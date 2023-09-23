@@ -11,4 +11,12 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.7" PrivateAssets="all" />
   </ItemGroup>
 
+<!-- Para SASS-->
+  <PropertyGroup>
+    <SassInputFile>wwwroot/scss/Index.scss</SassInputFile>
+    <SassOutputFile>Pages/Index.razor.css</SassOutputFile>
+  </PropertyGroup>
+  <Target Name="CompileSass" BeforeTargets="Build">
+    <Exec Command="sass $(SassInputFile) $(SassOutputFile)" />
+  </Target>
 </Project>

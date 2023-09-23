@@ -3,6 +3,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+#Archivos .css.map
+*.css.map
+
 # User-specific files
 *.rsuser
 *.suo

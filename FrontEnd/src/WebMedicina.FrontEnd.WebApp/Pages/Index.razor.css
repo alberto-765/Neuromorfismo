@@ -1,0 +1,13 @@
+#spinnerEjemplo {
+  position: relative;
+}
+
+.loading-progress-text1 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-weight: bold;
+  transform: translate(-50%, -50%) !important;
+}
+
+/*# sourceMappingURL=Index.razor.css.map */
