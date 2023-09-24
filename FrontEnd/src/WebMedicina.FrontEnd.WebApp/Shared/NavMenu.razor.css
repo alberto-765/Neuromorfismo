@@ -7,9 +7,6 @@
     background-color: rgba(0,0,0,0.4);
 }
 
-.navbar-brand {
-    font-size: 1.1rem;
-}
 
 .oi {
     width: 2rem;
@@ -65,4 +62,8 @@
         height: calc(100vh - 3.5rem);
         overflow-y: auto;
     }
+}
+#iconoNavbar{
+    width: 40px;
+    height: 40px;
 }

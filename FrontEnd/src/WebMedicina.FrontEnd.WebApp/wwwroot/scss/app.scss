@@ -1,4 +1,3 @@
-@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -92,21 +91,22 @@ a, .btn-link {
         }
     }
 }
-#iconoCarga{
-    width: 4%;
-    height: 8%;
+#iconoCarga {
+    width: 3rem;
+    height: 3.5rem;
     position: absolute;
-    top: 47.5%;
+    top: 48%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
 .loading-progress-text {
     position: absolute;
     font-weight: bold;
-    top: 52%;
+    top: 51.5%;
     font-size: 15px;
 
     &:after {
         content: var(--blazor-load-percentage-text, "Loading");
     }
 }
+

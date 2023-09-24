@@ -1,0 +1,14 @@
+﻿[
+  {
+    "outputFile": "wwwroot/css/app.css",
+    "inputFile": "wwwroot/scss/app.scss"
+  },
+  {
+    "outputFile": "Pages/Index.razor.css",
+    "inputFile": "wwwroot/scss/Index.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/bootstrap/bootstrap.css",
+    "inputFile": "wwwroot/scss/bootstrap/bootstrap.scss"
+  }
+]
