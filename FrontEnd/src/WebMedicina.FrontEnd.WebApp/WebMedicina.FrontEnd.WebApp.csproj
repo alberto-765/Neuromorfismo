@@ -134,11 +134,11 @@
   </ItemGroup>
 
 <!-- Para SASS-->
-  <PropertyGroup>
+  <!--<PropertyGroup>
     <SassInputFile>wwwroot/scss/Index.scss</SassInputFile>
     <SassOutputFile>Pages/Index.razor.css</SassOutputFile>
   </PropertyGroup>
   <Target Name="CompileSass" BeforeTargets="Build">
     <Exec Command="sass $(SassInputFile) $(SassOutputFile)" />
-  </Target>
+  </Target>-->
 </Project>
