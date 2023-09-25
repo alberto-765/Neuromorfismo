@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebMedicina.FrontEnd.Servic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebMedicina.BackEnd.Model", "BackEnd\src\WebMedicina.BackEnd.Model\WebMedicina.BackEnd.Model.csproj", "{224E3915-E6EE-4E80-A52D-508EC99FCB2E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebMedicina.BackEnd.Dal", "BackEnd\src\WebMedicina.BackEnd.Dto\WebMedicina.BackEnd.Dal.csproj", "{C07621ED-3488-42D6-9C2B-A99AD9E850E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebMedicina.BackEnd.Dal", "BackEnd\src\WebMedicina.BackEnd.Dal\WebMedicina.BackEnd.Dal.csproj", "{48C40900-EC84-4737-B7B2-B2509A772D4F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,10 +57,10 @@ Global
 		{224E3915-E6EE-4E80-A52D-508EC99FCB2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{224E3915-E6EE-4E80-A52D-508EC99FCB2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{224E3915-E6EE-4E80-A52D-508EC99FCB2E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C07621ED-3488-42D6-9C2B-A99AD9E850E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C07621ED-3488-42D6-9C2B-A99AD9E850E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C07621ED-3488-42D6-9C2B-A99AD9E850E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C07621ED-3488-42D6-9C2B-A99AD9E850E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48C40900-EC84-4737-B7B2-B2509A772D4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48C40900-EC84-4737-B7B2-B2509A772D4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48C40900-EC84-4737-B7B2-B2509A772D4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48C40900-EC84-4737-B7B2-B2509A772D4F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -73,7 +73,7 @@ Global
 		{F96F60B0-303A-4EBB-BFE7-21389FE672F8} = {86F39601-729A-4D43-B299-8FDE5606C988}
 		{501B3FEB-8C5B-4744-9B55-BCF214079036} = {86F39601-729A-4D43-B299-8FDE5606C988}
 		{224E3915-E6EE-4E80-A52D-508EC99FCB2E} = {43A646B1-2056-4B85-B4A7-E5C116200E2A}
-		{C07621ED-3488-42D6-9C2B-A99AD9E850E4} = {43A646B1-2056-4B85-B4A7-E5C116200E2A}
+		{48C40900-EC84-4737-B7B2-B2509A772D4F} = {43A646B1-2056-4B85-B4A7-E5C116200E2A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E8DA6551-196C-4AD8-AFF4-086CF32EFAD6}

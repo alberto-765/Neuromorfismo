@@ -15,31 +15,28 @@ public partial class WebmedicinaContext : DbContext
     {
     }
 
-    public virtual DbSet<Epilepsia> Epilepsias { get; set; }
+    public virtual DbSet<Epilepsias> Epilepsias { get; set; }
 
-    public virtual DbSet<Farmaco> Farmacos { get; set; }
+    public virtual DbSet<Farmacos> Farmacos { get; set; }
 
-    public virtual DbSet<Medico> Medicos { get; set; }
+    public virtual DbSet<Medicos> Medicos { get; set; }
 
-    public virtual DbSet<Mutacione> Mutaciones { get; set; }
+    public virtual DbSet<Mutaciones> Mutaciones { get; set; }
 
-    public virtual DbSet<Paciente> Pacientes { get; set; }
+    public virtual DbSet<Pacientes> Pacientes { get; set; }
 
-    public virtual DbSet<Password> Passwords { get; set; }
+    public virtual DbSet<Passwords> Passwords { get; set; }
 
-    public virtual DbSet<Usuario> Usuarios { get; set; }
+    public virtual DbSet<Usuarios> Usuarios { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySql("server=127.0.0.1;port=3306;database=webmedicina;user=userWebMedicina;password=WebMedicina", Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.4.24-mariadb"));
-
+   
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
             .UseCollation("utf8mb4_spanish2_ci")
             .HasCharSet("utf8mb4");
 
-        modelBuilder.Entity<Epilepsia>(entity =>
+        modelBuilder.Entity<Epilepsias>(entity =>
         {
             entity.HasKey(e => e.IdEpilepsia).HasName("PRIMARY");
 
@@ -60,7 +57,7 @@ public partial class WebmedicinaContext : DbContext
                 .HasColumnName("nombre");
         });
 
-        modelBuilder.Entity<Farmaco>(entity =>
+        modelBuilder.Entity<Farmacos>(entity =>
         {
             entity.HasKey(e => e.IdFarmaco).HasName("PRIMARY");
 
@@ -81,7 +78,7 @@ public partial class WebmedicinaContext : DbContext
                 .HasColumnName("nombre");
         });
 
-        modelBuilder.Entity<Medico>(entity =>
+        modelBuilder.Entity<Medicos>(entity =>
         {
             entity.HasKey(e => e.IdUsuario).HasName("PRIMARY");
 
@@ -116,7 +113,7 @@ public partial class WebmedicinaContext : DbContext
                 .HasColumnName("sexo");
         });
 
-        modelBuilder.Entity<Mutacione>(entity =>
+        modelBuilder.Entity<Mutaciones>(entity =>
         {
             entity.HasKey(e => e.IdMutacion).HasName("PRIMARY");
 
@@ -137,7 +134,7 @@ public partial class WebmedicinaContext : DbContext
                 .HasColumnName("nombre");
         });
 
-        modelBuilder.Entity<Paciente>(entity =>
+        modelBuilder.Entity<Pacientes>(entity =>
         {
             entity.HasKey(e => e.IdPaciente).HasName("PRIMARY");
 
@@ -194,7 +191,7 @@ public partial class WebmedicinaContext : DbContext
                 .HasColumnName("talla");
         });
 
-        modelBuilder.Entity<Password>(entity =>
+        modelBuilder.Entity<Passwords>(entity =>
         {
             entity.HasKey(e => e.IdUsuario).HasName("PRIMARY");
 
@@ -209,7 +206,7 @@ public partial class WebmedicinaContext : DbContext
                 .HasColumnName("password");
         });
 
-        modelBuilder.Entity<Usuario>(entity =>
+        modelBuilder.Entity<Usuarios>(entity =>
         {
             entity.HasKey(e => e.IdUsuario).HasName("PRIMARY");
 
@@ -230,11 +227,11 @@ public partial class WebmedicinaContext : DbContext
                 .HasColumnName("fechaUltMod");
 
             entity.HasOne(d => d.IdUsuarioNavigation).WithOne(p => p.Usuario)
-                .HasForeignKey<Usuario>(d => d.IdUsuario)
+                .HasForeignKey<Usuarios>(d => d.IdUsuario)
                 .HasConstraintName("FK_usuarios_medicos");
 
             entity.HasOne(d => d.IdUsuario1).WithOne(p => p.Usuario)
-                .HasForeignKey<Usuario>(d => d.IdUsuario)
+                .HasForeignKey<Usuarios>(d => d.IdUsuario)
                 .HasConstraintName("FK_usuarios_passwords");
         });
 

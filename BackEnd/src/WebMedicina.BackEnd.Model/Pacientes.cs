@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace WebMedicina.BackEnd.Model;
 
-public partial class Paciente
+public partial class Pacientes
 {
     public int IdPaciente { get; set; }
 
