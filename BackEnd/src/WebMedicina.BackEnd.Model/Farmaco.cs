@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace WebMedicina.BackEnd.Model;
 
-public partial class Farmacos
+public partial class Farmaco
 {
     public int IdFarmaco { get; set; }
 
@@ -12,4 +12,6 @@ public partial class Farmacos
     public DateOnly FechaCreac { get; set; }
 
     public DateOnly FechaUltMod { get; set; }
+
+    public virtual ICollection<Paciente> Pacientes { get; set; } = new List<Paciente>();
 }

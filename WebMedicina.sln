@@ -10,18 +10,33 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebMedicina.FrontEnd.WebApp", "FrontEnd\src\WebMedicina.FrontEnd.WebApp\WebMedicina.FrontEnd.WebApp.csproj", "{8734BB26-228A-4BAD-9E90-927DAC007267}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebMedicina.BackEnd.API", "BackEnd\src\WebMedicina.BackEnd.API\WebMedicina.BackEnd.API.csproj", "{BFA90D0F-A867-4648-8CBA-FAB6AE06A20B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{83C2F759-BFA5-4334-9C9D-AEA871DD8945} = {83C2F759-BFA5-4334-9C9D-AEA871DD8945}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebMedicina.BackEnd.Service", "BackEnd\src\WebMedicina.BackEnd.Service\WebMedicina.BackEnd.Service.csproj", "{F03A9762-C455-4EB1-9831-7803ED1D750B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EEEE3C73-5931-4D06-8252-5443502AC625} = {EEEE3C73-5931-4D06-8252-5443502AC625}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebMedicina.BackEnd.ServicesDependencies", "BackEnd\src\WebMedicina.BackEnd.ServicesDependencies\WebMedicina.BackEnd.ServicesDependencies.csproj", "{EEEE3C73-5931-4D06-8252-5443502AC625}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebMedicina.FrontEnd.Service", "FrontEnd\src\WebMedicina.FrontEnd.Service\WebMedicina.FrontEnd.Service.csproj", "{F96F60B0-303A-4EBB-BFE7-21389FE672F8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{501B3FEB-8C5B-4744-9B55-BCF214079036} = {501B3FEB-8C5B-4744-9B55-BCF214079036}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebMedicina.FrontEnd.ServiceDependencies", "FrontEnd\src\WebMedicina.FrontEnd.ServiceDependencies\WebMedicina.FrontEnd.ServiceDependencies.csproj", "{501B3FEB-8C5B-4744-9B55-BCF214079036}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebMedicina.BackEnd.Model", "BackEnd\src\WebMedicina.BackEnd.Model\WebMedicina.BackEnd.Model.csproj", "{224E3915-E6EE-4E80-A52D-508EC99FCB2E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebMedicina.BackEnd.Dal", "BackEnd\src\WebMedicina.BackEnd.Dal\WebMedicina.BackEnd.Dal.csproj", "{48C40900-EC84-4737-B7B2-B2509A772D4F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebMedicina.BackEnd.Dto", "BackEnd\src\WebMedicina.BackEnd.Dto\WebMedicina.BackEnd.Dto.csproj", "{D1F55C1E-B201-4EB4-959C-A8527EF98F6F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{69D2426F-C8BB-4E4F-949E-7A42D43F4F79}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebMedicina.Shared.Dto", "Shared\WebMedicina.Shared.Dto\WebMedicina.Shared.Dto.csproj", "{83C2F759-BFA5-4334-9C9D-AEA871DD8945}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +76,14 @@ Global
 		{48C40900-EC84-4737-B7B2-B2509A772D4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48C40900-EC84-4737-B7B2-B2509A772D4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48C40900-EC84-4737-B7B2-B2509A772D4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1F55C1E-B201-4EB4-959C-A8527EF98F6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1F55C1E-B201-4EB4-959C-A8527EF98F6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1F55C1E-B201-4EB4-959C-A8527EF98F6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1F55C1E-B201-4EB4-959C-A8527EF98F6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83C2F759-BFA5-4334-9C9D-AEA871DD8945}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83C2F759-BFA5-4334-9C9D-AEA871DD8945}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83C2F759-BFA5-4334-9C9D-AEA871DD8945}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83C2F759-BFA5-4334-9C9D-AEA871DD8945}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -74,6 +97,8 @@ Global
 		{501B3FEB-8C5B-4744-9B55-BCF214079036} = {86F39601-729A-4D43-B299-8FDE5606C988}
 		{224E3915-E6EE-4E80-A52D-508EC99FCB2E} = {43A646B1-2056-4B85-B4A7-E5C116200E2A}
 		{48C40900-EC84-4737-B7B2-B2509A772D4F} = {43A646B1-2056-4B85-B4A7-E5C116200E2A}
+		{D1F55C1E-B201-4EB4-959C-A8527EF98F6F} = {43A646B1-2056-4B85-B4A7-E5C116200E2A}
+		{83C2F759-BFA5-4334-9C9D-AEA871DD8945} = {69D2426F-C8BB-4E4F-949E-7A42D43F4F79}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E8DA6551-196C-4AD8-AFF4-086CF32EFAD6}

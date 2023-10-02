@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace WebMedicina.BackEnd.Model;
 
-public partial class Medicos
+public partial class Medico
 {
-    public uint IdUsuario { get; set; }
+    public string IdUsuario { get; set; } = null!;
 
     public string Nombre { get; set; } = null!;
 
@@ -21,5 +21,5 @@ public partial class Medicos
 
     public DateOnly FechaUltMod { get; set; }
 
-    public virtual Usuarios? Usuario { get; set; }
+    public virtual Aspnetuser IdUsuarioNavigation { get; set; } = null!;
 }

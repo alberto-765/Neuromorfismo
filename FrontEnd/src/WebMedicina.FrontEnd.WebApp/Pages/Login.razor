@@ -1,0 +1,16 @@
+﻿@page "/login"
+@inject IHttpClientFactory _httpClientFactory
+
+<h3>Login</h3>
+
+<button @onclick="MiMetodo">Click</button>
+@code {
+	private string hola = "hola";
+
+	public void MiMetodo() {
+
+		//HttpResponseMessage response = await _httpClient.GetAsync("Prueba");
+		Console.WriteLine("hola");
+
+	}
+}

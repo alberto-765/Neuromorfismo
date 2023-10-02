@@ -1,11 +1,18 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Identity;
+using WebMedicina.BackEnd.Model;
+using WebMedicina.Shared.Dto;
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace WebMedicina.BackEnd.API.Controllers {
-	[Route ("api/[controller]")]
+	[Route("api/[controller]")]
 	[ApiController]
-	public class Prueba {
+	public class Prueba : ControllerBase {
+
+		private readonly UserManager<Aspnetuser> _userManager;
+
+
 		// Para usar automap
 		private readonly IMapper _mapper;
 		public Prueba(IMapper mapper) {
@@ -16,12 +23,20 @@ namespace WebMedicina.BackEnd.API.Controllers {
 		}
 
 
+		//[HttpGet]
+		//public string Get(string nombre) {
+		//	return $"Hola {nombre}";
+		//}
+
 		[HttpGet]
-		public string Get(string nombre) {
-			return $"Hola {nombre}";
+		public IActionResult Get(UsuarioDto datos) {
+			if (ModelState.IsValid) {
+				return Unauthorized();
+			}
+			return BadRequest();
 		}
 
 
 
-    }
+	}
 }

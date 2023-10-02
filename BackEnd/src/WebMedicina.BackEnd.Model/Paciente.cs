@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace WebMedicina.BackEnd.Model;
 
-public partial class Pacientes
+public partial class Paciente
 {
     public int IdPaciente { get; set; }
 
@@ -30,4 +30,14 @@ public partial class Pacientes
     public DateOnly FechaCreac { get; set; }
 
     public DateOnly FechaUltMod { get; set; }
+
+    public int MedicoUltMod { get; set; }
+
+    public virtual Epilepsia IdEpilepsiaNavigation { get; set; } = null!;
+
+    public virtual Farmaco IdFarmacoNavigation { get; set; } = null!;
+
+    public virtual Mutacione IdMutacionNavigation { get; set; } = null!;
+
+    public virtual ICollection<Medicospaciente> Medicospacientes { get; set; } = new List<Medicospaciente>();
 }

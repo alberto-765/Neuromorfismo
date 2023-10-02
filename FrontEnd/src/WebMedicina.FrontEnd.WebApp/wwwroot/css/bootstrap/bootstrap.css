@@ -7609,6 +7609,10 @@ textarea.form-control-lg {
   width: auto !important;
 }
 
+.w-max {
+  width: max-content !important;
+}
+
 .mw-100 {
   max-width: 100% !important;
 }

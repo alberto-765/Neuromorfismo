@@ -1,13 +1,16 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System.Text;
 
-namespace WebMedicina.BackEnd.Data {
-    public class DBSettings {
+namespace WebMedicina.BackEnd.API
+{
+    public class DBSettings
+    {
 
 
-        public static string DBConnectionString(IConfiguration config) {
-			// Bindeamos uno a uno los valores del config a los de nuestra clase de configuracion
-			DbConnectionSettings dbConfig = new();
+        public static string DBConnectionString(IConfiguration config)
+        {
+            // Bindeamos uno a uno los valores del config a los de nuestra clase de configuracion
+            DbConnectionSettings dbConfig = new();
             config.Bind(key: "database", dbConfig);
 
             // Asignamos los valroes de la configuracion
@@ -23,7 +26,8 @@ namespace WebMedicina.BackEnd.Data {
         }
     }
 
-    public class DbConnectionSettings {
+    public class DbConnectionSettings
+    {
         public string Server { get; set; }
         public int Port { get; set; }
         public string DataBase { get; set; }

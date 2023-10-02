@@ -1,4 +1,4 @@
-#spinnerEjemplo {
+﻿#spinnerEjemplo {
   position: relative;
 }
 
@@ -9,5 +9,3 @@
   font-weight: bold;
   transform: translate(-50%, -50%) !important;
 }
-
-/*# sourceMappingURL=Index.razor.css.map */

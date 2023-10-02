@@ -5,3 +5,14 @@
 <h2>Esto es una prueba</h2>
 
 Welcome to your new app.
+<button @onclick="MiMetodo">Click</button>
+@code {
+	private string hola = "hola";
+
+	public void MiMetodo() {
+
+		//HttpResponseMessage response = await _httpClient.GetAsync("Prueba");
+		Console.WriteLine("hola");
+
+	}
+}

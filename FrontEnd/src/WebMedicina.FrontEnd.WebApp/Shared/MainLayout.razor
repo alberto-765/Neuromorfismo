@@ -1,5 +1,5 @@
 ﻿@inherits LayoutComponentBase
-
+@inject IJSRuntime JSRuntime
 <div class="page">
     <div class="sidebar">
         <NavMenu />
@@ -7,7 +7,39 @@
 
     <main>
         <article class="content px-4">
-            @Body
+            <ErrorBoundary @ref="errorBoundary">
+                <ChildContent>
+                    @Body
+                </ChildContent>
+                <ErrorContent Context="Exception">
+                    <div class="">
+                        <div class="alert alert-danger w-max" id="errorBody">
+                            @Exception.Message
+                            <button class="btn-close" @onclick="() => errorBoundary.Recover()"></button>
+                        </div>
+                    </div>
+                </ErrorContent>
+            </ErrorBoundary>
         </article>
     </main>
 </div>
+
+@code{
+    private ErrorBoundary errorBoundary;
+
+    protected override void OnInitialized()
+    {
+        errorBoundary = new ErrorBoundary();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        Boolean errorMostrado = await JSRuntime.InvokeAsync<Boolean>("errorMostrado");
+        if (errorMostrado)
+        {
+            errorBoundary.Recover();
+
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+}
