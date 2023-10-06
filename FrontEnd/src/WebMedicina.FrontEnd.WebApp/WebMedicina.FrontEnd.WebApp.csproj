@@ -1,31 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
-
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <TypeScriptTarget>ES6</TypeScriptTarget>
-    <TypeScriptMapRoot>F:\ProgramasVisual\WebMedicina\src\FrontEnd\src\WebMedicina.FrontEnd.WebApp</TypeScriptMapRoot>
-    <TypeScriptSourceRoot>F:\ProgramasVisual\WebMedicina\src\FrontEnd\src\WebMedicina.FrontEnd.WebApp</TypeScriptSourceRoot>
-  </PropertyGroup>
-
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <TypeScriptTarget>ES6</TypeScriptTarget>
-    <TypeScriptMapRoot>F:\ProgramasVisual\WebMedicina\src\FrontEnd\src\WebMedicina.FrontEnd.WebApp</TypeScriptMapRoot>
-    <TypeScriptSourceRoot>F:\ProgramasVisual\WebMedicina\src\FrontEnd\src\WebMedicina.FrontEnd.WebApp</TypeScriptSourceRoot>
-  </PropertyGroup>
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <DebugType>full</DebugType>
-  </PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<DebugType>portable</DebugType>
-	</PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <Optimize>False</Optimize>
-    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,28 +11,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.7" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.11" />
+    <None Include="compilerconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="7.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="7.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.11" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\css\bootstrap\" />
-    <Folder Include="wwwroot\js\bootstrap\" />
-    <Folder Include="wwwroot\scss\bootstrap\" />
+    <ProjectReference Include="..\..\..\Shared\WebMedicina.Shared.Dto\WebMedicina.Shared.Dto.csproj" />
+    <ProjectReference Include="..\WebMedicina.FrontEnd.ServiceDependencies\WebMedicina.FrontEnd.ServiceDependencies.csproj" />
+    <ProjectReference Include="..\WebMedicina.FrontEnd.Service\WebMedicina.FrontEnd.Service.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="compilerconfig.json" />
-  </ItemGroup>
-
-<!-- Para SASS-->
-  <!--<PropertyGroup>
-    <SassInputFile>wwwroot/scss/Index.scss</SassInputFile>
-    <SassOutputFile>Pages/Index.razor.css</SassOutputFile>
-  </PropertyGroup>
-  <Target Name="CompileSass" BeforeTargets="Build">
-    <Exec Command="sass $(SassInputFile) $(SassOutputFile)" />
-  </Target>-->
 </Project>

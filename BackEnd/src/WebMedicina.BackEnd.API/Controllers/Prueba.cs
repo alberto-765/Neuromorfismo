@@ -3,37 +3,20 @@ using Microsoft.AspNetCore.Identity;
 using WebMedicina.BackEnd.Model;
 using WebMedicina.Shared.Dto;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace WebMedicina.BackEnd.API.Controllers {
-	[Route("api/[controller]")]
+	[Route("api")]
 	[ApiController]
 	public class Prueba : ControllerBase {
 
-		private readonly UserManager<Aspnetuser> _userManager;
+		
 
-
-		// Para usar automap
-		private readonly IMapper _mapper;
-		public Prueba(IMapper mapper) {
-			_mapper = mapper;
-
-			// Para transoformar la clase2 uno en la clase1 lo hacemos en una funcion
-			//_mapper.Map<Clase1>(Clase2)
-		}
-
-
-		//[HttpGet]
-		//public string Get(string nombre) {
-		//	return $"Hola {nombre}";
-		//}
-
-		[HttpGet]
-		public IActionResult Get(UsuarioDto datos) {
-			if (ModelState.IsValid) {
-				return Unauthorized();
-			}
-			return BadRequest();
+		[HttpGet("prueba/{parametro}")]
+		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+		public async Task<ActionResult<string>> Get(String dato) {
+			return Ok(dato);
 		}
 
 

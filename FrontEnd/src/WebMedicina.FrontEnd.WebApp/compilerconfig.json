@@ -1,14 +1,18 @@
 ﻿[
-    {
-        "outputFile": "wwwroot/css/app.css",
-        "inputFile": "wwwroot/scss/app.scss"
-    },
-    {
-        "outputFile": "Pages/Index.razor.css",
-        "inputFile": "wwwroot/scss/Index.scss"
-    },
-    {
-        "outputFile": "wwwroot/css/bootstrap/bootstrap.css",
-        "inputFile": "wwwroot/scss/bootstrap/bootstrap.scss"
-    }
+  {
+    "outputFile": "wwwroot/css/app.css",
+    "inputFile": "wwwroot/scss/app.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/Index.css",
+    "inputFile": "wwwroot/scss/Index.scss"
+  },
+  {
+    "outputFile": "Pages/Auth/Registro.razor.css",
+    "inputFile": "Pages/Auth/Registro.razor.scss"
+  },
+  {
+    "outputFile": "Shared/InputPassword.razor.css",
+    "inputFile": "Shared/InputPassword.razor.scss"
+  }
 ]

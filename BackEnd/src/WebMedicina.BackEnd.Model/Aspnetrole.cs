@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 
 namespace WebMedicina.BackEnd.Model;
@@ -6,7 +7,7 @@ namespace WebMedicina.BackEnd.Model;
 /// <summary>
 /// Aquí se guardan los roles de usuario que puedes definir para tu aplicación. Los roles permiten agrupar usuarios y asignarles permisos específicos.
 /// </summary>
-public partial class Aspnetrole
+public partial class Aspnetrole : IdentityRole
 {
     public string Id { get; set; } = null!;
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 
 namespace WebMedicina.BackEnd.Model;
@@ -6,7 +7,7 @@ namespace WebMedicina.BackEnd.Model;
 /// <summary>
 /// Esta tabla almacena la informacion de los usuarios registrados, como nombres de usuario, direcciones de correo electronico, contrasennas con hash, etc.
 /// </summary>
-public partial class Aspnetuser
+public partial class Aspnetuser : IdentityUser
 {
     public string Id { get; set; } = null!;
 
@@ -26,7 +27,7 @@ public partial class Aspnetuser
 
     public bool EmailConfirmed { get; set; }
 
-    public string? PasswordHash { get; set; }
+    public string PasswordHash { get; set; }
 
     /// <summary>
     /// Sello del usuario que se verifica al hacer login, cambiar contraseña..

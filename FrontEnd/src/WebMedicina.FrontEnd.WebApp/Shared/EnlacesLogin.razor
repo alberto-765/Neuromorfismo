@@ -1,0 +1,15 @@
+﻿
+<AuthorizeView>
+    <Authorized>
+        <span>Hola @context.User.Identity.Name!</span>
+        <NavLink class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="Logout">Logout</NavLink>
+    </Authorized>
+    <NotAuthorized>
+        <NavLink class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="Registro">Registro</NavLink>
+        <NavLink class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="Login">login</NavLink>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+
+}

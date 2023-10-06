@@ -1,18 +1,28 @@
+﻿@inject IHttpClientFactory ClienFactory
+@inject Excepcion ExcepcionPersonalizada
 @page "/prueba"
 
-<PageTitle>Prueba</PageTitle>
+<h3>Prueba</h3>
 
-<h2>Esto es una prueba</h2>
-
-Welcome to your new app.
-<button @onclick="MiMetodo">Click</button>
 @code {
-	private string hola = "hola";
+    private CrearHttpClient crearHttpClient;
+    private HttpClient Http;
+    private HttpResponseMessage respuesta;
 
-	public void MiMetodo() {
 
-		//HttpResponseMessage response = await _httpClient.GetAsync("Prueba");
-		Console.WriteLine("hola");
+    protected override void OnInitialized() {
+        try {
+            crearHttpClient = new CrearHttpClient(ClienFactory);
+            Http = crearHttpClient.ObtenerCliente();
+            LlamadaPrueba();
+        } catch (Exception ex) {
+            ExcepcionPersonalizada.ConstruirPintarExcepcion(ex);
+        }
+    }
 
-	}
+    private async Task LlamadaPrueba() {
+     
+        respuesta = await Http.GetAsync("prueba/hola");
+    }
+
 }

@@ -1,7 +1,11 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using WebMedicina.BackEnd.API;
 using WebMedicina.BackEnd.Model;
+using WebMedicina.Shared.Dto;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,12 +37,21 @@ string connectionString = DBSettings.DBConnectionString(builder.Configuration);
 builder.Services.AddDbContext<WebmedicinaContext>(options =>
 	   options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
-builder.Services.AddDefaultIdentity<Aspnetuser>(options => {
+// IDENTITY
+builder.Services.AddIdentity<Aspnetuser, Aspnetrole>(options => {
 	// no requerir cuenta confirmada
 	options.SignIn.RequireConfirmedAccount = false;
 	// Ajustamos la cantidad de intentos fallidos para el bloqueo de 1 dia
 	options.Lockout.MaxFailedAccessAttempts = 5; // 5 intentos fallidos para bloqueo 
 	options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromDays(1);
+
+
+    // Persinalizacion politicas para contraseñas
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireDigit = true;
 
 })
 	// Resto de configuraciones
@@ -46,17 +59,37 @@ builder.Services.AddDefaultIdentity<Aspnetuser>(options => {
 	.AddEntityFrameworkStores<WebmedicinaContext>() // usar entityframework core para trabajar con la BBDD
 	.AddDefaultTokenProviders(); // para los tokens de inicio de sesion
 
+
+// JWT TOKENS
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                   .AddJwtBearer(options =>
+        options.TokenValidationParameters = new TokenValidationParameters {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(builder.Configuration["JWT:key"])),
+            ClockSkew = TimeSpan.Zero
+        });
+
+
 //Annadimos servicio mapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Activamos CORS para permitir llamadas a la api desde otras url
 builder.Services.AddCors(option => {
-	option.AddPolicy("NuevaPolitica", app => {
+	option.AddPolicy("MyPolitica", app => {
 		app.AllowAnyOrigin()
 		.AllowAnyHeader() 
 		.AllowAnyMethod();
 	});
 });
+
+
+//DEPENDENCIAS
+builder.Services.AddSingleton<Excepcion>(); // excepciones
+
 
 var app = builder.Build();
 
@@ -72,7 +105,7 @@ app.UseHttpsRedirection();
 app.MapControllers();
 
 // Usamos nuestra politica para cors
-app.UseCors("NuevaPolitica");
+app.UseCors("MyPolitica");
 
 
 // Usamos autentificacion y autorizacion

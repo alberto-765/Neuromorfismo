@@ -253,7 +253,7 @@ public partial class WebmedicinaContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("nombre");
             entity.Property(e => e.NumHistoria)
-                .HasColumnType("int(11)")
+                .HasMaxLength(50)
                 .HasColumnName("numHistoria");
             entity.Property(e => e.Sexo)
                 .HasMaxLength(1)

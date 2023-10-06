@@ -1,45 +1,18 @@
 ﻿@inherits LayoutComponentBase
-@inject IJSRuntime JSRuntime
+
 <div class="page">
     <div class="sidebar">
         <NavMenu />
     </div>
 
     <main>
+        <div class="top-row px-4">
+            <EnlacesLogin />
+            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+        </div>
+
         <article class="content px-4">
-            <ErrorBoundary @ref="errorBoundary">
-                <ChildContent>
-                    @Body
-                </ChildContent>
-                <ErrorContent Context="Exception">
-                    <div class="">
-                        <div class="alert alert-danger w-max" id="errorBody">
-                            @Exception.Message
-                            <button class="btn-close" @onclick="() => errorBoundary.Recover()"></button>
-                        </div>
-                    </div>
-                </ErrorContent>
-            </ErrorBoundary>
+            @Body
         </article>
     </main>
 </div>
-
-@code{
-    private ErrorBoundary errorBoundary;
-
-    protected override void OnInitialized()
-    {
-        errorBoundary = new ErrorBoundary();
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        Boolean errorMostrado = await JSRuntime.InvokeAsync<Boolean>("errorMostrado");
-        if (errorMostrado)
-        {
-            errorBoundary.Recover();
-
-        }
-        await base.OnAfterRenderAsync(firstRender);
-    }
-}

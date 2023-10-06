@@ -2,52 +2,38 @@
   "profiles": {
     "http": {
       "commandName": "Project",
-      "workingDirectory": "F:\\ProgramasVisual\\WebMedicina\\src\\FrontEnd\\src\\WebMedicina.FrontEnd.WebApp",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
       "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
-      "applicationUrl": "http://localhost:5221",
-      "nativeDebugging": false
+      "applicationUrl": "http://localhost:5071"
     },
     "https": {
       "commandName": "Project",
-      "workingDirectory": "F:\\ProgramasVisual\\WebMedicina\\src\\FrontEnd\\src\\WebMedicina.FrontEnd.WebApp",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
       "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
-      "applicationUrl": "https://localhost:7295;http://localhost:5221"
+      "applicationUrl": "https://localhost:7149;http://localhost:5071"
     },
     "IIS Express": {
       "commandName": "IISExpress",
-      "workingDirectory": "F:\\ProgramasVisual\\WebMedicina\\src\\FrontEnd\\src\\WebMedicina.FrontEnd.WebApp",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}"
-    },
-    "WSL": {
-      "commandName": "WSL2",
-      "launchBrowser": true,
-      "launchUrl": "https://localhost:7295",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "ASPNETCORE_URLS": "https://localhost:7295;http://localhost:5221"
-      },
-      "distributionName": ""
     }
   },
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:51896",
+      "applicationUrl": "http://localhost:6920",
       "sslPort": 0
     }
   }

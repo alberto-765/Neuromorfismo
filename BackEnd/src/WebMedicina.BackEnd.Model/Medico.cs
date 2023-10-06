@@ -15,7 +15,7 @@ public partial class Medico
 
     public string Sexo { get; set; } = null!;
 
-    public int NumHistoria { get; set; }
+    public string NumHistoria { get; set; }
 
     public DateOnly FechaCreac { get; set; }
 
