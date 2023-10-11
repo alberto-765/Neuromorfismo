@@ -1,11 +1,18 @@
-﻿#spinnerEjemplo {
-  position: relative;
+﻿.cienHeight {
+  height: 100%;
 }
 
-.loading-progress-text1 {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  font-weight: bold;
-  transform: translate(-50%, -50%) !important;
+#navMenu > .mud-nav-item .mud-nav-link {
+  padding: 20px;
+}
+#navMenu .mud-nav-group > button {
+  padding: 15px;
+}
+#navMenu .mud-nav-group .mud-nav-link {
+  padding-top: 13px;
+  padding-bottom: 13px;
+}
+
+.text-center {
+  text-align: center;
 }

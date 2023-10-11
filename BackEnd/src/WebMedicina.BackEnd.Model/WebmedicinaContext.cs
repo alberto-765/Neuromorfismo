@@ -15,31 +15,31 @@ public partial class WebmedicinaContext : DbContext
     {
     }
 
-    public virtual DbSet<Aspnetrole> Aspnetroles { get; set; }
+    public virtual DbSet<AspnetroleModel> Aspnetroles { get; set; }
 
-    public virtual DbSet<Aspnetroleclaim> Aspnetroleclaims { get; set; }
+    public virtual DbSet<AspnetroleclaimModel> Aspnetroleclaims { get; set; }
 
-    public virtual DbSet<Aspnetuser> Aspnetusers { get; set; }
+    public virtual DbSet<AspnetuserModel> Aspnetusers { get; set; }
 
     public virtual DbSet<Aspnetuserclaim> Aspnetuserclaims { get; set; }
 
     public virtual DbSet<Aspnetuserlogin> Aspnetuserlogins { get; set; }
 
-    public virtual DbSet<Aspnetusertoken> Aspnetusertokens { get; set; }
+    public virtual DbSet<AspnetusertokenModel> Aspnetusertokens { get; set; }
 
-    public virtual DbSet<Efmigrationshistory> Efmigrationshistories { get; set; }
+    public virtual DbSet<EfmigrationshistoryModel> Efmigrationshistories { get; set; }
 
-    public virtual DbSet<Epilepsia> Epilepsias { get; set; }
+    public virtual DbSet<EpilepsiaModel> Epilepsias { get; set; }
 
-    public virtual DbSet<Farmaco> Farmacos { get; set; }
+    public virtual DbSet<FarmacosModel> Farmacos { get; set; }
 
-    public virtual DbSet<Medico> Medicos { get; set; }
+    public virtual DbSet<MedicosModel> Medicos { get; set; }
 
-    public virtual DbSet<Medicospaciente> Medicospacientes { get; set; }
+    public virtual DbSet<MedicospacienteModel> Medicospacientes { get; set; }
 
-    public virtual DbSet<Mutacione> Mutaciones { get; set; }
+    public virtual DbSet<MutacionesModel> Mutaciones { get; set; }
 
-    public virtual DbSet<Paciente> Pacientes { get; set; }
+    public virtual DbSet<PacientesModel> Pacientes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -47,11 +47,11 @@ public partial class WebmedicinaContext : DbContext
             .UseCollation("utf8mb4_general_ci")
             .HasCharSet("utf8mb4");
 
-        modelBuilder.Entity<Aspnetrole>(entity =>
+        modelBuilder.Entity<AspnetroleModel>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("aspnetroles", tb => tb.HasComment("Aquí se guardan los roles de usuario que puedes definir para tu aplicación. Los roles permiten agrupar usuarios y asignarles permisos específicos."));
+            entity.ToTable("aspnetroles");
 
             entity.HasIndex(e => e.NormalizedName, "RoleNameIndex").IsUnique();
 
@@ -59,7 +59,7 @@ public partial class WebmedicinaContext : DbContext
             entity.Property(e => e.NormalizedName).HasMaxLength(256);
         });
 
-        modelBuilder.Entity<Aspnetroleclaim>(entity =>
+        modelBuilder.Entity<AspnetroleclaimModel>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
@@ -74,41 +74,30 @@ public partial class WebmedicinaContext : DbContext
                 .HasConstraintName("FK_AspNetRoleClaims_AspNetRoles_RoleId");
         });
 
-        modelBuilder.Entity<Aspnetuser>(entity =>
+        modelBuilder.Entity<AspnetuserModel>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("aspnetusers", tb => tb.HasComment("Esta tabla almacena la informacion de los usuarios registrados, como nombres de usuario, direcciones de correo electronico, contrasennas con hash, etc."));
+            entity.ToTable("aspnetusers");
 
             entity.HasIndex(e => e.NormalizedEmail, "EmailIndex");
 
             entity.HasIndex(e => e.NormalizedUserName, "UserNameIndex").IsUnique();
 
-            entity.Property(e => e.AccessFailedCount)
-                .HasComment("Contador de logins fallidos")
-                .HasColumnType("int(11)");
-            entity.Property(e => e.ConcurrencyStamp).HasComment("Su proposito principal es prevenir problemas de concurrencia cuando varios procesos o hilos intentan actualizar el mismo registro de usuario al mismo tiempo.");
+            entity.Property(e => e.AccessFailedCount).HasColumnType("int(11)");
             entity.Property(e => e.Email).HasMaxLength(256);
-            entity.Property(e => e.LockoutEnabled).HasComment("Bloqueo del usuario");
-            entity.Property(e => e.LockoutEnd)
-                .HasMaxLength(6)
-                .HasComment("Fecha fin de bloqueo");
-            entity.Property(e => e.NormalizedEmail)
-                .HasMaxLength(256)
-                .HasComment("Version en mayusculas");
-            entity.Property(e => e.NormalizedUserName)
-                .HasMaxLength(256)
-                .HasComment("Version en mayusculas");
-            entity.Property(e => e.SecurityStamp).HasComment("Sello del usuario que se verifica al hacer login, cambiar contraseña..");
+            entity.Property(e => e.LockoutEnd).HasMaxLength(6);
+            entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
+            entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
             entity.Property(e => e.UserName).HasMaxLength(256);
 
             entity.HasMany(d => d.Roles).WithMany(p => p.Users)
                 .UsingEntity<Dictionary<string, object>>(
                     "Aspnetuserrole",
-                    r => r.HasOne<Aspnetrole>().WithMany()
+                    r => r.HasOne<AspnetroleModel>().WithMany()
                         .HasForeignKey("RoleId")
                         .HasConstraintName("FK_AspNetUserRoles_AspNetRoles_RoleId"),
-                    l => l.HasOne<Aspnetuser>().WithMany()
+                    l => l.HasOne<AspnetuserModel>().WithMany()
                         .HasForeignKey("UserId")
                         .HasConstraintName("FK_AspNetUserRoles_AspNetUsers_UserId"),
                     j =>
@@ -116,7 +105,7 @@ public partial class WebmedicinaContext : DbContext
                         j.HasKey("UserId", "RoleId")
                             .HasName("PRIMARY")
                             .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
-                        j.ToTable("aspnetuserroles", tb => tb.HasComment("Esta tabla asocia usuarios a roles. Permite establecer qué usuarios tienen acceso a qué recursos y funcionalidades de la aplicación."));
+                        j.ToTable("aspnetuserroles");
                         j.HasIndex(new[] { "RoleId" }, "IX_AspNetUserRoles_RoleId");
                     });
         });
@@ -125,7 +114,7 @@ public partial class WebmedicinaContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("aspnetuserclaims", tb => tb.HasComment("Almacena información adicional sobre los usuarios, como identidades externas (por ejemplo, autenticación con Google o Facebook) y otros datos personalizados."));
+            entity.ToTable("aspnetuserclaims");
 
             entity.HasIndex(e => e.UserId, "IX_AspNetUserClaims_UserId");
 
@@ -146,15 +135,12 @@ public partial class WebmedicinaContext : DbContext
 
             entity.HasIndex(e => e.UserId, "IX_AspNetUserLogins_UserId");
 
-            entity.Property(e => e.LoginProvider).HasMaxLength(128);
-            entity.Property(e => e.ProviderKey).HasMaxLength(128);
-
             entity.HasOne(d => d.User).WithMany(p => p.Aspnetuserlogins)
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK_AspNetUserLogins_AspNetUsers_UserId");
         });
 
-        modelBuilder.Entity<Aspnetusertoken>(entity =>
+        modelBuilder.Entity<AspnetusertokenModel>(entity =>
         {
             entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name })
                 .HasName("PRIMARY")
@@ -162,15 +148,12 @@ public partial class WebmedicinaContext : DbContext
 
             entity.ToTable("aspnetusertokens");
 
-            entity.Property(e => e.LoginProvider).HasMaxLength(128);
-            entity.Property(e => e.Name).HasMaxLength(128);
-
             entity.HasOne(d => d.User).WithMany(p => p.Aspnetusertokens)
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK_AspNetUserTokens_AspNetUsers_UserId");
         });
 
-        modelBuilder.Entity<Efmigrationshistory>(entity =>
+        modelBuilder.Entity<EfmigrationshistoryModel>(entity =>
         {
             entity.HasKey(e => e.MigrationId).HasName("PRIMARY");
 
@@ -180,7 +163,7 @@ public partial class WebmedicinaContext : DbContext
             entity.Property(e => e.ProductVersion).HasMaxLength(32);
         });
 
-        modelBuilder.Entity<Epilepsia>(entity =>
+        modelBuilder.Entity<EpilepsiaModel>(entity =>
         {
             entity.HasKey(e => e.IdEpilepsia).HasName("PRIMARY");
 
@@ -203,7 +186,7 @@ public partial class WebmedicinaContext : DbContext
                 .HasColumnName("nombre");
         });
 
-        modelBuilder.Entity<Farmaco>(entity =>
+        modelBuilder.Entity<FarmacosModel>(entity =>
         {
             entity.HasKey(e => e.IdFarmaco).HasName("PRIMARY");
 
@@ -226,19 +209,19 @@ public partial class WebmedicinaContext : DbContext
                 .HasColumnName("nombre");
         });
 
-        modelBuilder.Entity<Medico>(entity =>
+        modelBuilder.Entity<MedicosModel>(entity =>
         {
-            entity.HasKey(e => e.IdUsuario).HasName("PRIMARY");
+            entity.HasKey(e => e.NumHistoria).HasName("PRIMARY");
 
             entity
                 .ToTable("medicos")
                 .UseCollation("utf8mb4_spanish2_ci");
 
-            entity.HasIndex(e => e.NumHistoria, "numHistoria").IsUnique();
+            entity.HasIndex(e => e.NetuserId, "Índice 2");
 
-            entity.Property(e => e.IdUsuario)
-                .HasColumnName("idUsuario")
-                .UseCollation("utf8mb4_general_ci");
+            entity.Property(e => e.NumHistoria)
+                .HasMaxLength(50)
+                .HasColumnName("numHistoria");
             entity.Property(e => e.Apellidos)
                 .HasMaxLength(50)
                 .HasColumnName("apellidos");
@@ -249,24 +232,24 @@ public partial class WebmedicinaContext : DbContext
             entity.Property(e => e.FechaUltMod)
                 .HasDefaultValueSql("curdate()")
                 .HasColumnName("fechaUltMod");
+            entity.Property(e => e.NetuserId)
+                .HasColumnName("netuserId")
+                .UseCollation("utf8mb4_general_ci");
             entity.Property(e => e.Nombre)
                 .HasMaxLength(50)
                 .HasColumnName("nombre");
-            entity.Property(e => e.NumHistoria)
-                .HasMaxLength(50)
-                .HasColumnName("numHistoria");
             entity.Property(e => e.Sexo)
                 .HasMaxLength(1)
                 .HasDefaultValueSql("''")
                 .IsFixedLength()
                 .HasColumnName("sexo");
 
-            entity.HasOne(d => d.IdUsuarioNavigation).WithOne(p => p.Medico)
-                .HasForeignKey<Medico>(d => d.IdUsuario)
+            entity.HasOne(d => d.Netuser).WithMany(p => p.Medicos)
+                .HasForeignKey(d => d.NetuserId)
                 .HasConstraintName("FK_medicos_aspnetusers");
         });
 
-        modelBuilder.Entity<Medicospaciente>(entity =>
+        modelBuilder.Entity<MedicospacienteModel>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
@@ -274,24 +257,27 @@ public partial class WebmedicinaContext : DbContext
 
             entity.HasIndex(e => e.IdPaciente, "FK_medicospacientes_pacientes");
 
-            entity.HasIndex(e => new { e.IdUsuario, e.IdPaciente }, "idUsuario_idPaciente");
+            entity.HasIndex(e => new { e.IdMedico, e.IdPaciente }, "idUsuario_idPaciente");
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.IdMedico)
+                .HasColumnName("idMedico")
+                .UseCollation("utf8mb4_spanish2_ci");
             entity.Property(e => e.IdPaciente)
                 .HasColumnType("int(11)")
                 .HasColumnName("idPaciente");
-            entity.Property(e => e.IdUsuario).HasColumnName("idUsuario");
+
+            entity.HasOne(d => d.IdMedicoNavigation).WithMany(p => p.Medicospacientes)
+                .HasForeignKey(d => d.IdMedico)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_medicospacientes_medicos");
 
             entity.HasOne(d => d.IdPacienteNavigation).WithMany(p => p.Medicospacientes)
                 .HasForeignKey(d => d.IdPaciente)
                 .HasConstraintName("FK_medicospacientes_pacientes");
-
-            entity.HasOne(d => d.IdUsuarioNavigation).WithMany(p => p.Medicospacientes)
-                .HasForeignKey(d => d.IdUsuario)
-                .HasConstraintName("FK_medicospacientes_aspnetusers");
         });
 
-        modelBuilder.Entity<Mutacione>(entity =>
+        modelBuilder.Entity<MutacionesModel>(entity =>
         {
             entity.HasKey(e => e.IdMutacion).HasName("PRIMARY");
 
@@ -314,7 +300,7 @@ public partial class WebmedicinaContext : DbContext
                 .HasColumnName("nombre");
         });
 
-        modelBuilder.Entity<Paciente>(entity =>
+        modelBuilder.Entity<PacientesModel>(entity =>
         {
             entity.HasKey(e => e.IdPaciente).HasName("PRIMARY");
 
@@ -327,6 +313,10 @@ public partial class WebmedicinaContext : DbContext
             entity.HasIndex(e => e.IdMutacion, "idMutacion");
 
             entity.HasIndex(e => e.IdEpilepsia, "idTipoEpilepsia");
+
+            entity.HasIndex(e => e.MedicoCreador, "medicoCreador");
+
+            entity.HasIndex(e => e.MedicoUltMod, "medicoUltMod");
 
             entity.Property(e => e.IdPaciente)
                 .HasColumnType("int(11)")
@@ -364,8 +354,11 @@ public partial class WebmedicinaContext : DbContext
             entity.Property(e => e.IdMutacion)
                 .HasColumnType("int(11)")
                 .HasColumnName("idMutacion");
+            entity.Property(e => e.MedicoCreador)
+                .HasMaxLength(50)
+                .HasColumnName("medicoCreador");
             entity.Property(e => e.MedicoUltMod)
-                .HasColumnType("int(11)")
+                .HasMaxLength(50)
                 .HasColumnName("medicoUltMod");
             entity.Property(e => e.Sexo)
                 .HasDefaultValueSql("'H'")
@@ -375,20 +368,15 @@ public partial class WebmedicinaContext : DbContext
                 .HasPrecision(20, 6)
                 .HasColumnName("talla");
 
-            entity.HasOne(d => d.IdEpilepsiaNavigation).WithMany(p => p.Pacientes)
-                .HasForeignKey(d => d.IdEpilepsia)
+            entity.HasOne(d => d.MedicoCreadorNavigation).WithMany(p => p.PacienteMedicoCreadorNavigations)
+                .HasForeignKey(d => d.MedicoCreador)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_pacientes_epilepsias");
+                .HasConstraintName("FK_pacientes_medicos_2");
 
-            entity.HasOne(d => d.IdFarmacoNavigation).WithMany(p => p.Pacientes)
-                .HasForeignKey(d => d.IdFarmaco)
+            entity.HasOne(d => d.MedicoUltModNavigation).WithMany(p => p.PacienteMedicoUltModNavigations)
+                .HasForeignKey(d => d.MedicoUltMod)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_pacientes_farmacos");
-
-            entity.HasOne(d => d.IdMutacionNavigation).WithMany(p => p.Pacientes)
-                .HasForeignKey(d => d.IdMutacion)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_pacientes_mutaciones");
+                .HasConstraintName("FK_pacientes_medicos");
         });
 
         OnModelCreatingPartial(modelBuilder);

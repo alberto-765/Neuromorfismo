@@ -18,7 +18,7 @@ namespace WebMedicina.BackEnd.API
             sb.Append($"Server={dbConfig.Server};");
             sb.Append($"Port={dbConfig.Port};");
             sb.Append($"DataBase={dbConfig.DataBase};");
-            sb.Append($"Uid={dbConfig.User};");
+            sb.Append($"user={dbConfig.User};");
             sb.Append($"Password={dbConfig.Password};");
 
             // devolvemos el string builder

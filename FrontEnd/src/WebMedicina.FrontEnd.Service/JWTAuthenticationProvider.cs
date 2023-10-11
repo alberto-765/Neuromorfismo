@@ -13,7 +13,7 @@ using System.Text.Json;
 namespace WebMedicina.FrontEnd.Service {
     public class JWTAuthenticationProvider : AuthenticationStateProvider, ILoginService {
         private readonly IJSRuntime js;
-        public static readonly string TOKENKEY = "TOKENKEY";
+        public static readonly string TOKENKEY = "OIJWRGU8G28238U2GIUG2H2VUHUIVWU89WEVIU";
         private readonly HttpClient httpClient;
 
         // Identidad anonima por si el usuario no está autenticado
@@ -27,11 +27,11 @@ namespace WebMedicina.FrontEnd.Service {
         public async override Task<AuthenticationState> GetAuthenticationStateAsync() {
             // Revisamos si tenemos un token en localstorage para autentical al usuario
             var token = await js.GetFromLocalStorage(TOKENKEY);
-            if (string.IsNullOrEmpty(token)) {
+            if (string.IsNullOrWhiteSpace(token) || token != null) {
                 return Anonimo;
             }
-
             return ConstruirAuthenticationState(token);
+
         }
 
         // Generamos el token del usuario
@@ -57,7 +57,7 @@ namespace WebMedicina.FrontEnd.Service {
             httpClient.DefaultRequestHeaders.Authorization = null;
 
             // Eliminamos y colocamos el perfil del usuario como anonimo
-            await js.RemoveItem(TOKENKEY);
+            await js.RemoveItemlocalStorage(TOKENKEY);
             NotifyAuthenticationStateChanged(Task.FromResult(Anonimo));
         }
 

@@ -14,7 +14,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.Abstractions" Version="7.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.11" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="7.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.11">
@@ -28,7 +27,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Shared\WebMedicina.Shared.Dto\WebMedicina.Shared.Dto.csproj" />
+    <ProjectReference Include="..\WebMedicina.BackEnd.Dal\WebMedicina.BackEnd.Dal.csproj" />
+    <ProjectReference Include="..\WebMedicina.BackEnd.Dto\WebMedicina.BackEnd.Dto.csproj" />
     <ProjectReference Include="..\WebMedicina.BackEnd.Model\WebMedicina.BackEnd.Model.csproj" />
+    <ProjectReference Include="..\WebMedicina.BackEnd.Service\WebMedicina.BackEnd.Service.csproj" />
   </ItemGroup>
 
 </Project>

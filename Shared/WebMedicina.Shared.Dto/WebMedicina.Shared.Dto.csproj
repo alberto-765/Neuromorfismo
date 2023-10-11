@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\WebMedicina.Shared.Service\WebMedicina.Shared.Service.csproj" />
+  </ItemGroup>
+
 </Project>

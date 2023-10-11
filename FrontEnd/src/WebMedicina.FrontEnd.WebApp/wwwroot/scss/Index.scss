@@ -1,11 +1,21 @@
-#spinnerEjemplo {
-    position: relative;
+.cienHeight{
+    height: 100%;
+}
+#navMenu {
+    & > .mud-nav-item .mud-nav-link {
+            padding: 20px;
+        }
+
+    & .mud-nav-group {
+        & > button{ padding: 15px;}
+
+        & .mud-nav-link {
+            padding-top: 13px;
+            padding-bottom: 13px;
+        }
+    }
 }
 
-.loading-progress-text1 {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    font-weight: bold;
-    transform: translate(-50%,-50%)!important;
+.text-center {
+    text-align: center;
 }

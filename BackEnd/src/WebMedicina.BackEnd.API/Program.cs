@@ -4,7 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using WebMedicina.BackEnd.API;
+using WebMedicina.BackEnd.Dal;
 using WebMedicina.BackEnd.Model;
+using WebMedicina.BackEnd.Service;
+using WebMedicina.BackEnd.ServicesDependencies;
 using WebMedicina.Shared.Dto;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,11 +37,13 @@ builder.Services.AddSwaggerGen();
 // conexion para BBDD
 builder.Services.Configure<DbConnectionSettings>(builder.Configuration.GetSection("database"));
 string connectionString = DBSettings.DBConnectionString(builder.Configuration);
+builder.Services.AddDbContext<IdentityContext>(options =>
+	   options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 builder.Services.AddDbContext<WebmedicinaContext>(options =>
 	   options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 // IDENTITY
-builder.Services.AddIdentity<Aspnetuser, Aspnetrole>(options => {
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => {
 	// no requerir cuenta confirmada
 	options.SignIn.RequireConfirmedAccount = false;
 	// Ajustamos la cantidad de intentos fallidos para el bloqueo de 1 dia
@@ -46,19 +51,19 @@ builder.Services.AddIdentity<Aspnetuser, Aspnetrole>(options => {
 	options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromDays(1);
 
 
-    // Persinalizacion politicas para contraseñas
-    options.Password.RequiredLength = 6;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequireLowercase = true;
-    options.Password.RequireUppercase = true;
-    options.Password.RequireDigit = true;
+	// Persinalizacion politicas para contraseñas
+	options.Password.RequiredLength = 6;
+	options.Password.RequireNonAlphanumeric = true;
+	options.Password.RequireLowercase = true;
+	options.Password.RequireUppercase = true;
+	options.Password.RequireDigit = true;
 
 })
-	// Resto de configuraciones
-	.AddRoles<Aspnetrole>()
-	.AddEntityFrameworkStores<WebmedicinaContext>() // usar entityframework core para trabajar con la BBDD
+	.AddEntityFrameworkStores<IdentityContext>() // usar entityframework core para trabajar con la BBDD
 	.AddDefaultTokenProviders(); // para los tokens de inicio de sesion
 
+//builder.Services.AddDefaultIdentity<Aspnetuser>(options => options.SignIn.RequireConfirmedAccount = false)
+//	.AddEntityFrameworkStores<WebmedicinaContext>();
 
 // JWT TOKENS
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -77,6 +82,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 //Annadimos servicio mapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+
 // Activamos CORS para permitir llamadas a la api desde otras url
 builder.Services.AddCors(option => {
 	option.AddPolicy("MyPolitica", app => {
@@ -88,7 +94,12 @@ builder.Services.AddCors(option => {
 
 
 //DEPENDENCIAS
-builder.Services.AddSingleton<Excepcion>(); // excepciones
+builder.Services.AddSingleton<ExcepcionDto>(); // excepciones
+builder.Services.AddScoped<AdminDal>(); // Dal de administradores
+builder.Services.AddScoped<MedicoDal>(); // Dal de administradores
+builder.Services.AddScoped<IIdentityService, IdentityService>(); // Servicios que trabajan con identity
+builder.Services.AddScoped<IAdminsService, AdminsService>(); // Servicios de administradores
+
 
 
 var app = builder.Build();

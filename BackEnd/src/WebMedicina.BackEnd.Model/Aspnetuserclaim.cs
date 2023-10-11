@@ -3,9 +3,6 @@ using System.Collections.Generic;
 
 namespace WebMedicina.BackEnd.Model;
 
-/// <summary>
-/// Almacena información adicional sobre los usuarios, como identidades externas (por ejemplo, autenticación con Google o Facebook) y otros datos personalizados.
-/// </summary>
 public partial class Aspnetuserclaim
 {
     public int Id { get; set; }
@@ -16,5 +13,5 @@ public partial class Aspnetuserclaim
 
     public string? ClaimValue { get; set; }
 
-    public virtual Aspnetuser User { get; set; } = null!;
+    public virtual AspnetuserModel User { get; set; } = null!;
 }

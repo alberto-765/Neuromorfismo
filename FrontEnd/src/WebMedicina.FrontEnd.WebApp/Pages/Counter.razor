@@ -1,5 +1,5 @@
 ﻿@page "/counter"
-@attribute [Authorize]
+@inject NavigationManager navigationManager
 @using Microsoft.AspNetCore.Authorization
 <PageTitle>Counter</PageTitle>
 
@@ -26,6 +26,7 @@
             currentCount += 5;
         }else { 
             currentCount -= 5;
+            navigationManager.NavigateTo("");
         }
     }
 }

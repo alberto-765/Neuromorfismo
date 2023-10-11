@@ -14,5 +14,9 @@
   {
     "outputFile": "Shared/InputPassword.razor.css",
     "inputFile": "Shared/InputPassword.razor.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/bootstrap/bootstrap.css",
+    "inputFile": "wwwroot/scss/bootstrap/bootstrap.scss"
   }
 ]

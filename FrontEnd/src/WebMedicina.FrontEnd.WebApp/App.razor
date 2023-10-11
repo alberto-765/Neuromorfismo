@@ -1,12 +1,18 @@
 ﻿ <CascadingAuthenticationState> 
     <Router AppAssembly="@typeof(Program).Assembly">
         <Found Context="routeData">
-            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" >
-                 <NotAuthorized>
-                     no estas autorizado
-                    @* <RedirectToLogin /> *@
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                <NotAuthorized>
+                    @if (context != null && context.User.Identity.IsAuthenticated == true) {
+                        redirigirManager.RedirigirLogin();
+                    } else {
+                        redirigirManager.RedirigirDefault();
+                    }
                 </NotAuthorized>
-                </AuthorizeRouteView>
+                <Authorizing>
+                    Autorizando al usuario
+                </Authorizing>
+            </AuthorizeRouteView>
         </Found>
         <NotFound>
             <LayoutView Layout="@typeof(MainLayout)">
@@ -15,3 +21,10 @@
         </NotFound>
     </Router>
 </CascadingAuthenticationState> 
+
+@code{
+    [Inject]
+    private IRedirigirManager redirigirManager { get; set; }
+
+
+}

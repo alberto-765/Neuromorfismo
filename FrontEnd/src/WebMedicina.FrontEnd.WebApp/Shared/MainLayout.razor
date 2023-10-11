@@ -1,18 +1,101 @@
 ﻿@inherits LayoutComponentBase
+@inject EstilosBase estilosBase
+@inject ExcepcionDto excepcionPersonalizada
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
 
-    <main>
-        <div class="top-row px-4">
-            <EnlacesLogin />
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
+<MudThemeProvider @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode" Theme="estilosBase.currentTheme" />
+    <MudDialogProvider />
+<MudSnackbarProvider />
+    
 
-        <article class="content px-4">
+
+
+<MudLayout>
+    <MudAppBar Class="mud-elevation-25">
+             <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
+                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Dark" Edge="Edge.Start" OnClick="@ToggleDrawer" />
+            </MudHidden>
+            <MudHidden Breakpoint="Breakpoint.LgAndUp" Invert="true">
+                <a id="iconoNavBar" href="">
+                    <img id="iconoNavBar" src="icono.png" alt="Icono" />
+                </a>
+            </MudHidden>
+
+
+            <MudSpacer />
+
+            @* Boton Modo Oscuro*@
+        <MudToggleIconButton @bind-Toggled="@_isDarkMode"
+                     Icon="@iconoInicial" Title="@modoInicial"
+                     ToggledIcon="@iconoSecundario" ToggledTitle="@modoSecundario"/>
+    
+         <AuthorizeView>
+            <Authorized>
+                <MudMenu Icon="@Icons.Material.Outlined.AccountCircle" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopRight">
+                    <MudMenuItem Color="Color.Dark" Icon="@Icons.Material.Filled.ManageAccounts">Perfil</MudMenuItem>
+                    <MudMenuItem Color="Color.Dark" Icon="@Icons.Material.Filled.Password">Contraseña</MudMenuItem>
+                </MudMenu>
+            </Authorized>
+        </AuthorizeView>
+    </MudAppBar>
+
+    @* Drawe solo para autenticados *@
+     <AuthorizeView>
+        <Authorized>
+            <MudDrawer @bind-Open="@open" ClipMode="clipMode" Elevation="1" Breakpoint="@Breakpoint.Lg" Variant="@DrawerVariant.Responsive" PreserveOpenState="true">
+                    <NavMenu />
+            </MudDrawer>
+        </Authorized>
+    </AuthorizeView>
+
+    <MudMainContent Class="cienHeight">
+        <MudContainer Fixed="true" Class="cienHeight">
             @Body
-        </article>
-    </main>
-</div>
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+@code {
+    bool open = true;
+    private bool primerClick = true;
+    private DrawerClipMode clipMode = DrawerClipMode.Always;
+
+    private MudThemeProvider _mudThemeProvider;
+    private bool _isDarkMode { get; set; }
+    private string iconoInicial { get; set; }
+    private string iconoSecundario { get; set; } 
+    private string modoInicial { get; set; }
+    private string modoSecundario { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+        try {
+            if (firstRender) {    
+                _isDarkMode = await _mudThemeProvider.GetSystemPreference();
+
+                // Colocamos como principal el icono del modo del usuario
+                if (_isDarkMode) {
+                    iconoInicial = @Icons.Material.Outlined.DarkMode;
+                    iconoSecundario = @Icons.Material.Outlined.LightMode;
+                    modoInicial = "Modo oscuro";
+                    modoSecundario = "Modo claro";
+                } else {
+                    iconoInicial = @Icons.Material.Outlined.LightMode;
+                    iconoSecundario = @Icons.Material.Outlined.DarkMode;
+                    modoInicial = "Modo claro";
+                    modoSecundario =  "Modo oscuro";
+                }
+
+                StateHasChanged();
+            }
+        } catch (Exception ex) {
+            excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+        }
+    }
+
+    void ToggleDrawer() {
+        if (primerClick) {
+            clipMode = DrawerClipMode.Docked;
+        } 
+        open = !open;
+    }
+}
+

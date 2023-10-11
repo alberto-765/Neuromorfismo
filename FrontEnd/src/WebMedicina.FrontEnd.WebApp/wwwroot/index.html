@@ -6,9 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>WebMedicina.FrontEnd.WebApp</title>
     <base href="/" />
-    <link href="css/bootstrap/bootstrap.css" rel="stylesheet" />
-    <link href="css/app.css" rel="stylesheet" />
     <link rel="icon" type="image/png" href="icono.png" />
+    <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+
+    <link href="css/app.min.css" rel="stylesheet" />
+    <link href="css/Index.min.css" rel="stylesheet" />
+    <link href="css/StyleSheet.css" rel="stylesheet" />
     <link href="WebMedicina.FrontEnd.WebApp.styles.css" rel="stylesheet" />
 </head>
 
@@ -25,13 +29,16 @@
     </div>
 
     <div id="blazor-error-ui">
-        Ha ocurrido un error.
-        <a href="" class="reload">Recargar</a>
-        <a class="dismiss">🗙</a>
+        <div>
+            <img src="error.png" style="width: 20px;margin-right: 10px;">
+            Ha ocurrido un error.
+            <a href="" class="reload">Recargar</a>
+            <a class="dismiss">🗙</a>
+        </div>
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
-    <script src="js/bootstrap/bootstrap.bundle.min.js"></script>
     <script src="js/index.js"></script>
+    <script src="_content/MudBlazor/MudBlazor.min.js"></script>
 </body>
 
 </html>

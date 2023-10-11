@@ -13,5 +13,5 @@ public partial class Aspnetuserlogin
 
     public string UserId { get; set; } = null!;
 
-    public virtual Aspnetuser User { get; set; } = null!;
+    public virtual AspnetuserModel User { get; set; } = null!;
 }

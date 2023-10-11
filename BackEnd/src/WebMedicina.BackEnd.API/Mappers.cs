@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using WebMedicina.BackEnd.Model;
 using WebMedicina.Shared.Dto;
 
 namespace WebMedicina.BackEnd.API {
@@ -13,9 +14,14 @@ namespace WebMedicina.BackEnd.API {
             //      .ForMember(dest => dest.PropiedadDestino, co => co.MapFrom(src => src.NombrePropiedadOrigen));
 
             // Mapper user info
-            CreateMap<UserRegistro, UserInfo>();
-            CreateMap<UserLogin, UserInfo>()
+            CreateMap<UserRegistroDto, UserInfoDto>();
+            CreateMap<UserLoginDto, UserInfoDto>()
                 .ForMember(dest => dest.NumHistoria, co => co.MapFrom(src => src.UserName));
+
+            // Mapeo modelo medico
+            CreateMap<MedicosModel, UserRegistroDto>().ReverseMap();
+            CreateMap<MedicosModel, UserInfoDto>();
+
 
 
             // Mapeamos listas
