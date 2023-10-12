@@ -14,7 +14,7 @@ namespace WebMedicina.Shared.Service {
         }
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext) {
-            if (value == null || _valoresPermitidos.Contains(value.ToString())) {
+            if (value is not null && _valoresPermitidos.Contains(value.ToString())) {
                 return ValidationResult.Success;
             }
 

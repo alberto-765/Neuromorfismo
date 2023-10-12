@@ -1,6 +1,7 @@
 ﻿@inherits LayoutComponentBase
 @inject EstilosBase estilosBase
 @inject ExcepcionDto excepcionPersonalizada
+@inject IJSRuntime js
 
 
 <MudThemeProvider @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode" Theme="estilosBase.currentTheme" />
@@ -9,8 +10,8 @@
     
 
 
-
-<MudLayout>
+<CascadingValue Value="@_isDarkMode">
+<MudLayout Class="d-flex">
     <MudAppBar Class="mud-elevation-25">
              <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
                 <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Dark" Edge="Edge.Start" OnClick="@ToggleDrawer" />
@@ -25,7 +26,7 @@
             <MudSpacer />
 
             @* Boton Modo Oscuro*@
-        <MudToggleIconButton @bind-Toggled="@_isDarkMode"
+            <MudToggleIconButton @bind-Toggled="@IsDarkMode"
                      Icon="@iconoInicial" Title="@modoInicial"
                      ToggledIcon="@iconoSecundario" ToggledTitle="@modoSecundario"/>
     
@@ -54,25 +55,44 @@
         </MudContainer>
     </MudMainContent>
 </MudLayout>
+</CascadingValue>
 @code {
     bool open = true;
     private bool primerClick = true;
     private DrawerClipMode clipMode = DrawerClipMode.Always;
 
+
     private MudThemeProvider _mudThemeProvider;
-    private bool _isDarkMode { get; set; }
+    private bool _isDarkMode = false;
+    private bool IsDarkMode { get => _isDarkMode; set{
+            _isDarkMode = value;
+            js.SetInLocalStorage(CLAVE, JsonSerializer.Serialize(_isDarkMode));
+        }
+    }
+
     private string iconoInicial { get; set; }
     private string iconoSecundario { get; set; } 
     private string modoInicial { get; set; }
     private string modoSecundario { get; set; }
+    private const string CLAVE = "KoAuNLWIWUEfVdUtDYsT";
+
 
     protected override async Task OnAfterRenderAsync(bool firstRender) {
         try {
-            if (firstRender) {    
-                _isDarkMode = await _mudThemeProvider.GetSystemPreference();
-
+            if (firstRender) {
+                var modoOscuro = await js.GetFromLocalStorage(CLAVE);
+                bool boolModo = false;
+                if(modoOscuro is not null) {
+                    boolModo = JsonSerializer.Deserialize<bool>(modoOscuro);
+                }
+                if (modoOscuro is null) {
+                    _isDarkMode = await _mudThemeProvider.GetSystemPreference();
+                    await js.SetInLocalStorage(CLAVE, JsonSerializer.Serialize(_isDarkMode));
+                }else {
+                    _isDarkMode = boolModo;
+                }
                 // Colocamos como principal el icono del modo del usuario
-                if (_isDarkMode) {
+                if (_isDarkMode == true) {
                     iconoInicial = @Icons.Material.Outlined.DarkMode;
                     iconoSecundario = @Icons.Material.Outlined.LightMode;
                     modoInicial = "Modo oscuro";
@@ -81,9 +101,8 @@
                     iconoInicial = @Icons.Material.Outlined.LightMode;
                     iconoSecundario = @Icons.Material.Outlined.DarkMode;
                     modoInicial = "Modo claro";
-                    modoSecundario =  "Modo oscuro";
+                    modoSecundario = "Modo oscuro";
                 }
-
                 StateHasChanged();
             }
         } catch (Exception ex) {

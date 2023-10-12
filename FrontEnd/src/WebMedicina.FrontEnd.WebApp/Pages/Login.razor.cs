@@ -23,10 +23,12 @@ namespace WebMedicina.FrontEnd.WebApp.Pages {
         protected ExcepcionDto _excepcionPersonalizada { get; set; }
         [Inject]
         JWTAuthenticationProvider _jwtAuthenticationProvider { get; set; }
+        [Inject]
+        IRedirigirManager redirigirManager { get; set; }
 
         protected override void OnInitialized() {
             try {
-                    Http = _crearHttpClient.CrearHttp();
+                Http = _crearHttpClient.CrearHttp();
             } catch (Exception ex) {
                 _excepcionPersonalizada.ConstruirPintarExcepcion(ex);
             }
@@ -49,9 +51,10 @@ namespace WebMedicina.FrontEnd.WebApp.Pages {
         private async Task hacerLogin() {
             // validamos el formulario
             cargando = true;
-            respuesta = await Http.PostAsJsonAsync("Login", userLogin);
+            respuesta = await Http.PostAsJsonAsync("cuentas/login", userLogin);
             if (respuesta.IsSuccessStatusCode) {
-                _jwtAuthenticationProvider.Login(await respuesta.Content.ReadAsStringAsync());
+                await _jwtAuthenticationProvider.Login(await respuesta.Content.ReadAsStringAsync());
+                redirigirManager.RedirigirDefault();
             } else {
                 mensajeErrorLogin = await respuesta.Content.ReadAsStringAsync();
             }

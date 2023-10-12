@@ -3,20 +3,24 @@
         <Found Context="routeData">
             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
                 <NotAuthorized>
-                    @if (context != null && context.User.Identity.IsAuthenticated == true) {
-                        redirigirManager.RedirigirLogin();
-                    } else {
-                        redirigirManager.RedirigirDefault();
+
+                    @if (noRedirigido) {
+                        if (context != null && context.User.Identity.IsAuthenticated == true) {
+                            redirigirManager.RedirigirDefault();
+                        } else {
+                            redirigirManager.RedirigirLogin();
+                        }
+                        noRedirigido = false;
                     }
                 </NotAuthorized>
                 <Authorizing>
-                    Autorizando al usuario
+                    Autorizando al usuario  
                 </Authorizing>
             </AuthorizeRouteView>
         </Found>
         <NotFound>
             <LayoutView Layout="@typeof(MainLayout)">
-                <p>Esta dirección no existe</p>
+                <h1 class="mt-5 ml-5">Dirección no encontrada</h1>
             </LayoutView>
         </NotFound>
     </Router>
@@ -25,6 +29,6 @@
 @code{
     [Inject]
     private IRedirigirManager redirigirManager { get; set; }
-
+    private bool noRedirigido { get; set; } = true;
 
 }

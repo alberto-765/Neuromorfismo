@@ -11,14 +11,10 @@ namespace WebMedicina.BackEnd.Dal {
     public  class AdminDal {
         private readonly WebmedicinaContext _context;
         private readonly IMapper _mapper;
-        private readonly ExcepcionDto _excepcionDto;
-
 
         public AdminDal(WebmedicinaContext context, IMapper mapper, ExcepcionDto excepcionDto) {
             _context = context;
             _mapper = mapper;
-            _excepcionDto = excepcionDto;
-
         }
 
 
@@ -28,10 +24,8 @@ namespace WebMedicina.BackEnd.Dal {
                 medicosModel.NetuserId = idUsuario;
 
                 _context.Medicos.Add(medicosModel);
-                _context.SaveChanges();
                   return true; // La operación se realizó correctamente
-            } catch (Exception ex) {
-                _excepcionDto.ConstruirPintarExcepcion(ex);
+            } catch (Exception) {
                 return false;   
             }
         }

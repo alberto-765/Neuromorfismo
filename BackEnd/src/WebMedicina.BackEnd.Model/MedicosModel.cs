@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebMedicina.BackEnd.Model;
 
@@ -28,4 +29,8 @@ public partial class MedicosModel
     public virtual ICollection<PacientesModel> PacienteMedicoCreadorNavigations { get; set; } = new List<PacientesModel>();
 
     public virtual ICollection<PacientesModel> PacienteMedicoUltModNavigations { get; set; } = new List<PacientesModel>();
+
+    // Propiedad la cual no se mapea
+    [NotMapped]
+    public IList<string>? Roles { get; set; }
 }

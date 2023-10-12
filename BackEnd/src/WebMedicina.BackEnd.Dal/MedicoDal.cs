@@ -23,11 +23,10 @@ namespace WebMedicina.BackEnd.Dal {
         }
 
         // Obtenemos los datos de un medico
-        public UserInfoDto ObtenerInfoUser(string numHistoria) {
+        public MedicosModel ObtenerInfoUser(string numHistoria) {
             try {
-                MedicosModel modeloMedico = new();
-                modeloMedico = _context.Medicos.FirstOrDefault(u => u.NumHistoria == numHistoria);
-                return _mapper.Map<UserInfoDto>(modeloMedico);
+                MedicosModel? modeloMedico = _context.Medicos.FirstOrDefault(u => u.NumHistoria == numHistoria);
+                return modeloMedico;
             } catch (Exception ex) {
                 throw;
             }

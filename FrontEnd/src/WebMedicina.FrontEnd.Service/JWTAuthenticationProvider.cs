@@ -27,7 +27,7 @@ namespace WebMedicina.FrontEnd.Service {
         public async override Task<AuthenticationState> GetAuthenticationStateAsync() {
             // Revisamos si tenemos un token en localstorage para autentical al usuario
             var token = await js.GetFromLocalStorage(TOKENKEY);
-            if (string.IsNullOrWhiteSpace(token) || token != null) {
+            if (token == null) {
                 return Anonimo;
             }
             return ConstruirAuthenticationState(token);

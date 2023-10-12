@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Shared\WebMedicina.Shared.Dto\WebMedicina.Shared.Dto.csproj" />
-    <ProjectReference Include="..\..\..\WebMedicina.Shared.Service\WebMedicina.Shared.Service.csproj" />
   </ItemGroup>
 
 </Project>

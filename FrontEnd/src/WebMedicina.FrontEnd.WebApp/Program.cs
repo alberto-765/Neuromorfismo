@@ -8,6 +8,7 @@ using WebMedicina.FrontEnd.WebApp;
 using WebMedicina.Shared.Dto;
 using MudBlazor.Services;
 using Microsoft.AspNetCore.Components;
+using MudBlazor;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
@@ -26,7 +27,7 @@ builder.Services.AddHttpClient("HttpAPI", client => {
 });
 builder.Services.AddSingleton<IConfigurationBuilder>(builder.Configuration); // para la configuracion
 builder.Services.AddSingleton<ICrearHttpClient, CrearHttpClient>(); // para crear Httpclient
-builder.Services.AddScoped<ExcepcionDto>(); // excepciones
+builder.Services.AddSingleton<ExcepcionDto>(); // excepciones
 builder.Services.AddSingleton<EstilosBase>(); // Base de estilos mudblazor
 builder.Services.AddSingleton<IRedirigirManager, RedirigirManager>(); // Redirigir 
 

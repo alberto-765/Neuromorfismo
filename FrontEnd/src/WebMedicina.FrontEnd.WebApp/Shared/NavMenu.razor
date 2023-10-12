@@ -1,20 +1,40 @@
 ﻿@attribute [Authorize]
 @inject EstilosBase estilosBase
-
+@using System.Security.Claims
 
 <div>
+<MudNavMenu id="navMenu" Class="pt-3 pt-md-5" Bordered="true" Color="@(_isDarkMode ? Color.Primary : Color.Dark)">
+    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Store">Estadísticas</MudNavLink>
+    <AuthorizeView Roles="admin, superAdmin">
+        <Authorized>
+            <MudNavGroup Title="Administación" Expanded="false" Icon="@Icons.Material.Outlined.Settings">
+                <MudNavLink Href="/medicos" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.MedicalServices">Médicos</MudNavLink>
 
-<MudNavMenu id="navMenu" Class="pt-3 pt-md-5" Bordered="true" Color="Color.Warning">
-    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Store">Dashboard</MudNavLink>
-    <MudNavLink Href="/servers" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Store">Servers</MudNavLink>
-    <MudNavGroup Title="Settings" Expanded="false">
-        <MudNavLink Href="/users" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Store">Users</MudNavLink>
-        <MudNavLink Href="/security" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Store">Security</MudNavLink>
-    </MudNavGroup>
-    <MudNavLink Href="/about" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Store">About</MudNavLink>
+                    @if (user is not null && user.IsInRole("superAdmin")) {
+                        <MudNavLink Href="/admins" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.MedicalServices">Administradores</MudNavLink>
+                    }
+                 
+             </MudNavGroup> 
+        </Authorized>
+    </AuthorizeView>
+    <MudNavLink Href="/pacientes" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Store">Pacientes</MudNavLink>
+    @* <MudNavLink Href="/about" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Store">About</MudNavLink> *@
 </MudNavMenu>
 </div>
 @code
 {
+    [CascadingParameter]
+    private bool _isDarkMode { get; set; }
 
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+    private ClaimsPrincipal? user { get; set; }
+
+    protected override async Task OnInitializedAsync() {
+        if (authenticationState is not null) {
+            var authState = await authenticationState;
+            user =  authState?.User;
+
+        }
+    }
 }

@@ -17,7 +17,7 @@ namespace WebMedicina.BackEnd.Service {
             _adminDal = adminDal;
         }
 
-        public async Task<bool> CrearMedico(UserRegistroDto nuevoMedico, string idUsuario) {
+        public bool CrearMedico(UserRegistroDto nuevoMedico, string idUsuario) {
             return _adminDal.CrearNuevoMedico(nuevoMedico, idUsuario);
         }
     }
