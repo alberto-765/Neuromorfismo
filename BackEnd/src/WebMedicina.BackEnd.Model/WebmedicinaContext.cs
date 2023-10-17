@@ -27,8 +27,6 @@ public partial class WebmedicinaContext : DbContext
 
     public virtual DbSet<AspnetusertokenModel> Aspnetusertokens { get; set; }
 
-    public virtual DbSet<EfmigrationshistoryModel> Efmigrationshistories { get; set; }
-
     public virtual DbSet<EpilepsiaModel> Epilepsias { get; set; }
 
     public virtual DbSet<FarmacosModel> Farmacos { get; set; }
@@ -40,7 +38,7 @@ public partial class WebmedicinaContext : DbContext
     public virtual DbSet<MutacionesModel> Mutaciones { get; set; }
 
     public virtual DbSet<PacientesModel> Pacientes { get; set; }
-
+   
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
@@ -225,10 +223,10 @@ public partial class WebmedicinaContext : DbContext
             entity.Property(e => e.Apellidos)
                 .HasMaxLength(50)
                 .HasColumnName("apellidos");
-            entity.Property(e => e.FechaCreac)
-                .HasDefaultValueSql("curdate()")
-                .HasColumnName("fechaCreac");
-            entity.Property(e => e.FechaNac).HasColumnName("fechaNac");
+            entity.Property(e => e.FechaCreac).HasColumnName("fechaCreac");
+            entity.Property(e => e.FechaNac)
+                .HasColumnType("datetime")
+                .HasColumnName("fechaNac");
             entity.Property(e => e.FechaUltMod)
                 .HasDefaultValueSql("curdate()")
                 .HasColumnName("fechaUltMod");
@@ -241,7 +239,6 @@ public partial class WebmedicinaContext : DbContext
             entity.Property(e => e.Sexo)
                 .HasMaxLength(1)
                 .HasDefaultValueSql("''")
-                .IsFixedLength()
                 .HasColumnName("sexo");
 
             entity.HasOne(d => d.Netuser).WithMany(p => p.Medicos)

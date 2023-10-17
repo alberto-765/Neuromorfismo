@@ -17,11 +17,11 @@ public partial class PacientesModel
 
     public DateTime FechaFractalidad { get; set; }
 
-    public int IdFarmaco { get; set; }
+    public int? IdFarmaco { get; set; } = null;
 
-    public int IdEpilepsia { get; set; }
+    public int? IdEpilepsia { get; set; } = null;
 
-    public int IdMutacion { get; set; }
+    public int? IdMutacion { get; set; } = null;
 
     public string EnfermRaras { get; set; } = null!;
 
@@ -31,9 +31,9 @@ public partial class PacientesModel
 
     public DateOnly FechaUltMod { get; set; }
 
-    public string MedicoUltMod { get; set; } = null!;
+    public string? MedicoUltMod { get; set; } = null;
 
-    public string MedicoCreador { get; set; } = null!;
+    public string? MedicoCreador { get; set; } = null;
 
     public virtual MedicosModel MedicoCreadorNavigation { get; set; } = null!;
 
