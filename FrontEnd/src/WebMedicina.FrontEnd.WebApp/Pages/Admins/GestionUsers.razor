@@ -1,21 +1,61 @@
 ﻿@page "/gestionUsers"
+@attribute [Authorize(Roles = "superAdmin, admin")]
 <PageTitle>Gestión Usuarios</PageTitle>
 
-<h1 class="mt-8 ml-8">Gestión de Usuarios 
+<h1 class="mt-8 ml-8">
+    Gestión de Usuarios
     @if (mostrarTooltip) {
         <MudTooltip>
             <ChildContent>
                 <MudIconButton Icon="@Icons.Material.Filled.Delete" />
             </ChildContent>
-            <TooltipContent >
+            <TooltipContent>
                 @tooltipInfoUser
             </TooltipContent>
         </MudTooltip>
     }
 </h1>
 
-<ul style=""></ul>
 
+<MudTable ServerData="@(new Func<TableState, Task<TableData<UserInfoDto>>>(ServerReload))"
+          Dense="true" Hover="true" @ref="table">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Usuarios Registrados</MudText>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Buscar" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortLabel="campo_numHistoria" T="UserInfoDto">Número Historia</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="campo_nombre" T="UserInfoDto">Nombre</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="campo_apellidos" T="UserInfoDto">Apellidos</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="campo_fechaNac" T="UserInfoDto">Fecha Nacimiento</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="campo_sexo" T="UserInfoDto">Género</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="campo_rol" T="UserInfoDto">Rol</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="campo_fechaCreac" T="UserInfoDto">Fecha Creación</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="campo_fechaUltMod" T="UserInfoDto">Fecha Última Modificación</MudTableSortLabel></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="numHistoria">@context.NumHistoria</MudTd>
+        <MudTd DataLabel="nombre">@context.Nombre</MudTd>
+        <MudTd DataLabel="apellidos">@context.Apellidos</MudTd>
+        <MudTd DataLabel="fechaNac">@context.FechaNac</MudTd>
+        <MudTd DataLabel="sexo">@context.Sexo</MudTd>
+        <MudTd DataLabel="rol">@context.Rol</MudTd>
+        <MudTd DataLabel="fechaCreac">@context.FechaCreac</MudTd>
+        <MudTd DataLabel="fechaUltMod">@context.FechaUltMod</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No se han encontrado usuarios</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Cargando...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
 @code {
-
+   
 }
+

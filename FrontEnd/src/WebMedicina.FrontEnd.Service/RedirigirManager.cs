@@ -19,7 +19,7 @@ namespace WebMedicina.FrontEnd.Service {
         public RedirigirManager(NavigationManager navigationManager, IJSRuntime js, ExcepcionDto excepcion) {
             this.navigationManager = navigationManager;
             this.js = js;
-            this.excepcionPers = excepcion;
+            excepcionPers = excepcion;
         }
 
         public async Task RedirigirLogin() {
