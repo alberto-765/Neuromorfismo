@@ -14,7 +14,7 @@ public partial class MedicosModel
 
     public DateTime? FechaNac { get; set; }
 
-    public string Sexo { get; set; }
+    public string Sexo { get; set; } = null!;
 
     public DateOnly FechaCreac { get; set; }
 
