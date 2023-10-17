@@ -35,15 +35,15 @@ public partial class PacientesModel
 
     public string? MedicoCreador { get; set; }
 
-    public virtual Epilepsia? IdEpilepsiaNavigation { get; set; }
+    public virtual EpilepsiaModel? IdEpilepsiaNavigation { get; set; }
 
-    public virtual Farmaco? IdFarmacoNavigation { get; set; }
+    public virtual FarmacosModel? IdFarmacoNavigation { get; set; }
 
-    public virtual Mutacione? IdMutacionNavigation { get; set; }
+    public virtual MutacionesModel? IdMutacionNavigation { get; set; }
 
-    public virtual Medico? MedicoCreadorNavigation { get; set; }
+    public virtual MedicosModel? MedicoCreadorNavigation { get; set; }
 
-    public virtual Medico? MedicoUltModNavigation { get; set; }
+    public virtual MedicosModel? MedicoUltModNavigation { get; set; }
 
-    public virtual ICollection<Medicospaciente> Medicospacientes { get; set; } = new List<Medicospaciente>();
+    public virtual ICollection<MedicospacienteModel> Medicospacientes { get; set; } = new List<MedicospacienteModel>();
 }

@@ -365,14 +365,29 @@ public partial class WebmedicinaContext : DbContext
                 .HasPrecision(20, 6)
                 .HasColumnName("talla");
 
+            entity.HasOne(d => d.IdEpilepsiaNavigation).WithMany(p => p.Pacientes)
+                 .HasForeignKey(d => d.IdEpilepsia)
+                 .OnDelete(DeleteBehavior.SetNull)
+                 .HasConstraintName("FK_pacientes_epilepsias");
+
+            entity.HasOne(d => d.IdFarmacoNavigation).WithMany(p => p.Pacientes)
+                .HasForeignKey(d => d.IdFarmaco)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_pacientes_farmacos");
+
+            entity.HasOne(d => d.IdMutacionNavigation).WithMany(p => p.Pacientes)
+                .HasForeignKey(d => d.IdMutacion)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_pacientes_mutaciones");
+
             entity.HasOne(d => d.MedicoCreadorNavigation).WithMany(p => p.PacienteMedicoCreadorNavigations)
                 .HasForeignKey(d => d.MedicoCreador)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("FK_pacientes_medicos_2");
 
             entity.HasOne(d => d.MedicoUltModNavigation).WithMany(p => p.PacienteMedicoUltModNavigations)
                 .HasForeignKey(d => d.MedicoUltMod)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("FK_pacientes_medicos");
         });
 

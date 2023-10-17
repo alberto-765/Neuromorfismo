@@ -13,5 +13,5 @@ public partial class MutacionesModel
 
     public DateOnly FechaUltMod { get; set; }
 
-    public virtual ICollection<Paciente> Pacientes { get; set; } = new List<Paciente>();
+    public virtual ICollection<PacientesModel> Pacientes { get; set; } = new List<PacientesModel>();
 }
