@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\css\bootstrap\**" />
+    <Content Remove="wwwroot\css\bootstrap\**" />
+    <EmbeddedResource Remove="wwwroot\css\bootstrap\**" />
+    <None Remove="wwwroot\css\bootstrap\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="compilerconfig.json" />
   </ItemGroup>
 
@@ -30,10 +37,6 @@
     <ProjectReference Include="..\..\..\Shared\WebMedicina.Shared.Dto\WebMedicina.Shared.Dto.csproj" />
     <ProjectReference Include="..\WebMedicina.FrontEnd.ServiceDependencies\WebMedicina.FrontEnd.ServiceDependencies.csproj" />
     <ProjectReference Include="..\WebMedicina.FrontEnd.Service\WebMedicina.FrontEnd.Service.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\css\bootstrap\" />
   </ItemGroup>
 
 </Project>

@@ -38,6 +38,7 @@ namespace WebMedicina.FrontEnd.Service {
                 DrawerText = "#FAFAFA",
                 DrawerIcon = "#FAFAFA",
                 AppbarText = "#FAFAFA",
+                
                 // TextPrimary = "#FFFFFF",
                 // TextSecondary = "#BDBDBD",
                 // DarkContrastText = "#FFFFFF",

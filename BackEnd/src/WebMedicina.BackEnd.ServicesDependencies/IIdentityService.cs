@@ -15,5 +15,6 @@ namespace WebMedicina.BackEnd.ServicesDependencies {
         Task<MedicosModel?> ObtenerUsuarioYRol(string numHistoria);
         Task<bool> CrearUser(IdentityUser user, UserRegistroDto model);
         Task<bool> ComprobarContraseña(UserLoginDto userLogin);
+        Task<bool> ComprobarUserName(string userName);
     }
 }

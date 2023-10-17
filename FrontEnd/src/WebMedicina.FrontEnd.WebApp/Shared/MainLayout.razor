@@ -2,6 +2,7 @@
 @inject EstilosBase estilosBase
 @inject ExcepcionDto excepcionPersonalizada
 @inject IJSRuntime js
+@inject ExcepcionDto _excepcionPersonalizada
 
 
 <MudThemeProvider @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode" Theme="estilosBase.currentTheme" />
@@ -10,8 +11,9 @@
     
 
 
-<CascadingValue Value="@_isDarkMode">
-<MudLayout Class="d-flex">
+<CascadingValue Name="modoOscuro" Value="@_isDarkMode">
+        <CascadingValue Name="excepcionPersonalizada" Value="@_excepcionPersonalizada">
+<MudLayout Class="d-flex flex-grow-1">
     <MudAppBar Class="mud-elevation-25">
              <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
                 <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Dark" Edge="Edge.Start" OnClick="@ToggleDrawer" />
@@ -27,8 +29,8 @@
 
             @* Boton Modo Oscuro*@
             <MudToggleIconButton @bind-Toggled="@IsDarkMode"
-                     Icon="@iconoInicial" Title="@modoInicial"
-                     ToggledIcon="@iconoSecundario" ToggledTitle="@modoSecundario"/>
+                                 Icon="@Icons.Material.Outlined.DarkMode" Title="Cambiar a modo oscuro"
+                                 ToggledIcon="@Icons.Material.Outlined.LightMode" ToggledTitle="Cambiar a modo claro" />
     
          <AuthorizeView>
             <Authorized>
@@ -50,18 +52,17 @@
     </AuthorizeView>
 
     <MudMainContent Class="cienHeight">
-        <MudContainer Fixed="true" Class="cienHeight">
+        <MudContainer Fixed="true" Class="noventaHeight">
             @Body
         </MudContainer>
     </MudMainContent>
 </MudLayout>
 </CascadingValue>
+</CascadingValue>
 @code {
     bool open = true;
     private bool primerClick = true;
     private DrawerClipMode clipMode = DrawerClipMode.Always;
-
-
     private MudThemeProvider _mudThemeProvider;
     private bool _isDarkMode = false;
     private bool IsDarkMode { get => _isDarkMode; set{
@@ -75,6 +76,7 @@
     private string modoInicial { get; set; }
     private string modoSecundario { get; set; }
     private const string CLAVE = "KoAuNLWIWUEfVdUtDYsT";
+    private HttpClient Http;
 
 
     protected override async Task OnAfterRenderAsync(bool firstRender) {
@@ -91,19 +93,6 @@
                 }else {
                     _isDarkMode = boolModo;
                 }
-                // Colocamos como principal el icono del modo del usuario
-                if (_isDarkMode == true) {
-                    iconoInicial = @Icons.Material.Outlined.DarkMode;
-                    iconoSecundario = @Icons.Material.Outlined.LightMode;
-                    modoInicial = "Modo oscuro";
-                    modoSecundario = "Modo claro";
-                } else {
-                    iconoInicial = @Icons.Material.Outlined.LightMode;
-                    iconoSecundario = @Icons.Material.Outlined.DarkMode;
-                    modoInicial = "Modo claro";
-                    modoSecundario = "Modo oscuro";
-                }
-                StateHasChanged();
             }
         } catch (Exception ex) {
             excepcionPersonalizada.ConstruirPintarExcepcion(ex);

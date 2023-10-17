@@ -9,6 +9,6 @@ namespace WebMedicina.FrontEnd.ServiceDependencies {
         Task ActualizarSeguimientoEnlace();
         Task RedirigirPagAnt();
         Task RedirigirLogin();
-        void RedirigirDefault(string enlace = "/");
+        Task RedirigirDefault(string enlace = "/");
     }
 }

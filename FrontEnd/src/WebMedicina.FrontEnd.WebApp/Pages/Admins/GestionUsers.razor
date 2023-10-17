@@ -1,0 +1,21 @@
+﻿@page "/gestionUsers"
+<PageTitle>Gestión Usuarios</PageTitle>
+
+<h1 class="mt-8 ml-8">Gestión de Usuarios 
+    @if (mostrarTooltip) {
+        <MudTooltip>
+            <ChildContent>
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" />
+            </ChildContent>
+            <TooltipContent >
+                @tooltipInfoUser
+            </TooltipContent>
+        </MudTooltip>
+    }
+</h1>
+
+<ul style=""></ul>
+
+@code {
+
+}

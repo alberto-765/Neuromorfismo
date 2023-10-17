@@ -13,7 +13,7 @@ namespace WebMedicina.FrontEnd.Service {
     public class RedirigirManager : IRedirigirManager {
         private readonly NavigationManager navigationManager;
         private readonly IJSRuntime js;
-        private string enlaceSeguimiento { get; set; } = "segEnl";
+        private const string enlaceSeguimiento  = "segEnl";
         private readonly ExcepcionDto excepcionPers;
         // replaceHistoryEntry
         public RedirigirManager(NavigationManager navigationManager, IJSRuntime js, ExcepcionDto excepcion) {
@@ -46,6 +46,9 @@ namespace WebMedicina.FrontEnd.Service {
         public async Task RedirigirPagAnt() {
             string segEnl = await js.GetFromSessionStorage(enlaceSeguimiento);
 
+            // Acutalizamos el enlace de seguimiento
+            await ActualizarSeguimientoEnlace();
+
             if (!string.IsNullOrWhiteSpace(segEnl)) {
                 navigationManager.NavigateTo(segEnl);
             } else {
@@ -53,7 +56,10 @@ namespace WebMedicina.FrontEnd.Service {
             }
         }
 
-        public void RedirigirDefault (string enlace ="/") {
+        public async Task RedirigirDefault (string enlace ="/") {
+            // Acutalizamos el enlace de seguimiento
+            await ActualizarSeguimientoEnlace();
+
             navigationManager.NavigateTo(enlace);
         }
     }

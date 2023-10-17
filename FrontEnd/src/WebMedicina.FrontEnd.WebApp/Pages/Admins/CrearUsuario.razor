@@ -1,0 +1,62 @@
+﻿@using WebMedicina.FrontEnd.ServiceDependencies;
+@using WebMedicina.Shared.Service;
+@attribute [Authorize(Roles = "superAdmin, admin")]
+
+
+@page "/crearUsuario"
+<PageTitle>Alta Usuario</PageTitle>
+
+<h1 class="mt-8 ml-8">Alta Nuevo Usuario</h1>
+<MudContainer MaxWidth="MaxWidth.Small" Class="d-flex align-center flex-grow-1">
+    <EditForm Model="@userRegistro" OnValidSubmit="Crear" Class="flex-grow-1 ">
+        <DataAnnotationsValidator />
+
+        <MudTextField Class="mb-3" @bind-Value="@userRegistro.NumHistoria" For="@(() => userRegistro.NumHistoria)" OnlyValidateIfDirty="true" Counter="12" MaxLength="12" Clearable="true" HelperText="El formato es ANXXXXXXXXXX" Label="Número de Historia*" Variant="Variant.Text" OnBlur="validarUserName"/>
+     
+        <MudTextField Class="mb-3" @bind-Value="userRegistro.Nombre" For="@(() => userRegistro.Nombre)" OnlyValidateIfDirty="true" Clearable="true" Label="Nombre*" Variant="Variant.Text" />
+        <MudTextField Class="mb-3" @bind-Value="userRegistro.Apellidos" For="@(() => userRegistro.Apellidos)" OnlyValidateIfDirty="true" Label="Apellidos*" Clearable="true" Variant="Variant.Text" />
+        <MudDatePicker Class="mb-3" @ref="_picker" Editable="true" AutoClose="true" Label="Fecha de Nacimiento" @bind-Date="userRegistro.FechaNac" For="@(() => userRegistro.FechaNac)" Placeholder="Mayor de 18 años" PickerVariant="PickerVariant.Dialog" IsDateDisabledFunc="@((DateTime dt)=> dt > ValidacionesRegistro.ObtenerFechaMaxNacimiento())">
+            <PickerActions Context="contexto2">
+                <MudButton Class="mr-auto align-self-start" OnClick="@(() => _picker.Clear())">Limpiar</MudButton>
+                <MudButton OnClick="@(() => _picker.Close(false))">Cancelar</MudButton>
+                <MudButton Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
+            </PickerActions>
+        </MudDatePicker>
+
+        <MudSelect Class="mb-3" T="string" Label="Género" @bind-Value="userRegistro.Sexo" For="@(() => userRegistro.Sexo)" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Variant="Variant.Text">
+            <MudSelectItem Value="@("H")"><div class="d-flex align-center"> <MudIcon Icon="@Icons.Material.Outlined.Man" Class="mr-2" Size="Size.Small"></MudIcon> Hombre </div></MudSelectItem>
+            <MudSelectItem Value="@("M")"><div class="d-flex align-center"><MudIcon Icon="@Icons.Material.Outlined.Woman" Class="mr-2" Size="Size.Small"></MudIcon> Mujer </div></MudSelectItem>
+        </MudSelect> 
+        
+        <MudSelect T="string" Class="mb-3"  Label="Rol" @bind-Value="userRegistro.Rol" For="@(() => userRegistro.Rol)" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Text">
+             @if (user is not null && user.IsInRole("superAdmin")) {
+                <MudSelectItem Value="@("superAdmin")" >Super Admin</MudSelectItem>
+            } 
+            <MudSelectItem Value="@("admin")">Admin</MudSelectItem>
+            <MudSelectItem Value="@("medico")">Médico</MudSelectItem>
+        </MudSelect>
+
+        <div class="d-flex align-center">
+            <MudTextField @bind-Value="userRegistro.Password" For="@(() => userRegistro.Password)" Label="Contraseña" Variant="Variant.Text" ReadOnly="true"/>
+            <MudTooltip Text="La contraseña debe ser compartida con el nuevo usuario">
+                <MudIconButton Icon="@Icons.Material.Outlined.Info" />
+            </MudTooltip>
+        </div>
+
+
+        <div Class="mt-9" Align="center" Typo="Typo.h6">
+            <MudButton ButtonType="ButtonType.Submit" Disabled="@cargando" Size="Size.Large" Variant="Variant.Filled" Color="Color.Primary" >
+                @if (cargando) {
+                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    <MudText Class="ms-2">Cargando</MudText>
+                } else {
+                    <MudIcon Class="mr-3" Icon="@Icons.Material.Filled.PersonAddAlt"></MudIcon>
+                    <MudText>Crear</MudText>
+                }
+            </MudButton>
+        </div>
+    </EditForm>
+</MudContainer>
+
+@code{
+}

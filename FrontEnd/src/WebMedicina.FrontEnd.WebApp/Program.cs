@@ -31,7 +31,6 @@ builder.Services.AddSingleton<ExcepcionDto>(); // excepciones
 builder.Services.AddSingleton<EstilosBase>(); // Base de estilos mudblazor
 builder.Services.AddSingleton<IRedirigirManager, RedirigirManager>(); // Redirigir 
 
-
 // Dependencias autenticacion
 builder.Services.AddScoped<JWTAuthenticationProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider, JWTAuthenticationProvider>(provider => provider.GetRequiredService<JWTAuthenticationProvider>());

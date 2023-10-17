@@ -13,18 +13,16 @@ namespace WebMedicina.FrontEnd.Service {
 
         public CrearHttpClient(IHttpClientFactory httpClientFactory) { 
             _httpClientFactory = httpClientFactory;
+            _HttpClient = _httpClientFactory.CreateClient("HttpAPI");
+
         }
 
         public HttpClient CrearHttp() {
             try {
-                _HttpClient = _httpClientFactory.CreateClient("HttpAPI");
                 return _HttpClient;
             } catch (Exception ) {
                 throw ;
             }
-        }
-        public HttpClient ObtenerCliente() {
-            return _HttpClient;
         }
     }
 }

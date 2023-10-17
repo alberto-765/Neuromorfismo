@@ -1,20 +1,16 @@
 ﻿@page "/"
+@inject IRedirigirManager _redirigirManager
 @attribute [Authorize]
-
-
-<AuthorizeView>
-    <Authorized>
-        <PageTitle>Index</PageTitle>
+<PageTitle>Inicio</PageTitle>
 
 <h1>Hello, world!</h1>
 
-Welcome to your new app.
+@code{
+    protected override async Task OnInitializedAsync() {
+        await _redirigirManager.ActualizarSeguimientoEnlace();
+    }
+}
 
-<SurveyPrompt Title="How is Blazor working for you?" />
-    </Authorized>
-    <NotAuthorized>
-     <Redirigir enlaceRedirigir="login" />
-    </NotAuthorized>
-</AuthorizeView>
+
 
 

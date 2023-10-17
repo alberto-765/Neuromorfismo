@@ -32,8 +32,12 @@ namespace WebMedicina.BackEnd.Service {
                 if (medicosModel is not null) {
                    var roles = await ObtenerRol(numHistoria);
 
-                    if(roles is not null) {
-                        medicosModel.Roles = roles;
+                    if(roles is not null && roles.Count > 0) {
+                        medicosModel.Rol = roles?.FirstOrDefault().ToString();
+                    }
+
+                    if (string.IsNullOrEmpty(medicosModel.Rol)) {
+                        medicosModel.Rol = "medico";
                     }
                 }
 
@@ -48,7 +52,8 @@ namespace WebMedicina.BackEnd.Service {
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded) {
                     // Añadimos el usuario a su rol
-                    result = await _userManager.AddToRoleAsync(user, model.Rol);
+                        result = await _userManager.AddToRoleAsync(user, model.Rol);
+
 
                     if (result.Succeeded) {
                         return true;
@@ -84,7 +89,16 @@ namespace WebMedicina.BackEnd.Service {
                 return role;
             } catch (Exception) {
                  throw;
-             }
+            }
+        }
+
+        // LLamamos a BBDD y devolvemos si existe o no el userName
+        public async Task<bool> ComprobarUserName(string userName) {
+            try {
+                return await _userManager.FindByNameAsync(userName) != null;
+            } catch (Exception) {
+                throw;
+            }
         }
     }
 }

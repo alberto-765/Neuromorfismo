@@ -8,26 +8,24 @@
     <AuthorizeView Roles="admin, superAdmin">
         <Authorized>
             <MudNavGroup Title="Administación" Expanded="false" Icon="@Icons.Material.Outlined.Settings">
-                <MudNavLink Href="/medicos" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.MedicalServices">Médicos</MudNavLink>
 
                     @if (user is not null && user.IsInRole("superAdmin")) {
-                        <MudNavLink Href="/admins" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.MedicalServices">Administradores</MudNavLink>
+                        <MudNavLink Href="/crearUsuario" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.Add">Alta Usuario</MudNavLink>
                     }
-                 
+                        <MudNavLink Href="/gestionUsers" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.Add">Gestión usuarios</MudNavLink>
+                    
              </MudNavGroup> 
         </Authorized>
     </AuthorizeView>
     <MudNavLink Href="/pacientes" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Store">Pacientes</MudNavLink>
-    @* <MudNavLink Href="/about" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Store">About</MudNavLink> *@
 </MudNavMenu>
 </div>
 @code
 {
-    [CascadingParameter]
+    [CascadingParameter(Name = "modoOscuro")]
     private bool _isDarkMode { get; set; }
 
-    [CascadingParameter]
-    private Task<AuthenticationState>? authenticationState { get; set; }
+    [CascadingParameter] private Task<AuthenticationState>? authenticationState { get; set; }
     private ClaimsPrincipal? user { get; set; }
 
     protected override async Task OnInitializedAsync() {

@@ -17,7 +17,7 @@ namespace WebMedicina.Shared.Dto {
 
             // Generamos la excepcion y la pintamos por consola 
             String respuesta = $"- Tipo: {Tipo}\n- Mensaje: {Mensaje}\n- Camino: {Camino}";
-            Console.WriteLine(respuesta);
+            Console.Write(respuesta);
         }
     }
 }

@@ -13,15 +13,15 @@ using System.Text.Json;
 namespace WebMedicina.FrontEnd.Service {
     public class JWTAuthenticationProvider : AuthenticationStateProvider, ILoginService {
         private readonly IJSRuntime js;
-        public static readonly string TOKENKEY = "OIJWRGU8G28238U2GIUG2H2VUHUIVWU89WEVIU";
+        public const string TOKENKEY = "OIJWRGU8G28238U2GIUG2H2VUHUIVWU89WEVIU";
         private readonly HttpClient httpClient;
 
         // Identidad anonima por si el usuario no está autenticado
         private AuthenticationState Anonimo => new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
 
-         public JWTAuthenticationProvider(IJSRuntime js, HttpClient httpClient) {
+         public JWTAuthenticationProvider(IJSRuntime js, ICrearHttpClient httpClient) {
             this.js = js;
-            this.httpClient = httpClient;
+            this.httpClient = httpClient.CrearHttp();
         }
 
         public async override Task<AuthenticationState> GetAuthenticationStateAsync() {
@@ -37,7 +37,7 @@ namespace WebMedicina.FrontEnd.Service {
         // Generamos el token del usuario
         private AuthenticationState ConstruirAuthenticationState(string token) {
             // creamos la cabecera para que cada vez que hagamos llamadas http mandemos el token del usuario
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt")));
         }
 

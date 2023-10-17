@@ -52,7 +52,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => {
 
 
 	// Persinalizacion politicas para contraseñas
-	options.Password.RequiredLength = 6;
+	options.Password.RequiredLength = 8;
 	options.Password.RequireNonAlphanumeric = true;
 	options.Password.RequireLowercase = true;
 	options.Password.RequireUppercase = true;
@@ -60,13 +60,15 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => {
 
 })
 	.AddEntityFrameworkStores<IdentityContext>() // usar entityframework core para trabajar con la BBDD
-	.AddDefaultTokenProviders(); // para los tokens de inicio de sesion
+.AddDefaultTokenProviders();  // para los tokens de inicio de sesion
 
-//builder.Services.AddDefaultIdentity<Aspnetuser>(options => options.SignIn.RequireConfirmedAccount = false)
-//	.AddEntityFrameworkStores<WebmedicinaContext>();
 
 // JWT TOKENS
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddAuthentication(x => {
+	x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+	x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+	x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+})
                    .AddJwtBearer(options =>
         options.TokenValidationParameters = new TokenValidationParameters {
             ValidateIssuer = false,
@@ -75,10 +77,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(builder.Configuration["JWT:key"])),
-            ClockSkew = TimeSpan.Zero
         });
 
-
+builder.Services.AddAuthorization();
 //Annadimos servicio mapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

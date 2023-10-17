@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +20,7 @@ using WebMedicina.Shared.Dto;
 namespace WebMedicina.BackEnd.API.Controllers {
     [Route("/api/cuentas")]
     [ApiController]
+    [Authorize(Roles = "superAdmin, admin")]
     public class CuentasController : ControllerBase {
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
@@ -38,7 +41,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
         }
 
         [HttpPost("crear")]
-        public async Task<ActionResult<UserToken>> CreateUser([FromBody] UserRegistroDto model) {
+        public async Task<ActionResult> CreateUser([FromBody] UserRegistroDto model) {
             using (var transactionIdentity = _identityContext.Database.BeginTransaction()) {
                 try {
                     if (ModelState.IsValid && model != null) {
@@ -55,11 +58,13 @@ namespace WebMedicina.BackEnd.API.Controllers {
                             if (_adminService.CrearMedico(model, user.Id)) {
                                 await transactionIdentity.CommitAsync();
                                 _context.SaveChanges();
-                                return BuildToken(userInfo);
+
+                                // Devolvemos que la respuesta ha sido correcta
+                                return Ok($"Nuevo {model.Rol} creado correctamente");
                             }
                             // Revertimos toda la transacción si el usuario no se ha creado correctamente
                             await transactionIdentity.RollbackAsync();
-                            return BadRequest("Ha surgido un error al crear el nuevo usuario");
+                            return BadRequest($"Ha surgido un error al crear el nuevo {model.Rol}");
                         } else {
                             return BadRequest($"Ya existe un usuario con el username: {model.NumHistoria}");
                         }
@@ -74,91 +79,92 @@ namespace WebMedicina.BackEnd.API.Controllers {
             }
         }
 
+        [HttpPost("login")]
+        [AllowAnonymous]
+        public async Task<ActionResult<UserToken>> Login([FromBody] UserLoginDto userLogin) {
+            try {
+                if (ModelState.IsValid) {
+                    if (await _identityService.ComprobarContraseña(userLogin)) {
 
-            [HttpPost("login")]
-            public async Task<ActionResult<UserToken>> Login([FromBody] UserLoginDto userLogin) {
-                try {
-                    if (ModelState.IsValid) {
-                        if (await _identityService.ComprobarContraseña(userLogin)) {
+                    // Obtenemos los datos del medico y su rol
+                    MedicosModel? medico = await _identityService.ObtenerUsuarioYRol(userLogin.UserName);
 
-                        // Obtenemos los datos del medico y su rol
-                        MedicosModel? medico = await _identityService.ObtenerUsuarioYRol(userLogin.UserName);
-
-                            // Generamos la info del usuario si se ha obtenido correctamente
-                            UserInfoDto userInfo = new();
-                            if(medico is not null) {
-                                userInfo = _mapper.Map<UserInfoDto>(medico);
-                                //userInfo.Rol = medico.Role;
-                            }
-                                return BuildToken(userInfo);
-
-                        } else {
-                            ModelState.AddModelError(string.Empty, "Credenciales incorrectas");
-                            return BadRequest(ModelState);
+                        // Generamos la info del usuario si se ha obtenido correctamente
+                        UserInfoDto userInfo = new();
+                        if(medico is not null) {
+                            userInfo = _mapper.Map<UserInfoDto>(medico);
                         }
+                            return Ok(BuildToken(userInfo));
+
                     } else {
-                        return BadRequest(ModelState);
+                        return BadRequest("Credenciales incorrectas");
                     }
-                } catch (Exception ex) {
-                    return StatusCode(500, "Error interno del servidor");
+                } else {
+                    return BadRequest(ModelState);
                 }
+            } catch (Exception) {
+                return StatusCode(500, "Error interno del servidor");
             }
+        }
 
-            [HttpPost("crearRol")]
-            public async Task<IActionResult> CrearRol([FromBody] string nombreRol) {
+        [HttpPost("crearRol")]
+        public async Task<IActionResult> CrearRol([FromBody] string nombreRol) {
 
-                //var roleExists = await _roleManager.RoleExistsAsync(nombreRol);
-                //if (!roleExists) {
-                //    // Añadir el nuevo rol
-                //    var identityRole = new IdentityRole { Name = nombreRol };
-                //    //var result =  await _roleManager.CreateAsync(identityRole);
-                //     //if (result.Succeeded) {
-                //        return Ok("Rol creado exitosamente");
-                //    //} 
+            //var roleExists = await _roleManager.RoleExistsAsync(nombreRol);
+            //if (!roleExists) {
+            //    // Añadir el nuevo rol
+            //    var identityRole = new IdentityRole { Name = nombreRol };
+            //    //var result =  await _roleManager.CreateAsync(identityRole);
+            //     //if (result.Succeeded) {
+            //        return Ok("Rol creado exitosamente");
+            //    //} 
 
-                //}
-                return BadRequest("Error al crear el rol");
-
-            }
-
-
-
-
-            private UserToken BuildToken(UserInfoDto userInfo) {
-                var claims = new List<Claim>();
-                {
-                new Claim(JwtRegisteredClaimNames.UniqueName, userInfo.NumHistoria);
-                new Claim(ClaimTypes.Name, userInfo.Nombre);
-                new Claim(ClaimTypes.Surname, userInfo.Apellidos);
-                new Claim(ClaimTypes.DateOfBirth, userInfo.FechaNac.ToString("dd/MM/yyyy"));
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString());
-            };
-
-            // recorremos los roles del usuario y los añadimos
-            if(userInfo.Roles is not null) {
-                foreach (var role in userInfo.Roles) {
-                    claims.Add(new Claim(ClaimTypes.Role, role));
-                }
-            }
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:key"]));
-                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-                // Tiempo de expiración del token. En nuestro caso lo hacemos de una hora.
-                var expiration = DateTime.UtcNow.AddDays(7);
-
-                JwtSecurityToken token = new JwtSecurityToken(
-                   issuer: null,
-                   audience: null,
-                   claims: claims,
-                   expires: expiration,
-                   signingCredentials: creds);
-
-                return new UserToken() {
-                    Token = new JwtSecurityTokenHandler().WriteToken(token),
-                    Expiration = expiration
-                };
-            }
+            //}
+            return BadRequest("Error al crear el rol");
 
         }
+
+
+        // Comprobamos si el userName está disponible
+        [HttpPost("comprobarUser")]
+        public async Task<IActionResult> ComprobarUser([FromBody] string userName) {
+            try { 
+                if (!string.IsNullOrWhiteSpace(userName)) {
+                    return Ok(await _identityService.ComprobarUserName(userName));
+                }
+                return Ok(false);
+            } catch (Exception ex) {
+               return StatusCode(500, "Error interno del servidor");
+            }
+        }
+
+        private UserToken BuildToken(UserInfoDto userInfo) {
+
+            var claims = new [] {
+                new Claim(JwtRegisteredClaimNames.Sub, userInfo.NumHistoria),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim("nombre", userInfo.Nombre),
+                new Claim("apellidos", userInfo.Apellidos),
+                new Claim(ClaimTypes.Role, userInfo.Rol),
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            // Tiempo de expiración del token. En nuestro caso lo hacemos de una hora.
+            var expiration = DateTime.UtcNow.AddDays(7);
+
+            JwtSecurityToken token = new JwtSecurityToken(
+                issuer: null,
+                audience: null,
+                claims: claims,
+                expires: expiration,
+                signingCredentials: creds);
+
+            return new UserToken() {
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                Expiration = expiration
+            };
+        }
+    }
     }

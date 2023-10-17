@@ -12,9 +12,9 @@ public partial class MedicosModel
 
     public string Apellidos { get; set; } = null!;
 
-    public DateOnly FechaNac { get; set; }
+    public DateTime? FechaNac { get; set; }
 
-    public string Sexo { get; set; } = null!;
+    public string Sexo { get; set; }
 
     public DateOnly FechaCreac { get; set; }
 
@@ -32,5 +32,5 @@ public partial class MedicosModel
 
     // Propiedad la cual no se mapea
     [NotMapped]
-    public IList<string>? Roles { get; set; }
+    public string Rol { get; set; }
 }
