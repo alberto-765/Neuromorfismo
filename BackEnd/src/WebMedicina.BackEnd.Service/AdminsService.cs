@@ -20,5 +20,9 @@ namespace WebMedicina.BackEnd.Service {
         public bool CrearMedico(UserRegistroDto nuevoMedico, string idUsuario) {
             return _adminDal.CrearNuevoMedico(nuevoMedico, idUsuario);
         }
+
+        public async Task<List<UserInfoDto>> ObtenerFiltradoUsuarios(Dictionary<string, string> filtros) {
+            return await _adminDal.ObtenerMedicos(filtros);
+        }
     }
 }

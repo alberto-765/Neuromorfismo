@@ -21,8 +21,9 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
         private HttpClient Http { get; set; }
         [CascadingParameter] private Task<AuthenticationState>? authenticationState { get; set; }
         private ClaimsPrincipal? user { get; set; }
-        private IReadOnlyDictionary<string, string> _filtros { get; set; } = ObtenerFiltros();
+        private ReadOnlyDictionary<string, string> _filtros { get; set; }
         [Inject] IJSRuntime js { get; set; }
+        [Inject] private ISnackbar _snackbar { get; set; }
 
         protected override async Task OnInitializedAsync() {
             Http = _crearHttpClient.CrearHttp();
@@ -34,6 +35,14 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 // Generamos el texto para el tooltip
                 await GenerarTooltip();
             }
+
+            // rellenamos los filtros
+            _filtros = await ObtenerFiltros();
+
+            // Configuracion default snackbar
+            _snackbar.Configuration.PreventDuplicates = true;
+            _snackbar.Configuration.VisibleStateDuration = 5000;
+            _snackbar.Configuration.MaximumOpacity = 0;
         }
 
 
@@ -41,12 +50,13 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
 
             // Por defecto el rol será medico
             string role = "medico";
-            if (user.IsInRole("superAdmin")) {
-                role = "superAdmin";
-            } else if(user.IsInRole("admin")) {
-                role = "admin";
+            if (user is not null) {
+                if (user.IsInRole("superAdmin")) {
+                    role = "superAdmin";
+                } else if(user.IsInRole("admin")) {
+                    role = "admin";
+                }
             }
-
 
             switch (role) {
                 case "superAdmin":
@@ -65,13 +75,9 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                     mostrarTooltip = false;
                 break;
             }
-
         }
 
-
-
         // FUNCIONES PARA TABLA TIPO SERVER
-
         private IEnumerable<UserInfoDto> pagedData { get; set; }
         private MudTable<UserInfoDto> table { get; set; }
 
@@ -82,38 +88,24 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
         /// Here we simulate getting the paged, filtered and ordered data from the server
         /// </summary>
         private async Task<TableData<UserInfoDto>> ServerReload(TableState state) {
-            IEnumerable<UserInfoDto> data = await Http.PostAsJsonAsync<List<UserInfoDto>>("webapi/periodictable");
-            data = data.Where(UserInfoDto => {
-                if (string.IsNullOrWhiteSpace(searchString))
-                    return true;
-                if (UserInfoDto.NumHistoria.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-                    return true;
-                if (UserInfoDto.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-                    return true;
-                if ($"{UserInfoDto.Number} {UserInfoDto.Position} {UserInfoDto.Molar}".Contains(searchString))
-                    return true;
-                return false;
-            }).ToArray();
-            totalItems = data.Count();
-            switch (state.SortLabel) {
-                case "nr_field":
-                data = data.OrderByDirection(state.SortDirection, o => o.Number);
-                break;
-                case "sign_field":
-                data = data.OrderByDirection(state.SortDirection, o => o.Sign);
-                break;
-                case "name_field":
-                data = data.OrderByDirection(state.SortDirection, o => o.Name);
-                break;
-                case "position_field":
-                data = data.OrderByDirection(state.SortDirection, o => o.Position);
-                break;
-                case "mass_field":
-                data = data.OrderByDirection(state.SortDirection, o => o.Molar);
-                break;
+            var responseMessage = await Http.PostAsJsonAsync("gestionUsers/obtenerUsuariosFiltrados", _filtros);
+            List<UserInfoDto>? list = new List<UserInfoDto>();
+            if(responseMessage.IsSuccessStatusCode) {
+                list = await responseMessage.Content.ReadFromJsonAsync<List<UserInfoDto>>();
+
+                if(list is not null && list.Count > 0) {
+                    totalItems = list.Count;
+                    pagedData = list.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
+                } else {
+                    totalItems = 0;
+                    pagedData = Enumerable.Empty<UserInfoDto>();
+                }
+            } else {
+                _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopStart;
+                _snackbar.Add(await responseMessage.Content.ReadAsStringAsync(), Severity.Error);
             }
 
-            pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
+            // Saltamos los items de la paginación y obtenemos el maximo que se puede mostrar
             return new TableData<UserInfoDto>() { TotalItems = totalItems, Items = pagedData };
         }
 
@@ -139,18 +131,19 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                         return filros;
                     }
                 }
-                return new ReadOnlyDictionary<string, string>(CrearDiccionarioFiltros());
+                return new ReadOnlyDictionary<string, string>(await CrearDiccionarioFiltros());
             } catch (Exception ex) {
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+                return new ReadOnlyDictionary<string, string>(await CrearDiccionarioFiltros());
             }
         }
 
-        private Dictionary<string, string> CrearDiccionarioFiltros() {
-            return new Dictionary<string, string> {   { "busqueda", "" },
-                    { "busqueda", "" },
-                    { "campoOrdenar", "" },
-                    { "direccionOrdenar", "" },
-                    { "tipoUser", "" },
+        private async Task<Dictionary<string, string>> CrearDiccionarioFiltros() {
+            return new Dictionary<string, string> {
+                { "busqueda" , "" },
+                {"campoOrdenar" , "" },
+                {"direccionOrdenar", ""} ,
+                {"rol" , "" }
             };
         }
     }

@@ -8,5 +8,6 @@ using WebMedicina.Shared.Dto;
 namespace WebMedicina.BackEnd.ServicesDependencies {
     public interface IAdminsService {
         bool CrearMedico(UserRegistroDto nuevoMedico, String idUsuario);
+        Task<List<UserInfoDto>> ObtenerFiltradoUsuarios(Dictionary<string, string> filtros);
     }
 }

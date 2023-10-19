@@ -30,5 +30,18 @@ namespace WebMedicina.BackEnd.Dal {
             }
         }
 
+        public async Task<List<UserInfoDto>> ObtenerMedicos(Dictionary<string, string> filtros) {
+
+            List<UserInfoDto> listaMedicos = new();
+            // Obtenemos los usuarios con los filtros seleccionados
+            listaMedicos = _context.Medicos.Where(u =>
+                (string.IsNullOrEmpty(filtros["busqueda"]) || (u.NumHistoria == filtros["busqueda"] || u.Nombre.StartsWith(filtros["busqueda"]) || u.Apellidos.Contains(filtros["busqueda"]) || u.Apellidos.StartsWith(filtros["busqueda"]))
+                || (string.IsNullOrEmpty(filtros["rol"]) || u.Rol == filtros["rol"])))
+                .Select(_mapper.Map<UserInfoDto>)
+                .ToList();
+
+            return listaMedicos;
+        }
+
     }
 }
