@@ -86,16 +86,15 @@ namespace WebMedicina.BackEnd.API.Controllers {
                 if (ModelState.IsValid) {
                     if (await _identityService.ComprobarContraseña(userLogin)) {
 
-                    // Obtenemos los datos del medico y su rol
-                    MedicosModel? medico = await _identityService.ObtenerUsuarioYRol(userLogin.UserName);
+                        // Obtenemos los datos del medico y su rol
+                        MedicosModel? medico = await _identityService.ObtenerUsuarioYRol(userLogin.UserName);
 
                         // Generamos la info del usuario si se ha obtenido correctamente
-                        UserInfoDto userInfo = new();
                         if(medico is not null) {
-                            userInfo = _mapper.Map<UserInfoDto>(medico);
-                        }
+                            UserInfoDto userInfo = _mapper.Map<UserInfoDto>(medico);
                             return Ok(BuildToken(userInfo));
-
+                        }
+                        return BadRequest("Error al obtener información del usuario");
                     } else {
                         return BadRequest("Credenciales incorrectas");
                     }

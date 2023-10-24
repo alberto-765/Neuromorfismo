@@ -16,7 +16,7 @@ namespace WebMedicina.BackEnd.API {
             //      .ForMember(dest => dest.PropiedadDestino, co => co.MapFrom(src => src.NombrePropiedadOrigen));
 
             // Mapper user info
-            CreateMap<UserRegistroDto, UserInfoDto>();
+            CreateMap<UserRegistroDto, UserInfoDto>().ReverseMap();
             CreateMap<UserLoginDto, UserInfoDto>()
                 .ForMember(dest => dest.NumHistoria, co => co.MapFrom(src => src.UserName));
 
@@ -30,6 +30,10 @@ namespace WebMedicina.BackEnd.API {
                 .ForMember(dest => dest.Nombre, co => co.MapFrom(src => src.FindFirst("nombre").Value))
                 .ForMember(dest => dest.Apellidos, co => co.MapFrom(src => src.FindFirst("apellidos").Value))
                 .ForMember(dest => dest.Rol, co => co.MapFrom(src => src.FindFirst(ClaimTypes.Role).Value));
+
+
+            // Mapeo modelo medico en dto upload
+            CreateMap<MedicosModel, UserUploadDto>().ReverseMap();
 
 
             // Mapeamos listas

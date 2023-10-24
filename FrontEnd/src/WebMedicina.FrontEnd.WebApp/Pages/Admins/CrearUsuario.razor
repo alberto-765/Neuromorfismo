@@ -4,14 +4,14 @@
 
 
 @page "/crearUsuario"
-<PageTitle>Alta Usuario</PageTitle>
+<PageTitle>Alta Médico</PageTitle>
 
 <h1 class="mt-8 ml-8">Alta Nuevo Usuario</h1>
 <MudContainer MaxWidth="MaxWidth.Small" Class="d-flex align-center flex-grow-1">
     <EditForm Model="@userRegistro" OnValidSubmit="Crear" Class="flex-grow-1 ">
         <DataAnnotationsValidator />
 
-        <MudTextField Class="mb-3" @bind-Value="@userRegistro.NumHistoria" For="@(() => userRegistro.NumHistoria)" OnlyValidateIfDirty="true" Counter="12" MaxLength="12" Clearable="true" HelperText="El formato es ANXXXXXXXXXX" Label="Número de Historia*" Variant="Variant.Text" OnBlur="validarUserName"/>
+        <MudTextField Class="mb-3" @bind-Value="@userRegistro.NumHistoria" For="@(() => userRegistro.NumHistoria)" OnlyValidateIfDirty="true" Counter="12" MaxLength="12" Clearable="true" HelperText="El formato es ANXXXXXXXXXX" Label="Número de Historia*" Variant="Variant.Text" OnBlur="ValidarUserName" />
      
         <MudTextField Class="mb-3" @bind-Value="userRegistro.Nombre" For="@(() => userRegistro.Nombre)" OnlyValidateIfDirty="true" Clearable="true" Label="Nombre*" Variant="Variant.Text" />
         <MudTextField Class="mb-3" @bind-Value="userRegistro.Apellidos" For="@(() => userRegistro.Apellidos)" OnlyValidateIfDirty="true" Label="Apellidos*" Clearable="true" Variant="Variant.Text" />
@@ -31,8 +31,8 @@
         <MudSelect T="string" Class="mb-3"  Label="Rol" @bind-Value="userRegistro.Rol" For="@(() => userRegistro.Rol)" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Text">
              @if (user is not null && user.IsInRole("superAdmin")) {
                 <MudSelectItem Value="@("superAdmin")" >Super Admin</MudSelectItem>
+                <MudSelectItem Value="@("admin")">Admin</MudSelectItem>
             } 
-            <MudSelectItem Value="@("admin")">Admin</MudSelectItem>
             <MudSelectItem Value="@("medico")">Médico</MudSelectItem>
         </MudSelect>
 

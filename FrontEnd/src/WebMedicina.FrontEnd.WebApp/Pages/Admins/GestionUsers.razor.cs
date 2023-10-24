@@ -3,110 +3,105 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 using MudBlazor;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Text.Json;
 using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.Shared.Dto;
+using static MudBlazor.CategoryTypes;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
     public partial class GestionUsers {
-        // Tooltip de info para el usuario, donde podra ver los permisos que tiene
-        private MarkupString tooltipInfoUser { get; set; }
-        private bool mostrarTooltip { get; set; }
+        // DEPENDENCIAS
+        [Inject] IAdminsService _adminsService { get; set; }
         [Inject] IRedirigirManager redirigirManager { get; set; }
         [CascadingParameter(Name = "excepcionPersonalizada")] ExcepcionDto excepcionPersonalizada { get; set; }
         [Inject] ICrearHttpClient _crearHttpClient { get; set; }
+        [Inject] private ISnackbar _snackbar { get; set; }
+        [Inject] IJSRuntime js { get; set; }
+        [Inject] private IDialogService DialogService { get; set; }
+
+
         private HttpClient Http { get; set; }
         [CascadingParameter] private Task<AuthenticationState>? authenticationState { get; set; }
-        private ClaimsPrincipal? user { get; set; }
-        private ReadOnlyDictionary<string, string> _filtros { get; set; }
-        [Inject] IJSRuntime js { get; set; }
-        [Inject] private ISnackbar _snackbar { get; set; }
+
+        private MarkupString tooltipInfoUser;  // Tooltip de info para el usuario, donde podra ver los permisos que tiene
+        private bool mostrarTooltip; // Mostrar o no el tooltip de informacion
+        private ClaimsPrincipal? user { get; set; } // datos del usuario logueado
+
+        // TABLAS
+        private ReadOnlyDictionary<string, string> _filtros { get; set; } // filtros aplicados
+        private IEnumerable<UserUploadDto> pagedData { get; set; } // datos que se muestran en la tabla
+        private MudTable<UserUploadDto> table { get; set; } // referencia de la tabla
+        private int totalItems; // ((UserUploadDto) item)s totales obtenidos
+        private string searchString = string.Empty; // texto por el que se está buscando
+        private UserUploadDto copiaSeguridadUsuario { get; set; } // copia de seguridad de un elemento editado
+        private MudDatePicker _picker { get; set; }
 
         protected override async Task OnInitializedAsync() {
-            Http = _crearHttpClient.CrearHttp();
+            try {
+                Http = _crearHttpClient.CrearHttp();
 
-            if (authenticationState is not null) {
-                var authState = await authenticationState;
-                user = authState?.User;
+                if (authenticationState is not null) {
+                    var authState = await authenticationState;
+                    user = authState?.User;
 
-                // Generamos el texto para el tooltip
-                await GenerarTooltip();
-            }
-
-            // rellenamos los filtros
-            _filtros = await ObtenerFiltros();
-
-            // Configuracion default snackbar
-            _snackbar.Configuration.PreventDuplicates = true;
-            _snackbar.Configuration.VisibleStateDuration = 5000;
-            _snackbar.Configuration.MaximumOpacity = 0;
-        }
-
-
-        private async Task GenerarTooltip() {
-
-            // Por defecto el rol será medico
-            string role = "medico";
-            if (user is not null) {
-                if (user.IsInRole("superAdmin")) {
-                    role = "superAdmin";
-                } else if(user.IsInRole("admin")) {
-                    role = "admin";
+                    // Generamos el texto para el tooltip
+                    _adminsService.GenerarTooltipInfoUser(user, ref tooltipInfoUser, ref mostrarTooltip);
                 }
-            }
 
-            switch (role) {
-                case "superAdmin":
-                tooltipInfoUser = new MarkupString($"<div style='text-align: left;'> Usted tiene permisos de Super Admin. <br />" +
-                    $"Puede <b>crear, editar y eliminar</b> usuarios de tipo: <br/>" +
-                    $"<ul style='padding-left: 15px;'><li>- Administradores</li><li>- Médicos</li></ul></div>");
-                    mostrarTooltip = true;
-                break;
-                case "admin":
-                tooltipInfoUser = new MarkupString($"<div style='text-align: left;'> Usted tiene permisos de Administrador. <br />" +
-                 $"Puede <b>crear, editar y eliminar</b> usuarios de tipo: <br/>" +
-                 $"<ul style='padding-left: 15px;'><li>- Médicos</li></ul></div>");
-                mostrarTooltip = true;
-                break;
-                default:
-                    mostrarTooltip = false;
-                break;
+                // Configuracion default snackbar
+                _snackbar.Configuration.PreventDuplicates = true;
+                _snackbar.Configuration.VisibleStateDuration = 5000;
+                _snackbar.Configuration.ShowCloseIcon = false;
+            } catch (Exception ex) {
+                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
             }
         }
 
         // FUNCIONES PARA TABLA TIPO SERVER
-        private IEnumerable<UserInfoDto> pagedData { get; set; }
-        private MudTable<UserInfoDto> table { get; set; }
-
-        private int totalItems;
-        private string searchString = null;
-
-        /// <summary>
-        /// Here we simulate getting the paged, filtered and ordered data from the server
-        /// </summary>
-        private async Task<TableData<UserInfoDto>> ServerReload(TableState state) {
-            var responseMessage = await Http.PostAsJsonAsync("gestionUsers/obtenerUsuariosFiltrados", _filtros);
-            List<UserInfoDto>? list = new List<UserInfoDto>();
-            if(responseMessage.IsSuccessStatusCode) {
-                list = await responseMessage.Content.ReadFromJsonAsync<List<UserInfoDto>>();
-
-                if(list is not null && list.Count > 0) {
-                    totalItems = list.Count;
-                    pagedData = list.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
-                } else {
-                    totalItems = 0;
-                    pagedData = Enumerable.Empty<UserInfoDto>();
+        private async Task<TableData<UserUploadDto>> ServerReload(TableState state) {
+            try {
+                if (_filtros is null || _filtros.Count == 0) {
+                    // rellenamos los filtros
+                    _filtros = await _adminsService.ObtenerFiltrosSession();
                 }
-            } else {
-                _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopStart;
-                _snackbar.Add(await responseMessage.Content.ReadAsStringAsync(), Severity.Error);
-            }
 
-            // Saltamos los items de la paginación y obtenemos el maximo que se puede mostrar
-            return new TableData<UserInfoDto>() { TotalItems = totalItems, Items = pagedData };
+                // Llamamos a la api para obtener de BBDD los usuarios con los filtros
+                var responseMessage = await Http.PostAsJsonAsync("gestionUsers/obtenerUsuariosFiltrados", _filtros);
+                List<UserUploadDto>? list = new ();
+                if(responseMessage.IsSuccessStatusCode) {
+                    if (responseMessage.StatusCode != HttpStatusCode.NoContent) {
+                        list = await responseMessage.Content.ReadFromJsonAsync<List<UserUploadDto>>();
+
+                        // Comprobamos que la lista no sea nula
+                        if (list is not null && list.Any()) {
+                            totalItems = list.Count;
+                            pagedData = list.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
+                        } else {
+                            totalItems = 0;
+                            pagedData = Enumerable.Empty<UserUploadDto>();
+                        }
+                    } else {
+                        totalItems = 0;
+                        pagedData = Enumerable.Empty<UserUploadDto>();
+                    }
+                } else {
+                    throw new Exception("Excepcion lanzada manualmente, error al obtener filtrado de usuarios de la api");
+                }
+
+                // Saltamos los ((UserUploadDto) item)s de la paginación y obtenemos el maximo que se puede mostrar
+                return new TableData<UserUploadDto>() { TotalItems = totalItems, Items = pagedData };
+            } catch (Exception ex) {
+                _snackbar.Add("Error al obtener los médicos", Severity.Error);
+
+                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+                return new TableData<UserUploadDto>();
+            }
         }
 
         private void OnSearch(string text) {
@@ -115,36 +110,106 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
         }
 
 
-        // FILTROS PARA LA BUSQUEDA
+        // FUNCIONES PARA TABLA EDITABLE
 
-        // Buscamos los filtros en la sesion y si no hay devolvemos unos nuevos
-        public async Task<ReadOnlyDictionary<string, string>> ObtenerFiltros() {
+        // Creamos copia de seguridad del userInfo que se esta editando 
+        private void CopiaSeguridadItem(object item) {
+            copiaSeguridadUsuario = new() {
+                NumHistoria = ((UserUploadDto) item).NumHistoria,
+                Nombre = ((UserUploadDto) item).Nombre,
+                Apellidos = ((UserUploadDto) item).Apellidos,
+                FechaNac = ((UserUploadDto) item).FechaNac,
+                FechaCreac = ((UserUploadDto) item).FechaCreac,
+                FechaUltMod = ((UserUploadDto) item).FechaUltMod,
+                Rol = ((UserUploadDto) item).Rol,
+                Sexo = ((UserUploadDto) item).Sexo
+            };
+        }
+
+        // Reseteamos el userInfo a sus valores por defecto
+        private void ResetearUserInfo(object item) {
+            ((UserUploadDto)item).NumHistoria = copiaSeguridadUsuario.NumHistoria;
+            ((UserUploadDto)item).Nombre = copiaSeguridadUsuario.Nombre;
+            ((UserUploadDto)item).Apellidos = copiaSeguridadUsuario.Apellidos;
+            ((UserUploadDto)item).FechaNac = copiaSeguridadUsuario.FechaNac;
+            ((UserUploadDto)item).FechaCreac = copiaSeguridadUsuario.FechaCreac;
+            ((UserUploadDto)item).FechaUltMod = copiaSeguridadUsuario.FechaUltMod;
+            ((UserUploadDto)item).Rol = copiaSeguridadUsuario.Rol;
+            ((UserUploadDto)item).Sexo = copiaSeguridadUsuario.Sexo;
+        }
+
+        // Actualizamos los datos del usuario editado
+        private async void ActualizarUsuario(object item) {
             try {
-                // Obtenemos los filtros de session
-                var filtrosSession = await js.GetFromSessionStorage("filtrosGestionUsers");
+                // Generamos el usuario actualizado
+                UserUploadDto userInfo = new() {
+                    NumHistoria = ((UserUploadDto)item).NumHistoria,
+                    Nombre = ((UserUploadDto)item).Nombre,
+                    Apellidos = ((UserUploadDto)item).Apellidos,
+                    FechaNac = ((UserUploadDto)item).FechaNac,
+                    FechaCreac = ((UserUploadDto)item).FechaCreac,
+                    FechaUltMod = ((UserUploadDto)item).FechaUltMod,
+                    Rol = ((UserUploadDto)item).Rol,
+                    Sexo = ((UserUploadDto)item).Sexo
+                };
 
-                // Comprobamos que hay filtros almacenados y si no devolvemos los filtros por defecto
-                if(!string.IsNullOrEmpty(filtrosSession)) {
-                    ReadOnlyDictionary<string, string> filros = JsonSerializer.Deserialize<ReadOnlyDictionary<string, string>>(filtrosSession);
+                // Validamos los campos del nuevo usuario
+                List<ValidationResult> errores = new ();
+                Validator.TryValidateObject(userInfo, new ValidationContext(userInfo), errores, true);
 
-                    if(filros is not null && filros.Count > 0) {
-                        return filros;
+                // Validamos si el usuario actualizado es correcto
+                if (errores.Any()) {
+                    MostrarMensajeError(errores);
+                } else {
+                    LLamadaUploadUser usuarioHttp = new() {
+                        usuario = userInfo
+                    };
+
+                    // Comprobamos si se ha modificado el rol
+                    if (userInfo.Rol != copiaSeguridadUsuario.Rol) {
+                        usuarioHttp.rolModificado = true;
+                    }
+
+                    HttpResponseMessage httpResponseMessage = await Http.PutAsJsonAsync("gestionUsers/actualizarUsuario", usuarioHttp);
+
+                    // Verificamos si el medico se ha editado correctamente
+                    if (httpResponseMessage.IsSuccessStatusCode) {
+                        _snackbar.Add("Médico editado correctamente", Severity.Success);
+                    } else {
+                        // Obtenemos el error del server
+                        string error = await httpResponseMessage.Content.ReadAsStringAsync();
+
+                        if(error.Length < 46) {
+                            _snackbar.Add(error, Severity.Warning);
+                        } else {
+                            _snackbar.Add("Error al editar al médico", Severity.Warning);
+                        }
                     }
                 }
-                return new ReadOnlyDictionary<string, string>(await CrearDiccionarioFiltros());
+
             } catch (Exception ex) {
+                _snackbar.Add("Error al editar al médico", Severity.Error);
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-                return new ReadOnlyDictionary<string, string>(await CrearDiccionarioFiltros());
             }
         }
 
-        private async Task<Dictionary<string, string>> CrearDiccionarioFiltros() {
-            return new Dictionary<string, string> {
-                { "busqueda" , "" },
-                {"campoOrdenar" , "" },
-                {"direccionOrdenar", ""} ,
-                {"rol" , "" }
-            };
+
+        private async void MostrarMensajeError(List<ValidationResult> errores) {
+            bool? result = await DialogService.ShowMessageBox(
+                "Error al editar usuario",
+                new MarkupString(generarHtmlErrores(errores)),
+                yesText: "Entendido");
+        }
+
+        private string generarHtmlErrores(List<ValidationResult>  errores) {
+            string listaErrores = "<p><b>Algunos campos no son correctos y no es posible editar el usuario</b></p><ol>";
+
+            foreach (ValidationResult validacion in errores) {
+                listaErrores += $"<li>{validacion.ErrorMessage}</li>";
+            }
+            listaErrores += "</ol>";
+
+            return listaErrores;
         }
     }
 }

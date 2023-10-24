@@ -25,6 +25,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
         private HttpClient Http { get; set; }
         [CascadingParameter(Name = "excepcionPersonalizada")] ExcepcionDto excepcionPersonalizada { get; set; }
         [Inject] IRedirigirManager _redirigirManager { get; set; }
+        [Inject] IAdminsService _adminsService { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -43,7 +44,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                 _snackbar.Configuration.HideTransitionDuration = 300;
 
                 // Creamos contraseña aleatoria
-                userRegistro.Password = await GenerarContraseñaAleatoria();
+                userRegistro.Password = await _adminsService.GenerarContraseñaAleatoria();
             } catch (Exception ex) {
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
             }
@@ -79,7 +80,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
         }
 
         // LLamada a BBDD para validar si el username está disponible
-        private async Task validarUserName() {
+        private async Task ValidarUserName() {
             try {
                 // Validamos que el campo del numeroHistoria cumpla las validaciones del dto
                 var validationErrors = new List<ValidationResult>();
@@ -108,30 +109,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
         }
 
 
-        public async Task<string> GenerarContraseñaAleatoria() {
-            // Generamos constantes para la contraseña
-            const string letrasMin = "abcdefghijklmnopqrstuvwxyz";
-            const string letrasMay = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            const string numeros = "1234567890";
-            const string especiales = "!@#$%^&*()_+";
-
-            // Generamos objeto random y contraseña la cual se rellenará
-            Random random = new Random();
-            StringBuilder constra = new StringBuilder();
-
-            // Añadimos 1 letra minuscula
-            constra.Append(letrasMay[random.Next(letrasMay.Length)]);
-
-            // Añadimos 1 letra mayuscula
-            constra.Append(letrasMin[random.Next(letrasMin.Length)]);
-            // Añadimos 3 numeros
-            for (int i = 0; i < 5; i++) {
-                constra.Append(numeros[random.Next(numeros.Length)]);
-            }
-            // Añadimos 1 caracter especial
-            constra.Append(especiales[random.Next(especiales.Length)]);
-
-            return constra.ToString();
-        }
+       
     }
 }

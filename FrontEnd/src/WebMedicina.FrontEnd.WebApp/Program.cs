@@ -30,6 +30,7 @@ builder.Services.AddSingleton<ICrearHttpClient, CrearHttpClient>(); // para crea
 builder.Services.AddSingleton<ExcepcionDto>(); // excepciones
 builder.Services.AddSingleton<EstilosBase>(); // Base de estilos mudblazor
 builder.Services.AddSingleton<IRedirigirManager, RedirigirManager>(); // Redirigir 
+builder.Services.AddScoped<IAdminsService, AdminsService>(); // Service de admins
 
 // Dependencias autenticacion
 builder.Services.AddScoped<JWTAuthenticationProvider>();

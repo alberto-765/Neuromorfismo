@@ -12,7 +12,7 @@ public partial class MedicosModel
 
     public string Apellidos { get; set; } = null!;
 
-    public DateTime? FechaNac { get; set; }
+    public DateTime FechaNac { get; set; }
 
     public string Sexo { get; set; } = null!;
 
@@ -30,7 +30,7 @@ public partial class MedicosModel
 
     public virtual ICollection<PacientesModel> PacienteMedicoUltModNavigations { get; set; } = new List<PacientesModel>();
 
-    // Propiedad la cual no se mapea
+    // Propiedad la cual no se mapea porque no existe en la BBDD
     [NotMapped]
     public string Rol { get; set; }
 }

@@ -1,6 +1,8 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using WebMedicina.BackEnd.Dal;
@@ -11,18 +13,37 @@ namespace WebMedicina.BackEnd.Service {
     public class AdminsService : IAdminsService {
 
         private readonly AdminDal _adminDal;
+        private readonly IMapper _mapper;
+
 
         // Constructor con dependencias
-        public AdminsService(AdminDal adminDal) {
+        public AdminsService(AdminDal adminDal, IMapper mapper) {
             _adminDal = adminDal;
+            _mapper = mapper;   
         }
 
         public bool CrearMedico(UserRegistroDto nuevoMedico, string idUsuario) {
             return _adminDal.CrearNuevoMedico(nuevoMedico, idUsuario);
         }
 
-        public async Task<List<UserInfoDto>> ObtenerFiltradoUsuarios(Dictionary<string, string> filtros) {
-            return await _adminDal.ObtenerMedicos(filtros);
+        public async Task<List<UserUploadDto>> ObtenerFiltradoUsuarios(Dictionary<string, string> filtros, ClaimsPrincipal user) {
+            return FiltrarUsuarios(await _adminDal.ObtenerMedicos(filtros, _mapper.Map<UserInfoDto>(user)), user);
+        }
+
+        // Filtramos por los permisos del administrador 
+        public List<UserUploadDto> FiltrarUsuarios(List<UserUploadDto> listaUsuarios, ClaimsPrincipal user) {
+
+            // Los administradores no podrán editar a super administradores
+            if (user.IsInRole("admin")) {
+                return (from q in listaUsuarios where q.Rol == "medico" select q).ToList();
+            } else {
+                return listaUsuarios;
+            }
+        }
+
+        // Update del medico pasado por parametro
+        public async Task<bool> ActualizarMedico (UserUploadDto medicoActualizado) {
+            return await _adminDal.UpdateMedico(medicoActualizado);
         }
     }
 }

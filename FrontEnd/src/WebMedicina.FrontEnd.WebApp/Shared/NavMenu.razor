@@ -1,5 +1,4 @@
 ﻿@attribute [Authorize]
-@inject EstilosBase estilosBase
 @using System.Security.Claims
 
 <div>
@@ -7,23 +6,19 @@
     <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Store">Estadísticas</MudNavLink>
     <AuthorizeView Roles="admin, superAdmin">
         <Authorized>
-            <MudNavGroup Title="Administación" Expanded="false" Icon="@Icons.Material.Outlined.Settings">
-
-                    @if (user is not null && user.IsInRole("superAdmin")) {
-                        <MudNavLink Href="/crearUsuario" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.Add">Alta Usuario</MudNavLink>
-                    }
-                        <MudNavLink Href="/gestionUsers" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.Add">Gestión usuarios</MudNavLink>
-                    
-             </MudNavGroup> 
+            <MudNavGroup Title="Administación" Icon="@Icons.Material.Outlined.Settings" @bind-Expanded="@_adminExpanded">
+                    <MudNavLink Href="/crearUsuario" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.Add">Alta Médico</MudNavLink>
+                    <MudNavLink Href="/gestionUsers" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.Add">Gestión Médicos</MudNavLink>
+            </MudNavGroup> 
         </Authorized>
     </AuthorizeView>
-    <MudNavLink Href="/pacientes" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Store">Pacientes</MudNavLink>
+    <MudNavLink Href="/pacientes" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Store">Pacientes</MudNavLink>
 </MudNavMenu>
 </div>
 @code
 {
-    [CascadingParameter(Name = "modoOscuro")]
-    private bool _isDarkMode { get; set; }
+    [CascadingParameter(Name = "modoOscuro")] private bool _isDarkMode { get; set; }
+    private bool _adminExpanded { get; set; }
 
     [CascadingParameter] private Task<AuthenticationState>? authenticationState { get; set; }
     private ClaimsPrincipal? user { get; set; }
