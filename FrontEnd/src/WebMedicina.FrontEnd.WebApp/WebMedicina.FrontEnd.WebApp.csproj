@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -35,6 +35,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Shared\WebMedicina.Shared.Dto\WebMedicina.Shared.Dto.csproj" />
+    <ProjectReference Include="..\WebMedicina.FrontEbd.Dto\WebMedicina.FrontEnd.Dto.csproj" />
     <ProjectReference Include="..\WebMedicina.FrontEnd.ServiceDependencies\WebMedicina.FrontEnd.ServiceDependencies.csproj" />
     <ProjectReference Include="..\WebMedicina.FrontEnd.Service\WebMedicina.FrontEnd.Service.csproj" />
   </ItemGroup>

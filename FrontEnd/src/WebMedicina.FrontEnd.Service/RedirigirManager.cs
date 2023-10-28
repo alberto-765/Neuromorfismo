@@ -24,11 +24,10 @@ namespace WebMedicina.FrontEnd.Service {
 
         public async Task RedirigirLogin() {
             try {
-                await ActualizarSeguimientoEnlace();
-                string urlActual = navigationManager.Uri;
+                    string urlActual = navigationManager.Uri;
                 string baseUri = navigationManager.BaseUri;
                 if (urlActual.Replace(baseUri, "") != "login") {
-                    navigationManager.NavigateTo("login");
+                    await RedirigirDefault("login");
                 }
             } catch (Exception ex) {
                 excepcionPers.ConstruirPintarExcepcion(ex);
@@ -36,31 +35,40 @@ namespace WebMedicina.FrontEnd.Service {
         }
 
         public async Task ActualizarSeguimientoEnlace() {
-            string urlActual = navigationManager.Uri;
-            string baseUri = navigationManager.BaseUri;
-            string paginaActual = urlActual.Replace(baseUri, "");
+            try { 
+                string urlActual = navigationManager.Uri;
+                string baseUri = navigationManager.BaseUri;
+                string paginaActual = urlActual.Replace(baseUri, "");
 
-            await js.SetInSessionStorage(enlaceSeguimiento, paginaActual);
-        }
+                await js.SetInSessionStorage(enlaceSeguimiento, paginaActual);
+            } catch (Exception ex) {
+                        excepcionPers.ConstruirPintarExcepcion(ex);
+            }
+}
 
         public async Task RedirigirPagAnt() {
-            string segEnl = await js.GetFromSessionStorage(enlaceSeguimiento);
+            try { 
+                string segEnl = await js.GetFromSessionStorage(enlaceSeguimiento);
 
-            // Acutalizamos el enlace de seguimiento
-            await ActualizarSeguimientoEnlace();
+                if (!string.IsNullOrWhiteSpace(segEnl)) {
+                   await RedirigirDefault(segEnl);
+                } else {
+                    await RedirigirDefault();
+                }
+            } catch (Exception ex) {
+                    excepcionPers.ConstruirPintarExcepcion(ex);
+             }
+}
 
-            if (!string.IsNullOrWhiteSpace(segEnl)) {
-                navigationManager.NavigateTo(segEnl);
-            } else {
-                navigationManager.NavigateTo("/");
+        public async Task RedirigirDefault (string enlace = "/") { 
+            try  {	        
+	
+                // Acutalizamos el enlace de seguimiento
+                await ActualizarSeguimientoEnlace();
+                navigationManager.NavigateTo(enlace);
+            } catch (Exception ex) {
+                excepcionPers.ConstruirPintarExcepcion(ex);
             }
-        }
-
-        public async Task RedirigirDefault (string enlace ="/") {
-            // Acutalizamos el enlace de seguimiento
-            await ActualizarSeguimientoEnlace();
-
-            navigationManager.NavigateTo(enlace);
         }
     }
 }

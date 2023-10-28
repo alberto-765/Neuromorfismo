@@ -7,15 +7,15 @@ public partial class PacientesModel
 {
     public int IdPaciente { get; set; }
 
-    public DateOnly FechaNac { get; set; }
+    public DateTime? FechaNac { get; set; }
 
     public string Sexo { get; set; } = null!;
 
     public decimal Talla { get; set; }
 
-    public DateTime FechaDiagnostico { get; set; }
+    public DateTime? FechaDiagnostico { get; set; }
 
-    public DateTime FechaFractalidad { get; set; }
+    public DateTime? FechaFractalidad { get; set; }
 
     public int? IdFarmaco { get; set; }
 

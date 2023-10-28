@@ -1,4 +1,65 @@
 ﻿@page "/pacientes"
 <PageTitle>Pacientes</PageTitle>
+@attribute [Authorize]
+@inject EstilosBase estilosBase
+
+<MudContainer MaxWidth="MaxWidth.Large">
+
+    @* Boton crear pacientes *@
+    <div class="absolute" id="botonCrearPaciente">
+        <MudButton Class="py-2 px-4" Variant="Variant.Filled" DisableElevation="true" StartIcon="@Icons.Material.Outlined.PersonAddAlt" Style="@($"background:{Colors.LightGreen.Lighten5};color:black;")">Crear Paciente</MudButton>
+    </div>
+
+   
+    @* Boton bloquear filtros *@
+    <div id="botonFiltros" class="absolute cursor-pointer">
+        <MudIcon @onclick="EventoFiltros" Icon="@((bloquearFiltros ? Icons.Material.Outlined.Lock: Icons.Material.Outlined.LockOpen))" Title="@((bloquearFiltros ? "Bloquear Filtros" : "Desbloquear Filtros"))" />
+    </div>
+
+    @* Drawer de filtros *@
+    <div>
+
+    <MudDrawer @bind-Open="@filtrosAbierto" id="drawerFiltros" Anchor="Anchor.End" Fixed="false" Elevation="4" Variant="@DrawerVariant.Mini" Color="Color.Transparent" OpenMiniOnHover="true"
+                   Class="rounded-tl-lg" Style="--mud-drawer-width-right: 300px;">
+
+             <div class="@($"mx-5 {(filtrosAbierto ? "d-block" : "d-none")}")">
+
+                <MudDrawerHeader Class="justify-center">
+                    <MudText Typo="Typo.h6">Filtros Pacientes</MudText>
+                </MudDrawerHeader>
+
+                <MudSelect T="string" Label="Género" AnchorOrigin="Origin.BottomCenter" @bind-Value="filrosPacientes.Sexo" For="@(() => filrosPacientes.Sexo)">
+                    <MudSelectItem Value="@("H")"><div class="d-flex align-center"> <MudIcon Icon="@Icons.Material.Outlined.Man" Class="mr-2" Size="Size.Small"></MudIcon> Hombre </div></MudSelectItem>
+                    <MudSelectItem Value="@("M")"><div class="d-flex align-center"><MudIcon Icon="@Icons.Material.Outlined.Woman" Class="mr-2" Size="Size.Small"></MudIcon> Mujer </div></MudSelectItem>
+                </MudSelect>         
+
+                @* Talla  *@
+                <MudSlider @bind-Value="@filrosPacientes.Talla" For="@(() => filrosPacientes.Talla)" ValueLabel="true" />
+
+                  @* Farmaco *@
+                <MudSelect T="int?" Label="Género" AnchorOrigin="Origin.BottomCenter" @bind-Value="filtroFarmaco" @bind-SelectedValues="filrosPacientes.Farmacos" MultiSelection="true">
+                    <MudSelectItem Value="@(0)"><div class="d-flex align-center"> <MudIcon Icon="@Icons.Material.Outlined.Man" Class="mr-2" Size="Size.Small"></MudIcon> Hombre </div></MudSelectItem>
+                    <MudSelectItem Value="@(1)"><div class="d-flex align-center"><MudIcon Icon="@Icons.Material.Outlined.Woman" Class="mr-2" Size="Size.Small"></MudIcon> Mujer </div></MudSelectItem>
+                </MudSelect>
+            </div>
+            <div class="@((filtrosAbierto ? "d-none" : "d-block"))">
+                <MudIcon Icon="@Icons.Material.Outlined.Face" />
+                <MudIcon Icon="@Icons.Material.Filled.Straighten" />
 
 
+            </div>
+
+        </MudDrawer>
+    </div>
+
+    @* Tab con las subpantallas*@
+    <MudTabs Elevation="2" Rounded="true" id="mudTab-Pacientes" Class="mt-11" >
+        <MudTabPanel Text="Todos los Pacientes">
+            <MudPaper Class="pa-16 ma-2" Elevation="0"></MudPaper>
+        </MudTabPanel>
+        <MudTabPanel Text="Mis Pacientes">
+            <MudText>Content Two</MudText>
+        </MudTabPanel>
+    </MudTabs>
+
+</MudContainer>

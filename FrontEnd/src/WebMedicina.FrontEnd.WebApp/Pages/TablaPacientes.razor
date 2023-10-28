@@ -1,0 +1,76 @@
+﻿<MudTable Items="@Pacientes" Hover="true" Breakpoint="Breakpoint.Sm">
+	<HeaderContent>
+		<MudTh id="columnaVerDetalles"></MudTh>
+		<MudTh>#</MudTh>
+		<MudTh>Fecha Nacimiento</MudTh>
+		<MudTh>Sexo</MudTh>
+		<MudTh>Talla</MudTh>
+	</HeaderContent>
+	<RowTemplate>
+		<MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => MostrarOcultarDetPaciente(context.IdPaciente))">@((context.Mostrar == true) ? "Ocultar " : "Ver") Detalles</MudButton></MudTd>
+		<MudTd DataLabel="#">@context.IdPaciente</MudTd>
+		<MudTd DataLabel="Fecha Nacimiento">@context.FechaNac</MudTd>
+		<MudTd DataLabel="Género">@context.Sexo</MudTd>
+	</RowTemplate>
+	<ChildRowContent>
+		@if (context.Mostrar)
+				{
+				  <MudTr>
+					   <td colspan="4">
+							<MudCard Elevation="0">
+								 <MudCardHeader>
+									  <CardHeaderContent>
+											<MudText Typo="Typo.body1">Detalles del Paciente <strong>@context.IdPaciente</strong></MudText>
+									  </CardHeaderContent>
+								 </MudCardHeader>
+								 <MudCardContent Class="pa-0">
+									<MudTable Items="@PacienteMostrado" Context="pacienteMostrado" Hover="true" Breakpoint="Breakpoint.Md" Elevation="0">
+									   <HeaderContent>
+											<MudTh>Fecha Diagnóstico</MudTh>
+											<MudTh>Fecha Fractalidad</MudTh>
+											<MudTh>Fármaco</MudTh>
+											<MudTh>Tipo Epilepsia</MudTh>
+											<MudTh>Tipo Mutación</MudTh>
+											<MudTh>Enfermedades Raras</MudTh>
+											<MudTh>Fecha Creación</MudTh>
+											<MudTh>Fecha Última Modidicación</MudTh>
+											<MudTh>Creado Por</MudTh>
+											<MudTh>Modificado Por</MudTh>
+									   </HeaderContent>
+									   <RowTemplate>
+											<MudTd DataLabel="Fecha Diagnóstic">@pacienteMostrado.FechaDiagnostico</MudTd>
+											<MudTd DataLabel="Fecha Fractalidad">@pacienteMostrado.FechaFractalidad</MudTd>
+											<MudTd DataLabel="Fármaco">@pacienteMostrado.Farmaco</MudTd>
+											<MudTd DataLabel="Tipo Epilepsia">@pacienteMostrado.TipoEpilepsia</MudTd>
+											<MudTd DataLabel="Tipo Mutación">@pacienteMostrado.TipoMutacion</MudTd>
+											<MudTd DataLabel="Enfermedades Raras">@pacienteMostrado.EnfermRaras</MudTd>
+											<MudTd DataLabel="Fecha Creación">@pacienteMostrado.FechaCreac</MudTd>
+											<MudTd DataLabel="Fecha Última Modidicación">@pacienteMostrado.FechaUltMod</MudTd>
+											<MudTd DataLabel="Creado Por">@pacienteMostrado.MedicoCreador</MudTd>
+											<MudTd DataLabel="Modificado Por">@pacienteMostrado.MedicoUltMod</MudTd>
+									   </RowTemplate>
+									</MudTable>
+								 </MudCardContent>
+							</MudCard>
+					   </td>
+				  </MudTr>
+		}
+	</ChildRowContent>
+</MudTable>
+
+
+@code
+{
+	[Parameter]
+	public IEnumerable<PacienteDto> Pacientes { get; set; } = new List<PacienteDto>();
+	private IEnumerable<PacienteDto> PacienteMostrado { get; set; } = new List<PacienteDto>();
+
+	// Mostramos/ocutlamos los detalles de un paciente
+	private void MostrarOcultarDetPaciente(int idPaciente) {
+		PacienteDto pacienteTemp = Pacientes.First(p => p.IdPaciente == idPaciente);
+		pacienteTemp.Mostrar = !pacienteTemp.Mostrar;
+
+		// Asignamos el paciente mostrado
+		PacienteMostrado = new List<PacienteDto>{ pacienteTemp };
+	}
+}

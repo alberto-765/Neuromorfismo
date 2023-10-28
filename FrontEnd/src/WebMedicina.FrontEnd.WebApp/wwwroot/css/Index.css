@@ -1,4 +1,8 @@
-﻿.cienHeight {
+﻿::deep {
+  --mud-drawer-width-mini-right: 256px;
+}
+
+.cienHeight {
   flex-basis: 100%;
 }
 
@@ -19,6 +23,6 @@
   padding-bottom: 13px;
 }
 
-.text-center {
-  text-align: center;
+#mudTab-Pacientes .mud-tabs-toolbar {
+  margin: auto;
 }

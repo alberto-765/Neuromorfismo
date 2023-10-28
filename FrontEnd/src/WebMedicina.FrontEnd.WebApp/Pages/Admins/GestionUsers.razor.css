@@ -1,6 +1,36 @@
-﻿::deep .tooltipInfo{
-    text-align: left;
-}
-.titulosTabla{
+﻿.titulosTabla{
     text-align: center;
 }
+::deep .filaGenero {
+    min-width: 120px;
+}
+@media (min-width: 960px) {
+    :: deep #tablaGestionUsers .mud-input-control > .mud-input-control-input-container > div.mud-input.mud-input-text {
+        margin-top: 0;
+    }
+    ::deep #tablaGestionUsers .mud-input-control{
+        margin-top: 0;
+    }
+}
+
+
+
+    @media (max-width: 960px) {
+        ::deep .mud-sm-table .mud-table-cell:not(.sinMargin):before {
+            margin-top: 10px;
+        }
+
+        ::deep #tablaGestionUsers .mud-input-control:not(.sinMargin) > .mud-input-control-input-container > div.mud-input.mud-input-text {
+            margin-top: 0;
+        }
+
+        ::deep #tablaGestionUsers .mud-table-smalldevices-sortselect .mud-input-control > .mud-input-control-input-container > div.mud-input.mud-input-text {
+            margin-top: 16px;
+        }
+    }
+
+    @media (max-width: 600px) {
+        ::deep #tablaGestionUsers .mud-toolbar {
+            --mud-internal-toolbar-height: 64px;
+        }
+    } 

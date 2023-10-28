@@ -1,6 +1,9 @@
-.cienHeight {
-flex-basis: 100%
+::deep{
+    --mud-drawer-width-mini-right: 256px;
+}
 
+.cienHeight {
+    flex-basis: 100%
 }
 .noventaHeight {
     height: 99%;
@@ -22,6 +25,8 @@ flex-basis: 100%
     }
 }
 
-.text-center {
-    text-align: center;
+
+// Pagina de pacientes
+#mudTab-Pacientes .mud-tabs-toolbar{
+    margin: auto;
 }

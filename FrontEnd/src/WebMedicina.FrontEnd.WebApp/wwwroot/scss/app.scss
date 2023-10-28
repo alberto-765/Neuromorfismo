@@ -1,6 +1,5 @@
 
 html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     display: flex;
     min-width: 100vw;
     min-height: 100vh;
@@ -88,6 +87,7 @@ a, .btn-link {
     transform: translate(-50%, -50%);
 }
 .loading-progress-text {
+    font-family: "Roboto", "Helvetica", "Arial", "sans-serif";
     position: absolute;
     font-weight: bold;
     top: 51.5%;

@@ -237,9 +237,9 @@ public partial class WebmedicinaContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("nombre");
             entity.Property(e => e.Sexo)
-                .HasMaxLength(1)
-                .HasDefaultValueSql("''")
-                .HasColumnName("sexo");
+				.HasDefaultValueSql("")
+				.HasMaxLength(1)
+				.HasColumnName("sexo");
 
             entity.HasOne(d => d.Netuser).WithMany(p => p.Medicos)
                 .HasForeignKey(d => d.NetuserId)
@@ -319,21 +319,20 @@ public partial class WebmedicinaContext : DbContext
                 .HasColumnType("int(11)")
                 .HasColumnName("idPaciente");
             entity.Property(e => e.DescripEnferRaras)
-                .HasDefaultValueSql("''")
                 .HasColumnType("text")
                 .HasColumnName("descripEnferRaras");
             entity.Property(e => e.EnfermRaras)
-                .HasColumnType("enum('S','N')")
-                .HasColumnName("enfermRaras");
+				.HasMaxLength(1)
+				.HasColumnName("enfermRaras");
             entity.Property(e => e.FechaCreac)
                 .HasDefaultValueSql("curdate()")
                 .HasColumnName("fechaCreac");
             entity.Property(e => e.FechaDiagnostico)
-                .HasDefaultValueSql("current_timestamp()")
+                .HasDefaultValueSql("curdate()")
                 .HasColumnType("datetime")
                 .HasColumnName("fechaDiagnostico");
             entity.Property(e => e.FechaFractalidad)
-                .HasDefaultValueSql("current_timestamp()")
+                .HasDefaultValueSql("curdate()")
                 .HasColumnType("datetime")
                 .HasColumnName("fechaFractalidad");
             entity.Property(e => e.FechaNac)
@@ -358,9 +357,9 @@ public partial class WebmedicinaContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("medicoUltMod");
             entity.Property(e => e.Sexo)
-                .HasDefaultValueSql("'H'")
-                .HasColumnType("enum('H','M')")
-                .HasColumnName("sexo");
+                .HasDefaultValueSql("")
+                .HasMaxLength(1)
+				.HasColumnName("sexo");
             entity.Property(e => e.Talla)
                 .HasPrecision(20, 6)
                 .HasColumnName("talla");

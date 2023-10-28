@@ -96,6 +96,7 @@ builder.Services.AddCors(option => {
 
 //DEPENDENCIAS
 builder.Services.AddSingleton<ExcepcionDto>(); // excepciones
+builder.Services.AddSingleton<IEncriptador, Encriptador>(); // encriptador
 builder.Services.AddScoped<AdminDal>(); // Dal de administradores
 builder.Services.AddScoped<MedicoDal>(); // Dal de administradores
 builder.Services.AddScoped<IIdentityService, IdentityService>(); // Servicios que trabajan con identity
