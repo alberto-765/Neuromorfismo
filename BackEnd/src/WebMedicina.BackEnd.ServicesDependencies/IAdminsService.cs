@@ -13,5 +13,6 @@ namespace WebMedicina.BackEnd.ServicesDependencies {
         List<UserUploadDto> FiltrarUsuarios(List<UserUploadDto> listaUsuarios, ClaimsPrincipal user);
 
         Task<bool> ActualizarMedico(UserUploadDto medicoActualizado);
+        List<EpilepsiasDto> ObtenerEpilepsias();
     }
 }

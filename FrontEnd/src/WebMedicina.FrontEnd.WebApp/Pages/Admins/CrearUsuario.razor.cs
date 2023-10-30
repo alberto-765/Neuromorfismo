@@ -17,7 +17,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
         [Inject] private ISnackbar _snackbar { get; set; }
         private UserRegistroDto userRegistro = new();
         private bool cargando { get; set; } = false;
-        private DateTime? fechaNac { get; set; }
         private MudDatePicker _picker { get; set; }
         [CascadingParameter] private Task<AuthenticationState>? authenticationState { get; set; }
         private ClaimsPrincipal? user { get; set; }

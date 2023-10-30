@@ -9,7 +9,7 @@ using static System.Net.WebRequestMethods;
 using WebMedicina.Shared.Dto;
 using WebMedicina.FrontEnd.Dto;
 
-namespace WebMedicina.FrontEnd.WebApp.Pages {
+namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
     public partial class Pacientes {
         // Dependencias
         [CascadingParameter] private Task<AuthenticationState>? authenticationState { get; set; }
@@ -21,9 +21,11 @@ namespace WebMedicina.FrontEnd.WebApp.Pages {
 
         // Panel de filtros
         private bool filtrosAbierto { get; set; } = false;
-        private bool bloquearFiltros { get; set; } = true;
-        private PacienteDto filrosPacientes { get; set; } = new();
-        private int? filtroFarmaco { get; set; } = null;
+        private bool bloquearFiltros { get; set; } = false;
+        private FiltroPacienteDto filrosPacientes { get; set; } = new();
+        private string farmacoFiltrado { get; set; }
+        private int epilepsiaFiltrado { get; set; }
+        private int mutacionFiltrado { get; set; }
 
         protected override async Task OnInitializedAsync() {
             if (authenticationState is not null) {
@@ -34,9 +36,10 @@ namespace WebMedicina.FrontEnd.WebApp.Pages {
             Http = _crearHttpClient.CrearHttp(); // creamos http
         }
 
-        private void EventoFiltros() {
+        private async Task<bool> EventoFiltros() {
+            bloquearFiltros =! bloquearFiltros;
             filtrosAbierto = !filtrosAbierto;
-            bloquearFiltros = !bloquearFiltros;
+            return bloquearFiltros;
         }
     }
 }

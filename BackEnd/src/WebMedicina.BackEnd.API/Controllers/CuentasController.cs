@@ -101,7 +101,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
                 } else {
                     return BadRequest(ModelState);
                 }
-            } catch (Exception) {
+            } catch (Exception ex) {
                 return StatusCode(500, "Error interno del servidor");
             }
         }

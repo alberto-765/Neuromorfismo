@@ -35,6 +35,8 @@ namespace WebMedicina.BackEnd.API {
             // Mapeo modelo medico en dto upload
             CreateMap<MedicosModel, UserUploadDto>().ReverseMap();
 
+            // Mapeo Epilepsias
+            CreateMap<EpilepsiaModel, EpilepsiasDto>().ReverseMap();
 
             // Mapeamos listas
             //CreateMap<ListaOrigen, ListaDestino>()

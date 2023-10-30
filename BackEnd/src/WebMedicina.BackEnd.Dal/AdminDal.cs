@@ -114,5 +114,12 @@ namespace WebMedicina.BackEnd.Dal {
             return false;
         }
 
+        // Get de toda la tabla de epilepsias
+        public List<EpilepsiasDto> GetEpilepsias() {
+            try {
+                return _mapper.Map<List<EpilepsiasDto>>(_context.Epilepsias.ToList());
+            } catch (Exception) {  throw;  }
+        }
+
     }
 }

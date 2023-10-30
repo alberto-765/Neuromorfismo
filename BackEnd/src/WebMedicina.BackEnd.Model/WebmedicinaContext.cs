@@ -207,8 +207,7 @@ public partial class WebmedicinaContext : DbContext
                 .HasColumnName("nombre");
         });
 
-        modelBuilder.Entity<MedicosModel>(entity =>
-        {
+        modelBuilder.Entity<MedicosModel>(entity => {
             entity.HasKey(e => e.NumHistoria).HasName("PRIMARY");
 
             entity
@@ -223,8 +222,11 @@ public partial class WebmedicinaContext : DbContext
             entity.Property(e => e.Apellidos)
                 .HasMaxLength(50)
                 .HasColumnName("apellidos");
-            entity.Property(e => e.FechaCreac).HasColumnName("fechaCreac");
+            entity.Property(e => e.FechaCreac)
+                .HasDefaultValueSql("curdate()")
+                .HasColumnName("fechaCreac");
             entity.Property(e => e.FechaNac)
+                .HasDefaultValueSql("curdate()")
                 .HasColumnType("datetime")
                 .HasColumnName("fechaNac");
             entity.Property(e => e.FechaUltMod)
@@ -237,17 +239,16 @@ public partial class WebmedicinaContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("nombre");
             entity.Property(e => e.Sexo)
-				.HasDefaultValueSql("")
-				.HasMaxLength(1)
-				.HasColumnName("sexo");
+                .HasMaxLength(1)
+                .HasDefaultValueSql("''")
+                .HasColumnName("sexo");
 
             entity.HasOne(d => d.Netuser).WithMany(p => p.Medicos)
                 .HasForeignKey(d => d.NetuserId)
                 .HasConstraintName("FK_medicos_aspnetusers");
         });
 
-        modelBuilder.Entity<MedicospacienteModel>(entity =>
-        {
+        modelBuilder.Entity<MedicospacienteModel>(entity => {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
             entity.ToTable("medicospacientes", tb => tb.HasComment("Relacion de que medicos pueden editar que pacientes"));
@@ -274,8 +275,7 @@ public partial class WebmedicinaContext : DbContext
                 .HasConstraintName("FK_medicospacientes_pacientes");
         });
 
-        modelBuilder.Entity<MutacionesModel>(entity =>
-        {
+        modelBuilder.Entity<MutacionesModel>(entity => {
             entity.HasKey(e => e.IdMutacion).HasName("PRIMARY");
 
             entity
@@ -297,8 +297,7 @@ public partial class WebmedicinaContext : DbContext
                 .HasColumnName("nombre");
         });
 
-        modelBuilder.Entity<PacientesModel>(entity =>
-        {
+        modelBuilder.Entity<PacientesModel>(entity => {
             entity.HasKey(e => e.IdPaciente).HasName("PRIMARY");
 
             entity
@@ -319,11 +318,13 @@ public partial class WebmedicinaContext : DbContext
                 .HasColumnType("int(11)")
                 .HasColumnName("idPaciente");
             entity.Property(e => e.DescripEnferRaras)
+                .HasDefaultValueSql("''")
                 .HasColumnType("text")
                 .HasColumnName("descripEnferRaras");
             entity.Property(e => e.EnfermRaras)
-				.HasMaxLength(1)
-				.HasColumnName("enfermRaras");
+                .HasMaxLength(1)
+                .HasDefaultValueSql("''")
+                .HasColumnName("enfermRaras");
             entity.Property(e => e.FechaCreac)
                 .HasDefaultValueSql("curdate()")
                 .HasColumnName("fechaCreac");
@@ -337,6 +338,7 @@ public partial class WebmedicinaContext : DbContext
                 .HasColumnName("fechaFractalidad");
             entity.Property(e => e.FechaNac)
                 .HasDefaultValueSql("curdate()")
+                .HasColumnType("datetime")
                 .HasColumnName("fechaNac");
             entity.Property(e => e.FechaUltMod)
                 .HasDefaultValueSql("curdate()")
@@ -357,17 +359,17 @@ public partial class WebmedicinaContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("medicoUltMod");
             entity.Property(e => e.Sexo)
-                .HasDefaultValueSql("")
-                .HasMaxLength(1)
-				.HasColumnName("sexo");
+                .HasDefaultValueSql("'H'")
+                .HasColumnType("enum('H','M')")
+                .HasColumnName("sexo");
             entity.Property(e => e.Talla)
                 .HasPrecision(20, 6)
                 .HasColumnName("talla");
 
             entity.HasOne(d => d.IdEpilepsiaNavigation).WithMany(p => p.Pacientes)
-                 .HasForeignKey(d => d.IdEpilepsia)
-                 .OnDelete(DeleteBehavior.SetNull)
-                 .HasConstraintName("FK_pacientes_epilepsias");
+                .HasForeignKey(d => d.IdEpilepsia)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_pacientes_epilepsias");
 
             entity.HasOne(d => d.IdFarmacoNavigation).WithMany(p => p.Pacientes)
                 .HasForeignKey(d => d.IdFarmaco)
@@ -389,7 +391,6 @@ public partial class WebmedicinaContext : DbContext
                 .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("FK_pacientes_medicos");
         });
-
         OnModelCreatingPartial(modelBuilder);
     }
 

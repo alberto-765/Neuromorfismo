@@ -7,8 +7,11 @@
     <AuthorizeView Roles="admin, superAdmin">
         <Authorized>
             <MudNavGroup Title="Administación" Icon="@Icons.Material.Outlined.Settings" @bind-Expanded="@_adminExpanded">
-                    <MudNavLink Href="/crearUsuario" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.Add">Alta Médico</MudNavLink>
-                    <MudNavLink Href="/gestionUsers" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.Add">Gestión Médicos</MudNavLink>
+                    <MudNavLink Href="/crearUsuario" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.PersonAddAlt1">Alta Médico</MudNavLink>
+                    <MudNavLink Href="/gestionUsers" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.FilterAlt">Gestión Médicos</MudNavLink>
+                    <MudNavLink Href="/epilepsias" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.Psychology">Epilepsias</MudNavLink>
+                    <MudNavLink Href="/mutaciones" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Coronavirus">Mutaciones</MudNavLink>
+                    <MudNavLink Href="/farmacos" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Vaccines">Fármacos</MudNavLink>
             </MudNavGroup> 
         </Authorized>
     </AuthorizeView>

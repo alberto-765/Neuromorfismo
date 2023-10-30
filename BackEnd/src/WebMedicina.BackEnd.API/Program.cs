@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using WebMedicina.BackEnd.API;
@@ -125,5 +126,10 @@ app.UseCors("MyPolitica");
 app.UseAuthentication();
 app.UseAuthorization();
 
-
+// Acceder a las imagenes de forma estatica
+app.UseStaticFiles(new StaticFileOptions {
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Imagenes")),
+    RequestPath = "/img" // La URL desde la que se servirán las imágenes
+});
 app.Run();

@@ -23,11 +23,15 @@ namespace WebMedicina.BackEnd.Service {
         }
 
         public bool CrearMedico(UserRegistroDto nuevoMedico, string idUsuario) {
-            return _adminDal.CrearNuevoMedico(nuevoMedico, idUsuario);
+            try {
+                return _adminDal.CrearNuevoMedico(nuevoMedico, idUsuario);
+            } catch (Exception) { throw; }
         }
 
         public async Task<List<UserUploadDto>> ObtenerFiltradoUsuarios(Dictionary<string, string> filtros, ClaimsPrincipal user) {
-            return FiltrarUsuarios(await _adminDal.ObtenerMedicos(filtros, _mapper.Map<UserInfoDto>(user)), user);
+            try {
+                return FiltrarUsuarios(await _adminDal.ObtenerMedicos(filtros, _mapper.Map<UserInfoDto>(user)), user);
+            } catch (Exception) { throw; }
         }
 
         // Filtramos por los permisos del administrador 
@@ -43,7 +47,17 @@ namespace WebMedicina.BackEnd.Service {
 
         // Update del medico pasado por parametro
         public async Task<bool> ActualizarMedico (UserUploadDto medicoActualizado) {
-            return await _adminDal.UpdateMedico(medicoActualizado);
+            try {
+                return await _adminDal.UpdateMedico(medicoActualizado);
+            } catch (Exception) { throw; }
         }
+
+        // Obtener todas las epilepsias disponibles 
+        public List<EpilepsiasDto> ObtenerEpilepsias() {
+            try {
+                 return _adminDal.GetEpilepsias();
+            } catch (Exception) { throw; }
+        }
+
     }
 }

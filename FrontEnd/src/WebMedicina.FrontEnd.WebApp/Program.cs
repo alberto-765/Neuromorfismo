@@ -15,15 +15,9 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-var apiSettingsSection = builder.Configuration.GetSection("ApiSettings");
-String developmentUrl = String.Empty;
-if (apiSettingsSection != null) {
-   developmentUrl =  apiSettingsSection[$"{builder.HostEnvironment.Environment}Url"];
-}
-
 //DEPENDENCIAS
 builder.Services.AddHttpClient("HttpAPI", client => {
-    client.BaseAddress = new Uri(developmentUrl);
+    client.BaseAddress = new Uri(builder.Configuration["ApiSettings:BaseUrl"]);
 });
 builder.Services.AddSingleton<IConfigurationBuilder>(builder.Configuration); // para la configuracion
 builder.Services.AddSingleton<ICrearHttpClient, CrearHttpClient>(); // para crear Httpclient

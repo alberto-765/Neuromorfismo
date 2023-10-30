@@ -1,0 +1,17 @@
+﻿@using System.Text.RegularExpressions
+<EditForm>
+    <MudTextField Validation="@(new Func<string, string>(Validar))" T="string" Label="Nombre tipo Epilepsia" Required="true" RequiredError="Debes especificar un tipo" HelperText="No debe contener caracteres especiales" Immediate="true" />
+</EditForm>
+@code {
+
+    // Validamos que no contiene caracteres especiales
+    private string Validar(string nombre) {
+        string patron = "[!@#$%^&*(),.?\":{}|<>]";
+        if(Regex.IsMatch(nombre, patron)) {
+            return "El nombre no puede contener caracteres espciales";
+        } else if (nombre.Length > 50) {
+            return "La longitud máxima son 50 caracteres";
+        }
+        return null;
+    }
+}

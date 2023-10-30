@@ -19,13 +19,13 @@ namespace WebMedicina.FrontEnd.Dto {
 
 		public DateTime? FechaFractalidad { get; set; }
 
-		public IEnumerable<int?> Farmacos { get; set; } = new HashSet<int?>(); 
+		public string Farmaco { get; set; } = string.Empty;
 
-		public IEnumerable<int?> TipoEpilepsias { get; set; } = new HashSet<int?>();
+		public string TipoEpilepsia { get; set; } = string.Empty;
 
-        public IEnumerable<int?> TipoMutacion { get; set; } = new HashSet<int?>();
+		public string TipoMutacion { get; set; } = string.Empty;
 
-        public string EnfermRaras { get; set; } = "No";
+		public string EnfermRaras { get; set; } = "No";
 
 		public string DescripEnferRaras { get; set; } = String.Empty;
 

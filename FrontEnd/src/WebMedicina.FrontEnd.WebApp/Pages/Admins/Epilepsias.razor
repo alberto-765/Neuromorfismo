@@ -1,0 +1,34 @@
+﻿@attribute [Authorize(Roles = "superAdmin, admin")]
+
+@page "/epilepsias"
+<PageTitle>Epilepsias</PageTitle>
+
+<h1 class="mt-4 mt-sm-8">Gestión Epilepsias</h1>
+<div class="mx-8 mt-4">
+    <MudButton OnClick="crearEpilepsia" id="btnCrear" Variant="Variant.Filled" Size="Size.Small" StartIcon="@Icons.Material.Outlined.AddCircleOutline" Color="Color.Success">Crear</MudButton>
+</div>
+@if (EpilepsiasTabla != null && EpilepsiasTabla.Any()) {
+    <MudStack>
+        <MudPaper Class="pa-16 ma-2" Elevation="3">
+            <MudTable Items="@EpilepsiasTabla" Hover="true" Breakpoint="Breakpoint.Sm" @ref="tabla" RowClassFunc="@SelectedRowClassFunc" T="EpilepsiasDto">
+                <HeaderContent>
+                    <MudTh>Nr</MudTh>
+                    <MudTh>Sign</MudTh>
+                    <MudTh>Name</MudTh>
+                    <MudTh>Position</MudTh>
+                    <MudTh>Molar mass</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    @* <MudTd DataLabel="Nr">@context.Number</MudTd> *@
+                </RowTemplate>
+            </MudTable>
+        </MudPaper>
+
+
+        <MudPaper Class="@($"pa-16 ma-2")" id="panelEpilepsia" Elevation="3">
+
+        </MudPaper>
+    </MudStack>
+} else {
+    <Error mensajeError="No se han encontrado <b>tipos de epilepsias</b>" />
+}
