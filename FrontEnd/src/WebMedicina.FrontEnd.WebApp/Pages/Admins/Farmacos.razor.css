@@ -13,6 +13,6 @@
 #columnaId {
     width: 10%;
 }
-::deep .mud-table-cell{
+::deep .mud-table-cell {
     text-align: center;
 }

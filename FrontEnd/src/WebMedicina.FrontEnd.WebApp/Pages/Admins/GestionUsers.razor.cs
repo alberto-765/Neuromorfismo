@@ -91,13 +91,13 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                         pagedData = Enumerable.Empty<UserUploadDto>();
                     }
                 } else {
-                    throw new Exception("Excepcion lanzada manualmente, error al obtener filtrado de usuarios de la api");
+                    throw new  Exception();
                 }
 
                 // Saltamos los ((UserUploadDto) item)s de la paginación y obtenemos el maximo que se puede mostrar
                 return new TableData<UserUploadDto>() { TotalItems = totalItems, Items = pagedData };
             } catch (Exception ex) {
-                _snackbar.Add("Error al obtener los médicos", Severity.Error);
+                _snackbar.Add("Error al obtener filtrado de usuarios", Severity.Error);
 
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
                 return new TableData<UserUploadDto>();

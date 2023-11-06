@@ -106,24 +106,6 @@ namespace WebMedicina.BackEnd.API.Controllers {
             }
         }
 
-        [HttpPost("crearRol")]
-        public async Task<IActionResult> CrearRol([FromBody] string nombreRol) {
-
-            //var roleExists = await _roleManager.RoleExistsAsync(nombreRol);
-            //if (!roleExists) {
-            //    // Añadir el nuevo rol
-            //    var identityRole = new IdentityRole { Name = nombreRol };
-            //    //var result =  await _roleManager.CreateAsync(identityRole);
-            //     //if (result.Succeeded) {
-            //        return Ok("Rol creado exitosamente");
-            //    //} 
-
-            //}
-            return BadRequest("Error al crear el rol");
-
-        }
-
-
         // Comprobamos si el userName está disponible
         [HttpPost("comprobarUser")]
         public async Task<IActionResult> ComprobarUser([FromBody] string userName) {
@@ -138,32 +120,35 @@ namespace WebMedicina.BackEnd.API.Controllers {
         }
 
         private UserToken BuildToken(UserInfoDto userInfo) {
+            try { 
+                var claims = new [] {
+                    new Claim(JwtRegisteredClaimNames.Sub, userInfo.NumHistoria),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim("nombre", userInfo.Nombre),
+                    new Claim("apellidos", userInfo.Apellidos),
+                    new Claim(ClaimTypes.Role, userInfo.Rol),
+                };
 
-            var claims = new [] {
-                new Claim(JwtRegisteredClaimNames.Sub, userInfo.NumHistoria),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim("nombre", userInfo.Nombre),
-                new Claim("apellidos", userInfo.Apellidos),
-                new Claim(ClaimTypes.Role, userInfo.Rol),
-            };
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:key"]));
+                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:key"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                // Tiempo de expiración del token. En nuestro caso lo hacemos de una hora.
+                var expiration = DateTime.UtcNow.AddDays(7);
 
-            // Tiempo de expiración del token. En nuestro caso lo hacemos de una hora.
-            var expiration = DateTime.UtcNow.AddDays(7);
+                JwtSecurityToken token = new JwtSecurityToken(
+                    issuer: null,
+                    audience: null,
+                    claims: claims,
+                    expires: expiration,
+                    signingCredentials: creds);
 
-            JwtSecurityToken token = new JwtSecurityToken(
-                issuer: null,
-                audience: null,
-                claims: claims,
-                expires: expiration,
-                signingCredentials: creds);
-
-            return new UserToken() {
-                Token = new JwtSecurityTokenHandler().WriteToken(token),
-                Expiration = expiration
-            };
+                return new UserToken() {
+                    Token = new JwtSecurityTokenHandler().WriteToken(token),
+                    Expiration = expiration
+                };
+            } catch (Exception) {
+                throw;
+            }
         }
     }
     }

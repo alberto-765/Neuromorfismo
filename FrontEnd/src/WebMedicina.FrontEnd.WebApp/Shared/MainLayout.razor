@@ -12,72 +12,68 @@
 
 
 <CascadingValue Name="modoOscuro" Value="@_isDarkMode">
-        <CascadingValue Name="excepcionPersonalizada" Value="@_excepcionPersonalizada">
-<MudLayout Class="d-flex flex-grow-1">
-    <MudAppBar Class="mud-elevation-25">
-             <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
+<CascadingValue Name="excepcionPersonalizada" Value="@_excepcionPersonalizada">
+    <MudLayout Class="d-flex">
+        <MudAppBar Class="mud-elevation-25">
+            <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
                 <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Dark" Edge="Edge.Start" OnClick="@ToggleDrawer" />
             </MudHidden>
             <MudHidden Breakpoint="Breakpoint.MdAndUp" Invert="true">
-                <a id="iconoNavBar" href="">
+                <a href="">
                     <img id="iconoNavBar" src="icono.png" alt="Icono" />
                 </a>
             </MudHidden>
-
-
             <MudSpacer />
 
             @* Boton Modo Oscuro*@
-            <MudToggleIconButton @bind-Toggled="@IsDarkMode"
-                                 Icon="@Icons.Material.Outlined.DarkMode" Title="Cambiar a modo oscuro"
-                                 ToggledIcon="@Icons.Material.Outlined.LightMode" ToggledTitle="Cambiar a modo claro" />
-    
+            <MudToggleIconButton @bind-Toggled="@IsDarkMode" Icon="@Icons.Material.Outlined.DarkMode" Title="Cambiar a modo oscuro"
+                                    ToggledIcon="@Icons.Material.Outlined.LightMode" ToggledTitle="Cambiar a modo claro" />
+            @* Perfil Cambiar contraseña solo para autenticados *@
+            <AuthorizeView>
+                <Authorized>
+                    <MudMenu Icon="@Icons.Material.Outlined.AccountCircle" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopRight">
+                        <MudMenuItem Color="Color.Dark" Icon="@Icons.Material.Filled.ManageAccounts">Perfil</MudMenuItem>
+                        <MudMenuItem Color="Color.Dark" Icon="@Icons.Material.Filled.Password">Contraseña</MudMenuItem>
+                    </MudMenu>
+                </Authorized>
+            </AuthorizeView>
+        </MudAppBar>
+
+        @* Drawer solo para autenticados *@
          <AuthorizeView>
             <Authorized>
-                <MudMenu Icon="@Icons.Material.Outlined.AccountCircle" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopRight">
-                    <MudMenuItem Color="Color.Dark" Icon="@Icons.Material.Filled.ManageAccounts">Perfil</MudMenuItem>
-                    <MudMenuItem Color="Color.Dark" Icon="@Icons.Material.Filled.Password">Contraseña</MudMenuItem>
-                </MudMenu>
+                <MudDrawer @bind-Open="@open" ClipMode="clipMode" Elevation="1" Breakpoint="@Breakpoint.Md" Variant="@DrawerVariant.Responsive" PreserveOpenState="true">
+                        <NavMenu />
+                </MudDrawer>
             </Authorized>
         </AuthorizeView>
-    </MudAppBar>
 
-    @* Drawe solo para autenticados *@
-     <AuthorizeView>
-        <Authorized>
-            <MudDrawer @bind-Open="@open" ClipMode="clipMode" Elevation="1" Breakpoint="@Breakpoint.Md" Variant="@DrawerVariant.Responsive" PreserveOpenState="true">
-                    <NavMenu />
-            </MudDrawer>
-        </Authorized>
-    </AuthorizeView>
-
-    <MudMainContent Class="cienHeight">
-        <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Class="noventaHeight">
-            @Body
-        </MudContainer>
-    </MudMainContent>
-</MudLayout>
+        <MudMainContent Class="cienHeight">
+                <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Class="d-flex flex-column">
+                @Body
+            </MudContainer>
+        </MudMainContent>
+    </MudLayout>
 </CascadingValue>
 </CascadingValue>
 @code {
-    bool open = true;
+    // Control del drawer pricnipal
+    bool open { get; set; } = true;
     private bool primerClick = true;
     private DrawerClipMode clipMode = DrawerClipMode.Always;
+
+    // Control de modo oscuro
     private MudThemeProvider _mudThemeProvider;
     private bool _isDarkMode = false;
-    private bool IsDarkMode { get => _isDarkMode; set{
+    private bool IsDarkMode { 
+        get => _isDarkMode; 
+        set{
             _isDarkMode = value;
             js.SetInLocalStorage(CLAVE, JsonSerializer.Serialize(_isDarkMode));
         }
     }
 
-    private string iconoInicial { get; set; }
-    private string iconoSecundario { get; set; } 
-    private string modoInicial { get; set; }
-    private string modoSecundario { get; set; }
-    private const string CLAVE = "KoAuNLWIWUEfVdUtDYsT";
-    private HttpClient Http;
-
+    private const string CLAVE = "KoAuNLWIWUEfVdUtDYsT"; // modo oscuro en sessionStorage
 
     protected override async Task OnAfterRenderAsync(bool firstRender) {
         try {

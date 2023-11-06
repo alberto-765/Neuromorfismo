@@ -2,33 +2,51 @@
 
 @page "/epilepsias"
 <PageTitle>Epilepsias</PageTitle>
+<MudContainer Class="px-0 d-flex flex-column gap-sm-5 gap-3" MaxWidth="MaxWidth.Large">
 
 <h1 class="mt-4 mt-sm-8">Gestión Epilepsias</h1>
-<div class="mx-8 mt-4">
-    <MudButton OnClick="crearEpilepsia" id="btnCrear" Variant="Variant.Filled" Size="Size.Small" StartIcon="@Icons.Material.Outlined.AddCircleOutline" Color="Color.Success">Crear</MudButton>
+    <div class="">
+    <MudButton Color="Color.Success"  OnClick="crearEpilepsia" id="btnCrear" Variant="Variant.Filled" Size="Size.Small" StartIcon="@Icons.Material.Outlined.AddCircleOutline">Crear</MudButton>
 </div>
-@if (EpilepsiasTabla != null && EpilepsiasTabla.Any()) {
+@if (mostrarTabla) {
     <MudStack>
-        <MudPaper Class="pa-16 ma-2" Elevation="3">
-            <MudTable Items="@EpilepsiasTabla" Hover="true" Breakpoint="Breakpoint.Sm" @ref="tabla" RowClassFunc="@SelectedRowClassFunc" T="EpilepsiasDto">
+        <div class="@((EpilepsiasTabla!= null && EpilepsiasTabla.Any() ? "" : "d-none"))">
+            <MudTable T="EpilepsiasDto" Items="@EpilepsiasTabla" Hover="true" Breakpoint="Breakpoint.Xs" @ref="tabla" RowClassFunc="@SelectedRowClassFunc" Elevation="3"
+                          Class="pa-4" OnRowClick="RowClickEvent" Loading="mostrarCargandoTabla" LoadingProgressColor="Color.Info">
                 <HeaderContent>
-                    <MudTh>Nr</MudTh>
-                    <MudTh>Sign</MudTh>
-                    <MudTh>Name</MudTh>
-                    <MudTh>Position</MudTh>
-                    <MudTh>Molar mass</MudTh>
+                    <MudTh>#</MudTh>
+                    <MudTh>Nombre</MudTh>
+                    <MudTh>Fecha Creación</MudTh>
+                    <MudTh>Fecha Última Modificación</MudTh>
                 </HeaderContent>
+
                 <RowTemplate>
-                    @* <MudTd DataLabel="Nr">@context.Number</MudTd> *@
+                    <MudTd DataLabel="#" Class="cursor-pointer">@context.IdEpilepsia</MudTd> 
+                    <MudTd DataLabel="Nombre" Class="cursor-pointer">@context.Nombre</MudTd> 
+                    <MudTd DataLabel="Fecha Creación" Class="cursor-pointer">@context.FechaCreac</MudTd> 
+                    <MudTd DataLabel="Fecha Última Modificación" Class="cursor-pointer">@context.FechaUltMod</MudTd> 
                 </RowTemplate>
             </MudTable>
-        </MudPaper>
+        </div>
 
 
-        <MudPaper Class="@($"pa-16 ma-2")" id="panelEpilepsia" Elevation="3">
-
+        <MudPaper Class="@($"pa-4 {(!mostrarEpilepsia ? "d-none" : "")}")" Elevation="3">
+                <EditForm Model="epilepsiaSeleccionada" OnValidSubmit="EditarEpilepsia">
+                    <MudStack Spacing="16" Row="true" AlignItems="AlignItems.Center">
+                        <DataAnnotationsValidator />
+                        <MudTextField T="string" HelperTextOnFocus="true" For="@(() => epilepsiaSeleccionada.Nombre)" @bind-Value="@epilepsiaSeleccionada.Nombre" HelperText="No debe contener caracteres especiales"
+                                      Immediate="true" OnlyValidateIfDirty="true" Clearable="true" Label="Nuevo nombre"/>
+                            <div>
+                               <MudButton OnClick="EliminarEpilepsia" Size="Size.Small" Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Rounded.DeleteOutline">Eliminar</MudButton>
+                                <MudButton Color="Color.Success" Class="ml-3" Size="Size.Small" ButtonType="ButtonType.Submit" Variant="Variant.Filled" StartIcon="@Icons.Material.Rounded.Upload">Actualizar</MudButton>
+                            </div>
+                    </MudStack>
+                </EditForm>
         </MudPaper>
     </MudStack>
 } else {
     <Error mensajeError="No se han encontrado <b>tipos de epilepsias</b>" />
 }
+
+<OverlayCargando mostrarOverlay=mostrarCargandoInicial />
+</MudContainer>

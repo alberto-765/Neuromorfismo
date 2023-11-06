@@ -3,7 +3,6 @@
         <Found Context="routeData">
             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
                 <NotAuthorized>
-
                     @if (noRedirigido) {
                         if (context != null && context.User.Identity.IsAuthenticated == true) {
                             redirigirManager.RedirigirDefault();
@@ -20,7 +19,7 @@
         </Found>
         <NotFound>
             <LayoutView Layout="@typeof(MainLayout)">
-                <h1 class="mt-5 ml-5">Dirección no encontrada</h1>
+                <Error mensajeError="Dirección <b> no encontrada</b>" />
             </LayoutView>
         </NotFound>
     </Router>

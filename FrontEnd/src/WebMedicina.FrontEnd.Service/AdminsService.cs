@@ -7,6 +7,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using WebMedicina.FrontEnd.ServiceDependencies;
 
@@ -113,6 +114,18 @@ namespace WebMedicina.FrontEnd.Service {
                 {"direccionOrdenar", ""} ,
                 {"rol" , "" }
             };
+        }
+
+        public string? ValidarNuevoNombre(string nombre) {
+            if (!string.IsNullOrWhiteSpace(nombre)) {
+                string patron = "[!@#$%^&*(),.?\":{}|<>]";
+                if (Regex.IsMatch(nombre, patron)) {
+                    return "El nombre no puede contener caracteres espciales";
+                } else if (nombre.Length > 50) {
+                    return "La longitud máxima son 50 caracteres";
+                }
+            }
+            return null;
         }
     }
 }

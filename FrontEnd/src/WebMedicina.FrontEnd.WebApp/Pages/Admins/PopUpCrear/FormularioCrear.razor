@@ -1,0 +1,17 @@
+﻿@using System.Text.RegularExpressions
+@inject IAdminsService _adminsService 
+
+<EditForm Model="@(new object())">
+    <DataAnnotationsValidator />
+    <MudTextField Validation="@(new Func<string, string>(Validar))" T="string" Label="Nuevo nombre" Required="true" RequiredError="Debes especificar un nuevo nombre"
+                  HelperText="No debe contener caracteres especiales" Immediate="true" OnlyValidateIfDirty="true" Clearable="true" />
+</EditForm>
+@code {
+    public string nombre { get; set; } = string.Empty;
+
+    // Validamos que no contiene caracteres especiales
+    private string Validar(string nombreValidar) {
+        nombre = nombreValidar;
+        return _adminsService.ValidarNuevoNombre(nombreValidar);
+    }
+}

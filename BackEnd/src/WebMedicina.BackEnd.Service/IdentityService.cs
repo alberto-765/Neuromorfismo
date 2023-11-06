@@ -54,12 +54,8 @@ namespace WebMedicina.BackEnd.Service {
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded) {
                     // Añadimos el usuario a su rol
-                        result = await _userManager.AddToRoleAsync(user, model.Rol);
-
-
-                    if (result.Succeeded) {
-                        return true;
-                    }
+                    result = await _userManager.AddToRoleAsync(user, model.Rol);
+                    return result.Succeeded;
                 }
                 return false;
             } catch (Exception) {
@@ -79,7 +75,7 @@ namespace WebMedicina.BackEnd.Service {
         // Obtener Rol del usuario
         public async Task<string?> ObtenerRol(string userName) {
             try {
-                return await _adminDal.ObtenerRolUser(userName, await _adminDal.ObtenerUsuario(userName));
+                return await _adminDal.ObtenerRolUser(userName, await _adminDal.ObtenerUsuarioIdentity(userName));
             } catch (Exception) {
                  throw;
             }
@@ -98,7 +94,7 @@ namespace WebMedicina.BackEnd.Service {
         public async Task<bool> ActualizarRol(string userName, string nuevoRol) {
             try { 
                 // Obtenemos el usuario y sus roles
-                IdentityUser? usuario = await _adminDal.ObtenerUsuario(userName);
+                IdentityUser? usuario = await _adminDal.ObtenerUsuarioIdentity(userName);
                 IdentityResult rolActualizado = new();
 
                 if (usuario is not null) {

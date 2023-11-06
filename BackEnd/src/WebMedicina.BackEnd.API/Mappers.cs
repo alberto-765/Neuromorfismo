@@ -38,6 +38,12 @@ namespace WebMedicina.BackEnd.API {
             // Mapeo Epilepsias
             CreateMap<EpilepsiaModel, EpilepsiasDto>().ReverseMap();
 
+            // Mapeo Mutaciones
+            CreateMap<MutacionesModel, MutacionesDto>().ReverseMap();
+
+            // Mapeo Farmacos
+            CreateMap<FarmacosModel, FarmacosDto>().ReverseMap();
+
             // Mapeamos listas
             //CreateMap<ListaOrigen, ListaDestino>()
             //	.ReverseMap(); // esto es para que pueda ser en ambos sentidos y no solo origen-destino

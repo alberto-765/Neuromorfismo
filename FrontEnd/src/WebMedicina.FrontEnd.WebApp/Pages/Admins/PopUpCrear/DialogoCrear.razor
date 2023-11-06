@@ -1,0 +1,35 @@
+﻿ @inject IAdminsService adminService
+<MudDialog MaxWidth="MaxWidth.ExtraSmall" CloseButton="true" DisableBackdropClick="true" CloseOnEscapeKey="true">
+    <DialogContent>
+        @formulario
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="@(() => MudDialog.Cancel())">Cancelar</MudButton>
+        <MudButton Color="Color.Success" Variant="Variant.Filled" OnClick="Crear">Crear</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    public RenderFragment formulario { get; set; }
+    public FormularioCrear _formularioCrear { get; set; }
+
+    // Creamos el componente con el tipo de formulario a crear
+    protected override void OnInitialized() {
+        formulario = builder => {
+            builder.OpenComponent(0, typeof(FormularioCrear));
+            builder.AddComponentReferenceCapture(1, modelo => _formularioCrear = (FormularioCrear)modelo);
+            builder.CloseComponent();
+        };     }
+
+    private void Crear() {
+
+        if (!string.IsNullOrWhiteSpace(_formularioCrear.nombre)) {
+            if (adminService.ValidarNuevoNombre(_formularioCrear.nombre) == null) {
+                MudDialog.Close(DialogResult.Ok(_formularioCrear.nombre));
+            }
+        }
+    }
+
+
+}
+

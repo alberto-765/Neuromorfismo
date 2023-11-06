@@ -1,33 +1,27 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
 using System.Net;
 using System.Net.Http.Json;
-using System.Security.Claims;
-using WebMedicina.FrontEnd.Service;
 using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.FrontEnd.WebApp.Pages.Admins.PopUpCrear;
 using WebMedicina.Shared.Dto;
-using static MudBlazor.CategoryTypes;
-using static System.Net.WebRequestMethods;
 
 namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
-    public partial class Epilepsias {
+    public partial class Mutaciones {
         [CascadingParameter(Name = "excepcionPersonalizada")] ExcepcionDto excepcionPersonalizada { get; set; }
-        [Inject] private IDialogService DialogService { get; set; } // Pop up eliminar epilepsia
+        [Inject] private IDialogService DialogService { get; set; } // Pop up eliminar mutacion
         [Inject] private ISnackbar _snackbar { get; set; }
         [Inject] ICrearHttpClient _crearHttpClient { get; set; }
 
-        private MudTable<EpilepsiasDto> tabla;
+        private MudTable<MutacionesDto> tabla;
         private HttpClient Http { get; set; }
-        private bool mostrarTabla { get; set; } = true; // mostrar o no la tabla de epilepsias
-        private bool mostrarEpilepsia { get; set; } = false; // mostrar o no la formulario para editar epilepsia
+        private bool mostrarTabla { get; set; } = true; // mostrar o no la tabla de mutaciones
+        private bool mostrarMutacion { get; set; } = false; // mostrar o no la formulario para editar mutacion
         private bool mostrarCargandoTabla { get; set; } = true; // mostrar cargando en la tabla
         private bool mostrarCargandoInicial { get; set; } = true; // mostrar cargando inicial mientras se obtienen datos
-        private EpilepsiasDto epilepsiaSeleccionada { get; set; } = new();
-        private IEnumerable<EpilepsiasDto> EpilepsiasTabla { get; set; }
+        private MutacionesDto mutacionSeleccionada { get; set; } = new();
+        private IEnumerable<MutacionesDto> MutacionesTabla { get; set; }
 
 
         protected override async Task OnInitializedAsync() {
@@ -52,9 +46,9 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
         }
 
         // Asignamos clase para la fila seleccionada
-        private string SelectedRowClassFunc(EpilepsiasDto elemento, int row) {
-            try {
-                if (mostrarEpilepsia && epilepsiaSeleccionada.Equals(elemento)) {
+        private string SelectedRowClassFunc(MutacionesDto elemento, int row) {
+            try { 
+                if (mostrarMutacion && mutacionSeleccionada.Equals(elemento)) {
                     return "selected";
                 } else {
                     return string.Empty;
@@ -64,18 +58,18 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 throw;
             }
         }
-        private void RowClickEvent(TableRowClickEventArgs<EpilepsiasDto> elemento) {
+        private void RowClickEvent(TableRowClickEventArgs<MutacionesDto> elemento) {
             try { 
                 // Deseleccionamos si ya ha sido seleccionada anteriormente
-                if (elemento.Item.Equals(epilepsiaSeleccionada)) {
-                    epilepsiaSeleccionada = new();
-                    mostrarEpilepsia = false;
+                if (elemento.Item.Equals(mutacionSeleccionada)) {
+                    mutacionSeleccionada = new();
+                    mostrarMutacion = false;
                 } else if (tabla.SelectedItem != null && tabla.SelectedItem.Equals(elemento.Item)) {
-                    epilepsiaSeleccionada = (EpilepsiasDto)elemento.Item.Clone() ?? new();
-                    mostrarEpilepsia = true;
+                    mutacionSeleccionada = (MutacionesDto)elemento.Item.Clone() ?? new();
+                    mostrarMutacion = true;
                 } else {
-                    epilepsiaSeleccionada = new();
-                    mostrarEpilepsia = false;
+                    mutacionSeleccionada = new();
+                    mostrarMutacion = false;
                 }
             } catch (Exception ex) {
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
@@ -83,17 +77,17 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
             }
         }
 
-        // Obtenemos las epilepsias disponibles
-        private async Task<IEnumerable<EpilepsiasDto>> ObtenerEpilepsias() {
+        // Obtenemos las mutaciones disponibles
+        private async Task<IEnumerable<MutacionesDto>> ObtenerMutaciones() {
             try {
-                HttpResponseMessage respuesta = await Http.GetAsync("administracion/getEpilepsias");
-                if(respuesta.IsSuccessStatusCode) {
-                    List<EpilepsiasDto>? listaEpilepsias = await respuesta.Content.ReadFromJsonAsync<List<EpilepsiasDto>>();
-                    if(listaEpilepsias != null && listaEpilepsias.Any()) {
-                        return listaEpilepsias;
+                HttpResponseMessage respuesta = await Http.GetAsync("administracion/getMutaciones");
+                if (respuesta.IsSuccessStatusCode) {
+                    List<MutacionesDto>? listaMutaciones = await respuesta.Content.ReadFromJsonAsync<List<MutacionesDto>>();
+                    if (listaMutaciones != null && listaMutaciones.Any()) {
+                        return listaMutaciones;
                     }
                 }
-                return Enumerable.Empty<EpilepsiasDto>();
+                return Enumerable.Empty<MutacionesDto>();
             } catch (Exception ex) {
                 throw;
             }
@@ -103,16 +97,16 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
         private async Task RecargarElementos() {
             try {
                 mostrarCargandoTabla = true;
-                EpilepsiasTabla = await ObtenerEpilepsias();
+                MutacionesTabla = await ObtenerMutaciones();
 
-                // Reseteamos la epilepsia seleccionada
-                epilepsiaSeleccionada = new();
-                mostrarEpilepsia = false;
+                // Reseteamos la mutacion seleccionada
+                mutacionSeleccionada = new();
+                mostrarMutacion = false;
 
-                if (EpilepsiasTabla != null && EpilepsiasTabla.Any()) {
+                if (MutacionesTabla != null && MutacionesTabla.Any()) {
                     mostrarCargandoTabla = false;
                     mostrarTabla = true;
-                }else {
+                } else {
                     mostrarCargandoTabla = false;
                     mostrarTabla = false;
                 }
@@ -121,32 +115,32 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 mostrarTabla = false;
                 throw;
             }
-}
+        }
 
-        // Se abre Dialogo para crear una epilepsia
-        private async Task crearEpilepsia() {
-            try {
+        // Se abre Dialogo para crear una mutacion
+        private async Task crearMutacion() {
+            try { 
                 // Creamos el dialogo pasandole el tipo de formulario que debe crear
-                var dialogo = await DialogService.ShowAsync<DialogoCrear>("Crear Epilepsia");
+                var dialogo = await DialogService.ShowAsync<DialogoCrear>("Crear Mutación");
                 var resultado = await dialogo.Result;
 
                 // Validamos que se haya creado y los campos esté correctos
                 if (resultado.Canceled == false && resultado.Data != null) {
                     Severity tipoSnackBar = Severity.Success; // Tipo de snackbar para mensaje
-                    string mensajeSnackBar = "Nueva epilepsia creada exitosamente";
+                    string mensajeSnackBar = "Nueva mutación creada exitosamente";
 
                     string nuevoNombre = resultado.Data.ToString();
                     if (!string.IsNullOrWhiteSpace(nuevoNombre)) {
 
-                        // Realizamos llamada httpget para creaer la nueva epilepsia
-                        HttpResponseMessage respuesta = await Http.PostAsJsonAsync("administracion/crearEpilepsia", resultado.Data);
+                        // Realizamos llamada httpget para creaer la nueva mutacion
+                        HttpResponseMessage respuesta = await Http.PostAsJsonAsync("administracion/crearMutacion", resultado.Data);
 
-                        if(respuesta.IsSuccessStatusCode) {
+                        if (respuesta.IsSuccessStatusCode) {
                             if (await respuesta.Content.ReadFromJsonAsync<bool>()) {
                                 await RecargarElementos();
                             } else {
                                 tipoSnackBar = Severity.Warning;
-                                mensajeSnackBar = "La epilepsia no ha podido ser creada";
+                                mensajeSnackBar = "La mutación no ha podido ser creada";
                             }
                         } else {
                             tipoSnackBar = Severity.Error;
@@ -164,25 +158,25 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
             }
         }
 
-        // Eliminar epilepsia
-        private async Task EliminarEpilepsia() {
+        // Eliminar mutacion
+        private async Task EliminarMutacion() {
             try { 
                 bool? result = await DialogService.ShowMessageBox(
-                    "Eliminar Epilepsia",
-                    (MarkupString) $"¿Estás seguro de eliminar el tipo: <b>{epilepsiaSeleccionada.Nombre}</b>?",
+                    "Eliminar Mutacion",
+                    (MarkupString)$"¿Estás seguro de eliminar el tipo: <b>{mutacionSeleccionada.Nombre}</b>?",
                     yesText: "Sí", cancelText: "No");
 
                 if (result == true) {
                     Severity tipoSnackBar = Severity.Success; // Tipo de snackbar para mensaje
-                    string mensajeSnackBar = "Epilepsia eliminada exitosamente";
-                    HttpResponseMessage respuesta = await Http.DeleteAsync($"administracion/eliminarEpilepsia/{epilepsiaSeleccionada.IdEpilepsia}");
-                
+                    string mensajeSnackBar = "Mutacion eliminada exitosamente";
+                    HttpResponseMessage respuesta = await Http.DeleteAsync($"administracion/eliminarMutacion/{mutacionSeleccionada.IdMutacion}");
+
                     if (respuesta.IsSuccessStatusCode) {
                         if (await respuesta.Content.ReadFromJsonAsync<bool>()) {
                             await RecargarElementos();
                         } else {
                             tipoSnackBar = Severity.Warning;
-                            mensajeSnackBar = "La epilepsia no ha podido ser eliminada";
+                            mensajeSnackBar = "La mutación no ha podido ser eliminada";
                         }
                     } else {
                         tipoSnackBar = Severity.Error;
@@ -196,15 +190,16 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
             }
         }
 
-        // Editar epilepsia
-        private async Task EditarEpilepsia(EditContext context) {
+
+        //Editar mutacion
+        private async Task EditarMutacion(EditContext context) {
             try { 
                 if (context.IsModified()) {
-                    EpilepsiasDto ep = (EpilepsiasDto) context.Model;
-                    HttpResponseMessage respuesta = await Http.PutAsJsonAsync("administracion/updateEpilepsia", ep);
+                    MutacionesDto mut = (MutacionesDto)context.Model;
+                    HttpResponseMessage respuesta = await Http.PutAsJsonAsync("administracion/updateMutacion", mut);
 
                     Severity tipoSnackBar = Severity.Success; // Tipo de snackbar para mensaje
-                    string mensajeSnackBar = "Epilepsia editada exitosamente";
+                    string mensajeSnackBar = "Mutacion editada exitosamente";
 
                     if (respuesta.IsSuccessStatusCode) {
 
@@ -214,7 +209,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                                 await RecargarElementos();
                             } else {
                                 tipoSnackBar = Severity.Warning;
-                                mensajeSnackBar = "La epilepsia no ha podido ser editada";
+                                mensajeSnackBar = "La mutación no ha podido ser editada";
                             }
                         } else {
                             tipoSnackBar = Severity.Warning;
@@ -233,3 +228,4 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
         }
     }
 }
+

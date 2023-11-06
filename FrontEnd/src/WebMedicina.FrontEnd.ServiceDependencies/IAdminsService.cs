@@ -13,5 +13,6 @@ namespace WebMedicina.FrontEnd.ServiceDependencies {
         void GenerarTooltipInfoUser(ClaimsPrincipal user, ref MarkupString tooltipInfoUser, ref bool mostrarTooltip);// se genera el tooltip para pantalla de gestion usuarios
         Task<ReadOnlyDictionary<string, string>> ObtenerFiltrosSession(); // Obtener los filtros seleccionados
         Dictionary<string, string> CrearDiccionarioFiltros();
+        string? ValidarNuevoNombre(string nombre); // Validar nombre mutacion, farmaco y epilepsia
     }
 }

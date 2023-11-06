@@ -7,13 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="wwwroot\css\bootstrap\**" />
-    <Content Remove="wwwroot\css\bootstrap\**" />
-    <EmbeddedResource Remove="wwwroot\css\bootstrap\**" />
-    <None Remove="wwwroot\css\bootstrap\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Remove="compilerconfig.json" />
   </ItemGroup>
 

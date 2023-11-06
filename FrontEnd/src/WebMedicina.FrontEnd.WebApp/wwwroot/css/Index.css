@@ -1,11 +1,8 @@
 ﻿.cienHeight {
-  flex-basis: 100%;
-}
-
-.noventaHeight {
-  height: 99%;
+  min-height: 100vh;
+  max-width: 100vw;
+  height: 100%;
   display: flex;
-  flex-direction: column;
 }
 
 #navMenu > .mud-nav-item .mud-nav-link {
@@ -25,4 +22,10 @@
 
 #imgError {
   height: 25rem;
+}
+
+@media (min-width: 960px) {
+  .cienHeight {
+    max-width: 82vw;
+  }
 }

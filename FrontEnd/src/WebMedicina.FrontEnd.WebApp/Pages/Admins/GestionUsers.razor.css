@@ -4,6 +4,9 @@
 ::deep .filaGenero {
     min-width: 120px;
 }
+::deep #tablaGestionUsers {
+    border-radius: 15px;
+}
 @media (min-width: 960px) {
     :: deep #tablaGestionUsers .mud-input-control > .mud-input-control-input-container > div.mud-input.mud-input-text {
         margin-top: 0;

@@ -1,33 +1,27 @@
-﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Components.Web;
+﻿using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using System.Net;
 using System.Net.Http.Json;
-using System.Security.Claims;
-using WebMedicina.FrontEnd.Service;
+using System.Net;
 using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.FrontEnd.WebApp.Pages.Admins.PopUpCrear;
 using WebMedicina.Shared.Dto;
-using static MudBlazor.CategoryTypes;
-using static System.Net.WebRequestMethods;
 
 namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
-    public partial class Epilepsias {
+    public partial class Farmacos {
         [CascadingParameter(Name = "excepcionPersonalizada")] ExcepcionDto excepcionPersonalizada { get; set; }
-        [Inject] private IDialogService DialogService { get; set; } // Pop up eliminar epilepsia
+        [Inject] private IDialogService DialogService { get; set; } // Pop up eliminar farmaco
         [Inject] private ISnackbar _snackbar { get; set; }
         [Inject] ICrearHttpClient _crearHttpClient { get; set; }
 
-        private MudTable<EpilepsiasDto> tabla;
+        private MudTable<FarmacosDto> tabla;
         private HttpClient Http { get; set; }
-        private bool mostrarTabla { get; set; } = true; // mostrar o no la tabla de epilepsias
-        private bool mostrarEpilepsia { get; set; } = false; // mostrar o no la formulario para editar epilepsia
+        private bool mostrarTabla { get; set; } = true; // mostrar o no la tabla de farmacos
+        private bool mostrarFarmaco { get; set; } = false; // mostrar o no la formulario para editar Mutacion
         private bool mostrarCargandoTabla { get; set; } = true; // mostrar cargando en la tabla
         private bool mostrarCargandoInicial { get; set; } = true; // mostrar cargando inicial mientras se obtienen datos
-        private EpilepsiasDto epilepsiaSeleccionada { get; set; } = new();
-        private IEnumerable<EpilepsiasDto> EpilepsiasTabla { get; set; }
+        private FarmacosDto farmacoSeleccionado { get; set; } = new();
+        private IEnumerable<FarmacosDto> FarmacosTabla { get; set; }
 
 
         protected override async Task OnInitializedAsync() {
@@ -52,9 +46,9 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
         }
 
         // Asignamos clase para la fila seleccionada
-        private string SelectedRowClassFunc(EpilepsiasDto elemento, int row) {
+        private string SelectedRowClassFunc(FarmacosDto elemento, int row) {
             try {
-                if (mostrarEpilepsia && epilepsiaSeleccionada.Equals(elemento)) {
+                if (mostrarFarmaco && farmacoSeleccionado.Equals(elemento)) {
                     return "selected";
                 } else {
                     return string.Empty;
@@ -64,18 +58,18 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 throw;
             }
         }
-        private void RowClickEvent(TableRowClickEventArgs<EpilepsiasDto> elemento) {
-            try { 
+        private void RowClickEvent(TableRowClickEventArgs<FarmacosDto> elemento) {
+            try {
                 // Deseleccionamos si ya ha sido seleccionada anteriormente
-                if (elemento.Item.Equals(epilepsiaSeleccionada)) {
-                    epilepsiaSeleccionada = new();
-                    mostrarEpilepsia = false;
+                if (elemento.Item.Equals(farmacoSeleccionado)) {
+                    farmacoSeleccionado = new();
+                    mostrarFarmaco = false;
                 } else if (tabla.SelectedItem != null && tabla.SelectedItem.Equals(elemento.Item)) {
-                    epilepsiaSeleccionada = (EpilepsiasDto)elemento.Item.Clone() ?? new();
-                    mostrarEpilepsia = true;
+                    farmacoSeleccionado = (FarmacosDto)elemento.Item.Clone() ?? new();
+                    mostrarFarmaco = true;
                 } else {
-                    epilepsiaSeleccionada = new();
-                    mostrarEpilepsia = false;
+                    farmacoSeleccionado = new();
+                    mostrarFarmaco = false;
                 }
             } catch (Exception ex) {
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
@@ -83,17 +77,17 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
             }
         }
 
-        // Obtenemos las epilepsias disponibles
-        private async Task<IEnumerable<EpilepsiasDto>> ObtenerEpilepsias() {
+        // Obtenemos las farmacos disponibles
+        private async Task<IEnumerable<FarmacosDto>> ObtenerFarmacos() {
             try {
-                HttpResponseMessage respuesta = await Http.GetAsync("administracion/getEpilepsias");
-                if(respuesta.IsSuccessStatusCode) {
-                    List<EpilepsiasDto>? listaEpilepsias = await respuesta.Content.ReadFromJsonAsync<List<EpilepsiasDto>>();
-                    if(listaEpilepsias != null && listaEpilepsias.Any()) {
-                        return listaEpilepsias;
+                HttpResponseMessage respuesta = await Http.GetAsync("administracion/getFarmacos");
+                if (respuesta.IsSuccessStatusCode) {
+                    List<FarmacosDto>? listaFarmacos = await respuesta.Content.ReadFromJsonAsync<List<FarmacosDto>>();
+                    if (listaFarmacos != null && listaFarmacos.Any()) {
+                        return listaFarmacos;
                     }
                 }
-                return Enumerable.Empty<EpilepsiasDto>();
+                return Enumerable.Empty<FarmacosDto>();
             } catch (Exception ex) {
                 throw;
             }
@@ -103,16 +97,16 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
         private async Task RecargarElementos() {
             try {
                 mostrarCargandoTabla = true;
-                EpilepsiasTabla = await ObtenerEpilepsias();
+                FarmacosTabla = await ObtenerFarmacos();
 
-                // Reseteamos la epilepsia seleccionada
-                epilepsiaSeleccionada = new();
-                mostrarEpilepsia = false;
+                // Reseteamos el farmaco seleccionado
+                farmacoSeleccionado = new();
+                mostrarFarmaco = false;
 
-                if (EpilepsiasTabla != null && EpilepsiasTabla.Any()) {
+                if (FarmacosTabla != null && FarmacosTabla.Any()) {
                     mostrarCargandoTabla = false;
                     mostrarTabla = true;
-                }else {
+                } else {
                     mostrarCargandoTabla = false;
                     mostrarTabla = false;
                 }
@@ -121,32 +115,32 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 mostrarTabla = false;
                 throw;
             }
-}
+        }
 
-        // Se abre Dialogo para crear una epilepsia
-        private async Task crearEpilepsia() {
+        // Se abre Dialogo para crear una farmaco
+        private async Task crearFarmaco() {
             try {
                 // Creamos el dialogo pasandole el tipo de formulario que debe crear
-                var dialogo = await DialogService.ShowAsync<DialogoCrear>("Crear Epilepsia");
+                var dialogo = await DialogService.ShowAsync<DialogoCrear>("Crear Farmaco");
                 var resultado = await dialogo.Result;
 
                 // Validamos que se haya creado y los campos esté correctos
                 if (resultado.Canceled == false && resultado.Data != null) {
                     Severity tipoSnackBar = Severity.Success; // Tipo de snackbar para mensaje
-                    string mensajeSnackBar = "Nueva epilepsia creada exitosamente";
+                    string mensajeSnackBar = "Nuevo fármaco creada exitosamente";
 
                     string nuevoNombre = resultado.Data.ToString();
                     if (!string.IsNullOrWhiteSpace(nuevoNombre)) {
 
-                        // Realizamos llamada httpget para creaer la nueva epilepsia
-                        HttpResponseMessage respuesta = await Http.PostAsJsonAsync("administracion/crearEpilepsia", resultado.Data);
+                        // Realizamos llamada httpget para creaer la nueva farmaco
+                        HttpResponseMessage respuesta = await Http.PostAsJsonAsync("administracion/crearFarmaco", resultado.Data);
 
-                        if(respuesta.IsSuccessStatusCode) {
+                        if (respuesta.IsSuccessStatusCode) {
                             if (await respuesta.Content.ReadFromJsonAsync<bool>()) {
                                 await RecargarElementos();
                             } else {
                                 tipoSnackBar = Severity.Warning;
-                                mensajeSnackBar = "La epilepsia no ha podido ser creada";
+                                mensajeSnackBar = "El fármaco no ha podido ser crado";
                             }
                         } else {
                             tipoSnackBar = Severity.Error;
@@ -164,25 +158,25 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
             }
         }
 
-        // Eliminar epilepsia
-        private async Task EliminarEpilepsia() {
-            try { 
+        // Eliminar farmaco
+        private async Task EliminarFarmaco() {
+            try {
                 bool? result = await DialogService.ShowMessageBox(
-                    "Eliminar Epilepsia",
-                    (MarkupString) $"¿Estás seguro de eliminar el tipo: <b>{epilepsiaSeleccionada.Nombre}</b>?",
+                    "Eliminar Fármaco",
+                    (MarkupString)$"¿Estás seguro de eliminar el tipo: <b>{farmacoSeleccionado.Nombre}</b>?",
                     yesText: "Sí", cancelText: "No");
 
                 if (result == true) {
                     Severity tipoSnackBar = Severity.Success; // Tipo de snackbar para mensaje
-                    string mensajeSnackBar = "Epilepsia eliminada exitosamente";
-                    HttpResponseMessage respuesta = await Http.DeleteAsync($"administracion/eliminarEpilepsia/{epilepsiaSeleccionada.IdEpilepsia}");
-                
+                    string mensajeSnackBar = "Fármaco eliminada exitosamente";
+                    HttpResponseMessage respuesta = await Http.DeleteAsync($"administracion/eliminarFarmaco/{farmacoSeleccionado.IdFarmaco}");
+
                     if (respuesta.IsSuccessStatusCode) {
                         if (await respuesta.Content.ReadFromJsonAsync<bool>()) {
                             await RecargarElementos();
                         } else {
                             tipoSnackBar = Severity.Warning;
-                            mensajeSnackBar = "La epilepsia no ha podido ser eliminada";
+                            mensajeSnackBar = "La epilepsia no ha podido ser eliminado";
                         }
                     } else {
                         tipoSnackBar = Severity.Error;
@@ -196,15 +190,16 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
             }
         }
 
-        // Editar epilepsia
-        private async Task EditarEpilepsia(EditContext context) {
-            try { 
+
+        //Editar farmaco
+        private async Task EditarMutacion(EditContext context) {
+            try {
                 if (context.IsModified()) {
-                    EpilepsiasDto ep = (EpilepsiasDto) context.Model;
-                    HttpResponseMessage respuesta = await Http.PutAsJsonAsync("administracion/updateEpilepsia", ep);
+                    FarmacosDto far = (FarmacosDto)context.Model;
+                    HttpResponseMessage respuesta = await Http.PutAsJsonAsync("administracion/updateFarmaco", far);
 
                     Severity tipoSnackBar = Severity.Success; // Tipo de snackbar para mensaje
-                    string mensajeSnackBar = "Epilepsia editada exitosamente";
+                    string mensajeSnackBar = "Fármaco editada exitosamente";
 
                     if (respuesta.IsSuccessStatusCode) {
 
@@ -214,7 +209,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                                 await RecargarElementos();
                             } else {
                                 tipoSnackBar = Severity.Warning;
-                                mensajeSnackBar = "La epilepsia no ha podido ser editada";
+                                mensajeSnackBar = "El fármaco no ha podido ser editada";
                             }
                         } else {
                             tipoSnackBar = Severity.Warning;
@@ -233,3 +228,4 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
         }
     }
 }
+

@@ -54,10 +54,10 @@ namespace WebMedicina.FrontEnd.WebApp.Pages {
                 cargando = true;
                 respuesta = await Http.PostAsJsonAsync("cuentas/login", userLogin);
                 if (respuesta.IsSuccessStatusCode) {
-                    UserToken token = await respuesta.Content.ReadFromJsonAsync<UserToken>();
+                    UserToken? token = await respuesta.Content.ReadFromJsonAsync<UserToken>();
                     if (token != null && token.Expiration >= DateTime.Now) {
                         await _jwtAuthenticationProvider.Login(token.Token);
-                        redirigirManager.RedirigirDefault();
+                        await redirigirManager.RedirigirDefault();
                     } else {
                         throw new Exception("Error en el token de autenticación");
                     }

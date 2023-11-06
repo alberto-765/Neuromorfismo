@@ -1,0 +1,14 @@
+﻿@* Overlay de carga  *@
+@if(_isDarkMode != null){
+    <MudOverlay @bind-Visible="mostrarOverlay" DarkBackground="true" ZIndex="9999">
+        <div id="iconoOverLayCarga">
+            <div id="spinner" class="@((_isDarkMode == true ? "darkSpinner" : ""))"></div>
+            <img src="icono.png" alt="Icono" />
+        </div>
+    </MudOverlay>
+}
+
+@code{
+    [Parameter]public bool mostrarOverlay { get; set; }
+    [CascadingParameter(Name = "modoOscuro")] private bool? _isDarkMode { get; set; } = null;
+}

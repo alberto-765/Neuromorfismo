@@ -48,5 +48,8 @@ namespace WebMedicina.FrontEnd.Service {
                 // more color properties
             }
         };
+
+        // Mostrar overlay de carga
+        public bool _mostrarCargando { get; set; }
     }
 }
