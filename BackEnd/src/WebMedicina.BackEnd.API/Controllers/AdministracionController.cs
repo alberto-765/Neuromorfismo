@@ -16,7 +16,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
         }
 
 
-        // [WEB V1] - Epilepsias
+        //  Epilepsias
         [HttpGet("getEpilepsias")]
         public ActionResult<List<EpilepsiasDto>> GetEpilepsias() {
             try {
@@ -33,7 +33,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
 
         }
 
-        // [WEB V1] - Epilepsias
+        //  Epilepsias
         [HttpPost("crearEpilepsia")]
         public async Task<ActionResult<bool>> CrearEpilepsia([FromBody] string nombre) {
             try {
@@ -48,7 +48,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
         }
 
 
-        // [WEB V1] - Epilepsias
+        //  Epilepsias
         [HttpDelete("eliminarEpilepsia/{idEpilepsia}")]
         public async Task<ActionResult<bool>> DeleteEpilepsia(int idEpilepsia) {
             try {
@@ -62,7 +62,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
             }
         }
 
-        // [WEB V1] - Epilepsias
+        //  Epilepsias
         [HttpPut("updateEpilepsia")]
         public async Task<ActionResult<bool>> UpdateEpilepsia([FromBody] EpilepsiasDto epilepsia) {
             try {
@@ -83,7 +83,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
             }
         }
 
-        // [WEB V1] - Mutaciones
+        //  Mutaciones
         [HttpGet("getMutaciones")]
         public ActionResult<List<MutacionesDto>> GetMutaciones() {
             try {
@@ -100,7 +100,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
 
         }
 
-        // [WEB V1] - Mutaciones
+        //  Mutaciones
         [HttpPost("crearMutacion")]
         public async Task<ActionResult<bool>> CrearMutacion([FromBody] string nombre) {
             try {
@@ -115,7 +115,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
         }
 
 
-        // [WEB V1] - Mutaciones
+        //  Mutaciones
         [HttpDelete("eliminarMutacion/{idMutacion}")]
         public async Task<ActionResult<bool>> DeleteMutacion(int idMutacion) {
             try {
@@ -129,7 +129,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
             }
         }
 
-        // [WEB V1] - Mutaciones
+        //  Mutaciones
         [HttpPut("updateMutacion")]
         public async Task<ActionResult<bool>> UpdateMutacion([FromBody] MutacionesDto mutacion) {
             try {
@@ -151,7 +151,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
         }
 
 
-        // [WEB V1] - Farmacos
+        //  Farmacos
         [HttpGet("getFarmacos")]
         public ActionResult<List<FarmacosDto>> GetFarmacos() {
             try {
@@ -165,10 +165,9 @@ namespace WebMedicina.BackEnd.API.Controllers {
             } catch (Exception) {
                 return StatusCode(500, "Error interno del servidor");
             }
-
         }
 
-        // [WEB V1] - Farmacos
+        //  Farmacos
         [HttpPost("crearFarmaco")]
         public async Task<ActionResult<bool>> CrearFarmaco([FromBody] string nombre) {
             try {
@@ -183,7 +182,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
         }
 
 
-        // [WEB V1] - Farmacos
+        //  Farmacos
         [HttpDelete("eliminarFarmaco/{idFarmaco}")]
         public async Task<ActionResult<bool>> DeleteFarmaco(int idFarmaco) {
             try {
@@ -197,7 +196,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
             }
         }
 
-        // [WEB V1] - Farmacos 
+        //  Farmacos 
         [HttpPut("updateFarmaco")]
         public async Task<ActionResult<bool>> UpdateFarmaco([FromBody] FarmacosDto farmaco) {
             try {

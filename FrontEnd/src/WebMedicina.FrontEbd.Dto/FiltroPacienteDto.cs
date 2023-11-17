@@ -9,18 +9,16 @@ namespace WebMedicina.FrontEnd.Dto {
 
         public string Sexo { get; set; } = String.Empty;
 
-        public decimal Talla { get; set; }
+        public decimal Talla { get; set; } = 50;
 
         public IEnumerable<string> Farmacos { get; set; } = new HashSet<string>();
 
-        public IEnumerable<int> TipoEpilepsias { get; set; } = new HashSet<int>();
+        public IEnumerable<string> TipoEpilepsias { get; set; } = new HashSet<string>();
 
-        public IEnumerable<int> TipoMutacion { get; set; } = new HashSet<int>();
+        public IEnumerable<string> TipoMutacion { get; set; } = new HashSet<string>();
 
-        public string EnfermRaras { get; set; } = "No";
+        public bool EnfermRaras { get; set; }
 
-        public string MedicoUltMod { get; set; } = string.Empty;
-
-        public string MedicoCreador { get; set; } = string.Empty;
+        public string Medico { get; set; } = string.Empty; // Filtrado por los pacientes de un medico
     }
 }

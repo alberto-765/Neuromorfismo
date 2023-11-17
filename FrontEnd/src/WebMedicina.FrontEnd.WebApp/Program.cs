@@ -1,14 +1,10 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.Configuration;
 using WebMedicina.FrontEnd.Service;
 using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.FrontEnd.WebApp;
-using WebMedicina.Shared.Dto;
 using MudBlazor.Services;
-using Microsoft.AspNetCore.Components;
-using MudBlazor;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
@@ -20,11 +16,13 @@ builder.Services.AddHttpClient("HttpAPI", client => {
     client.BaseAddress = new Uri(builder.Configuration["ApiSettings:BaseUrl"]);
 });
 builder.Services.AddSingleton<IConfigurationBuilder>(builder.Configuration); // para la configuracion
-builder.Services.AddSingleton<ICrearHttpClient, CrearHttpClient>(); // para crear Httpclient
-builder.Services.AddSingleton<ExcepcionDto>(); // excepciones
-builder.Services.AddSingleton<EstilosBase>(); // Base de estilos mudblazor
-builder.Services.AddSingleton<IRedirigirManager, RedirigirManager>(); // Redirigir 
+builder.Services.AddScoped<ICrearHttpClient, CrearHttpClient>(); // para crear Httpclient
+builder.Services.AddScoped<ExcepcionPersonalizada>(); // excepciones
+builder.Services.AddScoped<EstilosBase>(); // Base de estilos mudblazor
+builder.Services.AddScoped<IRedirigirManager, RedirigirManager>(); // Redirigir 
 builder.Services.AddScoped<IAdminsService, AdminsService>(); // Service de admins
+builder.Services.AddScoped<IPerfilService, PerfilService>(); // Service para control del perfil
+builder.Services.AddScoped<IPacientesService, PacientesService>(); // Service para pacientes
 
 // Dependencias autenticacion
 builder.Services.AddScoped<JWTAuthenticationProvider>();

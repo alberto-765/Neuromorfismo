@@ -10,6 +10,7 @@ using WebMedicina.BackEnd.Model;
 using WebMedicina.BackEnd.Service;
 using WebMedicina.BackEnd.ServicesDependencies;
 using WebMedicina.Shared.Dto;
+using WebMedicina.Shared.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -88,7 +89,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 // Activamos CORS para permitir llamadas a la api desde otras url
 builder.Services.AddCors(option => {
 	option.AddPolicy("MyPolitica", app => {
-		app.AllowAnyOrigin()
+		app.WithOrigins(builder.Configuration["AppSettings:BaseUrl"])
 		.AllowAnyHeader() 
 		.AllowAnyMethod();
 	});
@@ -96,12 +97,21 @@ builder.Services.AddCors(option => {
 
 
 //DEPENDENCIAS
-builder.Services.AddSingleton<ExcepcionDto>(); // excepciones
+builder.Services.AddSingleton<ExcepcionPersonalizada>(); // excepciones
 builder.Services.AddSingleton<IEncriptador, Encriptador>(); // encriptador
+
+// DAL - BASE DE DATOS
 builder.Services.AddScoped<AdminDal>(); // Dal de administradores
-builder.Services.AddScoped<MedicoDal>(); // Dal de administradores
+builder.Services.AddScoped<MedicoDal>(); // Dal de medicos
+builder.Services.AddScoped<PacientesDal>(); // Dal de pacientes
+builder.Services.AddScoped<EpilepsiasDal>(); // Dal de epilepsias
+builder.Services.AddScoped<FarmacosDal>(); // Dal de farmacos
+builder.Services.AddScoped<MutacionesDal>(); // Dal de mutaciones
+
+// SERVICES
 builder.Services.AddScoped<IIdentityService, IdentityService>(); // Servicios que trabajan con identity
 builder.Services.AddScoped<IAdminsService, AdminsService>(); // Servicios de administradores
+builder.Services.AddScoped<IPacientesService, PacientesService>(); // Servicios de pacientes
 
 
 

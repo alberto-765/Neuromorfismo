@@ -119,6 +119,21 @@ namespace WebMedicina.BackEnd.API.Controllers {
             }
         }
 
+        // Comprobamos si el userName está disponible
+        [HttpPost("cerrarSesion")]
+        public async Task<IActionResult> CerrarSesion([FromBody] string userName) {
+            try {
+                if (!string.IsNullOrWhiteSpace(userName)) {
+                    return Ok(await _identityService.ComprobarUserName(userName));
+                }
+                return Ok(false);
+            } catch (Exception ex) {
+                return StatusCode(500, "Error interno del servidor");
+            }
+        }
+
+
+
         private UserToken BuildToken(UserInfoDto userInfo) {
             try { 
                 var claims = new [] {

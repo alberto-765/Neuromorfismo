@@ -1,9 +1,8 @@
 ﻿@inherits LayoutComponentBase
 @inject EstilosBase estilosBase
-@inject ExcepcionDto excepcionPersonalizada
+@inject ExcepcionPersonalizada excepcionPersonalizada
 @inject IJSRuntime js
-@inject ExcepcionDto _excepcionPersonalizada
-
+@inject ExcepcionPersonalizada _excepcionPersonalizada
 
 <MudThemeProvider @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode" Theme="estilosBase.currentTheme" />
     <MudDialogProvider />
@@ -28,15 +27,9 @@
             @* Boton Modo Oscuro*@
             <MudToggleIconButton @bind-Toggled="@IsDarkMode" Icon="@Icons.Material.Outlined.DarkMode" Title="Cambiar a modo oscuro"
                                     ToggledIcon="@Icons.Material.Outlined.LightMode" ToggledTitle="Cambiar a modo claro" />
-            @* Perfil Cambiar contraseña solo para autenticados *@
-            <AuthorizeView>
-                <Authorized>
-                    <MudMenu Icon="@Icons.Material.Outlined.AccountCircle" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopRight">
-                        <MudMenuItem Color="Color.Dark" Icon="@Icons.Material.Filled.ManageAccounts">Perfil</MudMenuItem>
-                        <MudMenuItem Color="Color.Dark" Icon="@Icons.Material.Filled.Password">Contraseña</MudMenuItem>
-                    </MudMenu>
-                </Authorized>
-            </AuthorizeView>
+
+            @* Perfil  *@
+            <Perfil />
         </MudAppBar>
 
         @* Drawer solo para autenticados *@
@@ -45,14 +38,20 @@
                 <MudDrawer @bind-Open="@open" ClipMode="clipMode" Elevation="1" Breakpoint="@Breakpoint.Md" Variant="@DrawerVariant.Responsive" PreserveOpenState="true">
                         <NavMenu />
                 </MudDrawer>
+                 <MudMainContent Class="cienHeight">
+                    <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Class="d-flex flex-column">
+                        @Body
+                    </MudContainer>
+                 </MudMainContent>
             </Authorized>
+            <NotAuthorized>
+                    <MudMainContent id="loginContainer">
+                        <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Class="d-flex flex-column">
+                            @Body
+                        </MudContainer>
+                    </MudMainContent>
+            </NotAuthorized>
         </AuthorizeView>
-
-        <MudMainContent Class="cienHeight">
-                <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Class="d-flex flex-column">
-                @Body
-            </MudContainer>
-        </MudMainContent>
     </MudLayout>
 </CascadingValue>
 </CascadingValue>
@@ -101,5 +100,6 @@
         } 
         open = !open;
     }
+
 }
 

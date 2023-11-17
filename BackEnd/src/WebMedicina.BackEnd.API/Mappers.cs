@@ -44,6 +44,9 @@ namespace WebMedicina.BackEnd.API {
             // Mapeo Farmacos
             CreateMap<FarmacosModel, FarmacosDto>().ReverseMap();
 
+            // Mapeo tabla medicos pacientes
+            CreateMap<MedicospacienteModel, MedicosPacientesDto>();
+
             // Mapeamos listas
             //CreateMap<ListaOrigen, ListaDestino>()
             //	.ReverseMap(); // esto es para que pueda ser en ambos sentidos y no solo origen-destino

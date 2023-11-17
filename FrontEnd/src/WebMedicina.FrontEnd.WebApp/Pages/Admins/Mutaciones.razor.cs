@@ -3,13 +3,14 @@ using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
 using System.Net;
 using System.Net.Http.Json;
+using WebMedicina.FrontEnd.Service;
 using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.FrontEnd.WebApp.Pages.Admins.PopUpCrear;
 using WebMedicina.Shared.Dto;
 
 namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
     public partial class Mutaciones {
-        [CascadingParameter(Name = "excepcionPersonalizada")] ExcepcionDto excepcionPersonalizada { get; set; }
+        [CascadingParameter(Name = "excepcionPersonalizada")] ExcepcionPersonalizada excepcionPersonalizada { get; set; }
         [Inject] private IDialogService DialogService { get; set; } // Pop up eliminar mutacion
         [Inject] private ISnackbar _snackbar { get; set; }
         [Inject] ICrearHttpClient _crearHttpClient { get; set; }

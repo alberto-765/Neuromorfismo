@@ -8,18 +8,16 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Security.Claims;
-using System.Text.Json;
+using WebMedicina.FrontEnd.Service;
 using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.Shared.Dto;
-using static MudBlazor.CategoryTypes;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
     public partial class GestionUsers {
         // DEPENDENCIAS
         [Inject] IAdminsService _adminsService { get; set; }
         [Inject] IRedirigirManager redirigirManager { get; set; }
-        [CascadingParameter(Name = "excepcionPersonalizada")] ExcepcionDto excepcionPersonalizada { get; set; }
+        [CascadingParameter(Name = "excepcionPersonalizada")] ExcepcionPersonalizada excepcionPersonalizada { get; set; }
         [Inject] ICrearHttpClient _crearHttpClient { get; set; }
         [Inject] private ISnackbar _snackbar { get; set; }
         [Inject] IJSRuntime js { get; set; }

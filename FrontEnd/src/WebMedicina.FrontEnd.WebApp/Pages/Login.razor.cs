@@ -19,7 +19,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages {
         private InputType tipoInputPass { get; set; } = InputType.Password;
         [Inject] JWTAuthenticationProvider _jwtAuthenticationProvider { get; set; }
         [Inject] IRedirigirManager redirigirManager { get; set; }
-        [CascadingParameter(Name = "excepcionPersonalizada")] ExcepcionDto excepcionPersonalizada { get; set; }
+        [CascadingParameter(Name = "excepcionPersonalizada")] ExcepcionPersonalizada excepcionPersonalizada { get; set; }
         [Inject] ICrearHttpClient _crearHttpClient { get; set; }
         private HttpClient Http { get; set; }
 

@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Http.Json;
 using System.Security.Claims;
-using System.Text;
+using WebMedicina.FrontEnd.Service;
 using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.Shared.Dto;
 
@@ -22,8 +20,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
         private ClaimsPrincipal? user { get; set; }
         [Inject] ICrearHttpClient _crearHttpClient { get; set; }
         private HttpClient Http { get; set; }
-        [CascadingParameter(Name = "excepcionPersonalizada")] ExcepcionDto excepcionPersonalizada { get; set; }
-        [Inject] IRedirigirManager _redirigirManager { get; set; }
+        [CascadingParameter(Name = "excepcionPersonalizada")] ExcepcionPersonalizada excepcionPersonalizada { get; set; }
         [Inject] IAdminsService _adminsService { get; set; }
 
         protected override async Task OnInitializedAsync()
@@ -62,7 +59,9 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                         config.ShowCloseIcon = false;
                         config.VisibleStateDuration = 5000;
                     });
-                    await _redirigirManager.RedirigirPagAnt();
+
+                    // Reiniciamos el objeto de nuevo usuario
+                    userRegistro = new();
                 } else {
                     cargando = false;
                     _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopStart;

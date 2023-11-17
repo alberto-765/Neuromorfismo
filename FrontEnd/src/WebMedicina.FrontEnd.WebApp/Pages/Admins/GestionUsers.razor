@@ -4,12 +4,12 @@
 @attribute [Authorize(Roles = "superAdmin, admin")]
 <PageTitle>Gestión Médicos</PageTitle>
 
-<h1 class="mt-4 mt-sm-8 ml-sm-8">
+<h1 class="mt-4 mt-sm-8 ml-sm-8 d-flex align-center">
     Gestión de Usuarios
     @if (mostrarTooltip) {
         <MudTooltip>
             <ChildContent>
-                <MudIconButton Icon="@Icons.Material.Filled.Delete" />
+                <MudIconButton Icon="@Icons.Material.Outlined.Info" />
             </ChildContent>
             <TooltipContent>
                 @tooltipInfoUser

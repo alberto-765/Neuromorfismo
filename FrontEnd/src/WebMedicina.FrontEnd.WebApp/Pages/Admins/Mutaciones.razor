@@ -2,14 +2,14 @@
 
 @page "/mutaciones"
 <PageTitle>Mutaciones</PageTitle>
-<MudContainer Class="px-0 d-flex flex-column gap-sm-5" MaxWidth="MaxWidth.Large">
+<MudContainer Class="px-0 d-flex flex-column gap-sm-5" MaxWidth="MaxWidth.Medium">
 
     <h1 class="mt-4 mt-sm-8">Gestión Mutaciones</h1>
     <div class="mt-4 mt-sm-0">
         <MudButton Color="Color.Success" OnClick="crearMutacion" id="btnCrear" Variant="Variant.Filled" Size="Size.Small" StartIcon="@Icons.Material.Outlined.AddCircleOutline">Crear</MudButton>
     </div>
     @if (mostrarTabla) {
-        <MudStack>
+        <MudStack Class="mx-sm-16 mt-sm-4">
             <div class="@((MutacionesTabla != null && MutacionesTabla.Any() ? "" : "d-none"))">
                 <MudTable T="MutacionesDto" Items="@MutacionesTabla" Hover="true" Breakpoint="Breakpoint.Xs" @ref="tabla" RowClassFunc="@SelectedRowClassFunc" Elevation="3"
                           Class="pa-4" OnRowClick="RowClickEvent" Loading="mostrarCargandoTabla" LoadingProgressColor="Color.Info">
@@ -48,5 +48,5 @@
         <Error mensajeError="No se han encontrado <b>tipos de mutaciones</b>" />
     }
 
-    <OverlayCargando mostrarOverlay=mostrarCargandoInicial />
+    <OverlayCargando mostrarOverlay=true />
 </MudContainer>

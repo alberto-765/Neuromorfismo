@@ -1,18 +1,42 @@
-﻿#botonFiltros {
-    right: 15px;
-    margin-top: 10px;
-}
-#botonCrearPaciente{
-    top: 16%;
-}
-/*Estilos drawe filtros*/ 
+﻿/*Estilos drawe filtros*/ 
 ::deep #drawerFiltros{
-    height: 85%;
+    height: 80%;
     bottom: 0;
     transition: opacity 1s ease-in-out;
 }
 ::deep #drawerFiltros .drawerFiltros__Opcion{
     padding: 20px;
-} 
-
-
+}
+/*Boton crear paciente modo oscuro*/
+::deep #btnCrearPacienteDark {
+    background: #42A5F5;
+    color: white;
+}
+/*Boton crear paciente modo claro*/
+::deep #btnCrearPacienteDef {
+    background: #64B5F6;
+    color: black;
+}
+/*Switch boton filtros */
+#btnFiltros ::deep .mud-switch {
+    margin-right: 0 !important;
+}
+#btnFiltros[modoOscuro] ::deep .mud-icon-default {
+    color: rgb(12 12 12);
+}
+/*Boton orndear talla*/
+::deep #ordenarTalla {
+    height: fit-content;
+}
+/*Slider de la talla*/
+::deep #sliderTalla .mud-slider-container {
+    margin-left: 5px;
+}
+/*Estilos filtros panel filtros*/
+::deep .filtro, ::deep #sliderTalla p:first-child {
+    margin-top: 15px;
+}
+/*Estilos check enfermedad rara*/
+::deep .checkEnfRara .mud-icon-button {
+    padding: 0 5px 0 0;
+}

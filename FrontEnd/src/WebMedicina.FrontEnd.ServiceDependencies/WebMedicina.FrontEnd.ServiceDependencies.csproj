@@ -13,4 +13,8 @@
     <PackageReference Include="Microsoft.JSInterop" Version="7.0.11" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\WebMedicina.Shared.Dto\WebMedicina.Shared.Dto.csproj" />
+  </ItemGroup>
+
 </Project>

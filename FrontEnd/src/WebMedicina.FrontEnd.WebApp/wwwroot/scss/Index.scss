@@ -5,6 +5,12 @@
     height:100%;
     display: flex;
 }
+#loginContainer {
+    min-height: 100vh;
+    max-width: 100vw;
+    height: 100%;
+    display: flex;
+}
 #navMenu {
     & > .mud-nav-item .mud-nav-link {
             padding: 20px;

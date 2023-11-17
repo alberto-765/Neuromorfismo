@@ -2,14 +2,14 @@
 
 @page "/epilepsias"
 <PageTitle>Epilepsias</PageTitle>
-<MudContainer Class="px-0 d-flex flex-column gap-sm-5 gap-3" MaxWidth="MaxWidth.Large">
+<MudContainer Class="px-0 d-flex flex-column gap-sm-5 gap-3" MaxWidth="MaxWidth.Medium">
 
 <h1 class="mt-4 mt-sm-8">Gestión Epilepsias</h1>
     <div class="">
     <MudButton Color="Color.Success"  OnClick="crearEpilepsia" id="btnCrear" Variant="Variant.Filled" Size="Size.Small" StartIcon="@Icons.Material.Outlined.AddCircleOutline">Crear</MudButton>
 </div>
 @if (mostrarTabla) {
-    <MudStack>
+    <MudStack Class="mx-sm-16 mt-sm-4">
         <div class="@((EpilepsiasTabla!= null && EpilepsiasTabla.Any() ? "" : "d-none"))">
             <MudTable T="EpilepsiasDto" Items="@EpilepsiasTabla" Hover="true" Breakpoint="Breakpoint.Xs" @ref="tabla" RowClassFunc="@SelectedRowClassFunc" Elevation="3"
                           Class="pa-4" OnRowClick="RowClickEvent" Loading="mostrarCargandoTabla" LoadingProgressColor="Color.Info">

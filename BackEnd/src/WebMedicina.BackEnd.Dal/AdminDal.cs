@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WebMedicina.BackEnd.Model;
 using WebMedicina.Shared.Dto;
+using WebMedicina.Shared.Service;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WebMedicina.BackEnd.Dal {
@@ -18,7 +19,7 @@ namespace WebMedicina.BackEnd.Dal {
         private readonly IMapper _mapper;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public AdminDal(WebmedicinaContext context, IMapper mapper, ExcepcionDto excepcionDto, UserManager<IdentityUser> userManager) {
+        public AdminDal(WebmedicinaContext context, IMapper mapper, UserManager<IdentityUser> userManager) {
             _context = context;
             _mapper = mapper;
             _userManager = userManager;
@@ -126,180 +127,5 @@ namespace WebMedicina.BackEnd.Dal {
                 throw;
             }
         }
-
-        // [WEB V1] - Get EPILEPSIAS
-        public List<EpilepsiasDto> GetEpilepsias() {
-            try {
-                return _mapper.Map<List<EpilepsiasDto>>(_context.Epilepsias.ToList());
-            } catch (Exception) {  throw;  }
-        }
-
-        // [WEB V1] - Create EPILEPSIAS
-        public async Task<bool> CrearEpilepsia(string nombre) {
-            try {
-                EpilepsiaModel nuevaEpilepsia = new() { 
-                    Nombre = nombre
-                };
-
-                await _context.Epilepsias.AddAsync(nuevaEpilepsia);
-                return await _context.SaveChangesAsync() > 0;
-            } catch (Exception) {
-                throw;
-            }
-        }
-
-        // [WEB V1] - Delete EPILEPSIAS
-        public async Task<bool> DeleteEpilepsia(int idEpilepsia) {
-            try {
-                EpilepsiaModel? epilepsiaBorrada = await _context.Epilepsias.FindAsync(idEpilepsia);
-                if (epilepsiaBorrada != null) {
-                    _context.Epilepsias.Remove(epilepsiaBorrada);
-                }
-                return await _context.SaveChangesAsync() > 0;
-            } catch (Exception) {
-                throw;
-            }
-        }
-
-        // [WEB V1] - Update EPILEPSIAS
-        public async Task<(bool validacionEntry, bool filasModif)> UpdateEpilepsia(EpilepsiasDto epilepsia) {
-            try {
-                EpilepsiaModel ep = _context.Epilepsias.Find(epilepsia.IdEpilepsia);
-                bool validacionEntry = false, filasModif = false;
-                if (ep != null) {
-                    
-                    // Asignamos nuevo nombre
-                   ep.Nombre = epilepsia.Nombre;
-
-                    // Verificamos que el objeto haya sido modicado
-                    var entry = _context.Entry(ep);
-                    if(entry.State == EntityState.Modified) {
-                        validacionEntry = true;
-                        filasModif =  await _context.SaveChangesAsync() > 0;
-                    }
-                
-                }
-                return (validacionEntry, !filasModif);
-            } catch (Exception) {
-                throw;
-            }
-        }
-
-        // [WEB V1] - Get FARMACOS
-        public List<FarmacosDto> GetFarmacos() {
-            try {
-                return _mapper.Map<List<FarmacosDto>>(_context.Farmacos.ToList());
-            } catch (Exception) { throw; }
-        }
-
-        // [WEB V1] - Create FARMACOS
-        public async Task<bool> CrearFarmaco(string nombre) {
-            try {
-                FarmacosModel nuevoFarmaco = new() {
-                    Nombre = nombre
-                };
-
-                await _context.Farmacos.AddAsync(nuevoFarmaco);
-                return await _context.SaveChangesAsync() > 0;
-            } catch (Exception) {
-                throw;
-            }
-        }
-
-        // [WEB V1] - Delete FARMACOS
-        public async Task<bool> DeleteFarmaco(int idFarmaco) {
-            try {
-                FarmacosModel? farmacoBorrado = await _context.Farmacos.FindAsync(idFarmaco);
-                if (farmacoBorrado != null) {
-                    _context.Farmacos.Remove(farmacoBorrado);
-                }
-                return await _context.SaveChangesAsync() > 0;
-            } catch (Exception) {
-                throw;
-            }
-        }
-
-        // [WEB V1] - Update FARMACOS
-        public async Task<(bool validacionEntry, bool filasModif)> UpdateFarnaco(FarmacosDto farmaco) {
-            try {
-                FarmacosModel far = _context.Farmacos.Find(farmaco.IdFarmaco);
-                bool validacionEntry = false, filasModif = false;
-                if (far != null) {
-
-                    // Asignamos nuevo nombre
-                    far.Nombre = farmaco.Nombre;
-
-                    // Verificamos que el objeto haya sido modicado
-                    var entry = _context.Entry(far);
-                    if (entry.State == EntityState.Modified) {
-                        validacionEntry = true;
-                        filasModif = await _context.SaveChangesAsync() > 0;
-                    }
-
-                }
-                return (validacionEntry, !filasModif);
-            } catch (Exception) {
-                throw;
-            }
-        }
-
-        // [WEB V1] - Get MUTACION
-        public List<MutacionesDto> GetMutaciones() {
-            try {
-                return _mapper.Map<List<MutacionesDto>>(_context.Mutaciones.ToList());
-            } catch (Exception) { throw; }
-        }
-
-        // [WEB V1] - Create MUTACION
-        public async Task<bool> CrearMutacion(string nombre) {
-            try {
-                MutacionesModel nuevaMutacion = new() {
-                    Nombre = nombre
-                };
-
-                await _context.Mutaciones.AddAsync(nuevaMutacion);
-                return await _context.SaveChangesAsync() > 0;
-            } catch (Exception) {
-                throw;
-            }
-        }
-
-        // [WEB V1] - Delete MUTACION
-        public async Task<bool> DeleteMutacion(int idMutacion) {
-            try {
-                MutacionesModel? mutacionBorrada = await _context.Mutaciones.FindAsync(idMutacion);
-                if (mutacionBorrada != null) {
-                    _context.Mutaciones.Remove(mutacionBorrada);
-                }
-                return await _context.SaveChangesAsync() > 0;
-            } catch (Exception) {
-                throw;
-            }
-        }
-
-        // [WEB V1] - Update MUTACION
-        public async Task<(bool validacionEntry, bool filasModif)> UpdateMutacion(MutacionesDto mutacion) {
-            try {
-                MutacionesModel mut = _context.Mutaciones.Find(mutacion.IdMutacion);
-                bool validacionEntry = false, filasModif = false;
-                if (mut != null) {
-
-                    // Asignamos nuevo nombre
-                    mut.Nombre = mutacion.Nombre;
-
-                    // Verificamos que el objeto haya sido modicado
-                    var entry = _context.Entry(mut);
-                    if (entry.State == EntityState.Modified) {
-                        validacionEntry = true;
-                        filasModif = await _context.SaveChangesAsync() > 0;
-                    }
-
-                }
-                return (validacionEntry, !filasModif);
-            } catch (Exception) {
-                throw;
-            }
-        }
-
     }
 }

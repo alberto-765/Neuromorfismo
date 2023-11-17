@@ -2,14 +2,14 @@
 
 @page "/farmacos"
 <PageTitle>Fármacos</PageTitle>
-<MudContainer Class="px-0 d-flex flex-column gap-sm-5" MaxWidth="MaxWidth.Large">
+<MudContainer Class="px-0 d-flex flex-column gap-sm-5" MaxWidth="MaxWidth.Medium">
 
     <h1 class="mt-4 mt-sm-8">Gestión Fármacos</h1>
     <div class="mt-4 mt-sm-0">
         <MudButton Color="Color.Success" OnClick="crearFarmaco" id="btnCrear" Variant="Variant.Filled" Size="Size.Small" StartIcon="@Icons.Material.Outlined.AddCircleOutline">Crear</MudButton>
     </div>
     @if (mostrarTabla) {
-        <MudStack>
+        <MudStack Class="mx-sm-16 mt-sm-4">
             <div class="@((FarmacosTabla!= null && FarmacosTabla.Any() ? "" : "d-none"))">
                 <MudTable T="FarmacosDto" Items="@FarmacosTabla" Hover="true" Breakpoint="Breakpoint.Xs" @ref="tabla" RowClassFunc="@SelectedRowClassFunc" Elevation="3"
                           Class="pa-4" OnRowClick="RowClickEvent" Loading="mostrarCargandoTabla" LoadingProgressColor="Color.Info">

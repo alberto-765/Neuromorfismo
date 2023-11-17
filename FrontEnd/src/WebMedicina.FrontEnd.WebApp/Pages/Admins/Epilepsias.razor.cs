@@ -15,7 +15,7 @@ using static System.Net.WebRequestMethods;
 
 namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
     public partial class Epilepsias {
-        [CascadingParameter(Name = "excepcionPersonalizada")] ExcepcionDto excepcionPersonalizada { get; set; }
+        [CascadingParameter(Name = "excepcionPersonalizada")] ExcepcionPersonalizada excepcionPersonalizada { get; set; }
         [Inject] private IDialogService DialogService { get; set; } // Pop up eliminar epilepsia
         [Inject] private ISnackbar _snackbar { get; set; }
         [Inject] ICrearHttpClient _crearHttpClient { get; set; }

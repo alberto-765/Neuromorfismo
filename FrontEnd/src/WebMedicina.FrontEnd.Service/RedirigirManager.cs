@@ -14,9 +14,9 @@ namespace WebMedicina.FrontEnd.Service {
         private readonly NavigationManager navigationManager;
         private readonly IJSRuntime js;
         private const string enlaceSeguimiento  = "segEnl";
-        private readonly ExcepcionDto excepcionPers;
+        private readonly ExcepcionPersonalizada excepcionPers;
         // replaceHistoryEntry
-        public RedirigirManager(NavigationManager navigationManager, IJSRuntime js, ExcepcionDto excepcion) {
+        public RedirigirManager(NavigationManager navigationManager, IJSRuntime js, ExcepcionPersonalizada excepcion) {
             this.navigationManager = navigationManager;
             this.js = js;
             excepcionPers = excepcion;
@@ -24,7 +24,7 @@ namespace WebMedicina.FrontEnd.Service {
 
         public async Task RedirigirLogin() {
             try {
-                    string urlActual = navigationManager.Uri;
+                string urlActual = navigationManager.Uri;
                 string baseUri = navigationManager.BaseUri;
                 if (urlActual.Replace(baseUri, "") != "login") {
                     await RedirigirDefault("login");
@@ -42,7 +42,7 @@ namespace WebMedicina.FrontEnd.Service {
 
                 await js.SetInSessionStorage(enlaceSeguimiento, paginaActual);
             } catch (Exception ex) {
-                        excepcionPers.ConstruirPintarExcepcion(ex);
+                excepcionPers.ConstruirPintarExcepcion(ex);
             }
 }
 
@@ -56,7 +56,7 @@ namespace WebMedicina.FrontEnd.Service {
                     await RedirigirDefault();
                 }
             } catch (Exception ex) {
-                    excepcionPers.ConstruirPintarExcepcion(ex);
+                excepcionPers.ConstruirPintarExcepcion(ex);
              }
 }
 

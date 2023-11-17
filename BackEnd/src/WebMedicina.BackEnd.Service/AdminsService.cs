@@ -14,6 +14,9 @@ namespace WebMedicina.BackEnd.Service {
     public class AdminsService : IAdminsService {
 
         private readonly AdminDal _adminDal;
+        private readonly EpilepsiasDal _epilepsiasDal;
+        private readonly FarmacosDal _farmacosDal;
+        private readonly MutacionesDal _mutacionesDal;
         private readonly IMapper _mapper;
 
 
@@ -23,21 +26,21 @@ namespace WebMedicina.BackEnd.Service {
             _mapper = mapper;   
         }
 
-        // [WEB V1] - Crear nuevo usuario (superAdmin, admin medico)
+        // Crear nuevo usuario (superAdmin, admin medico)
         public bool CrearMedico(UserRegistroDto nuevoMedico, string idUsuario) {
             try {
                 return _adminDal.CrearNuevoMedico(nuevoMedico, idUsuario);
             } catch (Exception) { throw; }
         }
 
-        // [WEB V1] - Filtrar tabla de usuarios
+        // Filtrar tabla de usuarios
         public async Task<List<UserUploadDto>> ObtenerFiltradoUsuarios(Dictionary<string, string> filtros, ClaimsPrincipal user) {
             try {
                 return FiltrarUsuarios(await _adminDal.ObtenerMedicos(filtros, _mapper.Map<UserInfoDto>(user)), user);
             } catch (Exception) { throw; }
         }
 
-        // [WEB V1] - Filtramos por los permisos del administrador 
+        // Filtramos por los permisos del administrador 
         public List<UserUploadDto> FiltrarUsuarios(List<UserUploadDto> listaUsuarios, ClaimsPrincipal user) {
 
             // Los administradores no podrán editar a super administradores
@@ -48,7 +51,7 @@ namespace WebMedicina.BackEnd.Service {
             }
         }
 
-        // [WEB V1] - Update del medico pasado por parametro
+        // Update del medico pasado por parametro
         public async Task<bool> ActualizarMedico (UserUploadDto medicoActualizado) {
             try {
                 return await _adminDal.UpdateMedico(medicoActualizado);
@@ -56,97 +59,89 @@ namespace WebMedicina.BackEnd.Service {
         }
 
 
-
-
-
-        // [WEB V1] - Obtener todas las epilepsias disponibles 
+        // Obtener todas las epilepsias disponibles 
         public List<EpilepsiasDto> ObtenerEpilepsias() {
             try {
-                 return _adminDal.GetEpilepsias();
+                 return _epilepsiasDal.GetEpilepsias();
             } catch (Exception) { throw; }
         }
 
-        // [WEB V1] - Crear una nueva epilepsia
+        // Crear una nueva epilepsia
         public async Task<bool> CrearNuevaEpilepsia(string nombre) {
             try {
-                return await _adminDal.CrearEpilepsia(nombre);
+                return await _epilepsiasDal.CrearEpilepsia(nombre);
             } catch (Exception) { throw; }
         }
 
-        // [WEB V1] - Eliminar epilepsia
+        // Eliminar epilepsia
         public async Task<bool> EliminarEpilepsia(int idEpilepsia) {
             try {
-                return await _adminDal.DeleteEpilepsia(idEpilepsia);
+                return await _epilepsiasDal.DeleteEpilepsia(idEpilepsia);
             } catch (Exception) { throw; }
         }
 
-        // [WEB V1] - Actualizar nombre epilepsia
+        // Actualizar nombre epilepsia
         public async Task<(bool validacionEntry, bool filasModif)> ActualizarEpilepsia(EpilepsiasDto epilepsia) {
             try {
-                return await _adminDal.UpdateEpilepsia(epilepsia);
+                return await _epilepsiasDal.UpdateEpilepsia(epilepsia);
             } catch (Exception) { throw; }
         }
 
 
-
-
-        // [WEB V1] - Obtener todas las mutaciones disponibles 
+        // Obtener todas las mutaciones disponibles 
         public List<MutacionesDto> ObtenerMutaciones() {
             try {
-                return _adminDal.GetMutaciones();
+                return _mutacionesDal.GetMutaciones();
             } catch (Exception) { throw; }
         }
 
-        // [WEB V1] - Crear una nueva mutacion
+        // Crear una nueva mutacion
         public async Task<bool> CrearNuevaMutacion(string nombre) {
             try {
-                return await _adminDal.CrearMutacion(nombre);
+                return await _mutacionesDal.CrearMutacion(nombre);
             } catch (Exception) { throw; }
         }
 
-        // [WEB V1] - Eliminar mutacion
+        // Eliminar mutacion
         public async Task<bool> EliminarMutacion(int idMutacion) {
             try {
-                return await _adminDal.DeleteMutacion(idMutacion);
+                return await _mutacionesDal.DeleteMutacion(idMutacion);
             } catch (Exception) { throw; }
         }
 
-        // [WEB V1] - Actualizar nombre mutacion
+        // Actualizar nombre mutacion
         public async Task<(bool validacionEntry, bool filasModif)> ActualizarMutacion(MutacionesDto mutacion) {
             try {
-                return await _adminDal.UpdateMutacion(mutacion);
+                return await _mutacionesDal.UpdateMutacion(mutacion);
             } catch (Exception) { throw; }
         }
 
 
-
-
-
-        // [WEB V1] - Obtener todas las farmacos disponibles 
+        // Obtener todas las farmacos disponibles 
         public List<FarmacosDto> ObtenerFarmacos() {
             try {
-                return _adminDal.GetFarmacos();
+                return _farmacosDal.GetFarmacos();
             } catch (Exception) { throw; }
         }
 
-        // [WEB V1] - Crear una nuevo farmaco
+        // Crear una nuevo farmaco
         public async Task<bool> CrearNuevoFarmaco(string nombre) {
             try {
-                return await _adminDal.CrearFarmaco(nombre);
+                return await _farmacosDal.CrearFarmaco(nombre);
             } catch (Exception) { throw; }
         }
 
-        // [WEB V1] - Eliminar farmaco
+        // Eliminar farmaco
         public async Task<bool> EliminarFarmaco(int idFarmaco) {
             try {
-                return await _adminDal.DeleteFarmaco(idFarmaco);
+                return await _farmacosDal.DeleteFarmaco(idFarmaco);
             } catch (Exception) { throw; }
         }
 
-        // [WEB V1] - Actualizar nombre farmaco
+        // Actualizar nombre farmaco
         public async Task<(bool validacionEntry, bool filasModif)> ActualizarFarmaco(FarmacosDto farmaco) {
             try {
-                return await _adminDal.UpdateFarnaco(farmaco);
+                return await _farmacosDal.UpdateFarnaco(farmaco);
             } catch (Exception) { throw; }
         }
     }

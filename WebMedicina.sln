@@ -25,6 +25,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebMedicina.FrontEnd.Servic
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebMedicina.FrontEnd.ServiceDependencies", "FrontEnd\src\WebMedicina.FrontEnd.ServiceDependencies\WebMedicina.FrontEnd.ServiceDependencies.csproj", "{501B3FEB-8C5B-4744-9B55-BCF214079036}"
+	ProjectSection(ProjectDependencies) = postProject
+		{83C2F759-BFA5-4334-9C9D-AEA871DD8945} = {83C2F759-BFA5-4334-9C9D-AEA871DD8945}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebMedicina.BackEnd.Model", "BackEnd\src\WebMedicina.BackEnd.Model\WebMedicina.BackEnd.Model.csproj", "{224E3915-E6EE-4E80-A52D-508EC99FCB2E}"
 EndProject

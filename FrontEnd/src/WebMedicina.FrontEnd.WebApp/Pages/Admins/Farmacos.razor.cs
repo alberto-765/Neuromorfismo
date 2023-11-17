@@ -6,10 +6,11 @@ using System.Net;
 using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.FrontEnd.WebApp.Pages.Admins.PopUpCrear;
 using WebMedicina.Shared.Dto;
+using WebMedicina.FrontEnd.Service;
 
 namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
     public partial class Farmacos {
-        [CascadingParameter(Name = "excepcionPersonalizada")] ExcepcionDto excepcionPersonalizada { get; set; }
+        [CascadingParameter(Name = "excepcionPersonalizada")] ExcepcionPersonalizada excepcionPersonalizada { get; set; }
         [Inject] private IDialogService DialogService { get; set; } // Pop up eliminar farmaco
         [Inject] private ISnackbar _snackbar { get; set; }
         [Inject] ICrearHttpClient _crearHttpClient { get; set; }
