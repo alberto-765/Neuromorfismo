@@ -13,9 +13,9 @@ namespace WebMedicina.BackEnd.Dal {
         }
 
         // Obtenemos los datos de un medico
-        public MedicosModel ObtenerInfoUser(string numHistoria) {
+        public MedicosModel ObtenerInfoUser(string userName) {
             try {
-                return _context.Medicos.Find(numHistoria);
+                return _context.Medicos.FirstOrDefault(q => q.NumHistoria == userName);
             } catch (Exception ex) {
                 throw;
             }

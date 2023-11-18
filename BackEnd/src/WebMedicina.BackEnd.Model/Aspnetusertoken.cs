@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace WebMedicina.BackEnd.Model;
 
-public partial class Aspnetuserclaim
+public partial class Aspnetusertoken
 {
-    public int Id { get; set; }
-
     public string UserId { get; set; } = null!;
 
-    public string? ClaimType { get; set; }
+    public string LoginProvider { get; set; } = null!;
 
-    public string? ClaimValue { get; set; }
+    public string Name { get; set; } = null!;
+
+    public string? Value { get; set; }
 
     public virtual Aspnetuser User { get; set; } = null!;
 }

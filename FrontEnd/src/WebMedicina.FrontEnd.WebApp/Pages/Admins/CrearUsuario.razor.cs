@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Http.Json;
@@ -13,15 +14,19 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
     public partial class CrearUsuario
     {
         [Inject] private ISnackbar _snackbar { get; set; }
-        private UserRegistroDto userRegistro = new();
-        private bool cargando { get; set; } = false;
-        private MudDatePicker _picker { get; set; }
         [CascadingParameter] private Task<AuthenticationState>? authenticationState { get; set; }
         private ClaimsPrincipal? user { get; set; }
         [Inject] ICrearHttpClient _crearHttpClient { get; set; }
         private HttpClient Http { get; set; }
         [CascadingParameter(Name = "excepcionPersonalizada")] ExcepcionPersonalizada excepcionPersonalizada { get; set; }
         [Inject] IAdminsService _adminsService { get; set; }
+
+        // CAMPOS EDITFORM
+        private MudDatePicker _picker { get; set; }
+        private bool cargando { get; set; } = false;
+        private UserRegistroDto userRegistro = new();
+        private EditContext formContext;
+
 
         protected override async Task OnInitializedAsync()
         {
@@ -41,8 +46,12 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
 
                 // Creamos contraseña aleatoria
                 userRegistro.Password = await _adminsService.GenerarContraseñaAleatoria();
+
+                // Crear contexto del editform
+                formContext = new(userRegistro);
             } catch (Exception ex) {
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+                throw;
             }
         }
 
@@ -70,43 +79,40 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                         config.VisibleStateDuration = 3000;
                     });
                 }
-            }
-            catch (Exception ex)
-            {
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-            }
-        }
-
-        // LLamada a BBDD para validar si el username está disponible
-        private async Task ValidarUserName() {
-            try {
-                // Validamos que el campo del numeroHistoria cumpla las validaciones del dto
-                var validationErrors = new List<ValidationResult>();
-                bool esValido = Validator.TryValidateProperty(userRegistro.NumHistoria,
-                                                new ValidationContext(userRegistro) { MemberName = nameof(userRegistro.NumHistoria) },
-                                                validationErrors);
-                if (esValido) {
-                    HttpResponseMessage respuesta = await Http.PostAsJsonAsync($"cuentas/comprobarUser", userRegistro.NumHistoria);
-
-                    if(respuesta.IsSuccessStatusCode) {
-
-                        // Devuelve true si el usuario ya existe
-                        if(await respuesta.Content.ReadFromJsonAsync<bool>()) {
-                            _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopStart;
-                            _snackbar.Add("El número de historia ya está en uso", Severity.Error, config => {
-                                config.VisibleStateDuration = int.MaxValue;
-                            });
-                        } else {
-                            _snackbar.Clear();
-                        }
-                    }
-                } 
             } catch (Exception ex) {
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+                throw;
             }
         }
 
+        // LLamada a backend para generar un nombre de usuario valido
+        private async Task ValidarUserName() {
+            try {
+                if (!string.IsNullOrEmpty(userRegistro.Nombre) && string.IsNullOrEmpty(userRegistro.Apellidos)) {
+                    bool userNameCorrecto = false; // almacenaremos si ha podido generarse el nuevo nombre del usuario
 
-       
+                    HttpResponseMessage respuesta = await Http.PostAsJsonAsync($"cuentas/comprobarUser", userRegistro);
+                    if(respuesta.IsSuccessStatusCode) {
+
+                        // Devuelve el nuevo username
+                        string userName = await respuesta.Content.ReadAsStringAsync();
+                        if (!string.IsNullOrEmpty(userName)) {
+                            userRegistro.UserLogin = userName;
+                            userNameCorrecto = true;
+                        } 
+                    }
+
+                    // Validamos si se ha generado el nuevo nombre
+                    if (userNameCorrecto == false) {
+                        _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopStart;
+                        _snackbar.Add(@"<div>No ha sido posible generar el nombre de inicio de sesión</div>
+                                        <div>Inténtelo de nuevo o contacte con un administrador.</div>", Severity.Error);
+                    }
+                }
+            } catch (Exception ex) {
+                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+                throw;
+            }
+        }       
     }
 }

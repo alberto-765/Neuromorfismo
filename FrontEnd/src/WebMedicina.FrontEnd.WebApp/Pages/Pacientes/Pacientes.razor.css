@@ -1,9 +1,4 @@
-﻿/*Estilos drawe filtros*/ 
-::deep #drawerFiltros{
-    height: 80%;
-    bottom: 0;
-    transition: opacity 1s ease-in-out;
-}
+﻿/*Estilos drawe filtros*/
 ::deep #drawerFiltros .drawerFiltros__Opcion{
     padding: 20px;
 }

@@ -6,6 +6,7 @@ using WebMedicina.FrontEnd.Dto;
 using WebMedicina.FrontEnd.Service;
 using System.Runtime.CompilerServices;
 using WebMedicina.Shared.Dto;
+using MudBlazor;
 
 namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
     public partial class Pacientes {
@@ -16,29 +17,13 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
         [CascadingParameter(Name = "modoOscuro")] bool IsDarkMode { get; set; } // Modo oscuro
         [Inject] private IRedirigirManager _redirigirManager { get; set; } // Dependecia para rederifir
         [Inject] private IPacientesService _pacientesService { get; set; }
+        [Inject] private IDialogService _dialogoService { get; set; }
 
         // Panel de filtros
         public bool OrdenarTalla { get; set; } // Mostrar un icono u otro en ordenar por talla
-        private bool _bloquearFiltros;
-        private bool _filtrosAbierto;
+        private bool FiltrosAbierto { get; set; }
 
-        // Bind drawer mini filtros
-        private bool FiltrosAbierto {
-            get => _bloquearFiltros;
-            set {
-                _bloquearFiltros = value;
-                _filtrosAbierto = value;
-            }
-        }
 
-        // Switch para bloquear filtros
-        private bool BloquearFiltros {
-            get  => _bloquearFiltros; 
-            set {
-                _bloquearFiltros = value;
-                _filtrosAbierto = value;
-            } 
-        }
 
         // Valores seleccionados para mostrar en los filtros
         private FiltroPacienteDto FilrosPacientes { get; set; } = new(); // Dto con los filtros seleccionados
@@ -51,7 +36,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
         private string mutacionFiltrado { get; set; }
         private string medicoFiltrado { get; set; }
 
-
         protected override async Task OnInitializedAsync() {
             try {
                 if (AuthenticationState is not null) {
@@ -63,18 +47,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
             }
         }
-
-        // Mostramos u ocultamos el panel de filtros
-        private void SelectFiltro() {
-            try {
-              if(BloquearFiltros == false) {
-                    BloquearFiltros = true;
-                }
-            } catch (Exception ex) {
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-            }
-        }
-
 
         // Buscador para autocomplete de medicos
         private async Task<IEnumerable<string>> BuscarMedPac(string medico) {
@@ -104,6 +76,11 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
             ListaMutaciones = opcionesSelects.ListaMutaciones;
             // Asignamos la lista de farmacos
             ListaFarmacos = opcionesSelects.ListaFarmacos;
+        }
+
+        // Mostrar dialogo para crear paciente nuevo
+        private async Task MostrarCrearPac() {
+            _dialogoService.Show<CrearPaciente>();
         }
     }
 }

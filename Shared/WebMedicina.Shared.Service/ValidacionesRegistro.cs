@@ -9,7 +9,7 @@ using static System.Net.WebRequestMethods;
 namespace WebMedicina.Shared.Service {
     public static class ValidacionesRegistro {
 
-            // Valida que la persona tenga al menos 18 años
+         // Valida que la persona tenga al menos 18 años
         public static ValidationResult ValidateFechaNacimiento(DateTime fechaNacimiento, ValidationContext context) {
             try {
                 if (fechaNacimiento > DateTime.Now.AddYears(-18)) {
