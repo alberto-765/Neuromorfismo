@@ -20,10 +20,6 @@ namespace WebMedicina.FrontEnd.Service {
                 AppbarText = "#424242",
                 DrawerText = "#424242",
                 DrawerIcon = "#424242",
-                // TextPrimary = "#0A7BCF",
-                // TextSecondary = "#4CAF50",
-
-                // more color properties
             },
             PaletteDark = new PaletteDark {
 
@@ -44,8 +40,7 @@ namespace WebMedicina.FrontEnd.Service {
                 // DarkContrastText = "#FFFFFF",
                 Dark = "#EEEEEE",
                 White = "#000000",
-
-                // more color properties
+                TextPrimary= "#ececf1",
             }
         };
 

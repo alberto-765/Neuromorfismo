@@ -43,6 +43,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 mostrarCargandoInicial = false;
                 mostrarTabla = false;
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+                throw ex;
             }
         }
 
@@ -112,8 +113,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                     mostrarTabla = false;
                 }
             } catch (Exception ex) {
-                mostrarCargandoTabla = false;
-                mostrarTabla = false;
                 throw;
             }
         }
@@ -154,8 +153,10 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                     _snackbar.Add(mensajeSnackBar, tipoSnackBar);
                 }
             } catch (Exception ex) {
+                mostrarCargandoInicial = false;
+                mostrarTabla = false;
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-                throw;
+                throw ex; 
             }
         }
 
@@ -186,8 +187,10 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                     _snackbar.Add(mensajeSnackBar, tipoSnackBar);
                 }
             } catch (Exception ex) {
+                mostrarCargandoInicial = false;
+                mostrarTabla = false;
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-                throw;
+                throw ex;
             }
         }
 
@@ -223,8 +226,10 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                     _snackbar.Add(mensajeSnackBar, tipoSnackBar);
                 }
             } catch (Exception ex) {
+                mostrarCargandoInicial = false;
+                mostrarTabla = false;
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-                throw;
+                throw ex;
             }
         }
     }

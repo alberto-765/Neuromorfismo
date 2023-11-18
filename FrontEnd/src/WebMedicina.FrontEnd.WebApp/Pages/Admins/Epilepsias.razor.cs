@@ -48,6 +48,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 mostrarCargandoInicial = false;
                 mostrarTabla = false;
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+                throw ex;
             }
         }
 
@@ -61,7 +62,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 }
             } catch (Exception ex) {
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-                throw;
+                throw ex;
             }
         }
         private void RowClickEvent(TableRowClickEventArgs<EpilepsiasDto> elemento) {
@@ -79,7 +80,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 }
             } catch (Exception ex) {
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-                throw;
+                throw ex;
             }
         }
 
@@ -95,7 +96,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 }
                 return Enumerable.Empty<EpilepsiasDto>();
             } catch (Exception ex) {
-                throw;
+                throw ;
             }
         }
 
@@ -117,8 +118,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                     mostrarTabla = false;
                 }
             } catch (Exception ex) {
-                mostrarCargandoTabla = false;
-                mostrarTabla = false;
                 throw;
             }
 }
@@ -159,8 +158,10 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                     _snackbar.Add(mensajeSnackBar, tipoSnackBar);
                 }
             } catch (Exception ex) {
+                mostrarCargandoTabla = false;
+                mostrarTabla = false;
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-                throw;
+                throw ex;
             }
         }
 
@@ -191,8 +192,10 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                     _snackbar.Add(mensajeSnackBar, tipoSnackBar);
                 }
             } catch (Exception ex) {
+                mostrarCargandoTabla = false;
+                mostrarTabla = false;
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-                throw;
+                throw ex;
             }
         }
 
@@ -227,8 +230,10 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                     _snackbar.Add(mensajeSnackBar, tipoSnackBar);
                 }
             } catch (Exception ex) {
+                mostrarCargandoTabla = false;
+                mostrarTabla = false;
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-                throw;
+                throw ex;
             }
         }
     }

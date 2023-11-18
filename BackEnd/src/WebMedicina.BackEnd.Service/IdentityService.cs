@@ -26,13 +26,13 @@ namespace WebMedicina.BackEnd.Service {
             _signInManager = signInManager;
             _adminDal = adminDal;
         }
-        public async Task<MedicosModel?> ObtenerUsuarioYRol(string numHistoria) {
+        public async Task<MedicosModel?> ObtenerUsuarioYRol(string userName) {
             try {
-                MedicosModel? medicosModel = _medicoDal.ObtenerInfoUser(numHistoria);
+                MedicosModel? medicosModel = _medicoDal.ObtenerInfoUser(userName);
 
                 // Obtenemos el rol si se ha obtenido correctamente la info del usuario
                 if (medicosModel is not null) {
-                   var rol = await ObtenerRol(numHistoria);
+                   var rol = await ObtenerRol(userName);
 
                     if(rol is not null) {
                         medicosModel.Rol = rol;

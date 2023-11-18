@@ -113,7 +113,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
         // Creamos copia de seguridad del userInfo que se esta editando 
         private void CopiaSeguridadItem(object item) {
             copiaSeguridadUsuario = new() {
-                NumHistoria = ((UserUploadDto) item).NumHistoria,
+                IdMedico = ((UserUploadDto) item).IdMedico,
                 Nombre = ((UserUploadDto) item).Nombre,
                 Apellidos = ((UserUploadDto) item).Apellidos,
                 FechaNac = ((UserUploadDto) item).FechaNac,
@@ -126,12 +126,10 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
 
         // Reseteamos el userInfo a sus valores por defecto
         private void ResetearUserInfo(object item) {
-            ((UserUploadDto)item).NumHistoria = copiaSeguridadUsuario.NumHistoria;
+            ((UserUploadDto)item).IdMedico = copiaSeguridadUsuario.IdMedico;
             ((UserUploadDto)item).Nombre = copiaSeguridadUsuario.Nombre;
             ((UserUploadDto)item).Apellidos = copiaSeguridadUsuario.Apellidos;
             ((UserUploadDto)item).FechaNac = copiaSeguridadUsuario.FechaNac;
-            ((UserUploadDto)item).FechaCreac = copiaSeguridadUsuario.FechaCreac;
-            ((UserUploadDto)item).FechaUltMod = copiaSeguridadUsuario.FechaUltMod;
             ((UserUploadDto)item).Rol = copiaSeguridadUsuario.Rol;
             ((UserUploadDto)item).Sexo = copiaSeguridadUsuario.Sexo;
         }
@@ -141,12 +139,10 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
             try {
                 // Generamos el usuario actualizado
                 UserUploadDto userInfo = new() {
-                    NumHistoria = ((UserUploadDto)item).NumHistoria,
+                    IdMedico = ((UserUploadDto)item).IdMedico,
                     Nombre = ((UserUploadDto)item).Nombre,
                     Apellidos = ((UserUploadDto)item).Apellidos,
                     FechaNac = ((UserUploadDto)item).FechaNac,
-                    FechaCreac = ((UserUploadDto)item).FechaCreac,
-                    FechaUltMod = ((UserUploadDto)item).FechaUltMod,
                     Rol = ((UserUploadDto)item).Rol,
                     Sexo = ((UserUploadDto)item).Sexo
                 };

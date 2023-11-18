@@ -1,39 +1,75 @@
-﻿.titulosTabla{
+﻿::deep .tituloTabla {
     text-align: center;
 }
 ::deep .filaGenero {
-    min-width: 120px;
+    width: 10%;
 }
-::deep #tablaGestionUsers {
-    border-radius: 15px;
+::deep .filaApellidos {
+    width: 23%;
 }
-@media (min-width: 960px) {
-    :: deep #tablaGestionUsers .mud-input-control > .mud-input-control-input-container > div.mud-input.mud-input-text {
+::deep .filaNumHist {
+    width: 20%;
+}    
+
+/*Celdas de la tabla*/
+.celda {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+.celda_principal{
+    flex: 1;
+    text-align: center;
+}
+
+/*Celda justify between*/
+.celda-espaciada {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/*Romper textos largos de las celdas*/
+::deep .inputField{
+    word-break: break-word;
+}
+
+/*Inputs modo editar*/
+::deep .inputField .mud-input {
+    font-size: .875rem;
+}
+/*Estilo tabla en pc*/
+@media (min-width: 1280px) {
+    ::deep #tablaGestionUsers .mud-input-control > .mud-input-control-input-container > div.mud-input.mud-input-text {
         margin-top: 0;
     }
     ::deep #tablaGestionUsers .mud-input-control{
         margin-top: 0;
     }
+
+    /* Hueco para alinear campos fecha en la tabla larga*/
+    .celda_espacio {
+        width: 18px;
+    }
 }
 
-
-
-    @media (max-width: 960px) {
-        ::deep .mud-sm-table .mud-table-cell:not(.sinMargin):before {
-            margin-top: 10px;
-        }
-
-        ::deep #tablaGestionUsers .mud-input-control:not(.sinMargin) > .mud-input-control-input-container > div.mud-input.mud-input-text {
-            margin-top: 0;
-        }
-
-        ::deep #tablaGestionUsers .mud-table-smalldevices-sortselect .mud-input-control > .mud-input-control-input-container > div.mud-input.mud-input-text {
-            margin-top: 16px;
-        }
+/*Estilo tabla en movil*/
+@media (max-width: 1280px) {
+    ::deep .mud-sm-table .mud-table-cell:not(.sinMargin):before {
+        margin-top: 10px;
     }
+    ::deep #tablaGestionUsers .mud-input-control:not(.sinMargin) > .mud-input-control-input-container > div.mud-input.mud-input-text {
+        margin-top: 0;
+    }
+    ::deep #tablaGestionUsers .mud-table-smalldevices-sortselect .mud-input-control > .mud-input-control-input-container > div.mud-input.mud-input-text {
+        margin-top: 16px;
+    }
+}
 
-    @media (max-width: 600px) {
-        ::deep #tablaGestionUsers .mud-toolbar {
-            --mud-internal-toolbar-height: 64px;
-        }
-    } 
+@media (max-width: 600px) {
+    ::deep #tablaGestionUsers .mud-toolbar {
+        --mud-internal-toolbar-height: 64px;
+    }
+} 

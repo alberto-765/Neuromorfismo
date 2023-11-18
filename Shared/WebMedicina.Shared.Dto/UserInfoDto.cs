@@ -11,7 +11,7 @@ namespace WebMedicina.Shared.Dto {
         public string Nombre { get; set; }
         public string Apellidos { get; set; }
         public DateTime FechaNac { get; set; } 
-        public string NumHistoria { get; set; }
+        public int idMedico { get; set; }
         public DateOnly FechaCreac { get; set; }
         public DateOnly FechaUltMod { get; set; }
         public string Rol { get; set; }

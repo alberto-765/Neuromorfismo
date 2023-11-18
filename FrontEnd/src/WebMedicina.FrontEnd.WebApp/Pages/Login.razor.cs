@@ -43,6 +43,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages {
                 }
             } catch (Exception ex) {
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+                throw;
             }
         }
 
@@ -69,6 +70,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages {
                 cargando = false;
                 mensajeErrorLogin = "Error inesperado de autenticación, inténtelo de nuevo";
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+                throw;
             }
         }
     }

@@ -8,7 +8,7 @@ namespace WebMedicina.Shared.Dto {
     public class MedicosPacientesDto : ICloneable, IEquatable<MedicosPacientesDto> {
 
         public int Paciente {  get; set; }
-        public string Medico { get; set; }
+        public int Medico { get; set; }
 
 
         // Cloneable
