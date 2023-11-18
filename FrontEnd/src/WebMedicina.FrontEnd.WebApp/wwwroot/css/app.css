@@ -91,7 +91,7 @@
 }
 
 .darkSpinner::after {
-  background: #292a2f !important;
+  background: rgb(50, 51, 61) !important;
 }
 
 @keyframes spin {

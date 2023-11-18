@@ -21,12 +21,9 @@ namespace WebMedicina.BackEnd.Service {
 
 
         // Constructor con dependencias
-        public AdminsService(AdminDal adminDal, IMapper mapper, EpilepsiasDal epilepsiasDal, FarmacosDal farmacosDal, MutacionesDal mutacionesDal) {
+        public AdminsService(AdminDal adminDal, IMapper mapper) {
             _adminDal = adminDal;
             _mapper = mapper;   
-            _epilepsiasDal = epilepsiasDal;
-            _farmacosDal = farmacosDal;
-            _mutacionesDal = mutacionesDal;
         }
 
         // Crear nuevo usuario (superAdmin, admin medico)

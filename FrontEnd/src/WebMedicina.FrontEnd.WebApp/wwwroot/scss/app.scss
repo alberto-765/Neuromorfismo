@@ -83,7 +83,7 @@ html, body {
     background: linear-gradient(0deg,#61b8fc 0%,#2c75ff 100%);
 }
 .darkSpinner::after {
-    background: #292a2f !important;
+    background: rgb(50 51 61) !important;
 }
 @keyframes spin {
     to {

@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using WebMedicina.Shared.Service;
 
 namespace WebMedicina.Shared.Dto {
@@ -18,21 +17,20 @@ namespace WebMedicina.Shared.Dto {
         [CustomValidation(typeof(ValidacionesRegistro), "ValidateFechaNacimiento")]
         public DateTime? FechaNac { get; set; } =  ValidacionesRegistro.ObtenerFechaMaxNacimiento();
 
-        [Required(ErrorMessage = "El usuario para login debe ser generado.")]
-        [ReadOnly(true)]
-        public string UserLogin { get; set; }
+        [Required(ErrorMessage = "El número de historia es obligatorio")]
+        [RegularExpression(@"^AN\d{10}$", ErrorMessage = "El formato debe ser ANXXXXXXXXXX")]
+        public string NumHistoria { get; set; }
 
-        [ReadOnly(true)]
+        [DataType(DataType.Date, ErrorMessage = "El formato debe ser dd/MM/yyyy")]
         public DateOnly FechaCreac { get; set; } = DateOnly.FromDateTime(DateTime.Now);
 
-        [ReadOnly(true)]
+        [DataType(DataType.Date, ErrorMessage = "El formato debe ser dd/MM/yyyy")]
         public DateOnly FechaUltMod { get; set; } = DateOnly.FromDateTime(DateTime.Now);
 
 
         [Required(ErrorMessage = "La contraseña es obligatoria")]
         // Que haya 1 letra minuscula, 1 mayuscula, 1 digito y 6 caracteres o más
         [RegularExpression(@"^(?=.*\d)(?=.*[!@#$%^&*()_+])(?=.*[A-Z])(?=.*[a-z])\S{8,16}$", ErrorMessage = "La contraseña debe tener al entre 8 y 16 caracteres, al menos un dígito, al menos una minúscula, al menos una mayúscula y al menos un caracter especial")]
-        [ReadOnly(true)]
         public string Password { get; set; }
 
         [Required(ErrorMessage = "Debes seleccionar un rol para el nuevo usuario")]

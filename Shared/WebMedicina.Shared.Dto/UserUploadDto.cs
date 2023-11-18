@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
@@ -9,9 +8,6 @@ using WebMedicina.Shared.Service;
 
 namespace WebMedicina.Shared.Dto {
     public class UserUploadDto {
-        [ReadOnly(true)]
-        public string IdMedico { get; set; }
-
         [Required(ErrorMessage = "El nombre del usuario es obligatorio")]
         [RegularExpression(@"^[^\d]+$", ErrorMessage = "El nombre no puede contener números")]
         public string Nombre { get; set; }
@@ -24,11 +20,14 @@ namespace WebMedicina.Shared.Dto {
         [CustomValidation(typeof(ValidacionesRegistro), "ValidateFechaNacimiento")]
         public DateTime? FechaNac { get; set; }
 
+        [Required(ErrorMessage = "El número de historia es obligatorio")]
+        [RegularExpression(@"^AN\d{10}$", ErrorMessage = "El formato debe ser ANXXXXXXXXXX")]
+        public string NumHistoria { get; set; }
 
-        [ReadOnly(true)]
+        [DataType(DataType.Date, ErrorMessage = "El formato debe ser dd/MM/yyyy")]
         public DateOnly FechaCreac { get; set; }
 
-        [ReadOnly(true)]
+        [DataType(DataType.Date, ErrorMessage = "El formato debe ser dd/MM/yyyy")]
         public DateOnly FechaUltMod { get; set; }
 
         [Required(ErrorMessage = "Debes seleccionar un rol para el nuevo usuario")]

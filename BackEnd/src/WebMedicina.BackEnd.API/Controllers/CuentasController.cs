@@ -46,7 +46,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
                 try {
                     if (ModelState.IsValid && model != null) {
                         var user = new IdentityUser {
-                            UserName = model.UserLogin
+                            UserName = model.NumHistoria
                         };
 
                         // Creamos user con identity
@@ -66,7 +66,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
                             await transactionIdentity.RollbackAsync();
                             return BadRequest($"Ha surgido un error al crear el nuevo {model.Rol}");
                         } else {
-                            return BadRequest($"Ya existe un usuario con el username: {model.UserLogin}");
+                            return BadRequest($"Ya existe un usuario con el username: {model.NumHistoria}");
                         }
 
                     } else {
