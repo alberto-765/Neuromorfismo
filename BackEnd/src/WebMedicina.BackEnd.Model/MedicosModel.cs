@@ -6,7 +6,9 @@ namespace WebMedicina.BackEnd.Model;
 
 public partial class MedicosModel
 {
-    public string NumHistoria { get; set; } = null!;
+    public int IdMedico { get; set; }
+
+    public string? UserLogin { get; set; }
 
     public string Nombre { get; set; } = null!;
 

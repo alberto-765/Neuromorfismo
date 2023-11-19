@@ -8,9 +8,9 @@ namespace WebMedicina.BackEnd.Model;
 /// </summary>
 public partial class MedicospacienteModel
 {
-    public string Id { get; set; } = null!;
+    public int IdMedPac { get; set; }
 
-    public string IdMedico { get; set; } = null!;
+    public int IdMedico { get; set; }
 
     public int IdPaciente { get; set; }
 

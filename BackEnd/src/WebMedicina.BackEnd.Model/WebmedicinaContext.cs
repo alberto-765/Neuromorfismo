@@ -15,43 +15,38 @@ public partial class WebmedicinaContext : DbContext
     {
     }
 
-    public virtual DbSet<Aspnetrole> Aspnetroles { get; set; }
+    public virtual DbSet<AspnetroleModel> Aspnetroles { get; set; }
 
-    public virtual DbSet<Aspnetroleclaim> Aspnetroleclaims { get; set; }
+    public virtual DbSet<AspnetroleclaimModel> Aspnetroleclaims { get; set; }
 
-    public virtual DbSet<Aspnetuser> Aspnetusers { get; set; }
+    public virtual DbSet<AspnetuserModel> Aspnetusers { get; set; }
 
     public virtual DbSet<Aspnetuserclaim> Aspnetuserclaims { get; set; }
 
     public virtual DbSet<Aspnetuserlogin> Aspnetuserlogins { get; set; }
 
-    public virtual DbSet<Aspnetusertoken> Aspnetusertokens { get; set; }
+    public virtual DbSet<AspnetusertokenModel> Aspnetusertokens { get; set; }
 
-    public virtual DbSet<Efmigrationshistory> Efmigrationshistories { get; set; }
+    public virtual DbSet<EpilepsiaModel> Epilepsias { get; set; }
 
-    public virtual DbSet<Epilepsia> Epilepsias { get; set; }
+    public virtual DbSet<FarmacosModel> Farmacos { get; set; }
 
-    public virtual DbSet<Farmaco> Farmacos { get; set; }
+    public virtual DbSet<MedicosModel> Medicos { get; set; }
 
-    public virtual DbSet<Medico> Medicos { get; set; }
+    public virtual DbSet<MedicospacienteModel> Medicospacientes { get; set; }
 
-    public virtual DbSet<Medicospaciente> Medicospacientes { get; set; }
+    public virtual DbSet<MutacionesModel> Mutaciones { get; set; }
 
-    public virtual DbSet<Mutacione> Mutaciones { get; set; }
+    public virtual DbSet<PacientesModel> Pacientes { get; set; }
 
-    public virtual DbSet<Paciente> Pacientes { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySql("server=127.0.0.1;port=3306;database=webmedicina;user=userWebMedicina;password=WebMedicina", Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.4.24-mariadb"));
-
+ 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
             .UseCollation("utf8mb4_general_ci")
             .HasCharSet("utf8mb4");
 
-        modelBuilder.Entity<Aspnetrole>(entity =>
+        modelBuilder.Entity<AspnetroleModel>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
@@ -63,7 +58,7 @@ public partial class WebmedicinaContext : DbContext
             entity.Property(e => e.NormalizedName).HasMaxLength(256);
         });
 
-        modelBuilder.Entity<Aspnetroleclaim>(entity =>
+        modelBuilder.Entity<AspnetroleclaimModel>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
@@ -78,7 +73,7 @@ public partial class WebmedicinaContext : DbContext
                 .HasConstraintName("FK_AspNetRoleClaims_AspNetRoles_RoleId");
         });
 
-        modelBuilder.Entity<Aspnetuser>(entity =>
+        modelBuilder.Entity<AspnetuserModel>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
@@ -98,10 +93,10 @@ public partial class WebmedicinaContext : DbContext
             entity.HasMany(d => d.Roles).WithMany(p => p.Users)
                 .UsingEntity<Dictionary<string, object>>(
                     "Aspnetuserrole",
-                    r => r.HasOne<Aspnetrole>().WithMany()
+                    r => r.HasOne<AspnetroleModel>().WithMany()
                         .HasForeignKey("RoleId")
                         .HasConstraintName("FK_AspNetUserRoles_AspNetRoles_RoleId"),
-                    l => l.HasOne<Aspnetuser>().WithMany()
+                    l => l.HasOne<AspnetuserModel>().WithMany()
                         .HasForeignKey("UserId")
                         .HasConstraintName("FK_AspNetUserRoles_AspNetUsers_UserId"),
                     j =>
@@ -144,7 +139,7 @@ public partial class WebmedicinaContext : DbContext
                 .HasConstraintName("FK_AspNetUserLogins_AspNetUsers_UserId");
         });
 
-        modelBuilder.Entity<Aspnetusertoken>(entity =>
+        modelBuilder.Entity<AspnetusertokenModel>(entity =>
         {
             entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name })
                 .HasName("PRIMARY")
@@ -157,17 +152,7 @@ public partial class WebmedicinaContext : DbContext
                 .HasConstraintName("FK_AspNetUserTokens_AspNetUsers_UserId");
         });
 
-        modelBuilder.Entity<Efmigrationshistory>(entity =>
-        {
-            entity.HasKey(e => e.MigrationId).HasName("PRIMARY");
-
-            entity.ToTable("__efmigrationshistory");
-
-            entity.Property(e => e.MigrationId).HasMaxLength(150);
-            entity.Property(e => e.ProductVersion).HasMaxLength(32);
-        });
-
-        modelBuilder.Entity<Epilepsia>(entity =>
+        modelBuilder.Entity<EpilepsiaModel>(entity =>
         {
             entity.HasKey(e => e.IdEpilepsia).HasName("PRIMARY");
 
@@ -190,7 +175,7 @@ public partial class WebmedicinaContext : DbContext
                 .HasColumnName("nombre");
         });
 
-        modelBuilder.Entity<Farmaco>(entity =>
+        modelBuilder.Entity<FarmacosModel>(entity =>
         {
             entity.HasKey(e => e.IdFarmaco).HasName("PRIMARY");
 
@@ -213,7 +198,7 @@ public partial class WebmedicinaContext : DbContext
                 .HasColumnName("nombre");
         });
 
-        modelBuilder.Entity<Medico>(entity =>
+        modelBuilder.Entity<MedicosModel>(entity =>
         {
             entity.HasKey(e => e.IdMedico).HasName("PRIMARY");
 
@@ -260,7 +245,7 @@ public partial class WebmedicinaContext : DbContext
                 .HasConstraintName("FK_medicos_aspnetusers");
         });
 
-        modelBuilder.Entity<Medicospaciente>(entity =>
+        modelBuilder.Entity<MedicospacienteModel>(entity =>
         {
             entity.HasKey(e => e.IdMedPac).HasName("PRIMARY");
 
@@ -289,7 +274,7 @@ public partial class WebmedicinaContext : DbContext
                 .HasConstraintName("FK_medicospacientes_pacientes");
         });
 
-        modelBuilder.Entity<Mutacione>(entity =>
+        modelBuilder.Entity<MutacionesModel>(entity =>
         {
             entity.HasKey(e => e.IdMutacion).HasName("PRIMARY");
 
@@ -312,7 +297,7 @@ public partial class WebmedicinaContext : DbContext
                 .HasColumnName("nombre");
         });
 
-        modelBuilder.Entity<Paciente>(entity =>
+        modelBuilder.Entity<PacientesModel>(entity =>
         {
             entity.HasKey(e => e.IdPaciente).HasName("PRIMARY");
 
@@ -408,7 +393,6 @@ public partial class WebmedicinaContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_pacientes_medicos");
         });
-
         OnModelCreatingPartial(modelBuilder);
     }
 
