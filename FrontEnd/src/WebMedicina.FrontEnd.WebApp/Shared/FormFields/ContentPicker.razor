@@ -1,0 +1,30 @@
+﻿<MudDatePicker @ref="_picker" Class="@clases" Editable="true" AutoClose="true" Label="@label" DateChanged="EventoActualizar" For="@(() => Fecha)" PickerVariant="@variante"
+               IsDateDisabledFunc="@fechasDesactivadas" DateFormat="dd/MM/yyyy" MaxDate="FechaMaxima" MinDate="@FechaMinima">
+    <PickerActions>
+        <MudButton Class="mr-auto align-self-start" OnClick="@(() => _picker.Clear())">Limpiar</MudButton>
+        <MudButton OnClick="@(() => _picker.Close(false))">Cancelar</MudButton>
+        <MudButton Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
+    </PickerActions>
+</MudDatePicker>
+@code{
+    [Parameter] public string pickerName { get; set; }
+    [Parameter] public string clases { get; set; }
+    [Parameter] public string label { get; set; }
+    [Parameter] public DateTime? Fecha { get; set; }
+    [Parameter] public DateTime? FechaMinima { get; set; } = null;
+    [Parameter] public DateTime? FechaMaxima { get; set; } = null;
+    [Parameter] public PickerVariant variante { get; set; }
+    [Parameter] public Func<DateTime, bool> fechasDesactivadas { get; set; }
+    [Parameter] public EventCallback<(DateTime?, string)> ActualizarFecha { get; set; }
+    private MudDatePicker _picker { get; set; }
+
+
+    // Evento callback para actualizar la fecha
+    private async Task EventoActualizar(DateTime? nuevaFecha) {
+        try {
+            await ActualizarFecha.InvokeAsync((nuevaFecha, pickerName));
+        } catch (Exception) {
+            throw;
+        }
+    }
+}

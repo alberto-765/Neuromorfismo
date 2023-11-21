@@ -40,9 +40,10 @@
 ::deep .inputField .mud-input {
     font-size: .875rem;
 }
+
 /*Estilo tabla en pc*/
 @media (min-width: 1280px) {
-    ::deep #tablaGestionUsers .mud-input-control > .mud-input-control-input-container > div.mud-input.mud-input-text {
+    :: deep #tablaGestionUsers .mud-input-control > .mud-input-control-input-container > div.mud-input.mud-input-text {
         margin-top: 0;
     }
     ::deep #tablaGestionUsers .mud-input-control{
@@ -56,7 +57,7 @@
 }
 
 /*Estilo tabla en movil*/
-@media (max-width: 1280px) {
+@media (1280px <= width) {
     ::deep .mud-sm-table .mud-table-cell:not(.sinMargin):before {
         margin-top: 10px;
     }
@@ -68,8 +69,16 @@
     }
 }
 
-@media (max-width: 600px) {
+@media (600px <= width) {
     ::deep #tablaGestionUsers .mud-toolbar {
         --mud-internal-toolbar-height: 64px;
     }
 } 
+
+/*Estilo pantallas medianas*/
+@media (600px <= width <= 1200px){
+    ::deep #tablaGestionUsers {
+        margin: auto;
+        width: 600px;
+    }
+}

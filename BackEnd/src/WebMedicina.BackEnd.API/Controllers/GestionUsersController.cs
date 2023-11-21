@@ -61,7 +61,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
                                 if (usuarioEditado.rolModificado) {
 
                                     // Actualizamos el rol del usuario
-                                    if(await _identityService.ActualizarRol(usuarioEditado.usuario.NumHistoria, usuarioEditado.usuario.Rol)) {
+                                    if(await _identityService.ActualizarRol(usuarioEditado.usuario.UserLogin, usuarioEditado.usuario.Rol)) {
                                         await transactionContext.CommitAsync();
                                         return Ok("Médico editado correctamente");
                                     }

@@ -11,11 +11,11 @@ using WebMedicina.Shared.Dto;
 namespace WebMedicina.BackEnd.ServicesDependencies {
     public interface IIdentityService  {
 
-        // Funciones
-        Task<MedicosModel?> ObtenerUsuarioYRol(string numHistoria);
+        Task<MedicosModel?> ObtenerUsuarioYRol(int idMedico);
+        Task<MedicosModel?> ObtenerUsuarioYRolLogin(string userName); // Obtener info del usuario en el login
         Task<bool> CrearUser(IdentityUser user, UserRegistroDto model);
         Task<bool> ComprobarContraseña(UserLoginDto userLogin);
         Task<bool> ComprobarUserName(string userName);
-        Task<bool> ActualizarRol(string userName, string nuevoRol);
+        Task<bool> ActualizarRol(string userLogin, string nuevoRol);
     }
 }

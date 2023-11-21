@@ -9,16 +9,13 @@ using WebMedicina.Shared.Service;
 namespace WebMedicina.Shared.Dto {
     public class FiltradoPacientesDto {
 
-        [Required(ErrorMessage = "La fecha de nacimiento es obligatoria.")]
         [DataType(DataType.DateTime, ErrorMessage = "El formato debe ser dd/MM/yyyy")]
         [CustomValidation(typeof(ValidacionesRegistro), "ValidateFechaNacimiento")]
         public DateTime? FechaNac { get; set; } = ValidacionesRegistro.ObtenerFechaMaxNacimiento();
 
-        [Required(ErrorMessage = "El campo género es obligatorio")]
         [ValidacionLista("M", "H")]
         public string Sexo { get; set; }
 
-        [Required(ErrorMessage = "Debes especificar una talla para el paciente.")]
         [Range(50, 200, ErrorMessage = "La talla debe ser entre 50 y 200 cm.")]
         public decimal Talla { get; set; }
 

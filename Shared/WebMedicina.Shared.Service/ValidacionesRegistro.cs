@@ -20,6 +20,22 @@ namespace WebMedicina.Shared.Service {
             } catch (Exception) {
                 throw;
             }
+        }  
+        
+        public static ValidationResult ValidateFechaNacPaciente(DateTime? fechaNacimientoNull) {
+            try {
+
+                if(fechaNacimientoNull is not null) {
+                    DateTime fechaNacimiento = fechaNacimientoNull ?? DateTime.MinValue;
+                    if (DateTime.Compare(fechaNacimiento, DateTime.Now) > 0) {
+                        return new ValidationResult("Fecha de nacimiento no válida.");
+                    }
+                }
+
+                return ValidationResult.Success;
+            } catch (Exception) {
+                throw;
+            }
         }
 
         public static DateTime ObtenerFechaMaxNacimiento () {

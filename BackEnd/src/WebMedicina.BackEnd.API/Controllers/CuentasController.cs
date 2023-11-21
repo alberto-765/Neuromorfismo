@@ -41,6 +41,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
         }
 
         [HttpPost("crear")]
+        [AllowAnonymous]
         public async Task<ActionResult> CreateUser([FromBody] UserRegistroDto model) {
             using (var transactionIdentity = _identityContext.Database.BeginTransaction()) {
                 try {
@@ -51,8 +52,6 @@ namespace WebMedicina.BackEnd.API.Controllers {
 
                         // Creamos user con identity
                         if (await _identityService.CrearUser(user, model)) {
-
-                            UserInfoDto userInfo = _mapper.Map<UserInfoDto>(model);
 
                             // Insertamos el nuevo medico a la tabla y generamos token si todo esta OK
                             if (_adminService.CrearMedico(model, user.Id)) {
@@ -87,7 +86,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
                     if (await _identityService.ComprobarContraseña(userLogin)) {
 
                         // Obtenemos los datos del medico y su rol
-                        MedicosModel? medico = await _identityService.ObtenerUsuarioYRol(userLogin.UserName);
+                        MedicosModel? medico = await _identityService.ObtenerUsuarioYRolLogin(userLogin.UserName);
 
                         // Generamos la info del usuario si se ha obtenido correctamente
                         if(medico is not null) {
@@ -137,8 +136,9 @@ namespace WebMedicina.BackEnd.API.Controllers {
         private UserToken BuildToken(UserInfoDto userInfo) {
             try { 
                 var claims = new [] {
-                    new Claim(JwtRegisteredClaimNames.Sub, userInfo.NumHistoria),
+                    new Claim(JwtRegisteredClaimNames.Sub, userInfo.IdMedico.ToString()),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim("UserLogin", userInfo.UserLogin),
                     new Claim("nombre", userInfo.Nombre),
                     new Claim("apellidos", userInfo.Apellidos),
                     new Claim(ClaimTypes.Role, userInfo.Rol),

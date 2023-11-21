@@ -1,14 +1,80 @@
 ﻿<MudDialog>
     <TitleContent>
-        <MudText Typo="Typo.h6"> Nuevo Paciente </MudText>
+        <MudText Typo="Typo.h5">Nuevo Paciente</MudText>
     </TitleContent>
     <DialogContent>
-        <EditForm>
+        <div>
+            <EditForm Model="@nuevoPaciente" OnValidSubmit="Crear" Class="flex-grow-1 p">
+            <DataAnnotationsValidator />
 
+            @* Numero de historia *@
+            <MudTextField @bind-Value="nuevoPaciente.NumHistoria" Counter="12" MaxLength="12" For="@(() => nuevoPaciente.NumHistoria)" OnlyValidateIfDirty="true" Immediate="true" Clearable="true" Label="Número de Historia*" Variant="Variant.Text" />
+
+            @* Fecha Nacimiento *@
+                <ContentPicker pickerName="fechaNac" clases="filtro" label="Fecha de Nacimiento*" Fecha="nuevoPaciente.FechaNac" variante="PickerVariant.Dialog" fechasDesactivadas="@((DateTime dt)=> dt > DateTime.Now)"
+                               ActualizarFecha="ActFecha" FechaMaxima="DateTime.Today" />
+
+            @* Genero *@
+            <MudSelect Class="filtro" T="string" Label="Género*" @bind-Value="nuevoPaciente.Sexo" For="@(() => nuevoPaciente.Sexo)" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Variant="Variant.Text">
+                <MudSelectItem Value="@("H")"><div class="d-flex align-center"> <MudIcon Icon="@Icons.Material.Outlined.Man" Class="mr-2" Size="Size.Small"></MudIcon> Hombre </div></MudSelectItem>
+                <MudSelectItem Value="@("M")"><div class="d-flex align-center"><MudIcon Icon="@Icons.Material.Outlined.Woman" Class="mr-2" Size="Size.Small"></MudIcon> Mujer </div></MudSelectItem>
+            </MudSelect>
+
+            @* Talla *@
+            <MudStack Class="filtro" id="sliderTalla" Row="true" Spacing="3" AlignItems="AlignItems.End">
+                <MudSlider @bind-Value="@nuevoPaciente.Talla" For="@(() => nuevoPaciente.Talla)"  ValueLabel="true" Max="200" Min="50">Talla*: @nuevoPaciente.Talla cm</MudSlider>
+                <MudToggleIconButton @bind-Toggled="@OrdenarTalla" Class="pa-0"
+                                     Icon="@Icons.Material.Outlined.ArrowDropUp" Color="@Color.Default" ToggledTitle="Ordenar de menor a mayor"
+                                     ToggledIcon="@Icons.Material.Outlined.ArrowDropDown" Title="Ordenar de mayor a menor" id="ordenarTalla" />
+            </MudStack>
+
+            @* Fecha Diagnostico *@
+             <MudDatePicker Class="filtro" Editable="true" AutoClose="true" Label="Fecha de Diagnóstico" Date="nuevoPaciente.FechaDiagnostico" For="@(() => nuevoPaciente.FechaDiagnostico)" PickerVariant="PickerVariant.Dialog">
+                <ContentPicker />
+            </MudDatePicker>
+
+            @* Fecha fractalidad *@
+            <MudDatePicker Class="filtro" Editable="true" AutoClose="true" Label="Fecha de Fractalidad*" Date="nuevoPaciente.FechaFractalidad" For="@(() => nuevoPaciente.FechaFractalidad)" PickerVariant="PickerVariant.Dialog">
+                <ContentPicker />
+            </MudDatePicker>
+
+            @* Farmaco *@
+            <MudTextField T="string" Label="Fármacos" OnlyValidateIfDirty="true" Clearable="true" Variant="Variant.Text" @bind-Value="nuevoPaciente.Farmaco" For="@(() => nuevoPaciente.Farmaco)"></MudTextField>
+
+            @* Tipo Epilepsia *@
+            <MudSelect T="string" Class="filtro" Label="Epilepsia" AnchorOrigin="Origin.BottomCenter" @bind-Value="nuevoPaciente.Epilepsia" For="@(() => nuevoPaciente.Epilepsia)">
+                @if (ListaEpilepsias != null && ListaEpilepsias.Any()) {
+
+                    @* Mapeamos todos los farmacos almacenados *@
+                    foreach (EpilepsiasDto epilepsia in ListaEpilepsias) {
+                        <MudSelectItem Value="@(epilepsia.IdEpilepsia.ToString())">@epilepsia.Nombre</MudSelectItem>
+                    }
+                } else {
+                    <MudSelectItem Value="@(string.Empty)" Disabled="true">No hay opciones disponibles</MudSelectItem>
+                }
+            </MudSelect>
+
+            @* Tipo Mutacion *@
+            <MudSelect T="string" Class="filtro" Label="Tipo Mutación*" AnchorOrigin="Origin.BottomCenter" @bind-Value="nuevoPaciente.IdMutacion" For="@(() => nuevoPaciente.IdMutacion)">
+                @if (ListaMutaciones != null && ListaMutaciones.Any()) {
+
+                    @* Mapeamos todos los farmacos almacenados *@
+                    foreach (MutacionesDto mutacion in ListaMutaciones) {
+                        <MudSelectItem Value="@(mutacion.IdMutacion.ToString())">@mutacion.Nombre</MudSelectItem>
+                    }
+                } else {
+                    <MudSelectItem Value="@(string.Empty)" Disabled="true">No hay opciones disponibles</MudSelectItem>
+                }
+            </MudSelect>
+
+            @* Enfermedad Rara *@
+            <MudCheckBox T="bool" Class="filtro checkEnfRara" Checked="nuevoPaciente.EnfermRaras" For="@(() => nuevoPaciente.EnfermRaras)" Label="Enfermedad rara" Color="Color.Primary"></MudCheckBox>
+            <MudTextField T="string" Class="filtro" Label="Descripcion enfermedades raras" Variant="Variant.Outlined" Text="@nuevoPaciente.DescripEnferRaras" Lines="10" For="@(() => nuevoPaciente.DescripEnferRaras)" />
         </EditForm>
+        </div>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">Cancelar</MudButton>
-        <MudButton Color="Color.Success" OnClick="Submit">Crear</MudButton>
+        <MudButton Variant="Variant.Filled" OnClick="Cancel">Cancelar</MudButton>
+        <MudButton Color="Color.Secondary" OnClick="Crear">Crear</MudButton>
     </DialogActions>
 </MudDialog>

@@ -46,7 +46,7 @@ namespace WebMedicina.BackEnd.Dal {
             }
         }
 
-        public async Task<string?> ObtenerRolUser(string userName, IdentityUser? user) {
+        public async Task<string?> ObtenerRolUser(IdentityUser? user) {
             try {
   
                 IList<string>? roles = null;
@@ -70,15 +70,15 @@ namespace WebMedicina.BackEnd.Dal {
 
                     // Obtenemos los usuarios con los filtros seleccionados
                     listaMedicos = (from u in _context.Medicos
-                                                    where (u.NumHistoria != admin.NumHistoria &&
-                                                    (!string.IsNullOrEmpty(filtros["busqueda"]) || (u.NumHistoria == filtros["busqueda"] || u.Nombre.StartsWith(filtros["busqueda"])
+                                                    where (u.IdMedico != admin.IdMedico &&
+                                                    (!string.IsNullOrEmpty(filtros["busqueda"]) || (u.UserLogin == filtros["busqueda"] || u.Nombre.StartsWith(filtros["busqueda"])
                                    || u.Apellidos.Contains(filtros["busqueda"]) || u.Apellidos.StartsWith(filtros["busqueda"]))))
                                    select _mapper.Map<UserUploadDto>(u)).ToList();
 
                     // Mapeamos los medicos y obtenemos su rol
                     foreach (UserUploadDto usuario in listaMedicos)
                     {
-                        var role = await ObtenerRolUser(usuario.NumHistoria, await ObtenerUsuarioIdentity(usuario.NumHistoria));
+                        var role = await ObtenerRolUser(await ObtenerUsuarioIdentity(usuario.UserLogin));
                         if (role != null) {
                             usuario.Rol = role;
                         }
@@ -92,8 +92,8 @@ namespace WebMedicina.BackEnd.Dal {
 
                     //Obtenemos los usuarios con los filtros seleccionados
                     listaMedicos = (from u in _context.Medicos
-                                    where (u.NumHistoria != admin.NumHistoria && 
-                        (listaUserNames.Contains(u.NumHistoria) || (string.IsNullOrEmpty(filtros["busqueda"]) || (u.NumHistoria == filtros["busqueda"] || u.Nombre.StartsWith(filtros["busqueda"])
+                                    where (u.IdMedico != admin.IdMedico && 
+                        (listaUserNames.Contains(u.UserLogin) || (string.IsNullOrEmpty(filtros["busqueda"]) || (u.UserLogin == filtros["busqueda"] || u.Nombre.StartsWith(filtros["busqueda"])
                         || u.Apellidos.Contains(filtros["busqueda"]) || u.Apellidos.StartsWith(filtros["busqueda"])))))
                                     select _mapper.Map<UserUploadDto>(u)).ToList();
 
@@ -112,7 +112,7 @@ namespace WebMedicina.BackEnd.Dal {
             try {
 
                 // Obtenemos el medico
-                MedicosModel? medico = _context.Medicos.Find(medicoActualizado.NumHistoria);
+                MedicosModel? medico = _context.Medicos.Find(medicoActualizado.IdMedico);
 
                 // Actualizamos las propiedades
                 if(medico != null) {

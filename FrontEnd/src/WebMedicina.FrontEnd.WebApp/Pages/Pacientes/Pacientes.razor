@@ -2,8 +2,9 @@
 <PageTitle>Pacientes</PageTitle>
 @attribute [Authorize]
 
+
 @* Tab con las subpantallas*@
-<MudStack Spacing="0" Class="mt-5">
+<MudStack Spacing="8" Class="mt-5 gap-md-0" >
     <MudStack Spacing="0" Row="true">
         @* Boton crear pacientes *@
         <div>
@@ -31,11 +32,11 @@
 
 @* Drawer de filtros *@
 <div>
-    <MudDrawer @bind-Open="@FiltrosAbierto" id="drawerFiltros" Anchor="Anchor.End" Fixed="false" Elevation="4" Variant="@DrawerVariant.Temporary" Color="Color.Default"
-                Class="rounded-tl-lg" Style="@($"--mud-drawer-width-right: 290px; background: {(!IsDarkMode ? "white" : "var(--mud-palette-background)")}")">
+    <MudDrawer @bind-Open="@FiltrosAbierto" id="drawerFiltros" Anchor="Anchor.End" Fixed="true" Elevation="4" Variant="@DrawerVariant.Temporary" Color="Color.Default"
+               Class="rounded-tl-lg" Style="@($"background: {(!IsDarkMode ? "white" : "var(--mud-palette-background)")}")">
+        <div class="mx-5">
 
-        <div class="@($"mx-5 {(FiltrosAbierto ? "d-block" : "d-none")}")">
-            @* Titulo *@
+               @* Titulo *@
             <MudDrawerHeader Class="justify-center">
                 <MudText Typo="Typo.h6">Filtros Pacientes</MudText>
             </MudDrawerHeader>
@@ -60,7 +61,7 @@
             </MudSelect>
 
             @* Talla  *@
-            <MudStack id="sliderTalla" Class="filtro" Row="true" Spacing="3" AlignItems="AlignItems.End">
+            <MudStack Class="filtro sliderTalla" Row="true" Spacing="3" AlignItems="AlignItems.End">
                 <MudSlider @bind-Value="@FilrosPacientes.Talla" For="@(() => FilrosPacientes.Talla)" ValueLabel="true" Max="200" Min="50">Talla: @FilrosPacientes.Talla cm</MudSlider>
                 <MudToggleIconButton @bind-Toggled="@OrdenarTalla" Class="pa-0"
                                         Icon="@Icons.Material.Outlined.ArrowDropUp" Color="@Color.Default" ToggledTitle="Ordenar de menor a mayor"
@@ -68,25 +69,23 @@
             </MudStack>
 
             @* Farmaco *@
-            <MudSelect T="string" Class="filtro" Label="Fármaco" AnchorOrigin="Origin.BottomCenter" @bind-Value="farmacoFiltrado" @bind-SelectedValues="FilrosPacientes.Farmacos" MultiSelection="true">
+         @*<MudSelect T="string" Class="filtro" Label="Fármaco" AnchorOrigin="Origin.BottomCenter" @bind-Value="farmacoFiltrado" MultiSelection="true" @bind-SelectedValues="FilrosPacientes.Farmacos">
                 @if (ListaFarmacos != null && ListaFarmacos.Any()) {
 
                     @* Mapeamos todos los farmacos almacenados *@
-                    foreach(FarmacosDto farmaco in ListaFarmacos){
-                        <MudSelectItem Value="@(farmaco.IdFarmaco.ToString())">@farmaco.Nombre</MudSelectItem>
+                    @*foreach(FarmacosDto farmaco in ListaFarmacos){
+                        <MudSelectItem Value="@(farmaco.Nombre)">@farmaco.Nombre</MudSelectItem>
                     }
-                } else {
-                    <MudSelectItem Value="@(string.Empty)" Disabled="true">No hay opciones disponibles</MudSelectItem>
-                }
-            </MudSelect>
+            } *@
+            @*</MudSelect> *@
 
             @* Tipo Epilepsia *@
-            <MudSelect T="string" Class="filtro" Label="Tipo Epilepsia" AnchorOrigin="Origin.BottomCenter" @bind-Value="epilepsiaFiltrado" @bind-SelectedValues="FilrosPacientes.TipoEpilepsias" MultiSelection="true">
+            <MudSelect T="string" Class="filtro" Label="Tipo Epilepsia" AnchorOrigin="Origin.BottomCenter"  @bind-Value="epilepsiaFiltrado" @bind-SelectedValues="FilrosPacientes.TipoEpilepsias" MultiSelection="true">
                 @if (ListaEpilepsias != null && ListaEpilepsias.Any()) {
 
                     @* Mapeamos todos los farmacos almacenados *@
                     foreach (EpilepsiasDto epilepsia in ListaEpilepsias) {
-                        <MudSelectItem Value="@(epilepsia.IdEpilepsia.ToString())">@epilepsia.Nombre</MudSelectItem>
+                        <MudSelectItem Value="@(epilepsia.Nombre)">@epilepsia.Nombre</MudSelectItem>
                     }
                 } else {
                     <MudSelectItem Value="@(string.Empty)" Disabled="true">No hay opciones disponibles</MudSelectItem>
@@ -99,7 +98,7 @@
 
                     @* Mapeamos todos los farmacos almacenados *@
                     foreach (MutacionesDto mutacion in ListaMutaciones) {
-                        <MudSelectItem Value="@(mutacion.IdMutacion.ToString())">@mutacion.Nombre</MudSelectItem>
+                        <MudSelectItem Value="@(mutacion.Nombre)">@mutacion.Nombre</MudSelectItem>
                     }
                 } else {
                     <MudSelectItem Value="@(string.Empty)" Disabled="true">No hay opciones disponibles</MudSelectItem>
@@ -108,23 +107,6 @@
 
             @* Enfermedad Rara *@
             <MudCheckBox T="bool" Class="filtro checkEnfRara" @bind-Checked="@FilrosPacientes.EnfermRaras" For="@(() => FilrosPacientes.EnfermRaras)" Label="Enfermedad rara" Color="Color.Primary"></MudCheckBox>
-          
         </div>
-        <div class="@((FiltrosAbierto ? "d-none" : "d-block"))">
-            <MudStack Spacing="8" AlignItems="AlignItems.Center">
-                <div></div>
-                <AuthorizeView Roles="admin, superAdmin">
-                    <Authorized>
-                        <MudIcon Icon="@Icons.Material.Filled.LocalHospital" />
-                    </Authorized>
-                </AuthorizeView>
-                <MudIcon Icon="@Icons.Material.Outlined.Face" />
-                <MudIcon Icon="@Icons.Material.Filled.Straighten" />
-                <MudIcon Icon="@Icons.Material.Filled.Vaccines" />
-                <MudIcon Icon="@Icons.Material.Outlined.Psychology" />
-                <MudIcon Icon="@Icons.Material.Filled.Coronavirus" />
-                <MudIcon Icon="@Icons.Material.Outlined.Medication" />
-            </MudStack>
-        </div>
-    </MudDrawer>
+     </MudDrawer>
 </div>

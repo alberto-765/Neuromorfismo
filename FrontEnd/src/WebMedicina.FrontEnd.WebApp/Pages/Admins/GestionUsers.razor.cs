@@ -17,7 +17,8 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
         // DEPENDENCIAS
         [Inject] IAdminsService _adminsService { get; set; }
         [Inject] IRedirigirManager redirigirManager { get; set; }
-        [CascadingParameter(Name = "excepcionPersonalizada")] ExcepcionPersonalizada excepcionPersonalizada { get; set; }
+        [CascadingParameter(Name = "modoOscuro")] private bool _isDarkMode { get; set; } // Modo oscuro
+        [CascadingParameter(Name = "excepcionPersonalizada")] private ExcepcionPersonalizada excepcionPersonalizada { get; set; }
         [Inject] ICrearHttpClient _crearHttpClient { get; set; }
         [Inject] private ISnackbar _snackbar { get; set; }
         [Inject] IJSRuntime js { get; set; }
@@ -114,6 +115,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
         private void CopiaSeguridadItem(object item) {
             copiaSeguridadUsuario = new() {
                 IdMedico = ((UserUploadDto) item).IdMedico,
+                UserLogin = ((UserUploadDto) item).UserLogin,
                 Nombre = ((UserUploadDto) item).Nombre,
                 Apellidos = ((UserUploadDto) item).Apellidos,
                 FechaNac = ((UserUploadDto) item).FechaNac,
@@ -127,6 +129,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
         // Reseteamos el userInfo a sus valores por defecto
         private void ResetearUserInfo(object item) {
             ((UserUploadDto)item).IdMedico = copiaSeguridadUsuario.IdMedico;
+            ((UserUploadDto)item).UserLogin = copiaSeguridadUsuario.UserLogin;
             ((UserUploadDto)item).Nombre = copiaSeguridadUsuario.Nombre;
             ((UserUploadDto)item).Apellidos = copiaSeguridadUsuario.Apellidos;
             ((UserUploadDto)item).FechaNac = copiaSeguridadUsuario.FechaNac;
@@ -140,6 +143,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 // Generamos el usuario actualizado
                 UserUploadDto userInfo = new() {
                     IdMedico = ((UserUploadDto)item).IdMedico,
+                    UserLogin = ((UserUploadDto)item).UserLogin,
                     Nombre = ((UserUploadDto)item).Nombre,
                     Apellidos = ((UserUploadDto)item).Apellidos,
                     FechaNac = ((UserUploadDto)item).FechaNac,

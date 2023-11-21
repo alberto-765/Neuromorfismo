@@ -12,10 +12,19 @@ namespace WebMedicina.BackEnd.Dal {
             _mapper = mapper;
         }
 
-        // Obtenemos los datos de un medico
-        public MedicosModel ObtenerInfoUser(string userName) {
+        // Obtenemos los datos de un medico filtrando por id
+        public MedicosModel ObtenerInfoUser(int idMedico) {
             try {
-                return _context.Medicos.FirstOrDefault(q => q.NumHistoria == userName);
+                return _context.Medicos.Find(idMedico);
+            } catch (Exception ex) {
+                throw;
+            }
+        }
+        
+        // Obtenemos los datos de un medico filtrando por username
+        public MedicosModel ObtenerInfoUserLogin(string userName) {
+            try {
+                return _context.Medicos.First(q => q.UserLogin == userName);
             } catch (Exception ex) {
                 throw;
             }

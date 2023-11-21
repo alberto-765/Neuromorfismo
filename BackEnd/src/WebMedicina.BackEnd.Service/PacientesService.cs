@@ -20,7 +20,7 @@ namespace WebMedicina.BackEnd.Service {
             _mutacionesDal = mutacionesDal;
         }
 
-        public async Task<IEnumerable<string>> GetAllMed() {
+        public async Task<IEnumerable<int>> GetAllMed() {
             try {
                 // Obtenemos todos los medicos y sus pacientes
                 IEnumerable<MedicosPacientesDto> listaMedicosPac =  await pacientesDal.ObtenerMedicoPacientes();
@@ -30,7 +30,7 @@ namespace WebMedicina.BackEnd.Service {
                     return listaMedicosPac.Select(q => q.Medico).ToList();
                 }
 
-                return Enumerable.Empty<string>();
+                return Enumerable.Empty<int>();
             } catch (Exception) {
                 throw;
             }

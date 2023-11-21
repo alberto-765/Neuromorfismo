@@ -6,7 +6,7 @@
 @page "/crearUsuario"
 <PageTitle>Alta Médico</PageTitle>
 
-<MudContainer MaxWidth="MaxWidth.Small" Class="d-flex flex-grow-1 align-center">
+<MudContainer MaxWidth="MaxWidth.Small" Class="d-flex flex-grow-1 align-center my-10">
     <MudPaper Elevation="3" Class="rounded-lg pa-7 flex-1">
         <h1 class="mb-5">Alta Nuevo Usuario</h1>
         <EditForm Model="@userRegistro" OnValidSubmit="Crear" Class="flex-grow-1">
@@ -14,7 +14,7 @@
                  
             <MudTextField Class="mb-3" @bind-Value="userRegistro.Nombre" For="@(() => userRegistro.Nombre)" OnlyValidateIfDirty="true" Clearable="true" Label="Nombre*" Variant="Variant.Text" />
             <MudTextField Class="mb-3" @bind-Value="userRegistro.Apellidos" For="@(() => userRegistro.Apellidos)" OnlyValidateIfDirty="true" Label="Apellidos*" Clearable="true" Variant="Variant.Text" OnBlur="ValidarUserName" />
-            <MudTextField Class="mb-3" @bind-Value="@userRegistro.UserLogin" For="@(() => userRegistro.UserLogin)" HelperText="El nombre es generado automáticamente al rellanar 'Nombre' y 'Apellidos'" Label="Nombre de inicio de sesión*" Variant="Variant.Text"/>
+            <MudTextField Class="mb-3" @bind-Value="@userRegistro.UserLogin" For="@(() => userRegistro.UserLogin)" HelperText="El nombre es generado automáticamente al rellanar 'Nombre' y 'Apellidos'" Label="Nombre de inicio de sesión*" Variant="Variant.Text" ReadOnly="true"/>
             <MudDatePicker Class="mb-3" @ref="_picker" Editable="true" AutoClose="true" Label="Fecha de Nacimiento*" @bind-Date="userRegistro.FechaNac" For="@(() => userRegistro.FechaNac)" Placeholder="Mayor de 18 años" PickerVariant="PickerVariant.Dialog" IsDateDisabledFunc="@((DateTime dt)=> dt > ValidacionesRegistro.ObtenerFechaMaxNacimiento())">
                 <PickerActions Context="contexto2">
                     <MudButton Class="mr-auto align-self-start" OnClick="@(() => _picker.Clear())">Limpiar</MudButton>

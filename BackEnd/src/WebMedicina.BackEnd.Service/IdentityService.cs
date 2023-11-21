@@ -26,20 +26,40 @@ namespace WebMedicina.BackEnd.Service {
             _signInManager = signInManager;
             _adminDal = adminDal;
         }
-        public async Task<MedicosModel?> ObtenerUsuarioYRol(string userName) {
+
+        public async Task<MedicosModel?> ObtenerUsuarioYRolLogin(string userName) {
             try {
-                MedicosModel? medicosModel = _medicoDal.ObtenerInfoUser(userName);
+                MedicosModel? medicosModel = _medicoDal.ObtenerInfoUserLogin(userName);
 
                 // Obtenemos el rol si se ha obtenido correctamente la info del usuario
-                if (medicosModel is not null) {
-                   var rol = await ObtenerRol(userName);
+                if (medicosModel != null && !string.IsNullOrEmpty(medicosModel.UserLogin)) {
+                    var rol = await ObtenerRol(medicosModel.UserLogin);
 
-                    if(rol is not null) {
+                    if (string.IsNullOrEmpty(rol)) {
+                        medicosModel.Rol = "medico";
+                    } else {
                         medicosModel.Rol = rol;
                     }
+                }
 
-                    if (string.IsNullOrEmpty(medicosModel.Rol)) {
+                return medicosModel;
+            } catch (Exception) {
+                throw;
+            }
+        }
+
+        public async Task<MedicosModel?> ObtenerUsuarioYRol(int idMedico) {
+            try {
+                MedicosModel? medicosModel = _medicoDal.ObtenerInfoUser(idMedico);
+
+                // Obtenemos el rol si se ha obtenido correctamente la info del usuario
+                if (medicosModel != null && !string.IsNullOrEmpty(medicosModel.UserLogin)) {
+                   var rol = await ObtenerRol(medicosModel.UserLogin);
+
+                    if(string.IsNullOrEmpty(rol)) {
                         medicosModel.Rol = "medico";
+                    } else {
+                        medicosModel.Rol = rol;
                     }
                 }
 
@@ -75,7 +95,7 @@ namespace WebMedicina.BackEnd.Service {
         // Obtener Rol del usuario
         public async Task<string?> ObtenerRol(string userName) {
             try {
-                return await _adminDal.ObtenerRolUser(userName, await _adminDal.ObtenerUsuarioIdentity(userName));
+                return await _adminDal.ObtenerRolUser(await _adminDal.ObtenerUsuarioIdentity(userName));
             } catch (Exception) {
                  throw;
             }
@@ -91,14 +111,14 @@ namespace WebMedicina.BackEnd.Service {
         }
 
         // Actualizamos rol del usuario
-        public async Task<bool> ActualizarRol(string userName, string nuevoRol) {
+        public async Task<bool> ActualizarRol(string userLogin, string nuevoRol) {
             try { 
                 // Obtenemos el usuario y sus roles
-                IdentityUser? usuario = await _adminDal.ObtenerUsuarioIdentity(userName);
+                IdentityUser? usuario = await _adminDal.ObtenerUsuarioIdentity(userLogin);
                 IdentityResult rolActualizado = new();
 
                 if (usuario is not null) {
-                    string? rol = await _adminDal.ObtenerRolUser(userName, usuario);
+                    string? rol = await _adminDal.ObtenerRolUser(usuario);
                     // Eliminamos y volvemos a añadir el nuevo rol
                     if(rol != null) {
                         rolActualizado = await _userManager.RemoveFromRoleAsync(usuario, rol);

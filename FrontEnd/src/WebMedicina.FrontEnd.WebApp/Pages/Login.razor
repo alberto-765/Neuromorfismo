@@ -6,7 +6,7 @@
         <EditForm Model="@userLogin" OnValidSubmit="hacerLogin">
             <DataAnnotationsValidator />
 
-            <MudTextField @onfocus="(() => mensajeErrorLogin = String.Empty)" @bind-Value="userLogin.UserName" For="@(() => userLogin.UserName)"  OnlyValidateIfDirty="true" Counter="12" MaxLength="12" Clearable="true" HelperText="El usuario es el número de historia" Label="Usuario" HelperTextOnFocus="true" Variant="Variant.Text" />
+            <MudTextField @onfocus="(() => mensajeErrorLogin = String.Empty)" @bind-Value="userLogin.UserName" For="@(() => userLogin.UserName)"  OnlyValidateIfDirty="true" Clearable="true" Label="Usuario" HelperTextOnFocus="true" Variant="Variant.Text" />
             <MudTextField @onfocus="(() => mensajeErrorLogin = String.Empty)" @bind-Value="userLogin.Password" For="@(() => userLogin.Password)" Label="Contraseña" Variant="Variant.Text" InputType="@tipoInputPass" Adornment="Adornment.End" OnlyValidateIfDirty="true" AdornmentIcon="@iconoPassword" OnAdornmentClick="clickPassword" AdornmentAriaLabel="Ver contraseña" />
                 
             @if (!String.IsNullOrEmpty(mensajeErrorLogin)) {

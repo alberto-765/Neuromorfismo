@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using System.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using WebMedicina.BackEnd.Model;
@@ -17,8 +18,7 @@ namespace WebMedicina.BackEnd.API {
 
             // Mapper user info
             CreateMap<UserRegistroDto, UserInfoDto>().ReverseMap();
-            CreateMap<UserLoginDto, UserInfoDto>()
-                .ForMember(dest => dest.NumHistoria, co => co.MapFrom(src => src.UserName));
+            CreateMap<UserLoginDto, UserInfoDto>();
 
             // Mapeo modelo medico
             CreateMap<MedicosModel, UserRegistroDto>().ReverseMap();
@@ -26,7 +26,8 @@ namespace WebMedicina.BackEnd.API {
 
             // Mapeo token de User a UserInfoDto
             CreateMap<ClaimsPrincipal, UserInfoDto>()
-                .ForMember(dest => dest.NumHistoria, co => co.MapFrom(src => src.FindFirst(JwtRegisteredClaimNames.Sub).Value))
+                .ForMember(dest => dest.IdMedico, co => co.MapFrom(src => int.Parse(src.FindFirst(JwtRegisteredClaimNames.Sub).Value)))
+                .ForMember(dest => dest.UserLogin, co => co.MapFrom(src => src.FindFirst("UserName").Value))
                 .ForMember(dest => dest.Nombre, co => co.MapFrom(src => src.FindFirst("nombre").Value))
                 .ForMember(dest => dest.Apellidos, co => co.MapFrom(src => src.FindFirst("apellidos").Value))
                 .ForMember(dest => dest.Rol, co => co.MapFrom(src => src.FindFirst(ClaimTypes.Role).Value));

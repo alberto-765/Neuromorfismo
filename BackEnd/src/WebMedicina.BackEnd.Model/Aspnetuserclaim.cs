@@ -13,5 +13,5 @@ public partial class Aspnetuserclaim
 
     public string? ClaimValue { get; set; }
 
-    public virtual Aspnetuser User { get; set; } = null!;
+    public virtual AspnetuserModel User { get; set; } = null!;
 }

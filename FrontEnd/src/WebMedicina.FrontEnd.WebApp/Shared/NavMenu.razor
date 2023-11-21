@@ -6,12 +6,12 @@
     <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Store">Estadísticas</MudNavLink>
     <AuthorizeView Roles="admin, superAdmin">
         <Authorized>
-            <MudNavGroup Title="Administación" Icon="@Icons.Material.Outlined.Settings" @bind-Expanded="@_adminExpanded">
+            <MudNavGroup Title="Administación" Icon="@Icons.Material.Outlined.Settings" Expanded="true">
                     <MudNavLink Href="/crearUsuario" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.PersonAddAlt1">Alta Médico</MudNavLink>
                     <MudNavLink Href="/gestionUsers" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.FilterAlt">Gestión Médicos</MudNavLink>
                     <MudNavLink Href="/epilepsias" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.Psychology">Epilepsias</MudNavLink>
                     <MudNavLink Href="/mutaciones" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Coronavirus">Mutaciones</MudNavLink>
-                    <MudNavLink Href="/farmacos" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Vaccines">Fármacos</MudNavLink>
+                    @* <MudNavLink Href="/farmacos" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Vaccines">Fármacos</MudNavLink> *@
             </MudNavGroup> 
         </Authorized>
     </AuthorizeView>
@@ -21,7 +21,6 @@
 @code
 {
     [CascadingParameter(Name = "modoOscuro")] private bool _isDarkMode { get; set; }
-    private bool _adminExpanded { get; set; }
 
     [CascadingParameter] private Task<AuthenticationState>? authenticationState { get; set; }
     private ClaimsPrincipal? user { get; set; }

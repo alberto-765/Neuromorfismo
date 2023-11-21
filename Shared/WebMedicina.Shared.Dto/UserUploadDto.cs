@@ -12,6 +12,9 @@ namespace WebMedicina.Shared.Dto {
         [ReadOnly(true)]
         public string IdMedico { get; set; }
 
+        [ReadOnly(true)]
+        public string UserLogin { get; set; }
+
         [Required(ErrorMessage = "El nombre del usuario es obligatorio")]
         [RegularExpression(@"^[^\d]+$", ErrorMessage = "El nombre no puede contener números")]
         public string Nombre { get; set; }
@@ -20,7 +23,8 @@ namespace WebMedicina.Shared.Dto {
         public string Apellidos { get; set; }
 
         [Required(ErrorMessage = "La fecha de nacimiento es obligatoria")]
-        [DataType(DataType.DateTime, ErrorMessage = "El formato debe ser dd/MM/yyyy")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         [CustomValidation(typeof(ValidacionesRegistro), "ValidateFechaNacimiento")]
         public DateTime? FechaNac { get; set; }
 

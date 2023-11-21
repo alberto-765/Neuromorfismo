@@ -7,7 +7,7 @@ using WebMedicina.Shared.Dto;
 
 namespace WebMedicina.BackEnd.ServicesDependencies {
     public interface IPacientesService {
-        Task<IEnumerable<string>> GetAllMed();
+        Task<IEnumerable<int>> GetAllMed();
         List<FarmacosDto> ObtenerFarmacos();
         List<MutacionesDto> ObtenerMutaciones();
         List<EpilepsiasDto> ObtenerEpilepsias();

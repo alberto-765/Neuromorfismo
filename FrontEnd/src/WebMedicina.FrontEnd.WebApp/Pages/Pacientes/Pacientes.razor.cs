@@ -7,6 +7,7 @@ using WebMedicina.FrontEnd.Service;
 using System.Runtime.CompilerServices;
 using WebMedicina.Shared.Dto;
 using MudBlazor;
+using System.Drawing;
 
 namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
     public partial class Pacientes {
@@ -15,7 +16,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
         private ClaimsPrincipal? user { get; set; } // datos usuario logueado
         [CascadingParameter(Name = "excepcionPersonalizada")] ExcepcionPersonalizada excepcionPersonalizada { get; set; }
         [CascadingParameter(Name = "modoOscuro")] bool IsDarkMode { get; set; } // Modo oscuro
-        [Inject] private IRedirigirManager _redirigirManager { get; set; } // Dependecia para rederifir
         [Inject] private IPacientesService _pacientesService { get; set; }
         [Inject] private IDialogService _dialogoService { get; set; }
 
@@ -28,13 +28,19 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
         // Valores seleccionados para mostrar en los filtros
         private FiltroPacienteDto FilrosPacientes { get; set; } = new(); // Dto con los filtros seleccionados
         private IEnumerable<string>? ListaMedicos { get; set; } = null;
-        private IEnumerable<FarmacosDto>? ListaFarmacos { get; set; } = null;
+
+        //private IEnumerable<FarmacosDto>? ListaFarmacos { get; set; } = null;
+        //private string farmacoFiltrado { get; set; }
         private IEnumerable<EpilepsiasDto>? ListaEpilepsias { get; set; } = null;
         private IEnumerable<MutacionesDto>? ListaMutaciones { get; set; } = null;
-        private string farmacoFiltrado { get; set; }
         private string epilepsiaFiltrado { get; set; }
         private string mutacionFiltrado { get; set; }
         private string medicoFiltrado { get; set; }
+        private string otraOpcFarmaco { get; set; }
+
+        // Pop up crear paciente
+        DialogOptions opcionesDialogo { get; set; } = new DialogOptions{ FullWidth=true, CloseButton=true, DisableBackdropClick=true, Position=DialogPosition.Center, CloseOnEscapeKey=true};
+
 
         protected override async Task OnInitializedAsync() {
             try {
@@ -75,12 +81,20 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
             // Asignamos la lista de mutaciones
             ListaMutaciones = opcionesSelects.ListaMutaciones;
             // Asignamos la lista de farmacos
-            ListaFarmacos = opcionesSelects.ListaFarmacos;
+            //ListaFarmacos = opcionesSelects.ListaFarmacos;
         }
 
         // Mostrar dialogo para crear paciente nuevo
         private async Task MostrarCrearPac() {
-            _dialogoService.Show<CrearPaciente>();
+            var dialog = _dialogoService.Show<CrearPaciente>("titulo", opcionesDialogo);
+            var result = await dialog.Result;
+            if (!result.Cancelled) {
+                Console.WriteLine("hola");
+           }
+        }
+
+        // Cambiar los valores seleccionados para mostrarlos bonitos
+        private async Task CambiarValorFarmaco(string t) {
         }
     }
 }

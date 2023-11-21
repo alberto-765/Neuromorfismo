@@ -1,11 +1,11 @@
 ﻿@attribute [Authorize(Roles = "superAdmin, admin")]
 
-@page "/farmacos"
+@* @page "/farmacos" *@
 <PageTitle>Fármacos</PageTitle>
-<MudContainer Class="px-0 d-flex flex-column gap-sm-5" MaxWidth="MaxWidth.Medium">
+<MudContainer Class="px-0 d-flex flex-column gap-sm-8 gap-3" MaxWidth="MaxWidth.Medium">
 
-    <h1 class="mt-4 mt-sm-8">Gestión Fármacos</h1>
-    <div class="mt-4 mt-sm-0">
+    <div class="mt-4 mt-sm-8 d-flex justify-space-between align-center">
+        <h1>Gestión Fármacos</h1>
         <MudButton Color="Color.Success" OnClick="crearFarmaco" id="btnCrear" Variant="Variant.Filled" Size="Size.Small" StartIcon="@Icons.Material.Outlined.AddCircleOutline">Crear</MudButton>
     </div>
     @if (mostrarTabla) {

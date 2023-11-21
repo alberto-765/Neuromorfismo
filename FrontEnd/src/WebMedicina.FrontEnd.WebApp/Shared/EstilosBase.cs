@@ -10,7 +10,7 @@ namespace WebMedicina.FrontEnd.Service {
         public MudTheme currentTheme = new() {
             Palette = new PaletteLight {
                 Primary = "#64B5F6",
-                // Secondary = "#4CAF50",
+                Secondary = "#1565C0",
                 // Info = "#64a7e2",
                 // Success = "#2ECC40",
                 // Warning = "#FFC107",
@@ -24,7 +24,7 @@ namespace WebMedicina.FrontEnd.Service {
             PaletteDark = new PaletteDark {
 
                 Primary = "#64B5F6",
-                // Secondary = "#607D8B",
+                Secondary = "#42A5F5",
                 // Info = "#a4c2dd",
                 // Success = "#2ECC40",
                 // Warning = "#dc2d7e",
