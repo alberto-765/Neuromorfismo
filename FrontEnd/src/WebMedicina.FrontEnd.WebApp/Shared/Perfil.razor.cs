@@ -9,8 +9,7 @@ namespace WebMedicina.FrontEnd.WebApp.Shared {
         // Cerrar Sesion 
         private async Task CerrarSesion() {
             try {
-                perfilService.CerrarSesion();
-
+                await perfilService.CerrarSesion();
             } catch (Exception ex) {
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
             }

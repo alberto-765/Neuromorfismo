@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Principal;
 using System.Text;
@@ -79,7 +81,7 @@ namespace WebMedicina.BackEnd.Service {
                 }
                 return false;
             } catch (Exception) {
-                    throw;
+                throw;
             }
         }
 
@@ -110,6 +112,59 @@ namespace WebMedicina.BackEnd.Service {
             }
         }
 
+        // Genereamos un username valido para un nuevo medico
+        public async Task<(bool userNameInvalido, string userNameGenerado)> GenerarUserName(string[] nomYApell) {
+            try {
+                bool userNameInValido = true;
+                string userNameGenerado = string.Empty;
+
+                // Comprobamos que nombre y apellidos sean validos
+                if (nomYApell.Length > 1 && ValidarNomYApellUser(nomYApell[0], nomYApell[1])) {
+                    int indice = 0;
+                    int indiceApellido2 = 0;
+                    int indiceApellido3 = 0; // Apellido 3 en caso de que tuviera
+                    string nombre = nomYApell[0].ToLower();
+                    string[] apellidos = nomYApell[1].ToLower().Split(" ");
+
+                    // Creamos cronometro para contar tiempo maximo
+                    Stopwatch stopwatch = new();
+                    stopwatch.Start();
+
+                    // Recorremos hasta conseguir un userName valido para el usuario, al minuto salta excepcion
+                    while (userNameInValido || stopwatch.Elapsed.TotalSeconds > 30) {
+                        userNameGenerado = string.Empty;
+
+                        // Obtenemos primera letra del nombre
+                        userNameGenerado += nombre[0];
+
+                        // Obtenemos minimo 7 letras del primer apellido
+                        userNameGenerado += apellidos[0].Substring(0, (indice + 7 <= apellidos[0].Length ? indice + 7 : apellidos[0].Length));
+
+                        // Si se superan los caracteres del primer apellido comenzamos a coger del segundo
+                        if (apellidos.Length > 0 && indice > apellidos[0].Length) {
+                            userNameGenerado += apellidos[1].Substring(0, (indiceApellido2 <= apellidos[1].Length ? indiceApellido2 : apellidos[1].Length)) ;
+
+                            // Si se ha superado el segundo apellido y tiene 3 mapeamos tambien el tercero
+                            if (apellidos.Length > 1 && indice > apellidos[1].Length) {
+                                userNameGenerado += apellidos[2].Substring(0, (indiceApellido3 <= apellidos[2].Length ? indiceApellido3 : apellidos[2].Length));
+                            }
+                        }
+
+                        // Validamos el username generado
+                        userNameInValido = await ComprobarUserName(userNameGenerado);
+                        indice++;
+                    }
+
+                    // Paramos el cronometro
+                    stopwatch.Stop();
+                }
+
+                return (userNameInValido, userNameGenerado);
+            } catch (Exception) {
+                throw;
+            }
+        }
+
         // Actualizamos rol del usuario
         public async Task<bool> ActualizarRol(string userLogin, string nuevoRol) {
             try { 
@@ -127,6 +182,29 @@ namespace WebMedicina.BackEnd.Service {
                 }
 
                 return rolActualizado.Succeeded;
+            } catch (Exception) {
+                throw;
+            }
+        }
+
+        // Validamos si el nombre y apellidos del nuevo usuario son validos 
+        public bool ValidarNomYApellUser(string nombre, string apellidos) {
+            try {
+                if (!string.IsNullOrEmpty(nombre) && !string.IsNullOrEmpty(apellidos)) {
+                    UserRegistroDto usuarioRegistro = new() {
+                        Nombre = nombre,
+                        Apellidos = apellidos
+                    };
+
+                    // Validamos que el campo del Numero Historia cumpla las validaciones del dto
+                    var validationErrors = new List<ValidationResult>();
+                    bool nombreValido = Validator.TryValidateProperty(nombre, new ValidationContext(usuarioRegistro) { MemberName = nameof(usuarioRegistro.Nombre) }, validationErrors);
+                    bool apellidosValidos = Validator.TryValidateProperty(apellidos, new ValidationContext(usuarioRegistro) { MemberName = nameof(usuarioRegistro.Apellidos) }, validationErrors);
+
+                    return nombreValido && apellidosValidos;
+                }
+
+                return false;
             } catch (Exception) {
                 throw;
             }

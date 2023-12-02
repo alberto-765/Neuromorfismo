@@ -5,12 +5,14 @@ using WebMedicina.Shared.Service;
 namespace WebMedicina.Shared.Dto {
     public class UserRegistroDto {
         [Required(ErrorMessage = "El nombre del usuario es obligatorio")]
-        [RegularExpression(@"^[^\d]+$", ErrorMessage = "El nombre no puede contener números")]
+        [RegularExpression(ValidacionesRegistro.PatronNombres, ErrorMessage = "La primera letra del nombre debe ser mayúscula.")]
         [MaxLength(50, ErrorMessage = "El nombre puede contener máximo 50 caracteres")]
         public string Nombre { get; set; } 
 
         [Required(ErrorMessage = "Los apellidos del usuario es obligatorio")]
         [MaxLength(50, ErrorMessage = "Los apellidos pueden contener máximo 50 caracteres")]
+        [RegularExpression(ValidacionesRegistro.PatronApellidos, ErrorMessage = "Debe ingresar los dos apellidos del usuario. " +
+            "La primera letra debe ser mayúscula.")]
         public string Apellidos { get; set; }
 
         [Required(ErrorMessage = "La fecha de nacimiento es obligatoria")]

@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using WebMedicina.BackEnd.Service;
 using WebMedicina.BackEnd.ServicesDependencies;
 using WebMedicina.Shared.Dto;
 
@@ -14,6 +17,19 @@ namespace WebMedicina.BackEnd.API.Controllers {
             _pacientesService = pacientesService;
         }
 
+        // Validar si el numero de historia es valido par el paciente
+        [HttpGet("validarNumHistoria/{numHistoria}")]
+        public ActionResult<IEnumerable<string>> ValidarNumHistoria(string numHistoria) {
+            try {
+
+                // Devolvemos la lista con los id de los medicos
+                return Ok(_pacientesService.ValidarNumHistoria(numHistoria));
+            } catch (Exception) {
+                return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
+            }
+        }
+
+        // Obtener todos los medicos que tienen pacientes asignados
         [HttpGet("getMedicosPacientes")]
         public ActionResult<IEnumerable<string>> GetAllMed() {
             try {
@@ -23,10 +39,48 @@ namespace WebMedicina.BackEnd.API.Controllers {
                 // Devolvemos la lista con los id de los medicos
                 return Ok(listMedPac);
             } catch (Exception) {
-                return StatusCode(500, "Error interno del servidor");
+                return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
         }
 
+        // Crear nuevo paciente
+        [HttpPost("crearPaciente")]
+        public async Task<ActionResult<bool>> CrearPaciente([FromBody] CrearPacienteDto nuevoPaciente) {
+            try {
+                if(ModelState.IsValid) {
+
+                    // Validamos que el numero de historia sea valido
+                    if (_pacientesService.ValidarNumHistoria(nuevoPaciente.NumHistoria) == false) {
+
+                        // Obtenemos el id del medico y creamos paciente
+                        if (int.TryParse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value, out int idMedico) && idMedico > 0) {
+                            return Ok(await _pacientesService.CrearPaciente(nuevoPaciente, idMedico));
+                        } else {
+                            return Ok(false);
+                        }
+                    } else {
+                        return BadRequest($"El Número de Historia \"{nuevoPaciente.NumHistoria}\" ya está en uso.");
+                    }
+                } else {
+                    return BadRequest("Los datos del nuevo cliente no son correctos."); 
+                }
+            } catch (Exception) {
+                return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
+            }
+        }
+
+
+        // Obtener pacientes 
+        [HttpGet("obtenerPacientes")]
+        public ActionResult ObtenerPacientes() {
+            try {
+                IEnumerable<PacienteDto> listaPacientes = _pacientesService.ObtenerPacientes();
+
+                return BadRequest("No ha sido posible obtener los pacientes. Si el fallo persiste contacte con un administrador.");
+            } catch (Exception) {
+                return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
+            }
+        }
 
         //  Farmacos
         [HttpGet("getFarmacos")]
@@ -40,7 +94,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
                     return BadRequest();
                 }
             } catch (Exception) {
-                return StatusCode(500, "Error interno del servidor");
+                return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
         }
 
@@ -57,7 +111,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
                     return BadRequest();
                 }
             } catch (Exception) {
-                return StatusCode(500, "Error interno del servidor");
+                return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
         }
 
@@ -73,7 +127,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
                     return BadRequest();
                 }
             } catch (Exception) {
-                return StatusCode(500, "Error interno del servidor");
+                return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
 
         }

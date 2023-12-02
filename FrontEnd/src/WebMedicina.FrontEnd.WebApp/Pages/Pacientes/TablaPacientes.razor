@@ -1,76 +1,112 @@
-﻿<MudTable Items="@Pacientes" Hover="true" Breakpoint="Breakpoint.Sm">
-	<HeaderContent>
-		<MudTh id="columnaVerDetalles"></MudTh>
-		<MudTh>#</MudTh>
-		<MudTh>Fecha Nacimiento</MudTh>
-		<MudTh>Sexo</MudTh>
-		<MudTh>Talla</MudTh>
-	</HeaderContent>
-	<RowTemplate>
-		<MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => MostrarOcultarDetPaciente(context.IdPaciente))">@((context.Mostrar == true) ? "Ocultar " : "Ver") Detalles</MudButton></MudTd>
-		<MudTd DataLabel="#">@context.IdPaciente</MudTd>
-		<MudTd DataLabel="Fecha Nacimiento">@context.FechaNac</MudTd>
-		<MudTd DataLabel="Género">@context.Sexo</MudTd>
-	</RowTemplate>
-	<ChildRowContent>
-		@if (context.Mostrar)
-				{
-				  <MudTr>
-					   <td colspan="4">
-							<MudCard Elevation="0">
-								 <MudCardHeader>
-									  <CardHeaderContent>
-											<MudText Typo="Typo.body1">Detalles del Paciente <strong>@context.IdPaciente</strong></MudText>
-									  </CardHeaderContent>
-								 </MudCardHeader>
-								 <MudCardContent Class="pa-0">
-									<MudTable Items="@PacienteMostrado" Context="pacienteMostrado" Hover="true" Breakpoint="Breakpoint.Md" Elevation="0">
-									   <HeaderContent>
-											<MudTh>Fecha Diagnóstico</MudTh>
-											<MudTh>Fecha Fractalidad</MudTh>
-											<MudTh>Fármaco</MudTh>
-											<MudTh>Tipo Epilepsia</MudTh>
-											<MudTh>Tipo Mutación</MudTh>
-											<MudTh>Enfermedades Raras</MudTh>
-											<MudTh>Fecha Creación</MudTh>
-											<MudTh>Fecha Última Modidicación</MudTh>
-											<MudTh>Creado Por</MudTh>
-											<MudTh>Modificado Por</MudTh>
-									   </HeaderContent>
-									   <RowTemplate>
-											<MudTd DataLabel="Fecha Diagnóstic">@pacienteMostrado.FechaDiagnostico</MudTd>
-											<MudTd DataLabel="Fecha Fractalidad">@pacienteMostrado.FechaFractalidad</MudTd>
-											<MudTd DataLabel="Fármaco">@pacienteMostrado.Farmaco</MudTd>
-											<MudTd DataLabel="Tipo Epilepsia">@pacienteMostrado.TipoEpilepsia</MudTd>
-											<MudTd DataLabel="Tipo Mutación">@pacienteMostrado.TipoMutacion</MudTd>
-											<MudTd DataLabel="Enfermedades Raras">@pacienteMostrado.EnfermRaras</MudTd>
-											<MudTd DataLabel="Fecha Creación">@pacienteMostrado.FechaCreac</MudTd>
-											<MudTd DataLabel="Fecha Última Modidicación">@pacienteMostrado.FechaUltMod</MudTd>
-											<MudTd DataLabel="Creado Por">@pacienteMostrado.MedicoCreador</MudTd>
-											<MudTd DataLabel="Modificado Por">@pacienteMostrado.MedicoUltMod</MudTd>
-									   </RowTemplate>
-									</MudTable>
-								 </MudCardContent>
-							</MudCard>
-					   </td>
-				  </MudTr>
-		}
-	</ChildRowContent>
-</MudTable>
+﻿<MudDataGrid Items="@ListaPacientes" Elevation="25" SortMode="SortMode.Single">
+    <Columns>
+        <HierarchyColumn T="PacienteDto" />
+        <PropertyColumn Property="x => x.NumHistoria" Title="Número de Historia" />
+        <PropertyColumn Property="x => x.FechaNac" Title="Fecha Macimiento" />
+        <PropertyColumn Property="x => x.Sexo" Title="Género" />
+        <PropertyColumn Property="x => x.Talla" />
+        <PropertyColumn Property="x => x.TipoEpilepsia" Title="Tipo Epilepsia" />
+        <PropertyColumn Property="x => x.TipoMutacion" Title="Tipo Mutación" />
+        <PropertyColumn Property="x => x.EnfermRaras" Title="Enfermedad Rara" />
+    </Columns>
+    <ChildRowContent>
+        <MudCard>
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">@context.Item.NumHistoria</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+               <MudGrid Spacing="3" Justify="Justify.Center">
+                   @* Fecha Nacimiento *@
+                   <MudItem xs="12" md="6">
+                       <MudText Typo="Typo.h6">Fecha Nacimiento:</MudText>
+                       <MudText>@context.Item.FechaNac</MudText>
+                   </MudItem>
 
+                    @* Genero *@
+                    <MudItem xs="12" md="6">
+                        <MudText Typo="Typo.h6">Género:</MudText>
+                        <MudText>@context.Item.Sexo</MudText>
+                    </MudItem>
+                    
+                    @* Fecha Diagnostico *@
+                    <MudItem xs="12" md="6">
+                        <MudText Typo="Typo.h6">Fecha Diagnóstico:</MudText>
+                        <MudText>@context.Item.FechaDiagnostico</MudText>
+                    </MudItem>
+                    
+                    @* Fecha Fractalidad *@
+                    <MudItem xs="12" md="6">
+                        <MudText Typo="Typo.h6">Fecha Fractalidad:</MudText>
+                        <MudText>@context.Item.FechaFractalidad</MudText>
+                    </MudItem>
 
-@code
-{
-	[Parameter]
-	public IEnumerable<PacienteDto> Pacientes { get; set; } = new List<PacienteDto>();
-	private IEnumerable<PacienteDto> PacienteMostrado { get; set; } = new List<PacienteDto>();
+                    @* Talla *@
+                    <MudItem xs="12" md="6">
+                        <MudText Typo="Typo.h6">Talla:</MudText>
+                        <MudText>@context.Item.Talla</MudText>
+                    </MudItem>
 
-	// Mostramos/ocutlamos los detalles de un paciente
-	private void MostrarOcultarDetPaciente(int idPaciente) {
-		PacienteDto pacienteTemp = Pacientes.First(p => p.IdPaciente == idPaciente);
-		pacienteTemp.Mostrar = !pacienteTemp.Mostrar;
+                    @* Tipo Epilepsia *@
+                    <MudItem xs="12" md="6">
+                        <MudText Typo="Typo.h6">Tipo Epilepsia:</MudText>
+                        <MudText>@context.Item.TipoEpilepsia</MudText>
+                    </MudItem>
 
-		// Asignamos el paciente mostrado
-		PacienteMostrado = new List<PacienteDto>{ pacienteTemp };
-	}
-}
+                    @* Tipo Mutación *@
+                    <MudItem xs="12" md="6">
+                        <MudText Typo="Typo.h6">Tipo Mutación:</MudText>
+                        <MudText>@context.Item.TipoMutacion</MudText>
+                    </MudItem>
+
+                    @* Enfermedad Rara *@
+                    <MudItem xs="12" md="6">
+                        <MudText Typo="Typo.h6">Enfermedad Rara:</MudText>
+                        <MudText>@context.Item.EnfermRaras</MudText>
+                    </MudItem>
+
+                    @* Descripcion Enfermedad Rara *@
+                    @if(!string.IsNullOrEmpty(context.Item.EnfermRaras) && context.Item.EnfermRaras == "No"){
+                        <MudItem xs="12" md="6">
+                            <MudText Typo="Typo.h6">Descripción:</MudText>
+                            <MudText>@context.Item.DescripEnferRaras</MudText>
+                        </MudItem>
+                    }
+
+                    @* Fecha Creacion *@
+                    <MudItem xs="12" md="6">
+                        <MudText Typo="Typo.h6">Creación:</MudText>
+                        <MudText>@context.Item.FechaCreac</MudText>
+                    </MudItem>
+
+                    @* Fecha Modificacion *@
+                    <MudItem xs="12" md="6">
+                        <MudText Typo="Typo.h6">Última Modificación:</MudText>
+                        <MudText>@context.Item.FechaUltMod</MudText>
+                    </MudItem>
+
+                    @* Medico Creador *@
+                    <MudItem xs="12" md="6">
+                        <MudText Typo="Typo.h6">Médico Creador:</MudText>
+                        <MudText>@context.Item.MedicoCreador</MudText>
+                    </MudItem>
+
+                    @* Medico Ult Modificacion *@
+                    <MudItem xs="12" md="6">
+                        <MudText Typo="Typo.h6">Médico Última Modificación:</MudText>
+                        <MudText>@context.Item.MedicoUltMod</MudText>
+                    </MudItem>
+               </MudGrid>
+            </MudCardContent>
+            <MudCardActions>
+                <MudText Typo="Typo.subtitle2">Creado por
+                    <MudChip Variant="Variant.Text" Color="Color.Dark">@context.Item.MedicoCreador</MudChip>
+                    e   l @context.Item.FechaCreac.ToShortDateString()</MudText>
+            </MudCardActions>
+        </MudCard>
+    </ChildRowContent>
+    <PagerContent>
+        <MudDataGridPager T="PacienteDto" InfoFormat="@("{first_item}-{last_item} de {all_items}")" RowsPerPageString="Filas por página:" />
+    </PagerContent>
+</MudDataGrid>

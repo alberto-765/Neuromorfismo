@@ -33,7 +33,6 @@
     <ProjectReference Include="..\..\..\Shared\WebMedicina.Shared.Dto\WebMedicina.Shared.Dto.csproj" />
     <ProjectReference Include="..\..\..\Shared\WebMedicina.Shared.Service\WebMedicina.Shared.Service.csproj" />
     <ProjectReference Include="..\WebMedicina.BackEnd.Dal\WebMedicina.BackEnd.Dal.csproj" />
-    <ProjectReference Include="..\WebMedicina.BackEnd.Dto\WebMedicina.BackEnd.Dto.csproj" />
     <ProjectReference Include="..\WebMedicina.BackEnd.Model\WebMedicina.BackEnd.Model.csproj" />
     <ProjectReference Include="..\WebMedicina.BackEnd.Service\WebMedicina.BackEnd.Service.csproj" />
   </ItemGroup>

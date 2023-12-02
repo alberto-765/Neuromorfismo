@@ -48,6 +48,17 @@ namespace WebMedicina.BackEnd.API {
             // Mapeo tabla medicos pacientes
             CreateMap<MedicospacienteModel, MedicosPacientesDto>();
 
+            // Mapeo crear pacientes
+            CreateMap<PacientesModel, CrearPacienteDto>().ReverseMap()
+                .ForMember(dest => dest.EnfermRaras, co => co.MapFrom(src => (src.EnfermRaras ? 'S' : 'N')))
+                .ForMember(dest => dest.DescripEnferRaras, co => co.MapFrom(src => (src.EnfermRaras ? src.DescripEnferRaras : "")));
+
+            // Mapeo pacientes
+            CreateMap<PacientesModel, PacienteDto>()
+                .ForMember(dest => dest.EnfermRaras, co => co.MapFrom(src => (src.EnfermRaras == "S" ? "Sí" : "No")))
+                .ForMember(dest => dest.DescripEnferRaras, co => co.MapFrom(src => (src.EnfermRaras == "S" ? src.DescripEnferRaras : "")))
+                .ReverseMap();
+
             // Mapeamos listas
             //CreateMap<ListaOrigen, ListaDestino>()
             //	.ReverseMap(); // esto es para que pueda ser en ambos sentidos y no solo origen-destino

@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 using WebMedicina.Shared.Service;
 
 namespace WebMedicina.Shared.Dto {
     public class CrearPacienteDto {
-
         [Required(ErrorMessage = "El número de historia es obligatorio.")]
         [MaxLength(12, ErrorMessage = "El número de historia debe contener 12 dígitos.")]
         [MinLength(12, ErrorMessage = "El número de historia debe contener 12 dígitos.")]
@@ -18,7 +12,7 @@ namespace WebMedicina.Shared.Dto {
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         [CustomValidation(typeof(ValidacionesRegistro), "ValidateFechaNacPaciente")]
-        public DateTime? FechaNac { get; set; }
+        public DateTime? FechaNac { get; set; } = ValidacionesRegistro.ObtenerFechaMaxNacimiento();
 
         [Required(ErrorMessage = "El campo género es obligatorio.")]
         [ValidacionLista("M", "H")]
@@ -26,7 +20,7 @@ namespace WebMedicina.Shared.Dto {
 
         [Required(ErrorMessage = "Debes especificar una talla para el paciente.")]
         [Range(50, 200, ErrorMessage = "La talla debe ser entre 50 y 200 cm.")]
-        public decimal Talla { get; set; }
+        public decimal Talla { get; set; } = 50;
 
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{dd/MM/yyyy}", ApplyFormatInEditMode = true)]

@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Shared\WebMedicina.Shared.Dto\WebMedicina.Shared.Dto.csproj" />
+    <ProjectReference Include="..\WebMedicina.FrontEbd.Dto\WebMedicina.FrontEnd.Dto.csproj" />
   </ItemGroup>
 
 </Project>

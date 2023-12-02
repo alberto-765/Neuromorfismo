@@ -38,7 +38,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
                     return BadRequest("Filtros vacíos");
                 }
             } catch (Exception ex) {
-                return StatusCode(500, "Error interno del servidor");
+                return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
         }
 
@@ -80,7 +80,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
                     return BadRequest("Alguno de los campos del usuario no es válido");
                 } catch (Exception ex) {
                     await transactionContext.RollbackAsync();
-                    return StatusCode(500, "Error interno del servidor");
+                    return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
                 }
             }
         }

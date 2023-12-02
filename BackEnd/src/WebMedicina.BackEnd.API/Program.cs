@@ -40,9 +40,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.Configure<DbConnectionSettings>(builder.Configuration.GetSection("database"));
 string connectionString = DBSettings.DBConnectionString(builder.Configuration);
 builder.Services.AddDbContext<IdentityContext>(options =>
-	   options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+	   options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)), ServiceLifetime.Scoped);
 builder.Services.AddDbContext<WebmedicinaContext>(options =>
-	   options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+	   options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)), ServiceLifetime.Scoped);
 
 // IDENTITY
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => {

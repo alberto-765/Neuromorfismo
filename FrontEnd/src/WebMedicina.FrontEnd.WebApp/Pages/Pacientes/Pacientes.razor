@@ -20,9 +20,9 @@
         </div>
     </MudStack>
 
-    <MudTabs Elevation="2" Rounded="true" id="mudTab-Pacientes" Class="gap-4">
+    <MudTabs Elevation="2" Rounded="true" id="mudTab-Pacientes" Class="gap-4" AlwaysShowScrollButtons="false">
         <MudTabPanel Text="Todos los Pacientes">
-            <MudPaper Class="pa-16 ma-2" Elevation="25"></MudPaper>
+            <AllPacientes ListaPacientes="ListaPacientes" />
         </MudTabPanel>
         <MudTabPanel Text="Mis Pacientes">
             <MudPaper Class="pa-16 ma-2" Elevation="25"></MudPaper>
@@ -34,79 +34,90 @@
 <div>
     <MudDrawer @bind-Open="@FiltrosAbierto" id="drawerFiltros" Anchor="Anchor.End" Fixed="true" Elevation="4" Variant="@DrawerVariant.Temporary" Color="Color.Default"
                Class="rounded-tl-lg" Style="@($"background: {(!IsDarkMode ? "white" : "var(--mud-palette-background)")}")">
-        <div class="mx-5">
-
+        <EditForm Model="FiltrosPacientes" class="mx-5 d-flex flex-column flex-1" OnValidSubmit="ObtenerPacientesFiltrados">
                @* Titulo *@
-            <MudDrawerHeader Class="justify-center">
+            <MudDrawerHeader Class="justify-center align-center pr-0">
                 <MudText Typo="Typo.h6">Filtros Pacientes</MudText>
+                <MudSpacer />
+                <MudIconButton Icon="@Icons.Material.Outlined.Close" OnClick="@(() => FiltrosAbierto = !FiltrosAbierto)"></MudIconButton>
             </MudDrawerHeader>
 
-            @* Filtrado por medico *@
-            <AuthorizeView Roles="admin, superAdmin">
-                <Authorized>
-                    <MudAutocomplete T="string" Label="Médicos" @bind-Value="@FilrosPacientes.Medico" For="@(() => FilrosPacientes.Medico)" SearchFunc="@BuscarMedPac" ResetValueOnEmptyText="true" CoerceValue="true" ShowProgressIndicator="true">
-                        <NoItemsTemplate>
-                            <MudText Align="Align.Center" Class="px-4 py-1">
-                                No se han encontrado médicos
-                            </MudText>
-                        </NoItemsTemplate>
-                    </MudAutocomplete>
-                </Authorized>
-            </AuthorizeView>
+            <div class="d-flex flex-column flex-1 justify-space-between">
+                <div>
+                    @* Filtrado por medico *@
+                    <AuthorizeView Roles="admin, superAdmin" Context="context__FiltradoMedico">
+                        <Authorized>
+                            <MudAutocomplete T="string" Label="Médicos" @bind-Value="@FiltrosPacientes.Medico" For="@(() => FiltrosPacientes.Medico)" SearchFunc="@BuscarMedPac" ResetValueOnEmptyText="true" CoerceValue="true" ShowProgressIndicator="true">
+                                <NoItemsTemplate>
+                                    <MudText Align="Align.Center" Class="px-4 py-1">
+                                        No se han encontrado médicos
+                                    </MudText>
+                                </NoItemsTemplate>
+                            </MudAutocomplete>
+                        </Authorized>
+                    </AuthorizeView>
 
-            @* Genero *@
-            <MudSelect T="string" Label="Género" AnchorOrigin="Origin.BottomCenter" @bind-Value="FilrosPacientes.Sexo" For="@(() => FilrosPacientes.Sexo)">
-                <MudSelectItem Value="@("H")"><div class="d-flex align-center"> <MudIcon Icon="@Icons.Material.Outlined.Man" Class="mr-2" Size="Size.Small"></MudIcon> Hombre </div></MudSelectItem>
-                <MudSelectItem Value="@("M")"><div class="d-flex align-center"><MudIcon Icon="@Icons.Material.Outlined.Woman" Class="mr-2" Size="Size.Small"></MudIcon> Mujer </div></MudSelectItem>
-            </MudSelect>
+                    @* Genero *@
+                    <MudSelect T="string" Label="Género" AnchorOrigin="Origin.BottomCenter" @bind-Value="FiltrosPacientes.Sexo" For="@(() => FiltrosPacientes.Sexo)">
+                        <MudSelectItem Value="@("H")"><div class="d-flex align-center"> <MudIcon Icon="@Icons.Material.Outlined.Man" Class="mr-2" Size="Size.Small"></MudIcon> Hombre </div></MudSelectItem>
+                        <MudSelectItem Value="@("M")"><div class="d-flex align-center"><MudIcon Icon="@Icons.Material.Outlined.Woman" Class="mr-2" Size="Size.Small"></MudIcon> Mujer </div></MudSelectItem>
+                    </MudSelect>
 
-            @* Talla  *@
-            <MudStack Class="filtro sliderTalla" Row="true" Spacing="3" AlignItems="AlignItems.End">
-                <MudSlider @bind-Value="@FilrosPacientes.Talla" For="@(() => FilrosPacientes.Talla)" ValueLabel="true" Max="200" Min="50">Talla: @FilrosPacientes.Talla cm</MudSlider>
-                <MudToggleIconButton @bind-Toggled="@OrdenarTalla" Class="pa-0"
-                                        Icon="@Icons.Material.Outlined.ArrowDropUp" Color="@Color.Default" ToggledTitle="Ordenar de menor a mayor"
-                                        ToggledIcon="@Icons.Material.Outlined.ArrowDropDown" Title="Ordenar de mayor a menor" id="ordenarTalla" />
-            </MudStack>
+                    @* Talla  *@
+                    <MudStack Class="filtro sliderTalla" Row="true" Spacing="3" AlignItems="AlignItems.End">
+                        <MudSlider @bind-Value="@FiltrosPacientes.Talla" For="@(() => FiltrosPacientes.Talla)" ValueLabel="true" Max="200" Min="50">Talla: @FiltrosPacientes.Talla cm</MudSlider>
+                        <MudToggleIconButton @bind-Toggled="@OrdenarTalla" Class="pa-0"
+                                             Icon="@Icons.Material.Filled.ArrowUpward" Color="@Color.Default" ToggledTitle="Ordenar de menor a mayor"
+                                             ToggledIcon="@Icons.Material.Filled.ArrowDownward" Title="Ordenar de mayor a menor" id="ordenarTalla" Size="Size.Small"/>
+                    </MudStack>
 
-            @* Farmaco *@
-         @*<MudSelect T="string" Class="filtro" Label="Fármaco" AnchorOrigin="Origin.BottomCenter" @bind-Value="farmacoFiltrado" MultiSelection="true" @bind-SelectedValues="FilrosPacientes.Farmacos">
-                @if (ListaFarmacos != null && ListaFarmacos.Any()) {
+                    @* Farmaco *@
+                 @*<MudSelect T="string" Class="filtro" Label="Fármaco" AnchorOrigin="Origin.BottomCenter" @bind-Value="farmacoFiltrado" MultiSelection="true" @bind-SelectedValues="FiltrosPacientes.Farmacos">
+                        @if (ListaFarmacos != null && ListaFarmacos.Any()) {
 
-                    @* Mapeamos todos los farmacos almacenados *@
-                    @*foreach(FarmacosDto farmaco in ListaFarmacos){
-                        <MudSelectItem Value="@(farmaco.Nombre)">@farmaco.Nombre</MudSelectItem>
-                    }
-            } *@
-            @*</MudSelect> *@
+                            @* Mapeamos todos los farmacos almacenados *@
+                            @*foreach(FarmacosDto farmaco in ListaFarmacos){
+                                <MudSelectItem Value="@(farmaco.Nombre)">@farmaco.Nombre</MudSelectItem>
+                            }
+                    } *@
+                    @*</MudSelect> *@
 
-            @* Tipo Epilepsia *@
-            <MudSelect T="string" Class="filtro" Label="Tipo Epilepsia" AnchorOrigin="Origin.BottomCenter"  @bind-Value="epilepsiaFiltrado" @bind-SelectedValues="FilrosPacientes.TipoEpilepsias" MultiSelection="true">
-                @if (ListaEpilepsias != null && ListaEpilepsias.Any()) {
+                    @* Tipo Epilepsia *@
+                    <MudSelect T="string" Class="filtro" Label="Tipo Epilepsia" AnchorOrigin="Origin.BottomCenter"  @bind-Value="epilepsiaFiltrado" @bind-SelectedValues="FiltrosPacientes.TipoEpilepsias" MultiSelection="true">
+                        @if (ListaEpilepsias != null && ListaEpilepsias.Any()) {
 
-                    @* Mapeamos todos los farmacos almacenados *@
-                    foreach (EpilepsiasDto epilepsia in ListaEpilepsias) {
-                        <MudSelectItem Value="@(epilepsia.Nombre)">@epilepsia.Nombre</MudSelectItem>
-                    }
-                } else {
-                    <MudSelectItem Value="@(string.Empty)" Disabled="true">No hay opciones disponibles</MudSelectItem>
-                }
-            </MudSelect>
+                            @* Mapeamos todos los farmacos almacenados *@
+                            foreach (EpilepsiasDto epilepsia in ListaEpilepsias) {
+                                <MudSelectItem Value="@(epilepsia.Nombre)">@epilepsia.Nombre</MudSelectItem>
+                            }
+                        } else {
+                            <MudSelectItem Value="@(string.Empty)" Disabled="true">No hay opciones disponibles</MudSelectItem>
+                        }
+                    </MudSelect>
 
-            @* Tipo Mutacion *@
-            <MudSelect T="string" Class="filtro" Label="Tipo Mutación" AnchorOrigin="Origin.BottomCenter" @bind-Value="mutacionFiltrado" @bind-SelectedValues="FilrosPacientes.TipoMutacion" MultiSelection="true">
-                @if (ListaMutaciones != null && ListaMutaciones.Any()) {
+                    @* Tipo Mutacion *@
+                    <MudSelect T="string" Class="filtro" Label="Tipo Mutación" AnchorOrigin="Origin.BottomCenter" @bind-Value="mutacionFiltrado" @bind-SelectedValues="FiltrosPacientes.TipoMutacion" MultiSelection="true">
+                        @if (ListaMutaciones != null && ListaMutaciones.Any()) {
 
-                    @* Mapeamos todos los farmacos almacenados *@
-                    foreach (MutacionesDto mutacion in ListaMutaciones) {
-                        <MudSelectItem Value="@(mutacion.Nombre)">@mutacion.Nombre</MudSelectItem>
-                    }
-                } else {
-                    <MudSelectItem Value="@(string.Empty)" Disabled="true">No hay opciones disponibles</MudSelectItem>
-                }
-            </MudSelect>
+                            @* Mapeamos todos los farmacos almacenados *@
+                            foreach (MutacionesDto mutacion in ListaMutaciones) {
+                                <MudSelectItem Value="@(mutacion.Nombre)">@mutacion.Nombre</MudSelectItem>
+                            }
+                        } else {
+                            <MudSelectItem Value="@(string.Empty)" Disabled="true">No hay opciones disponibles</MudSelectItem>
+                        }
+                    </MudSelect>
 
-            @* Enfermedad Rara *@
-            <MudCheckBox T="bool" Class="filtro checkEnfRara" @bind-Checked="@FilrosPacientes.EnfermRaras" For="@(() => FilrosPacientes.EnfermRaras)" Label="Enfermedad rara" Color="Color.Primary"></MudCheckBox>
-        </div>
-     </MudDrawer>
+                    @* Enfermedad Rara *@
+                    <MudCheckBox T="bool" Class="filtro checkEnfRara" @bind-Checked="@FiltrosPacientes.EnfermRaras" For="@(() => FiltrosPacientes.EnfermRaras)" Label="Enfermedad rara" Color="Color.Primary"></MudCheckBox>
+                </div>
+
+                @* Botones Filtrar y Resetear *@
+                <div class="container__btnFiltrar">
+                    <MudButton ButtonType="ButtonType.Reset" Variant="Variant.Filled" Color="Color.Surface">Resetear</MudButton>
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">Filtrar</MudButton>
+                </div>
+            </div>
+        </EditForm>
+    </MudDrawer>
 </div>

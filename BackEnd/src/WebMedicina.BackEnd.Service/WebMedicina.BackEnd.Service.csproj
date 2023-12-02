@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WebMedicina.BackEnd.Dal\WebMedicina.BackEnd.Dal.csproj" />
+    <ProjectReference Include="..\WebMedicina.BackEnd.Dto\WebMedicina.BackEnd.Dto\WebMedicina.BackEnd.Dto.csproj" />
     <ProjectReference Include="..\WebMedicina.BackEnd.ServicesDependencies\WebMedicina.BackEnd.ServicesDependencies.csproj" />
   </ItemGroup>
 

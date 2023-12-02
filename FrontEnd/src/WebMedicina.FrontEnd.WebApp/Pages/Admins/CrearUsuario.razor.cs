@@ -22,7 +22,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
         [Inject] IAdminsService _adminsService { get; set; }
 
         // CAMPOS EDITFORM
-        private MudDatePicker _picker { get; set; }
         private bool cargando { get; set; } = false;
         private UserRegistroDto userRegistro = new();
         private EditContext formContext;
@@ -88,13 +87,13 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
         // LLamada a backend para generar un nombre de usuario valido
         private async Task ValidarUserName() {
             try {
-                if (!string.IsNullOrEmpty(userRegistro.Nombre) && string.IsNullOrEmpty(userRegistro.Apellidos)) {
+                if (_adminsService.ValidarNomYApellUser(userRegistro.Nombre, userRegistro.Apellidos)) {
                     bool userNameCorrecto = false; // almacenaremos si ha podido generarse el nuevo nombre del usuario
-
-                    HttpResponseMessage respuesta = await Http.PostAsJsonAsync($"cuentas/comprobarUser", userRegistro);
+                    string[] nomYApell = { userRegistro.Nombre, userRegistro.Apellidos };
+                    HttpResponseMessage respuesta = await Http.PostAsJsonAsync($"cuentas/generarUserName", nomYApell);
                     if(respuesta.IsSuccessStatusCode) {
 
-                        // Devuelve el nuevo username
+                        // Obtenemos el nuevo username
                         string userName = await respuesta.Content.ReadAsStringAsync();
                         if (!string.IsNullOrEmpty(userName)) {
                             userRegistro.UserLogin = userName;
@@ -106,13 +105,29 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                     if (userNameCorrecto == false) {
                         _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopStart;
                         _snackbar.Add(@"<div>No ha sido posible generar el nombre de inicio de sesión</div>
-                                        <div>Inténtelo de nuevo o contacte con un administrador.</div>", Severity.Error);
+                                        <div>Inténtelo de nuevo o contacte con un administrador.</div>", Severity.Error, config => { config.VisibleStateDuration = 5 * 1000;});
                     }
                 }
             } catch (Exception ex) {
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
                 throw;
             }
-        }       
+        }
+
+        // Actualizar fecha de un datepicker
+        private void ActFecha((DateTime?, string) tupla) {
+            try {
+                if (!string.IsNullOrEmpty(tupla.Item2)) {
+                    switch (tupla.Item2) {
+                        case "fechaNac":
+                        userRegistro.FechaNac = tupla.Item1;
+                        break;
+                    }
+                }
+            } catch (Exception ex) {
+                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+                throw;
+            }
+        }
     }
 }

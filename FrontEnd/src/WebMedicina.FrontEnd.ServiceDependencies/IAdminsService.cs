@@ -14,5 +14,7 @@ namespace WebMedicina.FrontEnd.ServiceDependencies {
         Task<ReadOnlyDictionary<string, string>> ObtenerFiltrosSession(); // Obtener los filtros seleccionados
         Dictionary<string, string> CrearDiccionarioFiltros();
         string? ValidarNuevoNombre(string nombre); // Validar nombre mutacion, farmaco y epilepsia
+        bool ValidarNomYApellUser(string nombre, string apellidos);
+
     }
 }

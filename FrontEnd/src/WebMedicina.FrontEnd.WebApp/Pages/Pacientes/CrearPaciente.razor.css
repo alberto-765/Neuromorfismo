@@ -1,19 +1,24 @@
-﻿/*Boton orndear talla*/
-::deep #ordenarTalla {
-    height: fit-content;
-}
-
+﻿
 /*Slider de la talla*/
-::deep #sliderTalla .mud-slider-container {
+::deep #sliderTalla {
     margin-left: 5px;
 }
 
 /*Estilos filtros panel filtros*/
 ::deep .filtro {
-    margin: 15px 0;
+    padding: 13px 0;
 }
 
 /*Estilos check enfermedad rara*/
 ::deep .checkEnfRara .mud-icon-button {
     padding: 0 5px 0 0;
+}
+
+/*Contenedor botones dialogo*/
+.contenedorBotones div:first-of-type {
+    flex-direction: row;
+    gap: 20px;
+    display: flex;
+    margin-right: 16px;
+    margin-bottom: 20px;
 }

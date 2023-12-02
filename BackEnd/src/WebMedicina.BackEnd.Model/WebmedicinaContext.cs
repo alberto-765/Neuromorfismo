@@ -297,15 +297,12 @@ public partial class WebmedicinaContext : DbContext
                 .HasColumnName("nombre");
         });
 
-        modelBuilder.Entity<PacientesModel>(entity =>
-        {
+        modelBuilder.Entity<PacientesModel>(entity => {
             entity.HasKey(e => e.IdPaciente).HasName("PRIMARY");
 
             entity
                 .ToTable("pacientes")
                 .UseCollation("utf8mb4_spanish2_ci");
-
-            entity.HasIndex(e => e.IdFarmaco, "idFarmaco");
 
             entity.HasIndex(e => e.IdMutacion, "idMutacion");
 
@@ -326,6 +323,9 @@ public partial class WebmedicinaContext : DbContext
                 .HasMaxLength(1)
                 .HasDefaultValueSql("''")
                 .HasColumnName("enfermRaras");
+            entity.Property(e => e.Farmaco)
+                .HasMaxLength(250)
+                .HasColumnName("farmaco");
             entity.Property(e => e.FechaCreac)
                 .HasDefaultValueSql("curdate()")
                 .HasColumnName("fechaCreac");
@@ -347,9 +347,6 @@ public partial class WebmedicinaContext : DbContext
             entity.Property(e => e.IdEpilepsia)
                 .HasColumnType("int(11)")
                 .HasColumnName("idEpilepsia");
-            entity.Property(e => e.IdFarmaco)
-                .HasColumnType("int(11)")
-                .HasColumnName("idFarmaco");
             entity.Property(e => e.IdMutacion)
                 .HasColumnType("int(11)")
                 .HasColumnName("idMutacion");
@@ -372,11 +369,6 @@ public partial class WebmedicinaContext : DbContext
                 .HasForeignKey(d => d.IdEpilepsia)
                 .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("FK_pacientes_epilepsias");
-
-            entity.HasOne(d => d.IdFarmacoNavigation).WithMany(p => p.Pacientes)
-                .HasForeignKey(d => d.IdFarmaco)
-                .OnDelete(DeleteBehavior.SetNull)
-                .HasConstraintName("FK_pacientes_farmacos");
 
             entity.HasOne(d => d.IdMutacionNavigation).WithMany(p => p.Pacientes)
                 .HasForeignKey(d => d.IdMutacion)

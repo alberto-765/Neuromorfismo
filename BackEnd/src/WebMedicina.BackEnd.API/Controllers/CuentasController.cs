@@ -73,7 +73,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
                     }
                 } catch (Exception) {
                     await transactionIdentity.RollbackAsync();
-                    return StatusCode(500, "Error interno del servidor");
+                    return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
                 }
             }
         }
@@ -98,46 +98,34 @@ namespace WebMedicina.BackEnd.API.Controllers {
                         return BadRequest("Credenciales incorrectas");
                     }
                 } else {
-                    return BadRequest(ModelState);
+                    return BadRequest("Usuario o contraseña no válidos");
                 }
             } catch (Exception ex) {
-                return StatusCode(500, "Error interno del servidor");
+                return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
         }
 
-        // Comprobamos si el userName está disponible
-        [HttpPost("comprobarUser")]
-        public async Task<IActionResult> ComprobarUser([FromBody] string userName) {
+        // Generamos y comprobamos si el userName está disponible 
+        [HttpPost("generarUserName")]
+        public async Task<IActionResult> GenerarUserName([FromBody] string[] nomYApell) {
             try { 
-                if (!string.IsNullOrWhiteSpace(userName)) {
-                    return Ok(await _identityService.ComprobarUserName(userName));
+                var respuesta = await _identityService.GenerarUserName(nomYApell);
+                if (respuesta.userNameInvalido == false) {
+                    return Ok(respuesta.userNameGenerado);
+                } else {
+                    return BadRequest();
                 }
-                return Ok(false);
-            } catch (Exception ex) {
-               return StatusCode(500, "Error interno del servidor");
+               } catch (Exception ex) {
+               return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
         }
-
-        // Comprobamos si el userName está disponible
-        [HttpPost("cerrarSesion")]
-        public async Task<IActionResult> CerrarSesion([FromBody] string userName) {
-            try {
-                if (!string.IsNullOrWhiteSpace(userName)) {
-                    return Ok(await _identityService.ComprobarUserName(userName));
-                }
-                return Ok(false);
-            } catch (Exception ex) {
-                return StatusCode(500, "Error interno del servidor");
-            }
-        }
-
 
 
         private UserToken BuildToken(UserInfoDto userInfo) {
             try { 
                 var claims = new [] {
                     new Claim(JwtRegisteredClaimNames.Sub, userInfo.IdMedico.ToString()),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), //IDENTIFICADOR
                     new Claim("UserLogin", userInfo.UserLogin),
                     new Claim("nombre", userInfo.Nombre),
                     new Claim("apellidos", userInfo.Apellidos),

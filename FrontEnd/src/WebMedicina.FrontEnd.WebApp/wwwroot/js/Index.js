@@ -1,23 +1,39 @@
-﻿function ocultarError() {
-    try {
-       let alertError = document.querySelector("#errorBody");
-        if (alertError != null && alertError.style.display != "none") {
-            alertError.style.display = "none"
-        }
-    } catch (error) {
-        console.error(error);
-    }
+﻿// Bloquear el scroll de un elemento
+function bloquearScroll(claseElemento, ejes) {
+    let elemento = document.querySelector(`.${claseElemento}`);
 
-}
-function errorMostrado() {
-    try {
-        let alertError = document.querySelector("#errorBody");
-        if (alertError != null && alertError.style.display != "none") {
-            return alertError.style.display != "none"
-        } else {
-            return false
+    if (elemento) {
+        // Bloqueamos eje x, eje y, o ambos
+        switch (ejes.toLowerCase()) {
+            case "x":
+                elemento.style.overflowX = "hidden";
+                break;
+            case "y":
+                elemento.style.overflowY = "hidden";
+                break;
+            case "xy":
+                elemento.style.overflow = "hidden";
+                break;
         }
-    } catch (error) {
-        console.error(error);
+    }
+}
+
+
+function desbloquearScroll(claseElemento, ejes) {
+    let elemento = document.querySelector(`.${claseElemento}`);
+
+    if (elemento) {
+        // Bloqueamos eje x, eje y, o ambos
+        switch (ejes.toLowerCase()) {
+            case "x":
+                elemento.style.overflowX = "";
+                break;
+            case "y":
+                elemento.style.overflowY = "";
+                break;
+            case "xy":
+                elemento.style.overflow = "";
+                break;
+        }
     }
 }

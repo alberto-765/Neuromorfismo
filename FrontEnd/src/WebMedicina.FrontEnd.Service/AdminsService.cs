@@ -3,6 +3,7 @@ using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
@@ -10,6 +11,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using WebMedicina.FrontEnd.ServiceDependencies;
+using WebMedicina.Shared.Dto;
 
 namespace WebMedicina.FrontEnd.Service {
     public class AdminsService :IAdminsService  {
@@ -126,6 +128,29 @@ namespace WebMedicina.FrontEnd.Service {
                 }
             }
             return null;
+        }
+
+        // Validamos si el nombre y apellidos del nuevo usuario son validos 
+        public bool ValidarNomYApellUser(string nombre, string apellidos) {
+            try {
+                if (!string.IsNullOrEmpty(nombre) && !string.IsNullOrEmpty(apellidos)) {
+                    UserRegistroDto usuarioRegistro = new() {
+                        Nombre = nombre,
+                        Apellidos = apellidos
+                    };
+
+                    // Validamos que el campo del Numero Historia cumpla las validaciones del dto
+                    var validationErrors = new List<ValidationResult>();
+                    bool nombreValido = Validator.TryValidateProperty(nombre, new ValidationContext(usuarioRegistro) { MemberName = nameof(usuarioRegistro.Nombre) }, validationErrors);
+                    bool apellidosValidos = Validator.TryValidateProperty(apellidos, new ValidationContext(usuarioRegistro) { MemberName = nameof(usuarioRegistro.Apellidos) }, validationErrors);
+
+                    return nombreValido && apellidosValidos;
+                }
+
+                return false;
+            } catch (Exception) {
+                throw;
+            }
         }
     }
 }

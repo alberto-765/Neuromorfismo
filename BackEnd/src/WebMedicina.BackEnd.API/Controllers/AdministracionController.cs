@@ -28,7 +28,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
                     return BadRequest();
                 }
             } catch (Exception) {
-                return StatusCode(500, "Error interno del servidor");
+                return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
 
         }
@@ -43,7 +43,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
 
                 return BadRequest("Nombre inválido");
             } catch (Exception) {
-                return StatusCode(500, "Error interno del servidor");
+                return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
         }
 
@@ -58,7 +58,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
 
                 return BadRequest("Error al eliminar la epilepsia");
             } catch (Exception) {
-                return StatusCode(500, "Error interno del servidor");
+                return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
         }
 
@@ -79,7 +79,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
 
                 return BadRequest("Epilepsia no válida");
             } catch (Exception) {
-                return StatusCode(500, "Error interno del servidor");
+                return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
         }
 
@@ -95,7 +95,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
                     return BadRequest();
                 }
             } catch (Exception) {
-                return StatusCode(500, "Error interno del servidor");
+                return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
 
         }
@@ -110,7 +110,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
 
                 return BadRequest("Nombre inválido");
             } catch (Exception) {
-                return StatusCode(500, "Error interno del servidor");
+                return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
         }
 
@@ -125,7 +125,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
 
                 return BadRequest("Error al eliminar la epilepsia");
             } catch (Exception) {
-                return StatusCode(500, "Error interno del servidor");
+                return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
         }
 
@@ -146,7 +146,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
 
                 return BadRequest("Epilepsia no válida");
             } catch (Exception) {
-                return StatusCode(500, "Error interno del servidor");
+                return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
         }
 
@@ -163,7 +163,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
                     return BadRequest();
                 }
             } catch (Exception) {
-                return StatusCode(500, "Error interno del servidor");
+                return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
         }
 
@@ -177,7 +177,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
 
                 return BadRequest("Nombre inválido");
             } catch (Exception) {
-                return StatusCode(500, "Error interno del servidor");
+                return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
         }
 
@@ -192,7 +192,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
 
                 return BadRequest("Error al eliminar la fármaco");
             } catch (Exception) {
-                return StatusCode(500, "Error interno del servidor");
+                return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
         }
 
@@ -213,7 +213,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
 
                 return BadRequest("Fármaco no válido");
             } catch (Exception) {
-                return StatusCode(500, "Error interno del servidor");
+                return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
         }
 

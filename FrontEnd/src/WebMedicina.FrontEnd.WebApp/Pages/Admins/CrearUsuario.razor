@@ -12,16 +12,12 @@
         <EditForm Model="@userRegistro" OnValidSubmit="Crear" Class="flex-grow-1">
             <DataAnnotationsValidator />
                  
-            <MudTextField Class="mb-3" @bind-Value="userRegistro.Nombre" For="@(() => userRegistro.Nombre)" OnlyValidateIfDirty="true" Clearable="true" Label="Nombre*" Variant="Variant.Text" />
+            <MudTextField Class="mb-3" @bind-Value="userRegistro.Nombre" For="@(() => userRegistro.Nombre)" OnlyValidateIfDirty="true" Clearable="true" Label="Nombre*" Variant="Variant.Text" OnBlur="ValidarUserName"/>
             <MudTextField Class="mb-3" @bind-Value="userRegistro.Apellidos" For="@(() => userRegistro.Apellidos)" OnlyValidateIfDirty="true" Label="Apellidos*" Clearable="true" Variant="Variant.Text" OnBlur="ValidarUserName" />
             <MudTextField Class="mb-3" @bind-Value="@userRegistro.UserLogin" For="@(() => userRegistro.UserLogin)" HelperText="El nombre es generado automáticamente al rellanar 'Nombre' y 'Apellidos'" Label="Nombre de inicio de sesión*" Variant="Variant.Text" ReadOnly="true"/>
-            <MudDatePicker Class="mb-3" @ref="_picker" Editable="true" AutoClose="true" Label="Fecha de Nacimiento*" @bind-Date="userRegistro.FechaNac" For="@(() => userRegistro.FechaNac)" Placeholder="Mayor de 18 años" PickerVariant="PickerVariant.Dialog" IsDateDisabledFunc="@((DateTime dt)=> dt > ValidacionesRegistro.ObtenerFechaMaxNacimiento())">
-                <PickerActions Context="contexto2">
-                    <MudButton Class="mr-auto align-self-start" OnClick="@(() => _picker.Clear())">Limpiar</MudButton>
-                    <MudButton OnClick="@(() => _picker.Close(false))">Cancelar</MudButton>
-                    <MudButton Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
-                </PickerActions>
-            </MudDatePicker>
+
+            <Picker pickerName="fechaNac" clases="mb-3" label="Fecha de Nacimiento*" Fecha="userRegistro.FechaNac" variante="PickerVariant.Dialog" 
+                    ActualizarFecha="ActFecha" FechaMaxima="ValidacionesRegistro.ObtenerFechaMaxNacimiento()" helperText="Mayor de 18 años" autoCLose="false"/>
 
             <MudSelect Class="mb-3" T="string" Label="Género*" @bind-Value="userRegistro.Sexo" For="@(() => userRegistro.Sexo)" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Variant="Variant.Text">
                 <MudSelectItem Value="@("H")"><div class="d-flex align-center"> <MudIcon Icon="@Icons.Material.Outlined.Man" Class="mr-2" Size="Size.Small"></MudIcon> Hombre </div></MudSelectItem>

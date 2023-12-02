@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WebMedicina.Shared.Dto;
+﻿using WebMedicina.Shared.Dto;
 
 namespace WebMedicina.BackEnd.ServicesDependencies {
     public interface IPacientesService {
@@ -11,5 +6,8 @@ namespace WebMedicina.BackEnd.ServicesDependencies {
         List<FarmacosDto> ObtenerFarmacos();
         List<MutacionesDto> ObtenerMutaciones();
         List<EpilepsiasDto> ObtenerEpilepsias();
+        bool ValidarNumHistoria(string numHistoria);
+        Task<bool> CrearPaciente(CrearPacienteDto nuevoPaciente, int idMedico);
+        IEnumerable<PacienteDto> ObtenerPacientes();
     }
 }

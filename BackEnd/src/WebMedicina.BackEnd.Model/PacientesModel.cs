@@ -19,7 +19,7 @@ public partial class PacientesModel
 
     public DateTime FechaFractalidad { get; set; }
 
-    public int? IdFarmaco { get; set; }
+    public string Farmaco { get; set; }
 
     public int? IdEpilepsia { get; set; }
 
