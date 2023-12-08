@@ -3,8 +3,7 @@
 That project started at a big challenge for me, it are going to be a real private web app that some doctors of Spain would use for a study about a special disease in childrens
 I started that project using C# and .NET 7 without any experience in C# and Blazor. I was for 2 months as a self-taught learning about the best practice of C# and Blazor for start that project alone.
 
-Actually, at 08/12/2023, three months ago without 100% of the project completed, I can say I am so proud of the decision of started that project being alone because I was and continue learning a lots of things
-As I said I learned of about C# and Blazor in internet, whatchign a lots of videos, blogs, and a lot of effort.
+Actually, at 08/12/2023, three months ago without 100% of the project completed, I can say I am so proud of the decision of started that project being alone because I was and continue learning a lots of things about C# and Blazor in internet, whatchign a lots of videos, blogs, and a lot of effort.
 
 I did not receive any money for this project, on the contrary, I gladly accepted to do it for free. I only wanted to contribute more experience in .NET for companies to see my potencial and my willingness to learn.
 
