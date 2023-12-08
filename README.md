@@ -68,7 +68,6 @@ And that are all the funcionalities of my app, now I am going to explain what te
   - I used .razor, .razor.cs and .razor.css files for the structure of almost all the components.
   - Linq
   - Async and await structure
-![Captasdasdasdura](https://github.com/Amimbrer/WebMedicina/assets/136268910/c6a5dbcc-712c-4ee6-a634-c1d4c9c76e29)
 
 3. Shared: that folder is shared between the BackEnd and FrontEnd and is used mainly to reutilice the Dtos between de two apps
    - N-layer structure.
@@ -78,6 +77,7 @@ And that are all the funcionalities of my app, now I am going to explain what te
 I tryed to do the best code in all my project, using the better techniques, CLEAN CODE, SOLID principles...
 ***If your write that thank you I hope I made myself clear because my english is not the best.****
 
+## Some pictures of the App: 
 ![WebMedicina0](https://github.com/Amimbrer/WebMedicina/assets/136268910/b5553272-74a2-47ba-b2b3-9e0df8b02d2c)
 ![WebMedicina1](https://github.com/Amimbrer/WebMedicina/assets/136268910/28665e8f-a320-4c12-9cb3-748bbb613469)
 ![WebMedicina2](https://github.com/Amimbrer/WebMedicina/assets/136268910/e9ea9c2d-be80-4ca6-a7a3-c5c2d8a932b9)
