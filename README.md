@@ -38,35 +38,35 @@ And that are all the funcionalities of my app, now I am going to explain what te
 
 ## Tecnologies used
 1. Backend: for the backend I created a REST API to allow all the connection between the frontEnd, business logic, and conecction with DataBase
-  - REST API
-  - C#
-  - Identity (for security and filter the permits between the three types of users)
-  - Entity Framework
-  - Automapper
-  - N-layer structure
-    1. API APP
-    2. Services/Business layer
-    3. ServicesDependencies/Interfaces layer
-    4. Dtos layer
-    5. Models for database layer
-  - Dependency injection
-  - Abstraction with interfaces
-  - Linq
-  - Async and await structure
+    - REST API
+    - C#
+    - Identity (for security and filter the permits between the three types of users)
+    - Entity Framework
+    - Automapper
+    - N-layer structure
+      1. API APP
+      2. Services/Business layer
+      3. ServicesDependencies/Interfaces layer
+      4. Dtos layer
+      5. Models for database layer
+    - Dependency injection
+    - Abstraction with interfaces
+    - Linq
+    - Async and await structure
 
 2. FrontEnd: for the frontEnd I decided use Blazor WebAssembly and some javascript (it was the only frontEnd lenguage than I controlled a lots)
-  - Blazor WebAssembly App.
-  - N-layer structure.
-    1. Services/Business layer, to all the logic and fetch to the API.
-    2. ServicesDependencies/Interfaces layer.
-    3. Dtos layer.
-  - MudBlazor for the UI of the app.
-  - Dependency injection.
-  - Abstraction with interfaces.
-  - Organized structure in components to try reutilice code, using parameters, cascading values.
-  - I used .razor, .razor.cs and .razor.css files for the structure of almost all the components.
-  - Linq
-  - Async and await structure
+    - Blazor WebAssembly App.
+    - N-layer structure.
+      1. Services/Business layer, to all the logic and fetch to the API.
+      2. ServicesDependencies/Interfaces layer.
+      3. Dtos layer.
+    - MudBlazor for the UI of the app.
+    - Dependency injection.
+    - Abstraction with interfaces.
+    - Organized structure in components to try reutilice code, using parameters, cascading values.
+    - I used .razor, .razor.cs and .razor.css files for the structure of almost all the components.
+    - Linq
+    - Async and await structure
 
 3. Shared: that folder is shared between the BackEnd and FrontEnd and is used mainly to reutilice the Dtos between de two apps
    - N-layer structure.
