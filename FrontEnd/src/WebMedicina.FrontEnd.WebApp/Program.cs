@@ -11,10 +11,16 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-//DEPENDENCIAS
+// CONFIGURACION APISETTINGSº
+
+// CONFIGURACION HTTCLIENT
 builder.Services.AddHttpClient("HttpAPI", client => {
     client.BaseAddress = new Uri(builder.Configuration["ApiSettings:BaseUrl"]);
 });
+
+
+//DEPENDENCIAS
+
 builder.Services.AddSingleton<IConfigurationBuilder>(builder.Configuration); // para la configuracion
 builder.Services.AddScoped<ICrearHttpClient, CrearHttpClient>(); // para crear Httpclient
 builder.Services.AddScoped<ExcepcionPersonalizada>(); // excepciones

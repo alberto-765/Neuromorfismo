@@ -11,6 +11,7 @@ namespace WebMedicina.FrontEnd.ServiceDependencies {
         Task<(List<FarmacosDto>? ListaFarmacos, List<EpilepsiasDto>? ListaEpilepsias, List<MutacionesDto>? ListaMutaciones)> ObtenerFiltros();
         Task<bool> ValidarNumHistoria(string numHistoria);
         Task<HttpResponseMessage> CrearPaciente(CrearPacienteDto nuevoPaciente);
-        Task<IEnumerable<PacienteDto>?> ObtenerPacientes();
+        Task<List<PacienteDto>?> ObtenerPacientes();
+        Task<List<PacienteDto>?> FiltrarPacientes(FiltroPacienteDto filtrsPacientes);
     }
 }

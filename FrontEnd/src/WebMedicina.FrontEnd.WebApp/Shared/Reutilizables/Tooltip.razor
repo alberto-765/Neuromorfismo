@@ -1,0 +1,24 @@
+﻿<MudTooltip Arrow="true" Placement="Placement.Top" Color="@Color">
+    <ChildContent>
+        <MudIconButton Icon="@Icono" />
+    </ChildContent>
+    <TooltipContent>
+        <MudText Typo="Typo.h6">@Titulo</MudText>
+        <MudText Typo="Typo.body1">@Contenido</MudText>
+    </TooltipContent>
+</MudTooltip>
+
+
+@code{
+    // Icono del tooltip
+    [Parameter] public string Icono { get; set; } = Icons.Material.Outlined.Info;
+
+    // Titulo 
+    [Parameter] public MarkupString Titulo { get; set; } = new MarkupString();
+
+    // Contenido
+    [Parameter] public MarkupString Contenido { get; set; } = new MarkupString();
+
+    // Color
+    [Parameter] public Color Color { get; set; } = Color.Default;
+}

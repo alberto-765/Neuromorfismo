@@ -21,7 +21,7 @@
                 </MudSelect>
 
                 @* Talla *@
-                <MudSlider @bind-Value="@nuevoPaciente.Talla" For="@(() => nuevoPaciente.Talla)" ValueLabel="true" Max="200" Min="50" id="sliderTalla">Talla*: @nuevoPaciente.Talla cm</MudSlider>
+                <MudSlider T="int" @bind-Value="@nuevoPaciente.Talla" For="@(() => nuevoPaciente.Talla)" ValueLabel="true" Max="200" Min="50" id="sliderTalla">Talla*: @nuevoPaciente.Talla cm</MudSlider>
 
                 @* Fecha Diagnostico *@
                 <Picker pickerName="fechaDiag" clases="filtro" label="Fecha de Diagnóstico" Fecha="nuevoPaciente.FechaDiagnostico" variante="PickerVariant.Inline" ActualizarFecha="ActFecha" />

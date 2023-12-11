@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using System.ComponentModel.DataAnnotations;
 using WebMedicina.BackEnd.Dal;
+using WebMedicina.BackEnd.Dto;
 using WebMedicina.BackEnd.Model;
 using WebMedicina.BackEnd.ServicesDependencies;
 using WebMedicina.Shared.Dto;
@@ -70,40 +71,42 @@ namespace WebMedicina.BackEnd.Service {
         }
 
         // Obtener todos los pacientes con sus datos
-        public IEnumerable<PacienteDto> ObtenerPacientes () {
+        public List<PacienteDto> ObtenerPacientes () {
             try {
                 // Get de todos los pacientes
-                IEnumerable<PacientesModel>? listaPacientesBD = _pacientesDal.GetAllPacientes();
+                List<InfoPacienteDto>? listaInfoPacientes = _pacientesDal.GetAllPacientes();
 
-                if (!listaPacientesBD.Any()) {
-                    return Enumerable.Empty<PacienteDto>();
-                }
-
-                // Mapeamos id de medicos para obtener sus nombres
-                HashSet<int> hastIdMedicos = listaPacientesBD.Select(q=> q.MedicoCreador).ToHashSet();
-                hastIdMedicos.Union(listaPacientesBD.Select(q => q.MedicoUltMod).ToHashSet());
-                Dictionary<int, string> listaNombresMed = _pacientesDal.ObtenerNombresMed(hastIdMedicos);
-
-              
                 // Creamos listado de pacientes
                 List<PacienteDto> listaPacientes = new();
 
                 // Mapeamos y añadimos nombres de medicos a cada paciente
-                foreach (PacientesModel modelo in listaPacientesBD) {
-                    PacienteDto nuevoPaciente = new() {
-                        IdPaciente = modelo.IdPaciente,
-                        NumHistoria = modelo.NumHistoria,
-                        FechaNac = modelo.FechaNac, 
-                        Sexo =  modelo.Sexo,
-                        Talla = modelo.Talla,
-                        FechaDiagnostico = modelo.FechaDiagnostico,
-                        FechaFractalidad = modelo.FechaFractalidad,
-                        //Farmaco = modelo.Farmaco,
-                        TipoEpilepsia = modelo.IdEpilepsia,
-                        TipoMutacion = 
-
-                    };
+                if(listaInfoPacientes is not null) {
+                    foreach (InfoPacienteDto infoPaciente in listaInfoPacientes) {
+                        PacienteDto nuevoPaciente = new() {
+                            IdPaciente = infoPaciente.Paciente.IdPaciente,
+                            NumHistoria = infoPaciente.Paciente.NumHistoria,
+                            FechaNac = infoPaciente.Paciente.FechaNac,
+                            Sexo = infoPaciente.Paciente.Sexo,
+                            Talla = infoPaciente.Paciente.Talla,
+                            FechaDiagnostico = infoPaciente.Paciente.FechaDiagnostico,
+                            FechaFractalidad = infoPaciente.Paciente.FechaFractalidad,
+                            Farmaco = infoPaciente.Paciente.Farmaco,
+                            IdEpilepsia = infoPaciente.Paciente.IdEpilepsia,
+                            NombreEpilepsia = infoPaciente.NombreEpilepsia,
+                            NombreMutacion = infoPaciente.NombreMutacion,
+                            IdMutacion = infoPaciente.Paciente.IdMutacion,
+                            EnfermRaras = (infoPaciente.Paciente.EnfermRaras == "S" ? "Sí" : (infoPaciente.Paciente.EnfermRaras == "N" ? "No" : string.Empty)),
+                            DescripEnferRaras = (infoPaciente.Paciente.EnfermRaras == "S" ? infoPaciente.Paciente.DescripEnferRaras : string.Empty  ),
+                            FechaCreac = infoPaciente.Paciente.FechaCreac,
+                            FechaUltMod = infoPaciente.Paciente.FechaUltMod,
+                            MedicoCreador = infoPaciente.Paciente.MedicoCreadorNavigation?.UserLogin ?? string.Empty,
+                            MedicoUltMod = infoPaciente.Paciente.MedicoUltModNavigation?.UserLogin ?? string.Empty
+                        };
+                        listaPacientes.Add(nuevoPaciente);
+                    }
                 }
+
+                return listaPacientes;
             } catch (Exception) {
                 throw;
             }

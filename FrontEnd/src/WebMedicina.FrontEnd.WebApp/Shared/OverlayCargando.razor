@@ -1,15 +1,54 @@
 ﻿@* Overlay de carga  *@
 @if(_isDarkMode != null){
-    <MudOverlay @bind-Visible="mostrarOverlay" DarkBackground="true" Absolute="absoluto">
+    <MudOverlay @bind-Visible="mostrarOverlay" DarkBackground="modoOscoruo" Absolute="absoluto">
         <div id="iconoOverLayCarga">
-            <div id="spinner" class="@((_isDarkMode == true ? "darkSpinner" : ""))"></div>
+            <div id="spinner" class="@fondoSpinner"></div>
             <img src="icono.png" alt="Icono" />
         </div>
+        <div id="textoOverlayCarga">@textoOverlayCarga</div>
     </MudOverlay>
 }
 
 @code{
-    [Parameter]public bool mostrarOverlay { get; set; }
+    // Bool para mostrar o esconder el overlay
+    [Parameter] public bool mostrarOverlay { get; set; }
+
+    // Para que el overlay sea absoluto
     [Parameter] public bool absoluto { get; set; } = false;
+
+    // Fondo oscuro para el overlay
+    [Parameter] public bool modoOscoruo { get; set; } = true;
+
+    // Texto overlay carga
+    [Parameter] public string textoOverlayCarga { get; set; } = string.Empty;
+
     [CascadingParameter(Name = "modoOscuro")] private bool? _isDarkMode { get; set; } = null;
+
+    // Tipo de fondo que va a tener el spinner
+    private string fondoSpinner { get; set; } = string.Empty;
+
+
+    protected override void OnParametersSet() {
+        // Colocamos un color de fondo para el spinner
+        if (_isDarkMode == true) {
+
+            // Fondo oscuro
+            if (modoOscoruo) {
+                fondoSpinner = "spinner1";
+            } else {
+                // Fondo claro
+                fondoSpinner = "spinner2";
+            }
+        } else if (_isDarkMode == false) {
+            // Modo claro
+
+            // Fondo oscuro
+            if (modoOscoruo) {
+                fondoSpinner = "spinner3";
+            } else {
+                // Fondo claro
+                fondoSpinner = "spinner4";
+            }
+        }
+    }
 }

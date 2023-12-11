@@ -12,6 +12,4 @@ public partial class FarmacosModel
     public DateOnly FechaCreac { get; set; }
 
     public DateOnly FechaUltMod { get; set; }
-
-    public virtual ICollection<PacientesModel> Pacientes { get; set; } = new List<PacientesModel>();
 }

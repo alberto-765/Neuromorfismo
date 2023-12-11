@@ -55,6 +55,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
 
                 // Configuracion default snackbar
                 _snackbar.Configuration.PreventDuplicates = true;
+                _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopLeft;
                 _snackbar.Configuration.VisibleStateDuration = 5000;
                 _snackbar.Configuration.ShowCloseIcon = false;
             } catch (Exception ex) {

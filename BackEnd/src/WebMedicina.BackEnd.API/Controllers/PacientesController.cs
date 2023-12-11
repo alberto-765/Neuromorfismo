@@ -70,11 +70,14 @@ namespace WebMedicina.BackEnd.API.Controllers {
         }
 
 
-        // Obtener pacientes 
+        // Obtener pacientes y devolver listado
         [HttpGet("obtenerPacientes")]
         public ActionResult ObtenerPacientes() {
             try {
-                IEnumerable<PacienteDto> listaPacientes = _pacientesService.ObtenerPacientes();
+                List<PacienteDto> listaPacientes = _pacientesService.ObtenerPacientes();
+                if (listaPacientes.Any()) {
+                    return Ok(listaPacientes);
+                }
 
                 return BadRequest("No ha sido posible obtener los pacientes. Si el fallo persiste contacte con un administrador.");
             } catch (Exception) {

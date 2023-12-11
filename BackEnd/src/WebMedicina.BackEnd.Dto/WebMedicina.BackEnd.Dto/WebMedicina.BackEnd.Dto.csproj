@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\WebMedicina.BackEnd.Model\WebMedicina.BackEnd.Model.csproj" />
+  </ItemGroup>
+
 </Project>

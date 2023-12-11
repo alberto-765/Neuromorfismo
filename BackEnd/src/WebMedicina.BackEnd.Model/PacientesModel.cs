@@ -13,13 +13,13 @@ public partial class PacientesModel
 
     public string Sexo { get; set; } = null!;
 
-    public decimal Talla { get; set; }
+    public int Talla { get; set; }
 
     public DateTime FechaDiagnostico { get; set; }
 
     public DateTime FechaFractalidad { get; set; }
 
-    public string Farmaco { get; set; }
+    public string Farmaco { get; set; } = null!;
 
     public int? IdEpilepsia { get; set; }
 
@@ -38,8 +38,6 @@ public partial class PacientesModel
     public int MedicoCreador { get; set; }
 
     public virtual EpilepsiaModel? IdEpilepsiaNavigation { get; set; }
-
-    public virtual FarmacosModel? IdFarmacoNavigation { get; set; }
 
     public virtual MutacionesModel? IdMutacionNavigation { get; set; }
 

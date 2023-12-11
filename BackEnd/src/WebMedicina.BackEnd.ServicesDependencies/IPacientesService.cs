@@ -8,6 +8,6 @@ namespace WebMedicina.BackEnd.ServicesDependencies {
         List<EpilepsiasDto> ObtenerEpilepsias();
         bool ValidarNumHistoria(string numHistoria);
         Task<bool> CrearPaciente(CrearPacienteDto nuevoPaciente, int idMedico);
-        IEnumerable<PacienteDto> ObtenerPacientes();
+        List<PacienteDto> ObtenerPacientes();
     }
 }

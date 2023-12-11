@@ -8,12 +8,17 @@
     <MudStack Spacing="0" Row="true">
         @* Boton crear pacientes *@
         <div>
-            <MudButton id="@((IsDarkMode ? "btnCrearPacienteDark" : "btnCrearPacienteDef"))" Class="py-2 px-4 ml-2" Variant="Variant.Filled" DisableElevation="true" StartIcon="@Icons.Material.Outlined.PersonAddAlt" @onclick="MostrarCrearPac">
-                Crear Paciente
-            </MudButton>
+            <MudButtonGroup Color="Color.Primary" Variant="Variant.Filled" Size="Size.Small">
+                <MudButton id="@((IsDarkMode ? "btnCrearPacienteDark" : "btnCrearPacienteDef"))" StartIcon="@Icons.Material.Outlined.PersonAddAlt" @onclick="MostrarCrearPac">Crear Paciente</MudButton>
+               
+                <MudButton Color="Color.Success"> 
+                    <MudImage Src="@(UrlImagenes + "iconoExcel.png")" Alt="Icono Excel" /> Excel
+                </MudButton>
+            </MudButtonGroup>
         </div>
 
         <MudSpacer />
+
         @* Boton bloquear filtros *@
         <div id="btnFiltros" modoOscuro="@IsDarkMode">
             <MudSwitch T="bool" Class="cursor-pointer" @bind-Checked="FiltrosAbierto" Size="Size.Medium" ThumbIcon="@((FiltrosAbierto  ? @Icons.Material.Outlined.VisibilityOff : @Icons.Material.Outlined.Visibility))" Color="Color.Primary" />
@@ -21,8 +26,8 @@
     </MudStack>
 
     <MudTabs Elevation="2" Rounded="true" id="mudTab-Pacientes" Class="gap-4" AlwaysShowScrollButtons="false">
-        <MudTabPanel Text="Todos los Pacientes">
-            <AllPacientes ListaPacientes="ListaPacientes" />
+        <MudTabPanel Text="Todos los Pacientes" >
+            <AllPacientes ListaPacientes="ListaPacientes"/>
         </MudTabPanel>
         <MudTabPanel Text="Mis Pacientes">
             <MudPaper Class="pa-16 ma-2" Elevation="25"></MudPaper>

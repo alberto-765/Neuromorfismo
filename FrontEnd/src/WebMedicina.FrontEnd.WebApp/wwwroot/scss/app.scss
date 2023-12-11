@@ -58,6 +58,12 @@ html, body {
     left: 50%;
     transform: translate(-50%, -50%);
 }
+#textoOverlayCarga {
+    position: relative;
+    margin-top: 6.2rem;
+    font-size: 1rem;
+}
+/*SPINNER*/
 #spinner {
     width: 60px;
     height: 60px;
@@ -82,12 +88,29 @@ html, body {
     height: 100%;
     background: linear-gradient(0deg,#61b8fc 0%,#2c75ff 100%);
 }
-.darkSpinner::after {
-    background: #292a2f !important;
-}
 @keyframes spin {
     to {
         transform: rotate(360deg);
     }
 }
+
+
+/* Spinner para dark mode y fondo oscuro*/
+.spinner1::after {
+    background: #292a2f !important;
+}
+/* Spinner para dark mode y fondo claro*/
+.spinner2::after {
+    background: #373740 !important;
+}
+/* Spinner para black mode y fondo oscuro*/
+.spinner3::after {
+    background: #909090 !important;
+}
+/* Spinner para black mode y fondo claro*/
+.spinner4::after {
+    background: #ffffff !important;
+}
+
+/*SPINNER*/
 

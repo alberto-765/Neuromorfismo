@@ -26,8 +26,7 @@ builder.Services.AddControllers(options =>
 {
 	// Configuramos que los valores no nulleables se consideren requeridos en los dto
 	options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true; 
-}
-);
+});
 
 // para encriptar
 builder.Services.AddDataProtection();

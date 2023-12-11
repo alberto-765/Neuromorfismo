@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using WebMedicina.BackEnd.Dto;
 using WebMedicina.BackEnd.Model;
 using WebMedicina.Shared.Dto;
 

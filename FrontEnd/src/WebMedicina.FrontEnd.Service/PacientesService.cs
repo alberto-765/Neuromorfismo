@@ -41,7 +41,7 @@ namespace WebMedicina.FrontEnd.Service {
             try {
                 // Obtenemos lista de farmacos
                 //List<FarmacosDto>?  listaFarmacos = await Http.GetFromJsonAsync<List<FarmacosDto>>("pacientes/getFarmacos");
-                List<FarmacosDto>? listaFarmacos = new List<FarmacosDto>();
+                List<FarmacosDto>? listaFarmacos = new();
 
                 // Obtenemos lista de epilepsias
                 List<EpilepsiasDto>?  listaEpilepsias = await Http.GetFromJsonAsync<List<EpilepsiasDto>>("pacientes/getEpilepsias");
@@ -50,7 +50,6 @@ namespace WebMedicina.FrontEnd.Service {
                 List<MutacionesDto>?  listaMutaciones = await Http.GetFromJsonAsync<List<MutacionesDto>>("pacientes/getMutaciones");
 
                 //Devolvemos las tres listas
-                //return (listaFarmacos, listaEpilepsias, listaMutaciones);
                 return (listaFarmacos, listaEpilepsias, listaMutaciones);
             } catch (Exception) {
                 throw;
@@ -76,27 +75,30 @@ namespace WebMedicina.FrontEnd.Service {
         }
 
         // Obtener pacientes de la api y realizar filtrado
-        public async Task<IEnumerable<PacienteDto>?> ObtenerPacientes() {
+        public async Task<List<PacienteDto>?> ObtenerPacientes() {
             try {
-                //IEnumerable<PacienteDto>? listaPacientes = JsonSerializer.Deserialize<IEnumerable<PacienteDto>>(await js.GetFromSessionStorage("pacientes"));
-                
-                // Si no hay pacientes en session obtenemos de la api
-                //if(listaPacientes == null || !listaPacientes.Any()) { 
-                //    listaPacientes = 
-                //}
+                HttpResponseMessage respuesta = await Http.GetAsync("pacientes/obtenerPacientes");
+                List<PacienteDto>? pacientes = null;
 
-                return await Http.GetFromJsonAsync<IEnumerable<PacienteDto>>("pacientes/obtenerPacientes"); 
+                // Guardamos el listado de todos los pacientes en session
+                if(respuesta.IsSuccessStatusCode) {
+                    pacientes = await respuesta.Content.ReadFromJsonAsync<List<PacienteDto>>();
+                    await js.SetInSessionStorage("pacientes",  JsonSerializer.Serialize(pacientes));
+                }
+                return pacientes;
             } catch (Exception) {
                 throw;
             }
         }
 
         // Filtramos los pacientes con los filtros seleccionados
-        public IEnumerable<PacienteDto>? FiltrarPacientes(FiltroPacienteDto filtrsPacientes, IEnumerable<PacienteDto>? listaPacientes) {
+        public async Task<List<PacienteDto>?> FiltrarPacientes(FiltroPacienteDto filtrsPacientes) {
             try {
+                // Obtenemos la lista de pacientes de session
+                List<PacienteDto>? listaPacientes = JsonSerializer.Deserialize<List<PacienteDto>>(await js.GetFromSessionStorage("pacientes"));
 
                 // Comprobamos si alguna de las propiedades no es null o las que son una lista si contienen elementos
-                if(filtrsPacientes.GetType().GetProperties().Any(prop => 
+                if (filtrsPacientes.GetType().GetProperties().Any(prop => 
                 {
                     var value = prop.GetValue(filtrsPacientes);
                     return value != null &&
@@ -108,8 +110,8 @@ namespace WebMedicina.FrontEnd.Service {
 
                     // Obtenemos el listado de pacientes
                     listaPacientes = (from q in listaPacientes where ((filtrsPacientes.Sexo == null || q.Sexo == filtrsPacientes.Sexo) &&
-                                      (filtrsPacientes.Talla == null || q.Talla == filtrsPacientes.Talla) && (filtrsPacientes.EnfermRaras == null || ((filtrsPacientes.EnfermRaras && q.EnfermRaras == "S") || !filtrsPacientes.EnfermRaras && q.EnfermRaras == "N"))
-                                      ) select q);
+                                      (filtrsPacientes.Talla == null || q.Talla == filtrsPacientes.Talla) && ((filtrsPacientes.EnfermRaras && q.EnfermRaras == "S") || !filtrsPacientes.EnfermRaras && q.EnfermRaras == "N")
+                                      ) select q).ToList();
 
                 }
                 return listaPacientes;

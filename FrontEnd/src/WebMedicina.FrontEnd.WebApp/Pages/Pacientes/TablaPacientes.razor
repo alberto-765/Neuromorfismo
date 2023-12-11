@@ -1,112 +1,140 @@
-﻿<MudDataGrid Items="@ListaPacientes" Elevation="25" SortMode="SortMode.Single">
-    <Columns>
-        <HierarchyColumn T="PacienteDto" />
-        <PropertyColumn Property="x => x.NumHistoria" Title="Número de Historia" />
-        <PropertyColumn Property="x => x.FechaNac" Title="Fecha Macimiento" />
-        <PropertyColumn Property="x => x.Sexo" Title="Género" />
-        <PropertyColumn Property="x => x.Talla" />
-        <PropertyColumn Property="x => x.TipoEpilepsia" Title="Tipo Epilepsia" />
-        <PropertyColumn Property="x => x.TipoMutacion" Title="Tipo Mutación" />
-        <PropertyColumn Property="x => x.EnfermRaras" Title="Enfermedad Rara" />
-    </Columns>
-    <ChildRowContent>
-        <MudCard>
-            <MudCardHeader>
-                <CardHeaderContent>
-                    <MudText Typo="Typo.h6">@context.Item.NumHistoria</MudText>
-                </CardHeaderContent>
-            </MudCardHeader>
-            <MudCardContent>
-               <MudGrid Spacing="3" Justify="Justify.Center">
-                   @* Fecha Nacimiento *@
-                   <MudItem xs="12" md="6">
-                       <MudText Typo="Typo.h6">Fecha Nacimiento:</MudText>
-                       <MudText>@context.Item.FechaNac</MudText>
-                   </MudItem>
-
-                    @* Genero *@
-                    <MudItem xs="12" md="6">
-                        <MudText Typo="Typo.h6">Género:</MudText>
-                        <MudText>@context.Item.Sexo</MudText>
-                    </MudItem>
-                    
-                    @* Fecha Diagnostico *@
-                    <MudItem xs="12" md="6">
-                        <MudText Typo="Typo.h6">Fecha Diagnóstico:</MudText>
-                        <MudText>@context.Item.FechaDiagnostico</MudText>
-                    </MudItem>
-                    
-                    @* Fecha Fractalidad *@
-                    <MudItem xs="12" md="6">
-                        <MudText Typo="Typo.h6">Fecha Fractalidad:</MudText>
-                        <MudText>@context.Item.FechaFractalidad</MudText>
-                    </MudItem>
-
-                    @* Talla *@
-                    <MudItem xs="12" md="6">
-                        <MudText Typo="Typo.h6">Talla:</MudText>
-                        <MudText>@context.Item.Talla</MudText>
-                    </MudItem>
-
-                    @* Tipo Epilepsia *@
-                    <MudItem xs="12" md="6">
-                        <MudText Typo="Typo.h6">Tipo Epilepsia:</MudText>
-                        <MudText>@context.Item.TipoEpilepsia</MudText>
-                    </MudItem>
-
-                    @* Tipo Mutación *@
-                    <MudItem xs="12" md="6">
-                        <MudText Typo="Typo.h6">Tipo Mutación:</MudText>
-                        <MudText>@context.Item.TipoMutacion</MudText>
-                    </MudItem>
-
-                    @* Enfermedad Rara *@
-                    <MudItem xs="12" md="6">
-                        <MudText Typo="Typo.h6">Enfermedad Rara:</MudText>
-                        <MudText>@context.Item.EnfermRaras</MudText>
-                    </MudItem>
-
-                    @* Descripcion Enfermedad Rara *@
-                    @if(!string.IsNullOrEmpty(context.Item.EnfermRaras) && context.Item.EnfermRaras == "No"){
-                        <MudItem xs="12" md="6">
-                            <MudText Typo="Typo.h6">Descripción:</MudText>
-                            <MudText>@context.Item.DescripEnferRaras</MudText>
-                        </MudItem>
+﻿<div>
+    <MudDataGrid Items="@ListaPacientes" Elevation="25" SortMode="SortMode.Single" Hover="true" Breakpoint="Breakpoint.Md" Class="mt-4">
+        <Columns>
+            <HierarchyColumn T="PacienteDto" />
+            <PropertyColumn Property="x => x.NumHistoria" Title="Número de Historia" />
+            <PropertyColumn Property="x => x.FechaNac" Title="Fecha Nacimiento" Format="dd/MM/yyyy"/>
+            <TemplateColumn Title="Género">
+                <CellTemplate>
+                    @if (context.Item.Sexo == "M") {
+                        <div class="celda-espaciada">
+                            <MudIcon Icon="@Icons.Material.Outlined.Woman" Class="mr-3" Size="Size.Small"></MudIcon>
+                            <MudText Typo="Typo.body1">Mujer</MudText>
+                        </div>
+                    } else if (context.Item.Sexo == "H") {
+                        <div class="celda-espaciada">
+                            <MudIcon Icon="@Icons.Material.Outlined.Man" Class="mr-3" Size="Size.Small"></MudIcon>
+                            <MudText Typo="Typo.body1">Hombre</MudText>
+                        </div>
                     }
+                </CellTemplate>
+            </TemplateColumn>
+            <TemplateColumn Title="Talla">
+                <CellTemplate>
+                        @if (context.Item.Talla > 0) {
+                            <MudText Typo="Typo.body1">@context.Item.Talla cm</MudText>
+                        } else {
+                            <MudText Typo="Typo.body1" Class="ml-4">-</MudText>
+                        }
+                </CellTemplate>
+            </TemplateColumn>
+            <TemplateColumn Title="Epilepsia">
+                <CellTemplate>
+                    @if (!string.IsNullOrEmpty(context.Item.NombreEpilepsia)) {
+                        <MudText Typo="Typo.body1">@context.Item.NombreEpilepsia</MudText>
+                    } else {
+                        <MudText Typo="Typo.body1" Class="ml-4">-</MudText>
+                    }
+                </CellTemplate>
+            </TemplateColumn>
+            <TemplateColumn Title="Mutación">
+                <CellTemplate>
+                    @if (!string.IsNullOrEmpty(context.Item.NombreMutacion)) {
+                        <MudText Typo="Typo.body1">@context.Item.NombreMutacion</MudText>
+                    } else {
+                        <MudText Typo="Typo.body1" Class="ml-4">-</MudText>
+                    }
+                </CellTemplate>
+            </TemplateColumn>
+            <PropertyColumn Property="x => x.EnfermRaras" Title="Enfermedad Rara" />
+        </Columns>
+        <ChildRowContent>
+            <MudCard Elevation="0" Class="cardPaciente">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h5">Paciente : @context.Item.NumHistoria</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
 
-                    @* Fecha Creacion *@
-                    <MudItem xs="12" md="6">
-                        <MudText Typo="Typo.h6">Creación:</MudText>
-                        <MudText>@context.Item.FechaCreac</MudText>
-                    </MudItem>
+                <MudDivider DividerType="DividerType.Middle" />
 
-                    @* Fecha Modificacion *@
-                    <MudItem xs="12" md="6">
-                        <MudText Typo="Typo.h6">Última Modificación:</MudText>
-                        <MudText>@context.Item.FechaUltMod</MudText>
-                    </MudItem>
+                <MudCardContent>
+                   <MudGrid Spacing="3" Justify="Justify.Center" id="gridDecipcionPaciente">
+                       @* Fecha Nacimiento *@
+                       <MudItem xs="12" md="6" >
+                            <MudText>Fecha Nacimiento: @context.Item.FechaNac.ToShortDateString()</MudText>
+                       </MudItem>
 
-                    @* Medico Creador *@
-                    <MudItem xs="12" md="6">
-                        <MudText Typo="Typo.h6">Médico Creador:</MudText>
-                        <MudText>@context.Item.MedicoCreador</MudText>
-                    </MudItem>
+                        @* Genero *@
+                        <MudItem xs="12" md="6">
+                            <MudText Class="d-flex flex-row align-center">Género:
+                                @if (context.Item.Sexo == "M") {
+                                    <MudIcon Icon="@Icons.Material.Outlined.Woman" Class="mx-3" Size="Size.Small"></MudIcon>
+                                    <text>Mujer</text>
+                                } else if (context.Item.Sexo == "H") {
+                                    <MudIcon Icon="@Icons.Material.Outlined.Man" Class="mx-3" Size="Size.Small"></MudIcon>
+                                    <text>Hombre</text>
+                                }
+                            </MudText>
+                        </MudItem>
+                    
+                        @* Fecha Diagnostico *@
+                        <MudItem xs="12" md="6">
+                            <MudText>Fecha Diagnóstico: @context.Item.FechaDiagnostico.ToShortDateString()</MudText>
+                        </MudItem>
+                    
+                        @* Fecha Fractalidad *@
+                        <MudItem xs="12" md="6">
+                            <MudText>Fecha Fractalidad: @context.Item.FechaFractalidad.ToShortDateString()</MudText>
+                        </MudItem>
 
-                    @* Medico Ult Modificacion *@
-                    <MudItem xs="12" md="6">
-                        <MudText Typo="Typo.h6">Médico Última Modificación:</MudText>
-                        <MudText>@context.Item.MedicoUltMod</MudText>
-                    </MudItem>
-               </MudGrid>
-            </MudCardContent>
-            <MudCardActions>
-                <MudText Typo="Typo.subtitle2">Creado por
-                    <MudChip Variant="Variant.Text" Color="Color.Dark">@context.Item.MedicoCreador</MudChip>
-                    e   l @context.Item.FechaCreac.ToShortDateString()</MudText>
-            </MudCardActions>
-        </MudCard>
-    </ChildRowContent>
-    <PagerContent>
-        <MudDataGridPager T="PacienteDto" InfoFormat="@("{first_item}-{last_item} de {all_items}")" RowsPerPageString="Filas por página:" />
-    </PagerContent>
-</MudDataGrid>
+                        @* Talla *@
+                        <MudItem xs="12" md="6">
+                            <MudText>Talla: @(context.Item.Talla > 0 ? $"{context.Item.Talla} cm" : "No especificado")</MudText>
+                        </MudItem>
+
+                        @* Tipo Epilepsia *@
+                        <MudItem xs="12" md="6">
+                                <MudText>Tipo Epilepsia: @((!string.IsNullOrEmpty(context.Item.NombreEpilepsia) ? context.Item.NombreEpilepsia : "No especificado"))</MudText>
+                        </MudItem>
+
+                        @* Tipo Mutación *@
+                        <MudItem xs="12" md="6">
+                                <MudText>Tipo Mutación: @((!string.IsNullOrEmpty(context.Item.NombreMutacion) ? context.Item.NombreMutacion : "No especificado"))</MudText>
+                        </MudItem>
+
+                        @* Enfermedad Rara *@
+                        <MudItem xs="12" md="6">
+                            <MudText>Enfermedad Rara: @context.Item.EnfermRaras
+
+                                @* Mostramos tooltip de info si tiene enfermedad rara *@
+                                @if (!string.IsNullOrEmpty(context.Item.EnfermRaras) && context.Item.EnfermRaras == "Sí" && !string.IsNullOrEmpty(context.Item.DescripEnferRaras)) {
+                                        <Tooltip Contenido="@(new MarkupString(context.Item.DescripEnferRaras))" Titulo="@(new MarkupString("Descripción Enfermedad"))" />
+                                }
+                            </MudText>
+                        </MudItem>
+                   </MudGrid>
+                </MudCardContent>
+
+                <MudDivider DividerType="DividerType.Middle" />
+
+                <MudCardActions Class="d-flex justify-space-between">
+                    <MudText Typo="Typo.subtitle2">Creado por
+                        <MudChip Variant="Variant.Text" Color="Color.Dark">@(string.IsNullOrEmpty(context.Item.MedicoCreador) ? "-" : $"{context.Item.MedicoCreador}")</MudChip>
+                        el
+                        <MudChip Variant="Variant.Text" Color="Color.Dark">@(context.Item.FechaCreac == DateOnly.MinValue ? "-" : $"{context.Item.FechaCreac.ToShortDateString()}")</MudChip>
+                    </MudText>
+                    <MudText Typo="Typo.subtitle2">
+                        Modificado por última vez por
+                        <MudChip Variant="Variant.Text" Color="Color.Dark">@(string.IsNullOrEmpty(context.Item.MedicoUltMod) ? "-" : $"{context.Item.MedicoUltMod}")</MudChip>
+                        el
+                        <MudChip Variant="Variant.Text" Color="Color.Dark">@(context.Item.FechaUltMod == DateOnly.MinValue ? "-" : $"{context.Item.FechaUltMod.ToShortDateString()}")</MudChip>
+                    </MudText>
+                </MudCardActions>
+            </MudCard>
+        </ChildRowContent>
+        <PagerContent>
+            <MudDataGridPager T="PacienteDto" InfoFormat="@("{first_item}-{last_item} de {all_items}")" RowsPerPageString="Filas por página:" />
+        </PagerContent>
+    </MudDataGrid>
+</div>

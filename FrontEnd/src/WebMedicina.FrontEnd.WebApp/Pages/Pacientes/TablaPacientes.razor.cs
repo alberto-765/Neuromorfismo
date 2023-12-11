@@ -3,6 +3,6 @@ using WebMedicina.Shared.Dto;
 
 namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
     public partial class TablaPacientes {
-        [Parameter] public IEnumerable<PacienteDto>? ListaPacientes { get; set; }
+        [Parameter] public List<PacienteDto>? ListaPacientes { get; set; }
     }
 }

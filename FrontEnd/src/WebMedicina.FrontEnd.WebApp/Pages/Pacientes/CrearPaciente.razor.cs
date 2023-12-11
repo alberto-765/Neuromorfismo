@@ -25,15 +25,15 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
         private EditForm form { get; set; } = new();
         public bool OrdenarTalla { get; set; } // Mostrar un icono u otro en ordenar por talla
         private CrearPacienteDto nuevoPaciente { get; set; } = new();
-        private IEnumerable<EpilepsiasDto>? ListaEpilepsias { get; set; } = null;
-        private IEnumerable<MutacionesDto>? ListaMutaciones { get; set; } = null;
+        [Parameter] public IEnumerable<EpilepsiasDto>? ListaEpilepsias { get; set; } = null;
+        [Parameter] public IEnumerable<MutacionesDto>? ListaMutaciones { get; set; } = null;
         private bool _creandoPaciente { get; set; } = false; 
         private bool _crearDisabled { get; set; } = false; 
 
 
         protected override async Task OnInitializedAsync() {
             try {
-                await ObtenerFiltrosSelects();
+                await base.OnInitializedAsync();
 
                 // Configuracion default snackbar
                 _snackbar.Configuration.PreventDuplicates = true;
@@ -69,22 +69,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
             }
         }
 
-        // Obtener listas de filtros
-        private async Task ObtenerFiltrosSelects() {
-            try {
-                var opcionesSelects = await _pacientesService.ObtenerFiltros();
-
-                // Asignamos la lista de epilepsias
-                ListaEpilepsias = opcionesSelects.ListaEpilepsias;
-                // Asignamos la lista de mutaciones
-                ListaMutaciones = opcionesSelects.ListaMutaciones;
-                // Asignamos la lista de farmacos
-                //ListaFarmacos = opcionesSelects.ListaFarmacos;
-
-            } catch (Exception) {
-                throw;
-            }
-        }
 
         // LLamada a backend para validar el numero de historia del paciente
         private async Task ValidarNumHistoria() {
@@ -162,7 +146,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
 
                     // Cerramos el dialogo
                     if(pacienteCreado) {
-                        MudDialog.Close(DialogResult.Ok(true));
+                        MudDialog.Close(DialogResult.Ok(nuevoPaciente));
                     }
                 }
             } catch (Exception ex) {

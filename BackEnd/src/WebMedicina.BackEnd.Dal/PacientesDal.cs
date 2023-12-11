@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WebMedicina.BackEnd.Dto;
 using WebMedicina.BackEnd.Model;
 using WebMedicina.Shared.Dto;
 
@@ -47,9 +48,14 @@ namespace WebMedicina.BackEnd.Dal {
         }
 
         // Obtener todos los pacientes
-        public IEnumerable<PacientesModel> GetAllPacientes() {
+        public List<InfoPacienteDto> GetAllPacientes() {
             try {
-                return _context.Pacientes.ToList();
+                return _context.Pacientes.Select(q => new InfoPacienteDto
+                {
+                    Paciente = q,
+                    NombreEpilepsia = (q.IdEpilepsiaNavigation != null ?  q.IdEpilepsiaNavigation.Nombre : string.Empty),
+                    NombreMutacion = (q.IdMutacionNavigation != null ? q.IdMutacionNavigation.Nombre : string.Empty)
+                }).ToList();
             } catch (Exception) {
                 throw;
             }
