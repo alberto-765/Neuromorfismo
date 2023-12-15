@@ -1,4 +1,5 @@
-﻿using WebMedicina.Shared.Dto;
+﻿using System.Security.Claims;
+using WebMedicina.Shared.Dto;
 
 namespace WebMedicina.BackEnd.ServicesDependencies {
     public interface IPacientesService {
@@ -8,6 +9,6 @@ namespace WebMedicina.BackEnd.ServicesDependencies {
         List<EpilepsiasDto> ObtenerEpilepsias();
         bool ValidarNumHistoria(string numHistoria);
         Task<bool> CrearPaciente(CrearPacienteDto nuevoPaciente, int idMedico);
-        List<PacienteDto> ObtenerPacientes();
+        List<PacienteDto> ObtenerPacientes(ClaimsPrincipal user);
     }
 }

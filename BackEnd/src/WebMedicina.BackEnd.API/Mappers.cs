@@ -27,18 +27,26 @@ namespace WebMedicina.BackEnd.API {
 
             // Mapeo token de User a UserInfoDto
             CreateMap<ClaimsPrincipal, UserInfoDto>()
-                .ForMember(dest => dest.IdMedico, co => co.MapFrom(src => int.Parse(src.FindFirst(JwtRegisteredClaimNames.Sub).Value)))
-                .ForMember(dest => dest.UserLogin, co => co.MapFrom(src => src.FindFirst("UserName").Value))
-                .ForMember(dest => dest.Nombre, co => co.MapFrom(src => src.FindFirst("nombre").Value))
-                .ForMember(dest => dest.Apellidos, co => co.MapFrom(src => src.FindFirst("apellidos").Value))
-                .ForMember(dest => dest.Rol, co => co.MapFrom(src => src.FindFirst(ClaimTypes.Role).Value));
+                .ForMember(dest => dest.IdMedico, co => co.MapFrom(src => int.Parse(src.FindFirstValue(ClaimTypes.NameIdentifier))))
+                .ForMember(dest => dest.UserLogin, co => co.MapFrom(src => src.FindFirstValue("UserName")))
+                .ForMember(dest => dest.Nombre, co => co.MapFrom(src => src.FindFirstValue(ClaimsIdentity.DefaultNameClaimType)))
+                .ForMember(dest => dest.Apellidos, co => co.MapFrom(src => src.FindFirstValue(ClaimTypes.Surname)))
+                .ForMember(dest => dest.Rol, co => co.MapFrom(src => src.FindFirstValue(ClaimTypes.Role)));
 
 
             // Mapeo modelo medico en dto upload
             CreateMap<MedicosModel, UserUploadDto>().ReverseMap();
 
             // Mapeo Epilepsias
-            CreateMap<EpilepsiaModel, EpilepsiasDto>().ReverseMap();
+            CreateMap<EpilepsiaModel, EpilepsiasDto>()
+                .AfterMap((origen, destino) => {
+                    int indice = 1;
+                    
+                    // recorremos la lista y añadimos el indice
+                    destino.IdEpilepsia = indice;
+                    indice++;
+                })
+                .ReverseMap();
 
             // Mapeo Mutaciones
             CreateMap<MutacionesModel, MutacionesDto>().ReverseMap();

@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -92,11 +93,8 @@ namespace WebMedicina.FrontEnd.Service {
         }
 
         // Filtramos los pacientes con los filtros seleccionados
-        public async Task<List<PacienteDto>?> FiltrarPacientes(FiltroPacienteDto filtrsPacientes) {
+        public async Task<List<PacienteDto>?> FiltrarPacientes(FiltroPacienteDto filtrsPacientes, List<PacienteDto>? listaPacientes) {
             try {
-                // Obtenemos la lista de pacientes de session
-                List<PacienteDto>? listaPacientes = JsonSerializer.Deserialize<List<PacienteDto>>(await js.GetFromSessionStorage("pacientes"));
-
                 // Comprobamos si alguna de las propiedades no es null o las que son una lista si contienen elementos
                 if (filtrsPacientes.GetType().GetProperties().Any(prop => 
                 {
@@ -119,5 +117,25 @@ namespace WebMedicina.FrontEnd.Service {
                 throw;
             }
         }
+
+        // Filtramos los pacientes para "Mis Pacientes" en caso de ser "SuperAdmin o Admin"
+        public List<PacienteDto>? FiltrarMisPacientes(List<PacienteDto>? listaPacientes, ClaimsPrincipal? user) {
+            try {
+                // Devolvemos la lista porque en los medicos ya tienen filtrados solamente sus pacientes
+                if (user == null || user.IsInRole("medico") || listaPacientes == null) {
+                    return listaPacientes;
+                }
+
+                // Obtenemos el id del medico solo para admins o superAdmins
+                if (int.TryParse(user.FindFirst(ClaimTypes.NameIdentifier)?.Value, out int idMedico) == false || idMedico == 0) {
+                    return listaPacientes;
+                }
+
+                return listaPacientes.Where(q => q.MedicosPacientes != null && q.MedicosPacientes.ContainsKey(idMedico)).ToList();
+            } catch (Exception) {
+                throw;
+            }
+        }
+
     }
 }

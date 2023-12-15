@@ -4,7 +4,7 @@
             <HierarchyColumn T="PacienteDto" />
             <PropertyColumn Property="x => x.NumHistoria" Title="Número de Historia" />
             <PropertyColumn Property="x => x.FechaNac" Title="Fecha Nacimiento" Format="dd/MM/yyyy"/>
-            <TemplateColumn Title="Género">
+            <TemplateColumn Title="Género" SortBy="@(x => x.Sexo)">
                 <CellTemplate>
                     @if (context.Item.Sexo == "M") {
                         <div class="celda-espaciada">
@@ -19,7 +19,7 @@
                     }
                 </CellTemplate>
             </TemplateColumn>
-            <TemplateColumn Title="Talla">
+            <TemplateColumn Title="Talla" SortBy="@(x => x.Talla)">
                 <CellTemplate>
                         @if (context.Item.Talla > 0) {
                             <MudText Typo="Typo.body1">@context.Item.Talla cm</MudText>
@@ -28,7 +28,7 @@
                         }
                 </CellTemplate>
             </TemplateColumn>
-            <TemplateColumn Title="Epilepsia">
+            <TemplateColumn Title="Epilepsia" SortBy="@(x => x.NombreEpilepsia)">
                 <CellTemplate>
                     @if (!string.IsNullOrEmpty(context.Item.NombreEpilepsia)) {
                         <MudText Typo="Typo.body1">@context.Item.NombreEpilepsia</MudText>
@@ -37,7 +37,7 @@
                     }
                 </CellTemplate>
             </TemplateColumn>
-            <TemplateColumn Title="Mutación">
+            <TemplateColumn Title="Mutación" SortBy="@(x => x.NombreMutacion)">
                 <CellTemplate>
                     @if (!string.IsNullOrEmpty(context.Item.NombreMutacion)) {
                         <MudText Typo="Typo.body1">@context.Item.NombreMutacion</MudText>
@@ -56,7 +56,7 @@
                     </CardHeaderContent>
                 </MudCardHeader>
 
-                <MudDivider DividerType="DividerType.Middle" />
+                <MudDivider DividerType="DividerType.FullWidth" Class="px-2"/>
 
                 <MudCardContent>
                    <MudGrid Spacing="3" Justify="Justify.Center" id="gridDecipcionPaciente">
@@ -95,7 +95,7 @@
 
                         @* Tipo Epilepsia *@
                         <MudItem xs="12" md="6">
-                                <MudText>Tipo Epilepsia: @((!string.IsNullOrEmpty(context.Item.NombreEpilepsia) ? context.Item.NombreEpilepsia : "No especificado"))</MudText>
+                            <MudText>Tipo Epilepsia: @((!string.IsNullOrEmpty(context.Item.NombreEpilepsia) ? context.Item.NombreEpilepsia : "No especificado"))</MudText>
                         </MudItem>
 
                         @* Tipo Mutación *@
@@ -116,7 +116,7 @@
                    </MudGrid>
                 </MudCardContent>
 
-                <MudDivider DividerType="DividerType.Middle" />
+                <MudDivider DividerType="DividerType.FullWidth" Class="px-2" />
 
                 <MudCardActions Class="d-flex justify-space-between">
                     <MudText Typo="Typo.subtitle2">Creado por

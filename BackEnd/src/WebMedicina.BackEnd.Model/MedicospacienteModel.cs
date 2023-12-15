@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace WebMedicina.BackEnd.Model;
+﻿namespace WebMedicina.BackEnd.Model;
 
 /// <summary>
 /// Relacion de que medicos pueden editar que pacientes

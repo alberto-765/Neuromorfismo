@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
@@ -139,6 +140,6 @@ app.UseAuthorization();
 app.UseStaticFiles(new StaticFileOptions {
     FileProvider = new PhysicalFileProvider(
         Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Imagenes")),
-    RequestPath = "/img" // La URL desde la que se servirán las imágenes
+    RequestPath = "/img", // La URL desde la que se servirán las imágenes
 });
 app.Run();

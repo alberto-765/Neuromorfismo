@@ -67,11 +67,11 @@ namespace WebMedicina.BackEnd.API.Controllers {
         public async Task<ActionResult<bool>> UpdateEpilepsia([FromBody] EpilepsiasDto epilepsia) {
             try {
                 if (ModelState.IsValid) {
-                    var resultado = await _adminsService.ActualizarEpilepsia(epilepsia);
+                    (bool validacionEntry, bool filasModif) = await _adminsService.ActualizarEpilepsia(epilepsia);
 
                     // Validamos si la epilepsia ha sido modificada por el cliente
-                    if (resultado.validacionEntry) {
-                        return Ok(resultado.filasModif);
+                    if (validacionEntry) {
+                        return Ok(filasModif);
                     } else {
                         return NoContent();
                     }
@@ -134,11 +134,11 @@ namespace WebMedicina.BackEnd.API.Controllers {
         public async Task<ActionResult<bool>> UpdateMutacion([FromBody] MutacionesDto mutacion) {
             try {
                 if (ModelState.IsValid) {
-                    var resultado = await _adminsService.ActualizarMutacion(mutacion);
+                    (bool validacionEntry, bool filasModif) = await _adminsService.ActualizarMutacion(mutacion);
 
                     // Validamos si la epilepsia ha sido modificada por el cliente
-                    if (resultado.validacionEntry) {
-                        return Ok(resultado.filasModif);
+                    if (validacionEntry) {
+                        return Ok(filasModif);
                     } else {
                         return NoContent();
                     }
@@ -201,11 +201,11 @@ namespace WebMedicina.BackEnd.API.Controllers {
         public async Task<ActionResult<bool>> UpdateFarmaco([FromBody] FarmacosDto farmaco) {
             try {
                 if (ModelState.IsValid) {
-                    var resultado = await _adminsService.ActualizarFarmaco(farmaco);
+                    (bool validacionEntry, bool filasModif) = await _adminsService.ActualizarFarmaco(farmaco);
 
                     // Validamos si la epilepsia ha sido modificada por el cliente
-                    if (resultado.validacionEntry) {
-                        return Ok(resultado.filasModif);
+                    if (validacionEntry) {
+                        return Ok(filasModif);
                     } else {
                         return NoContent();
                     }

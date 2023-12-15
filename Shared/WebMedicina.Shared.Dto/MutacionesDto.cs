@@ -11,7 +11,7 @@ namespace WebMedicina.Shared.Dto {
 
         [Required(ErrorMessage = "El nombre es un campo obligatorio")]
         [MaxLength(50, ErrorMessage = "La longitud máxima son 50 caracteres")]
-        [RegularExpression(@"^[^!@#$%^&*(),.?"":{}|<>]$", ErrorMessage = "El nombre no puede contener caracteres espciales")]
+        [RegularExpression(@"^[^!@#$%^&*(),.?"":{}|<>]*$", ErrorMessage = "El nombre no puede contener caracteres espciales")]
         public string Nombre { get; set; } = string.Empty;
 
         public DateOnly FechaCreac { get; set; }

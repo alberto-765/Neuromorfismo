@@ -8,11 +8,11 @@
     <MudStack Spacing="0" Row="true">
         @* Boton crear pacientes *@
         <div>
-            <MudButtonGroup Color="Color.Primary" Variant="Variant.Filled" Size="Size.Small">
-                <MudButton id="@((IsDarkMode ? "btnCrearPacienteDark" : "btnCrearPacienteDef"))" StartIcon="@Icons.Material.Outlined.PersonAddAlt" @onclick="MostrarCrearPac">Crear Paciente</MudButton>
+            <MudButtonGroup Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" OverrideStyles="false">
+                <MudButton id="@((IsDarkMode ? "btnCrearPacienteDark" : "btnCrearPacienteDef"))" StartIcon="@Icons.Material.Outlined.PersonAddAlt"  @onclick="MostrarCrearPac">Crear Paciente</MudButton>
                
-                <MudButton Color="Color.Success"> 
-                    <MudImage Src="@(UrlImagenes + "iconoExcel.png")" Alt="Icono Excel" /> Excel
+                <MudButton Color="Color.Success" Variant="Variant.Filled" >
+                    <MudImage Src="@(UrlImagenes + "iconoExcel.png")" Alt="Icono Excel" Height="20" Class="mr-4"/> Excel
                 </MudButton>
             </MudButtonGroup>
         </div>
@@ -21,7 +21,7 @@
 
         @* Boton bloquear filtros *@
         <div id="btnFiltros" modoOscuro="@IsDarkMode">
-            <MudSwitch T="bool" Class="cursor-pointer" @bind-Checked="FiltrosAbierto" Size="Size.Medium" ThumbIcon="@((FiltrosAbierto  ? @Icons.Material.Outlined.VisibilityOff : @Icons.Material.Outlined.Visibility))" Color="Color.Primary" />
+            <MudIconButton Icon="@Icons.Material.Filled.FilterAlt" OnClick="@(() => FiltrosAbierto = !FiltrosAbierto)"/>
         </div>
     </MudStack>
 
@@ -30,7 +30,7 @@
             <AllPacientes ListaPacientes="ListaPacientes"/>
         </MudTabPanel>
         <MudTabPanel Text="Mis Pacientes">
-            <MudPaper Class="pa-16 ma-2" Elevation="25"></MudPaper>
+            <MisPacientes ListaPacientes="ListaPacientes" />
         </MudTabPanel>
     </MudTabs>
 </MudStack>
@@ -39,7 +39,7 @@
 <div>
     <MudDrawer @bind-Open="@FiltrosAbierto" id="drawerFiltros" Anchor="Anchor.End" Fixed="true" Elevation="4" Variant="@DrawerVariant.Temporary" Color="Color.Default"
                Class="rounded-tl-lg" Style="@($"background: {(!IsDarkMode ? "white" : "var(--mud-palette-background)")}")">
-        <EditForm Model="FiltrosPacientes" class="mx-5 d-flex flex-column flex-1" OnValidSubmit="ObtenerPacientesFiltrados">
+        <EditForm Model="FiltrosPacientes" class="mx-5 d-flex flex-column flex-1" OnValidSubmit="ObtenerPacientesFiltrados" @onreset="ResetearFiltrado">
                @* Titulo *@
             <MudDrawerHeader Class="justify-center align-center pr-0">
                 <MudText Typo="Typo.h6">Filtros Pacientes</MudText>
@@ -119,8 +119,8 @@
 
                 @* Botones Filtrar y Resetear *@
                 <div class="container__btnFiltrar">
-                    <MudButton ButtonType="ButtonType.Reset" Variant="Variant.Filled" Color="Color.Surface">Resetear</MudButton>
-                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">Filtrar</MudButton>
+                    <MudButton ButtonType="ButtonType.Reset" DisableElevation="true" Variant="Variant.Filled" Color="Color.Surface">Resetear</MudButton>
+                    <MudButton ButtonType="ButtonType.Submit" DisableElevation="true" Variant="Variant.Filled" Color="Color.Primary">Filtrar</MudButton>
                 </div>
             </div>
         </EditForm>

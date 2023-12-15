@@ -43,7 +43,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 mostrarCargandoTabla = false;
                 mostrarTabla = false;
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-                throw ex;
+                throw;
             }
         }
 
@@ -57,7 +57,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 }
             } catch (Exception ex) {
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-                throw ex;
+                throw;
             }
         }
         private void RowClickEvent(TableRowClickEventArgs<FarmacosDto> elemento) {
@@ -75,7 +75,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 }
             } catch (Exception ex) {
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-                throw ex;
+                throw;
             }
         }
 
@@ -90,7 +90,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                     }
                 }
                 return Enumerable.Empty<FarmacosDto>();
-            } catch (Exception ex) {
+            } catch (Exception) {
                 throw;
             }
         }
@@ -112,7 +112,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                     mostrarCargandoTabla = false;
                     mostrarTabla = false;
                 }
-            } catch (Exception ex) {
+            } catch (Exception) {
                 throw;
             }
         }
@@ -129,14 +129,17 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                     Severity tipoSnackBar = Severity.Success; // Tipo de snackbar para mensaje
                     string mensajeSnackBar = "Nuevo fármaco creada exitosamente";
 
-                    string nuevoNombre = resultado.Data.ToString();
+                    string? nuevoNombre = resultado.Data.ToString();
                     if (!string.IsNullOrWhiteSpace(nuevoNombre)) {
 
                         // Realizamos llamada httpget para creaer la nueva farmaco
                         HttpResponseMessage respuesta = await Http.PostAsJsonAsync("administracion/crearFarmaco", resultado.Data);
 
+                        // Validamos si la respuesta es OK y ha podido ser creado
                         if (respuesta.IsSuccessStatusCode) {
-                            if (await respuesta.Content.ReadFromJsonAsync<bool>()) {
+                            bool recargarElementos = await respuesta.Content.ReadFromJsonAsync<bool>();
+
+                            if (recargarElementos) {
                                 await RecargarElementos();
                             } else {
                                 tipoSnackBar = Severity.Warning;
@@ -156,7 +159,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 mostrarCargandoTabla = false;
                 mostrarTabla = false;
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-                throw ex;
+                throw;
             }
         }
 
@@ -165,16 +168,20 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
             try {
                 bool? result = await DialogService.ShowMessageBox(
                     "Eliminar Fármaco",
-                    (MarkupString)$"¿Estás seguro de eliminar el tipo: <b>{farmacoSeleccionado.Nombre}</b>?",
+                    (MarkupString)$"¿Estás seguro de eliminar <b>{farmacoSeleccionado.Nombre}</b>?",
                     yesText: "Sí", cancelText: "No");
 
                 if (result == true) {
                     Severity tipoSnackBar = Severity.Success; // Tipo de snackbar para mensaje
                     string mensajeSnackBar = "Fármaco eliminada exitosamente";
+
+                    // Realizamos llamada httpget 
                     HttpResponseMessage respuesta = await Http.DeleteAsync($"administracion/eliminarFarmaco/{farmacoSeleccionado.IdFarmaco}");
 
+                    // Validamos si la respuesta es OK y ha podido ser eliminado
                     if (respuesta.IsSuccessStatusCode) {
-                        if (await respuesta.Content.ReadFromJsonAsync<bool>()) {
+                        bool recargarElementos = await respuesta.Content.ReadFromJsonAsync<bool>();
+                        if (recargarElementos) {
                             await RecargarElementos();
                         } else {
                             tipoSnackBar = Severity.Warning;
@@ -190,7 +197,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 mostrarCargandoTabla = false;
                 mostrarTabla = false;
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-                throw ex;
+                throw;
             }
         }
 
@@ -200,24 +207,29 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
             try {
                 if (context.IsModified()) {
                     FarmacosDto far = (FarmacosDto)context.Model;
-                    HttpResponseMessage respuesta = await Http.PutAsJsonAsync("administracion/updateFarmaco", far);
-
                     Severity tipoSnackBar = Severity.Success; // Tipo de snackbar para mensaje
                     string mensajeSnackBar = "Fármaco editada exitosamente";
+                    
+                    // Realizamos llamada httpget 
+                    HttpResponseMessage respuesta = await Http.PutAsJsonAsync("administracion/updateFarmaco", far);
 
+                    // Validamos si la respuesta es OK y ha podido ser editado
                     if (respuesta.IsSuccessStatusCode) {
+                        bool recargarElementos = false;
 
                         // Validamos si es de tipo NoContent
                         if (respuesta.StatusCode != HttpStatusCode.NoContent) {
-                            if (await respuesta.Content.ReadFromJsonAsync<bool>()) {
+                            recargarElementos = await respuesta.Content.ReadFromJsonAsync<bool>();
+                            if (recargarElementos) {
                                 await RecargarElementos();
-                            } else {
-                                tipoSnackBar = Severity.Warning;
-                                mensajeSnackBar = "El fármaco no ha podido ser editada";
-                            }
-                        } else {
+                                recargarElementos = true;
+                            } 
+                        } 
+
+                        // Mostramos snackbar con mensaje
+                        if (!recargarElementos) {
                             tipoSnackBar = Severity.Warning;
-                            mensajeSnackBar = "No hay ningún campo modificado";
+                            mensajeSnackBar = "El farmaco no ha podido ser editado";
                         }
                     } else {
                         tipoSnackBar = Severity.Error;
@@ -229,7 +241,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 mostrarCargandoTabla = false;
                 mostrarTabla = false;
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-                throw ex;
+                throw;
             }
         }
     }

@@ -43,7 +43,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 mostrarCargandoInicial = false;
                 mostrarTabla = false;
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-                throw ex;
+                throw;
             }
         }
 
@@ -90,7 +90,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                     }
                 }
                 return Enumerable.Empty<MutacionesDto>();
-            } catch (Exception ex) {
+            } catch (Exception) {
                 throw;
             }
         }
@@ -112,7 +112,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                     mostrarCargandoTabla = false;
                     mostrarTabla = false;
                 }
-            } catch (Exception ex) {
+            } catch (Exception) {
                 throw;
             }
         }
@@ -129,14 +129,16 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                     Severity tipoSnackBar = Severity.Success; // Tipo de snackbar para mensaje
                     string mensajeSnackBar = "Nueva mutación creada exitosamente";
 
-                    string nuevoNombre = resultado.Data.ToString();
+                    string? nuevoNombre = resultado.Data.ToString();
                     if (!string.IsNullOrWhiteSpace(nuevoNombre)) {
 
                         // Realizamos llamada httpget para creaer la nueva mutacion
                         HttpResponseMessage respuesta = await Http.PostAsJsonAsync("administracion/crearMutacion", resultado.Data);
 
+                        // Validamos si la respuesta es OK y ha podido ser creado
                         if (respuesta.IsSuccessStatusCode) {
-                            if (await respuesta.Content.ReadFromJsonAsync<bool>()) {
+                            bool recargarElementos = await respuesta.Content.ReadFromJsonAsync<bool>();
+                            if (recargarElementos) {
                                 await RecargarElementos();
                             } else {
                                 tipoSnackBar = Severity.Warning;
@@ -156,7 +158,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 mostrarCargandoInicial = false;
                 mostrarTabla = false;
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-                throw ex; 
+                throw; 
             }
         }
 
@@ -171,10 +173,14 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 if (result == true) {
                     Severity tipoSnackBar = Severity.Success; // Tipo de snackbar para mensaje
                     string mensajeSnackBar = "Mutacion eliminada exitosamente";
+
+                    // Realizamos llamada httpget 
                     HttpResponseMessage respuesta = await Http.DeleteAsync($"administracion/eliminarMutacion/{mutacionSeleccionada.IdMutacion}");
 
+                    // Validamos si la respuesta es OK y ha podido ser eliminado
                     if (respuesta.IsSuccessStatusCode) {
-                        if (await respuesta.Content.ReadFromJsonAsync<bool>()) {
+                        bool recargarElementos = await respuesta.Content.ReadFromJsonAsync<bool>();
+                        if (recargarElementos) {
                             await RecargarElementos();
                         } else {
                             tipoSnackBar = Severity.Warning;
@@ -190,7 +196,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 mostrarCargandoInicial = false;
                 mostrarTabla = false;
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-                throw ex;
+                throw;
             }
         }
 
@@ -200,24 +206,28 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
             try { 
                 if (context.IsModified()) {
                     MutacionesDto mut = (MutacionesDto)context.Model;
-                    HttpResponseMessage respuesta = await Http.PutAsJsonAsync("administracion/updateMutacion", mut);
-
                     Severity tipoSnackBar = Severity.Success; // Tipo de snackbar para mensaje
                     string mensajeSnackBar = "Mutacion editada exitosamente";
 
+                    // Realizamos llamada httpget 
+                    HttpResponseMessage respuesta = await Http.PutAsJsonAsync("administracion/updateMutacion", mut);
+
+                    // Validamos si la respuesta es OK y ha podido ser editado
                     if (respuesta.IsSuccessStatusCode) {
+                        bool recargarElementos = false;
 
                         // Validamos si es de tipo NoContent
                         if (respuesta.StatusCode != HttpStatusCode.NoContent) {
-                            if (await respuesta.Content.ReadFromJsonAsync<bool>()) {
+                            recargarElementos = await respuesta.Content.ReadFromJsonAsync<bool>();
+                            if (recargarElementos) {
                                 await RecargarElementos();
-                            } else {
-                                tipoSnackBar = Severity.Warning;
-                                mensajeSnackBar = "La mutación no ha podido ser editada";
-                            }
-                        } else {
+                            } 
+                        } 
+
+                        // Mostramos snackbar con mensaje
+                        if (!recargarElementos) {
                             tipoSnackBar = Severity.Warning;
-                            mensajeSnackBar = "No hay ningún campo modificado";
+                            mensajeSnackBar = "La mutación no ha podido ser editada";
                         }
                     } else {
                         tipoSnackBar = Severity.Error;
@@ -229,7 +239,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 mostrarCargandoInicial = false;
                 mostrarTabla = false;
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-                throw ex;
+                throw;
             }
         }
     }

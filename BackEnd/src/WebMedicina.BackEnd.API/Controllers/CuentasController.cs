@@ -124,11 +124,11 @@ namespace WebMedicina.BackEnd.API.Controllers {
         private UserToken BuildToken(UserInfoDto userInfo) {
             try { 
                 var claims = new [] {
-                    new Claim(JwtRegisteredClaimNames.Sub, userInfo.IdMedico.ToString()),
+                    new Claim(ClaimTypes.NameIdentifier, userInfo.IdMedico.ToString()),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), //IDENTIFICADOR
                     new Claim("UserLogin", userInfo.UserLogin),
-                    new Claim("nombre", userInfo.Nombre),
-                    new Claim("apellidos", userInfo.Apellidos),
+                    new Claim(ClaimTypes.Name, userInfo.Nombre),
+                    new Claim(ClaimTypes.Surname, userInfo.Apellidos),
                     new Claim(ClaimTypes.Role, userInfo.Rol),
                 };
 

@@ -50,18 +50,33 @@ namespace WebMedicina.BackEnd.Dal {
         // Obtener todos los pacientes
         public List<InfoPacienteDto> GetAllPacientes() {
             try {
-                return _context.Pacientes.Select(q => new InfoPacienteDto
-                {
+                return _context.Pacientes.Select(q => new InfoPacienteDto {
                     Paciente = q,
-                    NombreEpilepsia = (q.IdEpilepsiaNavigation != null ?  q.IdEpilepsiaNavigation.Nombre : string.Empty),
-                    NombreMutacion = (q.IdMutacionNavigation != null ? q.IdMutacionNavigation.Nombre : string.Empty)
+                    NombreEpilepsia = (q.IdEpilepsiaNavigation != null ? q.IdEpilepsiaNavigation.Nombre : string.Empty),
+                    NombreMutacion = (q.IdMutacionNavigation != null ? q.IdMutacionNavigation.Nombre : string.Empty),
+                    MedicosPacientes = q.Medicospacientes.Select(mp => mp.IdMedicoNavigation)
                 }).ToList();
             } catch (Exception) {
                 throw;
             }
         }
 
-        // Obtener nombres medicos relacionado con cada paciente
+        // Obtener los pacientes de un unico medico
+        public List<InfoPacienteDto> GetPacientesMed(UserInfoDto userInfo) {
+            try {
+                return _context.Pacientes.Where(q => q.Medicospacientes.Any(medpac => medpac.IdMedPac == userInfo.IdMedico))
+                    .Select(q => new InfoPacienteDto {
+                        Paciente = q,
+                        NombreEpilepsia = (q.IdEpilepsiaNavigation != null ? q.IdEpilepsiaNavigation.Nombre : string.Empty),
+                        NombreMutacion = (q.IdMutacionNavigation != null ? q.IdMutacionNavigation.Nombre : string.Empty),
+                        MedicosPacientes = q.Medicospacientes.Select(mp => mp.IdMedicoNavigation)
+                    }).ToList();
+            } catch (Exception) {
+                throw;
+            }
+        }
+
+            // Obtener nombres medicos relacionado con cada paciente
         public Dictionary<int, string> ObtenerNombresMed(HashSet<int> idMedicos) {
             try {
                 Dictionary<int, string> listaNombresMed = _context.Medicos.Where(q => idMedicos.Contains(q.IdMedico)).ToDictionary(medico => medico.IdMedico, medico => medico.Nombre);

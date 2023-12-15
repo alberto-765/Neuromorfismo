@@ -64,14 +64,13 @@ namespace WebMedicina.BackEnd.Dal {
                     ep.Nombre = epilepsia.Nombre;
 
                     // Verificamos que el objeto haya sido modicado
-                    var entry = _context.Entry(ep);
-                    if (entry.State == EntityState.Modified) {
+                    if (_context.Entry(ep).State == EntityState.Modified) {
                         validacionEntry = true;
                         filasModif = await _context.SaveChangesAsync() > 0;
                     }
 
                 }
-                return (validacionEntry, !filasModif);
+                return (validacionEntry, filasModif);
             } catch (Exception) {
                 throw;
             }

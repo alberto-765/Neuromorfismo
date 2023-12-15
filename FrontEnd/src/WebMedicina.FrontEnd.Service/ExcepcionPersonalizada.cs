@@ -12,8 +12,7 @@ namespace WebMedicina.FrontEnd.Service {
             string camino = e.StackTrace ?? string.Empty;
 
             // Generamos la excepcion y la pintamos por consola 
-            String respuesta = $"- Tipo: {tipo}\n- Mensaje: {mensaje}\n- Camino: {camino}";
-            Console.Write(respuesta);
+            Console.Error.WriteLine($"- Tipo: {tipo} - Mensaje: {mensaje} - Camino: {camino}");
         }
     }
 }

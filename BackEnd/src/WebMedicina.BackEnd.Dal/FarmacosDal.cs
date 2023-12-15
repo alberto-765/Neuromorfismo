@@ -62,14 +62,13 @@ namespace WebMedicina.BackEnd.Dal {
                     far.Nombre = farmaco.Nombre;
 
                     // Verificamos que el objeto haya sido modicado
-                    var entry = _context.Entry(far);
-                    if (entry.State == EntityState.Modified) {
+                    if (_context.Entry(far).State == EntityState.Modified) {
                         validacionEntry = true;
                         filasModif = await _context.SaveChangesAsync() > 0;
                     }
 
                 }
-                return (validacionEntry, !filasModif);
+                return (validacionEntry, filasModif);
             } catch (Exception) {
                 throw;
             }

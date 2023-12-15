@@ -101,6 +101,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
                 // Asignamos la lista de farmacos
                 //ListaFarmacos = opcionesSelects.ListaFarmacos;
             } catch (Exception) {
+                _snackbar.Add("Ha surgido un error los filtros.", Severity.Error);
                 throw;
             }
         }
@@ -128,9 +129,17 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
         // Obtener pacientes de BD
         private async Task ObtenerPacientesFiltrados() {
             try {
-                ListaPacientes = await _pacientesService.FiltrarPacientes(FiltrosPacientes);
+                ListaPacientes = await _pacientesService.FiltrarPacientes(FiltrosPacientes, ListaPacientes);
             } catch (Exception ex) {
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+                throw;
+            }
+        }
+
+        private void ResetearFiltrado() {
+            try {
+                FiltrosPacientes = new();
+            } catch (Exception) {
                 throw;
             }
         }
@@ -139,15 +148,16 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
             try {
                 // Obtenemos el listado de pacientes
                 ListaPacientes = await _pacientesService.ObtenerPacientes();
-                cargandoPacientes = false;
 
                 // Validamos si la lista de pacientes no es null
                 if (ListaPacientes == null) {
                     _snackbar.Add("No se han encontrado pacientes para mostrar.", Severity.Error);
                 }
             } catch (Exception) {
+                _snackbar.Add("Ha surgido un error al obtener los pacientes.", Severity.Error);
                 throw;
             }
+            cargandoPacientes = false;
         }
     }
 }

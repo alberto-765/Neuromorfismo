@@ -68,16 +68,16 @@ namespace WebMedicina.FrontEnd.Service {
 
                 switch (role) {
                     case "superAdmin":
-                    tooltipInfoUser = new MarkupString($"<div style='text-align: left;'> Usted tiene permisos de Super Admin. <br />" +
-                        $"Puede <b><i>crear, editar y eliminar</i></b> usuarios de tipo: <br/>" +
-                        $"<ul style='padding-left: 15px;'><li>- Administradores.</li><li>- Médicos.</li></ul></div>");
-                    mostrarTooltip = true;
+                        tooltipInfoUser = new MarkupString($"<div style='text-align: left;'> Usted tiene permisos de Super Admin. <br />" +
+                            $"Puede <b><i>crear, editar y eliminar</i></b> usuarios de tipo: <br/>" +
+                            $"<ul style='padding-left: 15px;'><li>- Administradores.</li><li>- Médicos.</li></ul></div>");
+                        mostrarTooltip = true;
                     break;
                     case "admin":
-                    tooltipInfoUser = new MarkupString($"<div style='text-align: left;'> Usted tiene permisos de Administrador. <br />" +
-                     $"Puede <b><i>crear, editar y eliminar</i></b> usuarios de tipo: <br/>" +
-                     $"<ul style='padding-left: 15px;'><li>- Médicos.</li></ul></div>");
-                    mostrarTooltip = true;
+                        tooltipInfoUser = new MarkupString($"<div style='text-align: left;'> Usted tiene permisos de Administrador. <br />" +
+                         $"Puede <b><i>crear, editar y eliminar</i></b> usuarios de tipo: <br/>" +
+                         $"<ul style='padding-left: 15px;'><li>- Médicos.</li></ul></div>");
+                        mostrarTooltip = true;
                     break;
                     default:
                     mostrarTooltip = false;

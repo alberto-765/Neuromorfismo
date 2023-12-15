@@ -64,14 +64,13 @@ namespace WebMedicina.BackEnd.Dal {
                     mut.Nombre = mutacion.Nombre;
 
                     // Verificamos que el objeto haya sido modicado
-                    var entry = _context.Entry(mut);
-                    if (entry.State == EntityState.Modified) {
+                    if (_context.Entry(mut).State == EntityState.Modified) {
                         validacionEntry = true;
                         filasModif = await _context.SaveChangesAsync() > 0;
                     }
 
                 }
-                return (validacionEntry, !filasModif);
+                return (validacionEntry, filasModif);
             } catch (Exception) {
                 throw;
             }

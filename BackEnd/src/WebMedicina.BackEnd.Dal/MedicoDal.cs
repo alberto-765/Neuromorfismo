@@ -16,7 +16,7 @@ namespace WebMedicina.BackEnd.Dal {
         public MedicosModel ObtenerInfoUser(int idMedico) {
             try {
                 return _context.Medicos.Find(idMedico);
-            } catch (Exception ex) {
+            } catch (Exception) {
                 throw;
             }
         }
@@ -25,7 +25,7 @@ namespace WebMedicina.BackEnd.Dal {
         public MedicosModel ObtenerInfoUserLogin(string userName) {
             try {
                 return _context.Medicos.First(q => q.UserLogin == userName);
-            } catch (Exception ex) {
+            } catch (Exception) {
                 throw;
             }
         }

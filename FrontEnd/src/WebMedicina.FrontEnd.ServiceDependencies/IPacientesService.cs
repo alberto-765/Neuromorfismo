@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using WebMedicina.Shared.Dto;
@@ -12,6 +13,7 @@ namespace WebMedicina.FrontEnd.ServiceDependencies {
         Task<bool> ValidarNumHistoria(string numHistoria);
         Task<HttpResponseMessage> CrearPaciente(CrearPacienteDto nuevoPaciente);
         Task<List<PacienteDto>?> ObtenerPacientes();
-        Task<List<PacienteDto>?> FiltrarPacientes(FiltroPacienteDto filtrsPacientes);
+        Task<List<PacienteDto>?> FiltrarPacientes(FiltroPacienteDto filtrsPacientes, List<PacienteDto>? listaPacientes);
+        List<PacienteDto>? FiltrarMisPacientes(List<PacienteDto>? listaPacientes, ClaimsPrincipal? user);
     }
 }

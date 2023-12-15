@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using WebMedicina.BackEnd.Dal;
 using WebMedicina.BackEnd.Dto;
 using WebMedicina.BackEnd.Model;
 using WebMedicina.BackEnd.ServicesDependencies;
 using WebMedicina.Shared.Dto;
+using System.IdentityModel.Tokens.Jwt;
+
 
 namespace WebMedicina.BackEnd.Service {
     public class PacientesService : IPacientesService {
@@ -71,10 +74,24 @@ namespace WebMedicina.BackEnd.Service {
         }
 
         // Obtener todos los pacientes con sus datos
-        public List<PacienteDto> ObtenerPacientes () {
+        public List<PacienteDto> ObtenerPacientes (ClaimsPrincipal user) {
             try {
                 // Get de todos los pacientes
-                List<InfoPacienteDto>? listaInfoPacientes = _pacientesDal.GetAllPacientes();
+                List<InfoPacienteDto>? listaInfoPacientes = null;
+
+                // Obtenemos todos los pacientes o solamente los del medico 
+                if(user is not null) {
+                    UserInfoDto userInfo = _mapper.Map<UserInfoDto>(user);
+
+                    // Validamos que el id del medico sea valido
+                    if (user.IsInRole("superAdmin") || user.IsInRole("superAdmin")) {
+                        listaInfoPacientes = _pacientesDal.GetAllPacientes();
+                    } else {
+                        if (userInfo.IdMedico != 0) {
+                            listaInfoPacientes = _pacientesDal.GetPacientesMed(userInfo);
+                        }
+                    }
+                }
 
                 // Creamos listado de pacientes
                 List<PacienteDto> listaPacientes = new();
@@ -100,7 +117,8 @@ namespace WebMedicina.BackEnd.Service {
                             FechaCreac = infoPaciente.Paciente.FechaCreac,
                             FechaUltMod = infoPaciente.Paciente.FechaUltMod,
                             MedicoCreador = infoPaciente.Paciente.MedicoCreadorNavigation?.UserLogin ?? string.Empty,
-                            MedicoUltMod = infoPaciente.Paciente.MedicoUltModNavigation?.UserLogin ?? string.Empty
+                            MedicoUltMod = infoPaciente.Paciente.MedicoUltModNavigation?.UserLogin ?? string.Empty,
+                            MedicosPacientes = infoPaciente.MedicosPacientes.ToDictionary(x => x.IdMedico, x => x.UserLogin)
                         };
                         listaPacientes.Add(nuevoPaciente);
                     }

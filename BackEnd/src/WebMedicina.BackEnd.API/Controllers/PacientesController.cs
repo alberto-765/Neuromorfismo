@@ -74,7 +74,9 @@ namespace WebMedicina.BackEnd.API.Controllers {
         [HttpGet("obtenerPacientes")]
         public ActionResult ObtenerPacientes() {
             try {
-                List<PacienteDto> listaPacientes = _pacientesService.ObtenerPacientes();
+                var rol = HttpContext.User;
+                var rol2 = User;
+                List<PacienteDto> listaPacientes = _pacientesService.ObtenerPacientes(User);
                 if (listaPacientes.Any()) {
                     return Ok(listaPacientes);
                 }

@@ -48,7 +48,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 mostrarCargandoInicial = false;
                 mostrarTabla = false;
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-                throw ex;
+                throw;
             }
         }
 
@@ -62,7 +62,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 }
             } catch (Exception ex) {
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-                throw ex;
+                throw;
             }
         }
         private void RowClickEvent(TableRowClickEventArgs<EpilepsiasDto> elemento) {
@@ -80,7 +80,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 }
             } catch (Exception ex) {
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-                throw ex;
+                throw;
             }
         }
 
@@ -95,7 +95,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                     }
                 }
                 return Enumerable.Empty<EpilepsiasDto>();
-            } catch (Exception ex) {
+            } catch (Exception) {
                 throw ;
             }
         }
@@ -117,7 +117,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                     mostrarCargandoTabla = false;
                     mostrarTabla = false;
                 }
-            } catch (Exception ex) {
+            } catch (Exception) {
                 throw;
             }
 }
@@ -134,13 +134,14 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                     Severity tipoSnackBar = Severity.Success; // Tipo de snackbar para mensaje
                     string mensajeSnackBar = "Nueva epilepsia creada exitosamente";
 
-                    string nuevoNombre = resultado.Data.ToString();
+                    string? nuevoNombre = resultado.Data.ToString();
                     if (!string.IsNullOrWhiteSpace(nuevoNombre)) {
 
                         // Realizamos llamada httpget para creaer la nueva epilepsia
                         HttpResponseMessage respuesta = await Http.PostAsJsonAsync("administracion/crearEpilepsia", resultado.Data);
 
-                        if(respuesta.IsSuccessStatusCode) {
+                        // Validamos si la respuesta es OK y ha podido ser creado
+                        if (respuesta.IsSuccessStatusCode) {
                             if (await respuesta.Content.ReadFromJsonAsync<bool>()) {
                                 await RecargarElementos();
                             } else {
@@ -161,7 +162,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 mostrarCargandoTabla = false;
                 mostrarTabla = false;
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-                throw ex;
+                throw;
             }
         }
 
@@ -170,18 +171,22 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
             try { 
                 bool? result = await DialogService.ShowMessageBox(
                     "Eliminar Epilepsia",
-                    (MarkupString) $"¿Estás seguro de eliminar el tipo: <b>{epilepsiaSeleccionada.Nombre}</b>?",
+                    (MarkupString) $"¿Estás seguro de eliminar <b>{epilepsiaSeleccionada.Nombre}</b>?",
                     yesText: "Sí", cancelText: "No");
 
                 if (result == true) {
                     Severity tipoSnackBar = Severity.Success; // Tipo de snackbar para mensaje
                     string mensajeSnackBar = "Epilepsia eliminada exitosamente";
+
+                    // Realizamos llamada httpget 
                     HttpResponseMessage respuesta = await Http.DeleteAsync($"administracion/eliminarEpilepsia/{epilepsiaSeleccionada.IdEpilepsia}");
-                
+
+                    // Validamos si la respuesta es OK y ha podido ser eliminado
                     if (respuesta.IsSuccessStatusCode) {
-                        if (await respuesta.Content.ReadFromJsonAsync<bool>()) {
+                        bool recargarElementos = await respuesta.Content.ReadFromJsonAsync<bool>();
+                        if (recargarElementos) {
                             await RecargarElementos();
-                        } else {
+                        } else { 
                             tipoSnackBar = Severity.Warning;
                             mensajeSnackBar = "La epilepsia no ha podido ser eliminada";
                         }
@@ -195,7 +200,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 mostrarCargandoTabla = false;
                 mostrarTabla = false;
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-                throw ex;
+                throw;
             }
         }
 
@@ -204,24 +209,28 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
             try { 
                 if (context.IsModified()) {
                     EpilepsiasDto ep = (EpilepsiasDto) context.Model;
-                    HttpResponseMessage respuesta = await Http.PutAsJsonAsync("administracion/updateEpilepsia", ep);
-
                     Severity tipoSnackBar = Severity.Success; // Tipo de snackbar para mensaje
                     string mensajeSnackBar = "Epilepsia editada exitosamente";
 
+                    // Realizamos llamada httpget 
+                    HttpResponseMessage respuesta = await Http.PutAsJsonAsync("administracion/updateEpilepsia", ep);
+
+                    // Validamos si la respuesta es OK y ha podido ser editado
                     if (respuesta.IsSuccessStatusCode) {
+                        bool recargarElementos = false;
 
                         // Validamos si es de tipo NoContent
                         if (respuesta.StatusCode != HttpStatusCode.NoContent) {
-                            if (await respuesta.Content.ReadFromJsonAsync<bool>()) {
+                            recargarElementos = await respuesta.Content.ReadFromJsonAsync<bool>();
+                            if (recargarElementos) {
                                 await RecargarElementos();
-                            } else {
-                                tipoSnackBar = Severity.Warning;
-                                mensajeSnackBar = "La epilepsia no ha podido ser editada";
                             }
-                        } else {
+                        }
+
+                        // Mostramos snackbar con mensaje
+                        if (!recargarElementos) {
                             tipoSnackBar = Severity.Warning;
-                            mensajeSnackBar = "No hay ningún campo modificado";
+                            mensajeSnackBar = "La epilepsia no ha podido ser editada";
                         }
                     } else {
                         tipoSnackBar = Severity.Error;
@@ -233,7 +242,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 mostrarCargandoTabla = false;
                 mostrarTabla = false;
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-                throw ex;
+                throw;
             }
         }
     }

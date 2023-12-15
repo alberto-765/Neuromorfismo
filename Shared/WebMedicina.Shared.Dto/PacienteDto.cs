@@ -47,5 +47,8 @@ namespace WebMedicina.Shared.Dto {
 		public string MedicoUltMod { get; set; } = string.Empty;
 
         public string MedicoCreador { get; set; } = string.Empty;
+
+        // Medicos que tienen permisos sobre el paciente
+        public Dictionary<int, string?> MedicosPacientes { get; set; } = null!;
     }
 }
