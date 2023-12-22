@@ -69,6 +69,58 @@ namespace WebMedicina.BackEnd.API.Controllers {
             }
         }
 
+        // Editar paciente
+        [HttpPut("editarPaciente")]
+        public async Task<ActionResult<bool>> EditarPaciente([FromBody] CrearPacienteDto nuevoPaciente) {
+            try {
+                if (ModelState.IsValid) {
+
+                    // Validamos que el numero de historia sea valido
+                    // Validar que el usuario tiene permisos
+                    //if (_pacientesService.ValidarNumHistoria(nuevoPaciente.NumHistoria) == false) {
+
+                        // Obtenemos el id del medico y creamos paciente
+                        return Ok(await _pacientesService.CrearPaciente(nuevoPaciente, idMedico));
+                   
+                    //} else {
+                    //    return BadRequest($"No se ha encontrado el paciente.");
+                    //}
+                } else {
+                    return BadRequest("Los datos para cliente no son correctos.");
+                }
+            } catch (Exception) {
+                return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
+            }
+        }
+
+
+
+        // Eliminar paciente
+        [HttpDelete("eliminarPaciente")]
+        public async Task<ActionResult<bool>> EliminarPaciente([FromBody] CrearPacienteDto nuevoPaciente) {
+            try {
+                if (ModelState.IsValid) {
+
+                    // Validamos que el numero de historia sea valido
+                    if (_pacientesService.ValidarNumHistoria(nuevoPaciente.NumHistoria) == false) {
+
+                        // Obtenemos el id del medico y creamos paciente
+                        if (int.TryParse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value, out int idMedico) && idMedico > 0) {
+                            return Ok(await _pacientesService.CrearPaciente(nuevoPaciente, idMedico));
+                        } else {
+                            return Ok(false);
+                        }
+                    } else {
+                        return BadRequest($"El Número de Historia \"{nuevoPaciente.NumHistoria}\" ya está en uso.");
+                    }
+                } else {
+                    return BadRequest("Los datos del nuevo cliente no son correctos.");
+                }
+            } catch (Exception) {
+                return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
+            }
+        }
+
 
         // Obtener pacientes y devolver listado
         [HttpGet("obtenerPacientes")]
@@ -76,7 +128,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
             try {
                 var rol = HttpContext.User;
                 var rol2 = User;
-                List<PacienteDto> listaPacientes = _pacientesService.ObtenerPacientes(User);
+                List<CrearPacienteDto> listaPacientes = _pacientesService.ObtenerPacientes(User);
                 if (listaPacientes.Any()) {
                     return Ok(listaPacientes);
                 }

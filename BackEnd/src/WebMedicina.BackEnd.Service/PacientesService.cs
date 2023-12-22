@@ -74,7 +74,7 @@ namespace WebMedicina.BackEnd.Service {
         }
 
         // Obtener todos los pacientes con sus datos
-        public List<PacienteDto> ObtenerPacientes (ClaimsPrincipal user) {
+        public List<CrearPacienteDto> ObtenerPacientes (ClaimsPrincipal user) {
             try {
                 // Get de todos los pacientes
                 List<InfoPacienteDto>? listaInfoPacientes = null;
@@ -94,12 +94,12 @@ namespace WebMedicina.BackEnd.Service {
                 }
 
                 // Creamos listado de pacientes
-                List<PacienteDto> listaPacientes = new();
+                List<CrearPacienteDto> listaPacientes = new();
 
                 // Mapeamos y añadimos nombres de medicos a cada paciente
                 if(listaInfoPacientes is not null) {
                     foreach (InfoPacienteDto infoPaciente in listaInfoPacientes) {
-                        PacienteDto nuevoPaciente = new() {
+                        CrearPacienteDto nuevoPaciente = new() {
                             IdPaciente = infoPaciente.Paciente.IdPaciente,
                             NumHistoria = infoPaciente.Paciente.NumHistoria,
                             FechaNac = infoPaciente.Paciente.FechaNac,
@@ -108,11 +108,11 @@ namespace WebMedicina.BackEnd.Service {
                             FechaDiagnostico = infoPaciente.Paciente.FechaDiagnostico,
                             FechaFractalidad = infoPaciente.Paciente.FechaFractalidad,
                             Farmaco = infoPaciente.Paciente.Farmaco,
-                            IdEpilepsia = infoPaciente.Paciente.IdEpilepsia,
+                            Epilepsia = infoPaciente.Paciente.IdEpilepsia.ToString(),
                             NombreEpilepsia = infoPaciente.NombreEpilepsia,
                             NombreMutacion = infoPaciente.NombreMutacion,
-                            IdMutacion = infoPaciente.Paciente.IdMutacion,
-                            EnfermRaras = (infoPaciente.Paciente.EnfermRaras == "S" ? "Sí" : (infoPaciente.Paciente.EnfermRaras == "N" ? "No" : string.Empty)),
+                            IdMutacion = infoPaciente.Paciente.IdMutacion.ToString(),
+                            EnfermRaras = (infoPaciente.Paciente.EnfermRaras == "S" ? true : false),
                             DescripEnferRaras = (infoPaciente.Paciente.EnfermRaras == "S" ? infoPaciente.Paciente.DescripEnferRaras : string.Empty  ),
                             FechaCreac = infoPaciente.Paciente.FechaCreac,
                             FechaUltMod = infoPaciente.Paciente.FechaUltMod,
@@ -149,6 +149,14 @@ namespace WebMedicina.BackEnd.Service {
             try {
                 return _farmacosDal.GetFarmacos();
             } catch (Exception) { throw; }
+        }
+
+        public Task<bool> EditarPaciente(CrearPacienteDto nuevoPaciente, int idMedico) {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> EliminarPaciente(int idPaciente, int idMedico) {
+            throw new NotImplementedException();
         }
     }
 }

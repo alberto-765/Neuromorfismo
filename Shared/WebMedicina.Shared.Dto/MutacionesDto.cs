@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace WebMedicina.Shared.Dto {
     public class MutacionesDto : ICloneable, IEquatable<MutacionesDto>{
+        public int Indice { get; set; }
         public int IdMutacion { get; set; }
 
         [Required(ErrorMessage = "El nombre es un campo obligatorio")]

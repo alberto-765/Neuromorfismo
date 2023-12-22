@@ -4,8 +4,8 @@ using WebMedicina.Shared.Dto;
 
 namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
     public partial class AllPacientes {
-        [Parameter] public List<PacienteDto>? ListaPacientes { get; set; }
-        public bool mostrarOverlay { get; set; } = true;
+        [Parameter] public List<CrearPacienteDto>? ListaPacientes { get; set; }
+        public bool MostrarOverlay { get; set; } = true;
 
 
         /// <summary>
@@ -13,7 +13,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
         /// </summary>
         protected override void OnParametersSet() {
             if (ListaPacientes is not null && ListaPacientes.Any()) {
-                mostrarOverlay = false;
+                MostrarOverlay = false;
             }
         }
     }

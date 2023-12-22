@@ -1,0 +1,7 @@
+﻿<div>
+    <MudSelect Class="filtro" T="string" Label="Género*" @bind-Value="GeneroSel" For="@(() => GeneroSel)" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Variant="Variant.Text" OnOpen="BloquearScroll"
+               OnClose="DesbloquearScroll" Clearable="true">
+        <MudSelectItem Value="@("H")"><div class="d-flex align-center"> <MudIcon Icon="@Icons.Material.Outlined.Man" Class="mr-2" Size="Size.Small"></MudIcon> Hombre </div></MudSelectItem>
+        <MudSelectItem Value="@("M")"><div class="d-flex align-center"><MudIcon Icon="@Icons.Material.Outlined.Woman" Class="mr-2" Size="Size.Small"></MudIcon> Mujer </div></MudSelectItem>
+    </MudSelect>
+</div>

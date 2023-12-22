@@ -112,7 +112,11 @@ namespace WebMedicina.BackEnd.Service {
             }
         }
 
-        // Genereamos un username valido para un nuevo medico
+        /// <summary>
+        /// Genereamos un username valido para un nuevo medico
+        /// </summary>
+        /// <param name="nomYApell"></param>
+        /// <returns>UserName Invalido y UserName generado</returns>
         public async Task<(bool userNameInvalido, string userNameGenerado)> GenerarUserName(string[] nomYApell) {
             try {
                 bool userNameInValido = true;
@@ -123,37 +127,37 @@ namespace WebMedicina.BackEnd.Service {
                     int indice = 0;
                     int indiceApellido2 = 0;
                     int indiceApellido3 = 0; // Apellido 3 en caso de que tuviera
-                    string nombre = nomYApell[0].ToLower();
-                    string[] apellidos = nomYApell[1].ToLower().Split(" ");
+                    string nombre = nomYApell[0].ToLower().Replace(" ", "").SinTildes();
+                    string[] apellidos = nomYApell[1].ToLower().SinTildes().Split(" ");
 
                     // Creamos cronometro para contar tiempo maximo
                     Stopwatch stopwatch = new();
                     stopwatch.Start();
 
                     // Recorremos hasta conseguir un userName valido para el usuario, al minuto salta excepcion
-                    while (userNameInValido || stopwatch.Elapsed.TotalSeconds > 30) {
+                    do {
                         userNameGenerado = string.Empty;
 
                         // Obtenemos primera letra del nombre
                         userNameGenerado += nombre[0];
 
                         // Obtenemos minimo 7 letras del primer apellido
-                        userNameGenerado += apellidos[0].Substring(0, (indice + 7 <= apellidos[0].Length ? indice + 7 : apellidos[0].Length));
+                        userNameGenerado += apellidos[0][..(indice + 7 <= apellidos[0].Length ? indice + 7 : apellidos[0].Length)];
 
                         // Si se superan los caracteres del primer apellido comenzamos a coger del segundo
                         if (apellidos.Length > 0 && indice > apellidos[0].Length) {
-                            userNameGenerado += apellidos[1].Substring(0, (indiceApellido2 <= apellidos[1].Length ? indiceApellido2 : apellidos[1].Length)) ;
+                            userNameGenerado += apellidos[1][..(indiceApellido2 <= apellidos[1].Length ? indiceApellido2 : apellidos[1].Length)] ;
 
                             // Si se ha superado el segundo apellido y tiene 3 mapeamos tambien el tercero
                             if (apellidos.Length > 1 && indice > apellidos[1].Length) {
-                                userNameGenerado += apellidos[2].Substring(0, (indiceApellido3 <= apellidos[2].Length ? indiceApellido3 : apellidos[2].Length));
+                                userNameGenerado += apellidos[2][..(indiceApellido3 <= apellidos[2].Length ? indiceApellido3 : apellidos[2].Length)];
                             }
                         }
 
                         // Validamos el username generado
                         userNameInValido = await ComprobarUserName(userNameGenerado);
                         indice++;
-                    }
+                    } while (userNameInValido || stopwatch.Elapsed.TotalSeconds > 30) ;
 
                     // Paramos el cronometro
                     stopwatch.Stop();

@@ -15,14 +15,15 @@ using WebMedicina.Shared.Dto;
 namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
     public partial class GestionUsers {
         // DEPENDENCIAS
-        [Inject] IAdminsService _adminsService { get; set; }
-        [Inject] IRedirigirManager redirigirManager { get; set; }
+        [Inject] private IAdminsService _adminsService { get; set; }
+        [Inject] private IRedirigirManager redirigirManager { get; set; }
         [CascadingParameter(Name = "modoOscuro")] private bool _isDarkMode { get; set; } // Modo oscuro
         [CascadingParameter(Name = "excepcionPersonalizada")] private ExcepcionPersonalizada excepcionPersonalizada { get; set; }
-        [Inject] ICrearHttpClient _crearHttpClient { get; set; }
+        [Inject] private ICrearHttpClient _crearHttpClient { get; set; }
         [Inject] private ISnackbar _snackbar { get; set; }
-        [Inject] IJSRuntime js { get; set; }
+        [Inject] private IJSRuntime js { get; set; }
         [Inject] private IDialogService DialogService { get; set; }
+        [Inject] private IComun _comun { get; set; }
 
 
         private HttpClient Http { get; set; }
@@ -33,7 +34,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
         private ClaimsPrincipal? user { get; set; } // datos del usuario logueado
 
         // TABLAS
-        private ReadOnlyDictionary<string, string> _filtros { get; set; } // filtros aplicados
         private IEnumerable<UserUploadDto> pagedData { get; set; } // datos que se muestran en la tabla
         private MudTable<UserUploadDto> table { get; set; } // referencia de la tabla
         private int totalItems; // ((UserUploadDto) item)s totales obtenidos
@@ -66,13 +66,17 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
         // FUNCIONES PARA TABLA TIPO SERVER
         private async Task<TableData<UserUploadDto>> ServerReload(TableState state) {
             try {
-                if (_filtros is null || _filtros.Count == 0) {
-                    // rellenamos los filtros
-                    _filtros = await _adminsService.ObtenerFiltrosSession();
-                }
+                // Rellenamos campos para fitrado
+                FiltradoTablaDefaultDto camposFiltrado = new() {
+                    Page = state.Page,
+                    PageSize = state.PageSize,
+                    SortDirection = (int)state.SortDirection,
+                    SearchString = searchString,
+                    SortLabel = state.SortLabel
+                };
 
                 // Llamamos a la api para obtener de BBDD los usuarios con los filtros
-                var responseMessage = await Http.PostAsJsonAsync("gestionUsers/obtenerUsuariosFiltrados", _filtros);
+                HttpResponseMessage responseMessage = await Http.PostAsJsonAsync("gestionUsers/obtenerUsuariosFiltrados", camposFiltrado);
                 List<UserUploadDto>? list = new ();
                 if(responseMessage.IsSuccessStatusCode) {
                     if (responseMessage.StatusCode != HttpStatusCode.NoContent) {
@@ -81,7 +85,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                         // Comprobamos que la lista no sea nula
                         if (list is not null && list.Any()) {
                             totalItems = list.Count;
-                            pagedData = list.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
+                            pagedData = list;
                         } else {
                             totalItems = 0;
                             pagedData = Enumerable.Empty<UserUploadDto>();
@@ -90,23 +94,14 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                         totalItems = 0;
                         pagedData = Enumerable.Empty<UserUploadDto>();
                     }
-                } else {
-                    throw new  Exception();
-                }
+                } 
 
                 // Saltamos los ((UserUploadDto) item)s de la paginación y obtenemos el maximo que se puede mostrar
                 return new TableData<UserUploadDto>() { TotalItems = totalItems, Items = pagedData };
             } catch (Exception ex) {
-                _snackbar.Add("Error al obtener filtrado de usuarios", Severity.Error);
-
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-                return new TableData<UserUploadDto>();
+                throw;
             }
-        }
-
-        private void OnSearch(string text) {
-            searchString = text;
-            table.ReloadServerData();
         }
 
 
@@ -194,21 +189,18 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
 
 
         private async void MostrarMensajeError(List<ValidationResult> errores) {
-            bool? result = await DialogService.ShowMessageBox(
+            await DialogService.ShowMessageBox(
                 "Error al editar usuario",
-                new MarkupString(generarHtmlErrores(errores)),
+                new MarkupString(_comun.GenerarHtmlErrores(errores)),
                 yesText: "Entendido");
         }
 
-        private string generarHtmlErrores(List<ValidationResult>  errores) {
-            string listaErrores = "<p><b>Algunos campos no son correctos y no es posible editar el usuario</b></p><ol>";
+        
 
-            foreach (ValidationResult validacion in errores) {
-                listaErrores += $"<li>{validacion.ErrorMessage}</li>";
-            }
-            listaErrores += "</ol>";
-
-            return listaErrores;
+        // Filtrar por search
+        private void OnSearch(string text) {
+            searchString = text;
+            table.ReloadServerData();
         }
     }
 }

@@ -1,9 +1,23 @@
 ﻿<div>
-    <MudDataGrid Items="@ListaPacientes" Elevation="25" SortMode="SortMode.Single" Hover="true" Breakpoint="Breakpoint.Md" Class="mt-4">
+    <MudDataGrid T="CrearPacienteDto" Items="@ListaPacientes" ReadOnly="false" 
+                 EditTrigger="DataGridEditTrigger.Manual" Elevation="25" SortMode="SortMode.Single" Hover="true" Breakpoint="Breakpoint.Md" Class="mt-4"
+                 QuickFilter="Search">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6" Class="ml-md-5 mt-5 mt-md-0">Pacientes</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString" Placeholder="Buscar" Adornment="Adornment.Start" Immediate="true"
+                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
         <Columns>
-            <HierarchyColumn T="PacienteDto" />
+            <HierarchyColumn T="CrearPacienteDto" />
+
+            @* Numero Historia *@
             <PropertyColumn Property="x => x.NumHistoria" Title="Número de Historia" />
-            <PropertyColumn Property="x => x.FechaNac" Title="Fecha Nacimiento" Format="dd/MM/yyyy"/>
+
+            @* Fecha Nacimiento *@
+            <PropertyColumn Property="x => x.FechaNac" Title="Fecha Nacimiento" Format="dd/MM/yyyy" />
+
+            @* Genero *@
             <TemplateColumn Title="Género" SortBy="@(x => x.Sexo)">
                 <CellTemplate>
                     @if (context.Item.Sexo == "M") {
@@ -19,6 +33,8 @@
                     }
                 </CellTemplate>
             </TemplateColumn>
+
+            @* Talla *@
             <TemplateColumn Title="Talla" SortBy="@(x => x.Talla)">
                 <CellTemplate>
                         @if (context.Item.Talla > 0) {
@@ -28,6 +44,8 @@
                         }
                 </CellTemplate>
             </TemplateColumn>
+
+            @* Tipo Epilepsia *@
             <TemplateColumn Title="Epilepsia" SortBy="@(x => x.NombreEpilepsia)">
                 <CellTemplate>
                     @if (!string.IsNullOrEmpty(context.Item.NombreEpilepsia)) {
@@ -37,6 +55,8 @@
                     }
                 </CellTemplate>
             </TemplateColumn>
+
+            @* Tipo Mutacion *@
             <TemplateColumn Title="Mutación" SortBy="@(x => x.NombreMutacion)">
                 <CellTemplate>
                     @if (!string.IsNullOrEmpty(context.Item.NombreMutacion)) {
@@ -46,7 +66,15 @@
                     }
                 </CellTemplate>
             </TemplateColumn>
-            <PropertyColumn Property="x => x.EnfermRaras" Title="Enfermedad Rara" />
+
+
+            @* Botones Editar y Eliminar *@  
+            <TemplateColumn CellClass="d-flex justify-space-between gap-3">
+                <CellTemplate>
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => MostrarEditarPac(context.Item))" />
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => EliminarPaciente(context.Item))" />
+                </CellTemplate>
+            </TemplateColumn>
         </Columns>
         <ChildRowContent>
             <MudCard Elevation="0" Class="cardPaciente">
@@ -62,7 +90,7 @@
                    <MudGrid Spacing="3" Justify="Justify.Center" id="gridDecipcionPaciente">
                        @* Fecha Nacimiento *@
                        <MudItem xs="12" md="6" >
-                            <MudText>Fecha Nacimiento: @context.Item.FechaNac.ToShortDateString()</MudText>
+                            <MudText>Fecha Nacimiento: @context.Item.FechaNac?.ToShortDateString()</MudText>
                        </MudItem>
 
                         @* Genero *@
@@ -80,12 +108,12 @@
                     
                         @* Fecha Diagnostico *@
                         <MudItem xs="12" md="6">
-                            <MudText>Fecha Diagnóstico: @context.Item.FechaDiagnostico.ToShortDateString()</MudText>
+                            <MudText>Fecha Diagnóstico: @context.Item.FechaDiagnostico?.ToShortDateString()</MudText>
                         </MudItem>
                     
                         @* Fecha Fractalidad *@
                         <MudItem xs="12" md="6">
-                            <MudText>Fecha Fractalidad: @context.Item.FechaFractalidad.ToShortDateString()</MudText>
+                            <MudText>Fecha Fractalidad: @context.Item.FechaFractalidad?.ToShortDateString()</MudText>
                         </MudItem>
 
                         @* Talla *@
@@ -108,7 +136,7 @@
                             <MudText>Enfermedad Rara: @context.Item.EnfermRaras
 
                                 @* Mostramos tooltip de info si tiene enfermedad rara *@
-                                @if (!string.IsNullOrEmpty(context.Item.EnfermRaras) && context.Item.EnfermRaras == "Sí" && !string.IsNullOrEmpty(context.Item.DescripEnferRaras)) {
+                                @if (context.Item.EnfermRaras && !string.IsNullOrEmpty(context.Item.DescripEnferRaras)) {
                                         <Tooltip Contenido="@(new MarkupString(context.Item.DescripEnferRaras))" Titulo="@(new MarkupString("Descripción Enfermedad"))" />
                                 }
                             </MudText>
@@ -134,7 +162,7 @@
             </MudCard>
         </ChildRowContent>
         <PagerContent>
-            <MudDataGridPager T="PacienteDto" InfoFormat="@("{first_item}-{last_item} de {all_items}")" RowsPerPageString="Filas por página:" />
+            <MudDataGridPager T="CrearPacienteDto" InfoFormat="@("{first_item}-{last_item} de {all_items}")" RowsPerPageString="Filas por página:" />
         </PagerContent>
     </MudDataGrid>
 </div>

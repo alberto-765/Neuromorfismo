@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace WebMedicina.Shared.Dto {
     public class FarmacosDto :ICloneable, IEquatable<FarmacosDto> {
+        public int Indice { get; set; }
         public int IdFarmaco { get; set; }
 
         [Required(ErrorMessage = "El nombre es un campo obligatorio")]

@@ -1,0 +1,9 @@
+﻿/*Estilos filtros panel filtros*/
+::deep .filtro {
+    padding: 13px 0;
+}
+
+/*Estilos check enfermedad rara*/
+::deep .checkEnfRara .mud-icon-button {
+    padding: 0 5px 0 0;
+}

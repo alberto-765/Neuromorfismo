@@ -22,7 +22,13 @@ namespace WebMedicina.BackEnd.Dal {
         // Get EPILEPSIAS
         public List<EpilepsiasDto> GetEpilepsias() {
             try {
-                return _mapper.Map<List<EpilepsiasDto>>(_context.Epilepsias.ToList());
+                List<EpilepsiasDto> listaEpilepsias = _mapper.Map<List<EpilepsiasDto>>(_context.Epilepsias.ToList());
+                if (listaEpilepsias.Count > 0) {
+                    for (int i = 0; i < listaEpilepsias.Count; i++) {
+                        listaEpilepsias[i].Indice = i+1;
+                    }
+                }
+                return listaEpilepsias;
             } catch (Exception) { throw; }
         }
 

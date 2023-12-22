@@ -1,0 +1,52 @@
+﻿<MudDialog Class="@idDialogo" ClassActions="contenedorBotones">
+    <DialogContent>
+        <div>
+            <EditForm @ref="form" Model="@nuevoPaciente" Class="flex-grow-1 p">
+                <DataAnnotationsValidator />
+
+                @* Numero de historia *@
+                <NumHistoria @bind-NumHistoriaSel="@nuevoPaciente.NumHistoria" />
+
+                @* Fecha Nacimiento *@
+                <Picker label="Fecha de Nacimiento"@bind-Fecha="nuevoPaciente.FechaNac"FechaMaxima="ValidacionesRegistro.ObtenerFechaMaxNacimiento()" />
+
+                @* Genero *@
+                <Genero @bind-GeneroSel="nuevoPaciente.Sexo" IdDialogo="idDialogo" />
+
+                @* Talla *@
+                <Talla @bind-TallaSel="nuevoPaciente.Talla" />
+
+                @* Fecha Diagnostico *@
+                <Picker label="Fecha de Diagnóstico" @bind-Fecha="nuevoPaciente.FechaDiagnostico" variante="PickerVariant.Inline" />
+      
+                @* Fecha fractalidad *@
+                <Picker label="Fecha de Fractalidad" @bind-Fecha="nuevoPaciente.FechaFractalidad" variante="PickerVariant.Inline" />
+
+                @* Farmaco *@
+                <Farmaco @bind-FarmacoSel="nuevoPaciente.Farmaco" />
+
+                @* Tipo Epilepsia *@
+                <TipoEpilepsia @bind-TipoEpiSel="nuevoPaciente.Epilepsia" IdDialogo="idDialogo" />
+
+                @* Tipo Mutacion *@
+                <TipoMutacion @bind-TipoMutacionSel="nuevoPaciente.IdMutacion" IdDialogo="idDialogo" />
+
+                @* Enfermedad Rara *@
+                <EnfermedadRara @bind-EnfermedadRaraCheck="nuevoPaciente.EnfermRaras" @bind-Descripcion="nuevoPaciente.DescripEnferRaras" MostrarDescripcion="true" />
+            </EditForm>
+        </div>
+    </DialogContent>
+    <DialogActions>
+        <div>
+            <MudButton Variant="Variant.Filled" OnClick="Cancel" DisableElevation>Cancelar</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="Editar" Disabled="_crearDisabled">
+                @if (_creandoPaciente) {
+                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    <MudText Class="ms-2">Cargando...</MudText>
+                } else {
+                    <MudText>Editar</MudText>
+                }
+            </MudButton>
+        </div>
+    </DialogActions>
+</MudDialog>

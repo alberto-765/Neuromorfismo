@@ -22,30 +22,16 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
         [Inject] private IConfiguration _configuracion { get; set; }
 
         // Panel de filtros
-        public bool OrdenarTalla { get; set; } // Mostrar un icono u otro en ordenar por talla
         private bool FiltrosAbierto { get; set; } = false;
 
-
-        // Formulario filtrado
-        private List<PacienteDto>? ListaPacientes { get; set; }
-
-        // Valores seleccionados para mostrar en los filtros
-        private FiltroPacienteDto FiltrosPacientes { get; set; } = new(); // Dto con los filtros seleccionados
-        private bool cargandoPacientes{ get; set; } = true;  // Cargando pacientes
-        private IEnumerable<string>? ListaMedicos { get; set; } = null;
+        // Listado de objetos
+        private List<CrearPacienteDto>? ListaPacientes { get; set; } = null;
         private IEnumerable<EpilepsiasDto>? ListaEpilepsias { get; set; } = null;
         private IEnumerable<MutacionesDto>? ListaMutaciones { get; set; } = null;
 
-        //private IEnumerable<FarmacosDto>? ListaFarmacos { get; set; } = null;
-        //private string farmacoFiltrado { get; set; }
-
-        // String que se puestra en el select
-        private string epilepsiaFiltrado { get; set; } 
-        private string mutacionFiltrado { get; set; }
-
 
         // Pop up crear paciente
-        DialogOptions opcionesDialogo { get; set; } = new DialogOptions{ FullWidth=true, CloseButton=true, DisableBackdropClick=true, Position=DialogPosition.Center, CloseOnEscapeKey=true};
+        DialogOptions OpcionesDialogo { get; set; } = new DialogOptions{ FullWidth=true, CloseButton=true, DisableBackdropClick=true, Position=DialogPosition.Center, CloseOnEscapeKey=true};
 
         // Url imagenes server
         private string? UrlImagenes { get; set; }
@@ -68,24 +54,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
                 await ObtenerPacientes();
             } catch (Exception ex) {
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-            }
-        }
-
-        // Buscador para autocomplete de medicos
-        private async Task<IEnumerable<string>> BuscarMedPac(string medico) {
-            try {
-                // Si la lista es null se obtiene por primera vez de BD
-                ListaMedicos ??= await _pacientesService.ObtenerAllMed();
-
-                // Si hay medicos en la lista se realiza la busqueda
-                if (ListaMedicos != null && ListaMedicos.Any()) {
-                    return ListaMedicos.Where(q => q.Contains(medico, StringComparison.InvariantCultureIgnoreCase));
-                } else {
-                    return Enumerable.Empty<string>();
-                }
-            } catch (Exception ex) {
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-                throw;
             }
         }
 
@@ -113,12 +81,12 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
                     { "ListaEpilepsias", ListaEpilepsias },
                     { "ListaMutaciones", ListaMutaciones },
                 };        
-                var dialog = _dialogoService.Show<CrearPaciente>("titulo", parametros ,opcionesDialogo);
+                var dialog = _dialogoService.Show<CrearPaciente>("Nuevo Paciente", parametros ,OpcionesDialogo);
                 var result = await dialog.Result;
 
-                // Validamos que el dialogo haya devuelto el nuevo paciente creado
-                if (result.Cancelled == false && result.Data is PacienteDto) {
-                    ListaPacientes?.Add((PacienteDto)result.Data);
+                // Validamos que el dialogo haya devuelto el nuevo paciente creado y actualizamos la lista
+                if (result.Cancelled == false && result.Data is CrearPacienteDto) {
+                    ListaPacientes = await _pacientesService.AnadirPacienteALista((CrearPacienteDto)result.Data);
                 }          
             } catch (Exception ex) {
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
@@ -127,23 +95,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
         }
 
         // Obtener pacientes de BD
-        private async Task ObtenerPacientesFiltrados() {
-            try {
-                ListaPacientes = await _pacientesService.FiltrarPacientes(FiltrosPacientes, ListaPacientes);
-            } catch (Exception ex) {
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-                throw;
-            }
-        }
-
-        private void ResetearFiltrado() {
-            try {
-                FiltrosPacientes = new();
-            } catch (Exception) {
-                throw;
-            }
-        }
-
         private async Task ObtenerPacientes() {
             try {
                 // Obtenemos el listado de pacientes
@@ -157,7 +108,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
                 _snackbar.Add("Ha surgido un error al obtener los pacientes.", Severity.Error);
                 throw;
             }
-            cargandoPacientes = false;
         }
     }
 }

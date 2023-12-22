@@ -8,7 +8,6 @@ using WebMedicina.Shared.Dto;
 
 namespace WebMedicina.BackEnd.API {
 	public class Mappers :Profile {
-
 		public Mappers() {
             //// Mapeamos una clase a otra
             //CreateMap<ClaseOrigen, ClaseDestino>()
@@ -38,21 +37,21 @@ namespace WebMedicina.BackEnd.API {
             CreateMap<MedicosModel, UserUploadDto>().ReverseMap();
 
             // Mapeo Epilepsias
-            CreateMap<EpilepsiaModel, EpilepsiasDto>()
-                .AfterMap((origen, destino) => {
-                    int indice = 1;
-                    
-                    // recorremos la lista y añadimos el indice
-                    destino.IdEpilepsia = indice;
-                    indice++;
-                })
-                .ReverseMap();
+            CreateMap<EpilepsiaModel, EpilepsiasDto>().ReverseMap();
 
             // Mapeo Mutaciones
             CreateMap<MutacionesModel, MutacionesDto>().ReverseMap();
+            
 
             // Mapeo Farmacos
-            CreateMap<FarmacosModel, FarmacosDto>().ReverseMap();
+            //CreateMap<List<FarmacosModel>, List<FarmacosDto>>()
+            //    .AfterMap((origen, destino) => {
+
+            //        // recorremos la lista y añadimos el indice
+            //        destino.Indice = indice;
+            //        indice++;
+            //    })
+            //    .ReverseMap();
 
             // Mapeo tabla medicos pacientes
             CreateMap<MedicospacienteModel, MedicosPacientesDto>();

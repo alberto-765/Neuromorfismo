@@ -5,12 +5,14 @@
     width: 10%;
 }
 ::deep .filaApellidos {
-    width: 23%;
+    width: 20%;
 }
 ::deep .filaNumHist {
     width: 20%;
 }    
-
+::deep .filaRol{
+    width: 9%;
+}
 /*Celdas de la tabla*/
 .celda {
     display: flex;

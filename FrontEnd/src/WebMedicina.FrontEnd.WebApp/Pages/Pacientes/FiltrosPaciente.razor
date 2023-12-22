@@ -1,0 +1,50 @@
+﻿<div>
+    <MudDrawer @bind-Open="@FiltrosAbierto" id="drawerFiltros" Anchor="Anchor.End" Fixed="true" Elevation="4" Variant="@DrawerVariant.Temporary" Color="Color.Default"
+               Class="rounded-tl-lg" Style="@($"background: {(!IsDarkMode ? "white" : "var(--mud-palette-background)")}")">
+        <EditForm Model="FiltrosPacientes" class="mx-5 d-flex flex-column flex-1" OnValidSubmit="ObtenerPacientesFiltrados" @onreset="ResetearFiltrado">
+            @* Titulo *@
+            <MudDrawerHeader Class="justify-center align-center pr-0">
+                <MudText Typo="Typo.h6">Filtros Pacientes</MudText>
+                <MudSpacer />
+                <MudIconButton Icon="@Icons.Material.Outlined.Close" OnClick="@(() => FiltrosAbierto = !FiltrosAbierto)"></MudIconButton>
+            </MudDrawerHeader>
+
+            <div class="d-flex flex-column flex-1 justify-space-between">
+                <div>
+                    @* Filtrado por medico *@
+                    <AuthorizeView Roles="admin, superAdmin" Context="context__FiltradoMedico">
+                        <Authorized>
+                            <MudAutocomplete T="string" Label="Médicos" @bind-Value="@FiltrosPacientes.Medico" For="@(() => FiltrosPacientes.Medico)" SearchFunc="@BuscarMedPac" ResetValueOnEmptyText="true" CoerceValue="true" ShowProgressIndicator="true">
+                                <NoItemsTemplate>
+                                    <MudText Align="Align.Center" Class="px-4 py-1">
+                                        No se han encontrado médicos
+                                    </MudText>
+                                </NoItemsTemplate>
+                            </MudAutocomplete>
+                        </Authorized>
+                    </AuthorizeView>
+
+                    @* Genero *@
+                    <Genero @bind-GeneroSel="FiltrosPacientes.Sexo" />
+
+                    @* Talla *@
+                    <Talla @bind-TallaSel="FiltrosPacientes.Talla" />
+
+                    @* Tipo Epilepsia *@
+                    <TipoEpilepsia @bind-TipoEpiSel="FiltrosPacientes.Epilepsia" />
+                    @* Tipo Mutacion *@
+                    <TipoMutacion @bind-TipoMutacionSel="FiltrosPacientes.IdMutacion" />
+
+                    @* Enfermedad Rara *@
+                    <EnfermedadRara @bind-EnfermedadRaraCheck="FiltrosPacientes.EnfermRaras" @bind-Descripcion="FiltrosPacientes.DescripEnferRaras" />
+                </div>
+
+                @* Botones Filtrar y Resetear *@
+                <div class="container__btnFiltrar">
+                    <MudButton ButtonType="ButtonType.Reset" DisableElevation="true" Variant="Variant.Filled" Color="Color.Surface">Resetear</MudButton>
+                    <MudButton ButtonType="ButtonType.Submit" DisableElevation="true" Variant="Variant.Filled" Color="Color.Primary">Filtrar</MudButton>
+                </div>
+            </div>
+        </EditForm>
+    </MudDrawer>
+</div>

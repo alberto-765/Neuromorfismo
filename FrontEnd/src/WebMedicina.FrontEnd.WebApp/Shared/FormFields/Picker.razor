@@ -1,34 +1,23 @@
-﻿ <MudDatePicker @ref="_picker" Class="@clases" Editable="true" AutoClose="@autoCLose" Label="@label" DateChanged="EventoActualizar" PickerVariant="@variante"
-               DateFormat="dd/MM/yyyy" MaxDate="@FechaMaxima" MinDate="@FechaMinima" Placeholder="@placeHolder" HelperText="@helperText" 
-               Date="Fecha" For="@(() => Fecha)" >
-    <PickerActions>
-        <MudButton Class="mr-auto align-self-start" OnClick="@(() => {_picker.Clear(); _picker.Close();})">Limpiar</MudButton>
-        <MudButton OnClick="@(() => _picker.Close(false))">Cancelar</MudButton>
-        <MudButton Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
-    </PickerActions>
-</MudDatePicker>
+﻿<div style="padding: 10px 0;">
+    <MudDatePicker @ref="_picker" Editable="true" AutoClose="@autoCLose" Label="@label" PickerVariant="@variante"
+                   DateFormat="dd/MM/yyyy" MaxDate="@FechaMaxima" MinDate="@FechaMinima" Placeholder="@placeHolder" HelperText="@helperText" 
+                   @bind-Date="Fecha" For="@(() => Fecha)">
+        <PickerActions>
+            <MudButton Class="mr-auto align-self-start" OnClick="@(() => {_picker.Clear(); _picker.Close();})">Limpiar</MudButton>
+            <MudButton OnClick="@(() => _picker.Close(false))">Cancelar</MudButton>
+            <MudButton Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
+        </PickerActions>
+    </MudDatePicker>
+</div>
 @code{
-    [Parameter] public string pickerName { get; set; } = string.Empty; // Nombre para identificar 
-    [Parameter] public string clases { get; set; } = string.Empty; // Clases para estilo
     [Parameter] public string label { get; set; } = string.Empty; // Texto para label
     [Parameter] public string helperText { get; set; } = string.Empty; // Texto de ayuda
     [Parameter] public string placeHolder { get; set; } = string.Empty; // PlaceHolder
     [Parameter] public bool autoCLose { get; set; } = false; // Autoclose para cerrar al elegir fecha 
+    [Parameter] public EventCallback<DateTime?> FechaChanged { get; set; } // Callback para devolver la fecha actualizada
     [Parameter] public DateTime? Fecha { get; set; } // Modelo para la fecha
     [Parameter] public DateTime? FechaMinima { get; set; } = null; // Fecha Minima
     [Parameter] public DateTime? FechaMaxima { get; set; } = null; // Fecha maxima
     [Parameter] public PickerVariant variante { get; set; } = PickerVariant.Dialog; // Tipo de datepicker
-    [Parameter] public EventCallback<(DateTime?, string)> ActualizarFecha { get; set; } // Callback para devolver la fecha actualizada
     private MudDatePicker _picker { get; set; } = new();
-
-
-    // Evento callback para actualizar la fecha
-    private async Task EventoActualizar(DateTime? nuevaFecha) {
-        try {
-            Fecha = nuevaFecha;
-            await ActualizarFecha.InvokeAsync((nuevaFecha, pickerName));
-        } catch (Exception) {
-            throw;
-        }
-    }
 }

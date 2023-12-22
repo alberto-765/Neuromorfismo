@@ -12,14 +12,12 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
         [CascadingParameter] private Task<AuthenticationState>? authenticationState { get; set; }
         [CascadingParameter(Name = "excepcionPersonalizada")] private ExcepcionPersonalizada _excepcionPersonalizada { get; set; }
         [Inject] private IPacientesService _pacientesService { get; set; }
-        [Inject] private ISnackbar _snackbar { get; set; }
-
 
         // Lista pacientes para mostrar
-        [Parameter] public List<PacienteDto>? ListaPacientes { get; set; }
+        [Parameter] public List<CrearPacienteDto>? ListaPacientes { get; set; }
 
         // Bool para mostrar overlay de carga
-        public bool mostrarOverlay { get; set; } = true;
+        public bool MostrarOverlay { get; set; } = true;
 
         // Datos del usuario
         private ClaimsPrincipal? user { get; set; }
@@ -39,9 +37,8 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
                     }
 
                     // Filtramos el listado de pacientes
-                    ListaPacientes = _pacientesService.FiltrarMisPacientes(ListaPacientes, user);
-
-                    mostrarOverlay = false;
+                    ListaPacientes = await _pacientesService.FiltrarMisPacientes(ListaPacientes, user);
+                    MostrarOverlay = false;
                 }
             } catch (Exception ex) {
                 _excepcionPersonalizada.ConstruirPintarExcepcion(ex);

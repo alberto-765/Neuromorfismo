@@ -1,17 +1,4 @@
-﻿
-/*Estilos drawe filtros*/
-::deep #drawerFiltros {
-    height: calc(100% - var(--mud-appbar-height));
-    top: unset;
-    bottom: 0;
-}
-::deep #drawerFiltros .drawerFiltros__Opcion {
-    padding: 20px;
-}
-::deep #drawerFiltros.mud-drawer--open {
-    width: 350px !important;
-}
-/*Boton crear paciente modo oscuro*/
+﻿/*Boton crear paciente modo oscuro*/
 ::deep #btnCrearPacienteDark {
     background: #42A5F5;
     color: white;
@@ -23,47 +10,4 @@
     color: black;
 }
 
-/*Switch boton filtros */
-#btnFiltros ::deep .mud-switch {
-    margin-right: 0 !important;
-}
-#btnFiltros[modoOscuro] ::deep .mud-icon-default {
-    color: rgb(12 12 12);
-}
 
-/*Boton orndear talla*/
-::deep #ordenarTalla {
-    height: fit-content;
-}
-
-/*Slider de la talla*/
-::deep .sliderTalla .mud-slider-container {
-    margin-left: 5px;
-}
-
-/*Estilos filtros panel filtros*/
-::deep .filtro, ::deep .sliderTalla p:first-child {
-    margin-top: 15px;
-}
-::deep .checkEnfRara{
-    margin-top: 30px;
-}
-/*Estilos check enfermedad rara*/
-::deep .checkEnfRara .mud-icon-button {
-    padding: 0 5px 0 0;
-}
-
-/*Contenedor botones drawer filtrado*/
-.container__btnFiltrar {
-    margin-bottom: 2rem;
-    display: flex;
-    flex-direction: row;
-    column-gap: 1rem;
-    justify-content: end;
-}
-/*Drawer en moviles*/
-@media (width <= 960px) {
-    :: deep #drawerFiltros.mud-drawer--open {
-        width: 100vw;
-    }
-}

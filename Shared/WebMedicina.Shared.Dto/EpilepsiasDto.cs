@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace WebMedicina.Shared.Dto {
     public class EpilepsiasDto : ICloneable, IEquatable<EpilepsiasDto>{
+        public int Indice {  get; set; }    
         public int IdEpilepsia { get; set; }
 
         [Required(ErrorMessage = "El nombre es un campo obligatorio")]

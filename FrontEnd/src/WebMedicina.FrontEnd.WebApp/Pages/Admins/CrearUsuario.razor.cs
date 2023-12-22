@@ -68,8 +68,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                         config.VisibleStateDuration = 5000;
                     });
 
-                    // Reiniciamos el objeto de nuevo usuario
-                    userRegistro = new();
+             
                 } else {
                     cargando = false;
                     _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopStart;
@@ -80,6 +79,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                 }
             } catch (Exception ex) {
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+                await ReiniciarDatos();
                 throw;
             }
         }
@@ -114,18 +114,14 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
             }
         }
 
-        // Actualizar fecha de un datepicker
-        private void ActFecha((DateTime?, string) tupla) {
+        // Reiniciar objeto de nuevo usuario y boton de crear
+        private async Task ReiniciarDatos() {
             try {
-                if (!string.IsNullOrEmpty(tupla.Item2)) {
-                    switch (tupla.Item2) {
-                        case "fechaNac":
-                        userRegistro.FechaNac = tupla.Item1;
-                        break;
-                    }
-                }
-            } catch (Exception ex) {
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+                // Reiniciamos el objeto de nuevo usuario
+                userRegistro = new();
+                cargando = false;
+            } catch (Exception e) {
+                excepcionPersonalizada.ConstruirPintarExcepcion(e);
                 throw;
             }
         }

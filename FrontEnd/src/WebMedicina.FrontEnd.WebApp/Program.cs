@@ -29,6 +29,7 @@ builder.Services.AddScoped<IRedirigirManager, RedirigirManager>(); // Redirigir
 builder.Services.AddScoped<IAdminsService, AdminsService>(); // Service de admins
 builder.Services.AddScoped<IPerfilService, PerfilService>(); // Service para control del perfil
 builder.Services.AddScoped<IPacientesService, PacientesService>(); // Service para pacientes
+builder.Services.AddScoped<IComun, Comun>(); // Service para funciones comunes y reutilizables
 
 // Dependencias autenticacion
 builder.Services.AddScoped<JWTAuthenticationProvider>();

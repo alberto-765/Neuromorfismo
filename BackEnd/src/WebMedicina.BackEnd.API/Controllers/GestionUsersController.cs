@@ -25,18 +25,14 @@ namespace WebMedicina.BackEnd.API.Controllers {
         }
 
         [HttpPost("obtenerUsuariosFiltrados")]
-        public async Task<IActionResult> ObtenerUsuariosFiltrados([FromBody] Dictionary<string, string>  filtros) {
+        public async Task<IActionResult> ObtenerUsuariosFiltrados([FromBody] FiltradoTablaDefaultDto camposFiltrado) {
             try {
-                if(filtros is not  null && filtros.Any()) {
-                    List<UserUploadDto> listaMedicos = await _adminService.ObtenerFiltradoUsuarios(filtros, HttpContext.User);
-                    if (listaMedicos.Any()) {
-                        return Ok(listaMedicos);
-                    }
-
-                    return NoContent();
-                } else {
-                    return BadRequest("Filtros vacíos");
+                List<UserUploadDto> listaMedicos = await _adminService.ObtenerFiltradoUsuarios(camposFiltrado, HttpContext.User);
+                if (listaMedicos.Any()) {
+                    return Ok(listaMedicos);
                 }
+
+                return NoContent();
             } catch (Exception ex) {
                 return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }

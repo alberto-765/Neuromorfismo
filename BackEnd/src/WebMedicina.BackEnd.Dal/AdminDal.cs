@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,63 +47,95 @@ namespace WebMedicina.BackEnd.Dal {
             }
         }
 
+        // Obtener todos los roles de un usuario
         public async Task<string?> ObtenerRolUser(IdentityUser? user) {
             try {
-  
+ 
                 IList<string>? roles = null;
 
                 if (user is not null) {
                     roles = await _userManager.GetRolesAsync(user);
                 }
 
-                return roles?.FirstOrDefault().ToString();
+                return roles?.FirstOrDefault().ToString() ?? string.Empty;
             } catch (Exception) {
                 throw;
             }
         }
-        public async Task<List<UserUploadDto>> ObtenerMedicos(Dictionary<string, string> filtros, UserInfoDto admin) {
+        public async Task<List<UserUploadDto>> ObtenerMedicos(FiltradoTablaDefaultDto camposFiltrado, UserInfoDto admin) {
             try { 
                 List<UserUploadDto> listaMedicos = new();
-
-                // Validamos si hay que filtrar por rol o no
-                if (string.IsNullOrEmpty(filtros["rol"])) {
+                int indice = 1;
 
 
-                    // Obtenemos los usuarios con los filtros seleccionados
-                    listaMedicos = (from u in _context.Medicos
-                                                    where (u.IdMedico != admin.IdMedico &&
-                                                    (!string.IsNullOrEmpty(filtros["busqueda"]) || (u.UserLogin == filtros["busqueda"] || u.Nombre.StartsWith(filtros["busqueda"])
-                                   || u.Apellidos.Contains(filtros["busqueda"]) || u.Apellidos.StartsWith(filtros["busqueda"]))))
-                                   select _mapper.Map<UserUploadDto>(u)).ToList();
+                IQueryable<MedicosModel> query = _context.Medicos.Where(m => m.IdMedico != admin.IdMedico &&
+                (string.IsNullOrWhiteSpace(camposFiltrado.SearchString) ||
+                 ($"{m.Nombre} {m.Apellidos} {m.UserLogin ?? string.Empty} {m.Sexo} {m.FechaNac}")
+                     .Contains(camposFiltrado.SearchString, StringComparison.OrdinalIgnoreCase)));
 
-                    // Mapeamos los medicos y obtenemos su rol
-                    foreach (UserUploadDto usuario in listaMedicos)
-                    {
-                        var role = await ObtenerRolUser(await ObtenerUsuarioIdentity(usuario.UserLogin));
-                        if (role != null) {
-                            usuario.Rol = role;
-                        }
+
+
+                // ----------------- Creamos expresion lambda para el ordenamiento --------------
+                if (!string.IsNullOrWhiteSpace(camposFiltrado.SortLabel) && typeof(MedicosModel).GetProperty(camposFiltrado.SortLabel) != null) {
+
+                    // Generamos el nombre del parametro de entrada Ej: x => x.
+                    var parametro = Expression.Parameter(typeof(MedicosModel), "x");
+                    // Generamos la propiedad del modelo que se va a seleccionar
+                    var propiedad = Expression.Property(parametro, camposFiltrado.SortLabel);
+
+                    // obtenemos el tipo de la propiedad
+                    var tipoDePropiedad = ((MemberExpression)propiedad).Type;
+
+                    // Generamos expresion lamda con el modelo de entrada (x) y con lo que devuelve. Se le pasa la propiedad que se quiere ordenar 
+                    // y el nombre del parametro
+                    Expression<Func<MedicosModel, object>> lambda = x => x;
+
+                    if (tipoDePropiedad == typeof(DateTime) || tipoDePropiedad == typeof(DateTime?)) {
+                        // Convertir DateTime a object de manera segura
+                        var conversion = Expression.Convert(propiedad, typeof(object));
+                        var typeAs = Expression.TypeAs(conversion, typeof(object));
+
+                        lambda = Expression.Lambda<Func<MedicosModel, object>>(typeAs, parametro);
+                    } else if (tipoDePropiedad == typeof(DateOnly) || tipoDePropiedad == typeof(DateOnly?)) {
+
+                        // Convertir DateTime a object de manera segura
+                        var conversion = Expression.Convert(propiedad, typeof(object));
+                        var typeAs = Expression.TypeAs(conversion, typeof(object));
+                        lambda = Expression.Lambda<Func<MedicosModel, object>>(typeAs, parametro);
+                    } else {
+                        lambda = Expression.Lambda<Func<MedicosModel, object>>(propiedad, parametro);
                     }
-                } else {
-                    
-                    // Obtenemos todos los usuarios con el rol indicado y generamos una lista
-                    var usuariosConRol = await _userManager.GetUsersInRoleAsync(filtros["rol"]);
-                    IEnumerable<string> listaUserNames =  (from q in usuariosConRol where q.NormalizedUserName is not null select q.NormalizedUserName).ToArray();
 
 
-                    //Obtenemos los usuarios con los filtros seleccionados
-                    listaMedicos = (from u in _context.Medicos
-                                    where (u.IdMedico != admin.IdMedico && 
-                        (listaUserNames.Contains(u.UserLogin) || (string.IsNullOrEmpty(filtros["busqueda"]) || (u.UserLogin == filtros["busqueda"] || u.Nombre.StartsWith(filtros["busqueda"])
-                        || u.Apellidos.Contains(filtros["busqueda"]) || u.Apellidos.StartsWith(filtros["busqueda"])))))
-                                    select _mapper.Map<UserUploadDto>(u)).ToList();
+                    // Obtenemos los usuarios que no sea el propio admin y filtramos por el search
+                    if (camposFiltrado.SortDirection == 1) {
+                        query = query.OrderBy(lambda);
+                    } else {
+                        query = query.OrderByDescending(lambda);
+                    }
+                } 
+         
+                // ----------------- Creamos expresion lambda para el ordenamiento --------------
 
-                    // Añadimos el rol a los usuarios
-                    listaMedicos.ForEach(m => m.Rol = filtros["rol"]);
+                // Filtramos la cantiadad de usuarios a obtener
+                query = query.Skip(camposFiltrado.Page * camposFiltrado.PageSize).Take(camposFiltrado.PageSize);
+
+                // Obtenemos los medicos
+                listaMedicos = _mapper.Map<List<UserUploadDto>>(query.ToList());
+
+
+                // Mapeamos los medicos y obtenemos su rol
+                foreach (UserUploadDto usuario in listaMedicos) {
+                    var role = await ObtenerRolUser(await ObtenerUsuarioIdentity(usuario.UserLogin));
+                    if (role != null) {
+                        usuario.Rol = role;
+                    }
+                    usuario.Indice = indice;
+                    indice++;
                 }
 
                 return listaMedicos;
-            } catch (Exception) {
+            } catch (Exception ex) {
                     throw;
             }
         }

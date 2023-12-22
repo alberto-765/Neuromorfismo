@@ -65,7 +65,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
                             await transactionIdentity.RollbackAsync();
                             return BadRequest($"Ha surgido un error al crear el nuevo {model.Rol}");
                         } else {
-                            return BadRequest($"Ya existe un usuario con el username: {model.UserLogin}");
+                            return BadRequest($"Ya existe un usuario con el username: {model.UserLogin}, o el username no es válido.");
                         }
 
                     } else {

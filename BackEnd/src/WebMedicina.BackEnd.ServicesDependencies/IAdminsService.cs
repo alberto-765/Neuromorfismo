@@ -10,8 +10,8 @@ namespace WebMedicina.BackEnd.ServicesDependencies {
     public interface IAdminsService {
         // USUARIOS Y MEDICOS
         bool CrearMedico(UserRegistroDto nuevoMedico, String idUsuario);
-        Task<List<UserUploadDto>> ObtenerFiltradoUsuarios(Dictionary<string, string> filtros, ClaimsPrincipal user);
-        List<UserUploadDto> FiltrarUsuarios(List<UserUploadDto> listaUsuarios, ClaimsPrincipal user);
+        Task<List<UserUploadDto>> ObtenerFiltradoUsuarios(FiltradoTablaDefaultDto camposFiltrado, ClaimsPrincipal user);
+        List<UserUploadDto> FiltrarUsuariosPorPermisos(List<UserUploadDto> listaUsuarios, ClaimsPrincipal user);
         Task<bool> ActualizarMedico(UserUploadDto medicoActualizado);
 
         // EPILEPSIAS

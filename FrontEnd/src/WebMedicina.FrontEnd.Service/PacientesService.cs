@@ -1,13 +1,8 @@
 ﻿using Microsoft.JSInterop;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http.Json;
 using System.Security.Claims;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.Shared.Dto;
 
@@ -16,7 +11,7 @@ namespace WebMedicina.FrontEnd.Service {
         private readonly ICrearHttpClient _crearHttpClient;
         private readonly HttpClient Http;
         private readonly IJSRuntime js;
-
+        private const string clavePacientesSession = "ListadoPacientes";
         public PacientesService(ICrearHttpClient crearHttpClient, IJSRuntime js) {
             _crearHttpClient = crearHttpClient;
             Http = _crearHttpClient.CrearHttp();
@@ -75,17 +70,38 @@ namespace WebMedicina.FrontEnd.Service {
             }
         }
 
+        // LLamada http para editar paciente
+        public async Task<HttpResponseMessage> EditarPaciente(CrearPacienteDto nuevoPaciente) {
+            try {
+                return await Http.PostAsJsonAsync("pacientes/editarPaciente", nuevoPaciente);
+            } catch (Exception) {
+                throw;
+            }
+        }
+
+
+        // LLamada http para eliminar paciente
+        public async Task<HttpResponseMessage> EliminarPaciente(CrearPacienteDto nuevoPaciente) {
+            try {
+                return await Http.PostAsJsonAsync("pacientes/crearPaciente", nuevoPaciente);
+            } catch (Exception) {
+                throw;
+            }
+        }
+
         // Obtener pacientes de la api y realizar filtrado
-        public async Task<List<PacienteDto>?> ObtenerPacientes() {
+        public async Task<List<CrearPacienteDto>?> ObtenerPacientes() {
             try {
                 HttpResponseMessage respuesta = await Http.GetAsync("pacientes/obtenerPacientes");
-                List<PacienteDto>? pacientes = null;
+                List<CrearPacienteDto>? pacientes = null;
 
                 // Guardamos el listado de todos los pacientes en session
                 if(respuesta.IsSuccessStatusCode) {
-                    pacientes = await respuesta.Content.ReadFromJsonAsync<List<PacienteDto>>();
-                    await js.SetInSessionStorage("pacientes",  JsonSerializer.Serialize(pacientes));
+                    pacientes = await respuesta.Content.ReadFromJsonAsync<List<CrearPacienteDto>>();
                 }
+
+                // Guardamos pacientes en session
+                await GuardarPacientesSession(pacientes);
                 return pacientes;
             } catch (Exception) {
                 throw;
@@ -93,7 +109,7 @@ namespace WebMedicina.FrontEnd.Service {
         }
 
         // Filtramos los pacientes con los filtros seleccionados
-        public async Task<List<PacienteDto>?> FiltrarPacientes(FiltroPacienteDto filtrsPacientes, List<PacienteDto>? listaPacientes) {
+        public async Task<List<CrearPacienteDto>?> FiltrarPacientes(FiltroPacienteDto filtrsPacientes, List<CrearPacienteDto>? listaPacientes) {
             try {
                 // Comprobamos si alguna de las propiedades no es null o las que son una lista si contienen elementos
                 if (filtrsPacientes.GetType().GetProperties().Any(prop => 
@@ -108,7 +124,7 @@ namespace WebMedicina.FrontEnd.Service {
 
                     // Obtenemos el listado de pacientes
                     listaPacientes = (from q in listaPacientes where ((filtrsPacientes.Sexo == null || q.Sexo == filtrsPacientes.Sexo) &&
-                                      (filtrsPacientes.Talla == null || q.Talla == filtrsPacientes.Talla) && ((filtrsPacientes.EnfermRaras && q.EnfermRaras == "S") || !filtrsPacientes.EnfermRaras && q.EnfermRaras == "N")
+                                      (filtrsPacientes.Talla == null || q.Talla == filtrsPacientes.Talla) && ((filtrsPacientes.EnfermRaras && q.EnfermRaras) || !filtrsPacientes.EnfermRaras && !q.EnfermRaras)
                                       ) select q).ToList();
 
                 }
@@ -119,10 +135,11 @@ namespace WebMedicina.FrontEnd.Service {
         }
 
         // Filtramos los pacientes para "Mis Pacientes" en caso de ser "SuperAdmin o Admin"
-        public List<PacienteDto>? FiltrarMisPacientes(List<PacienteDto>? listaPacientes, ClaimsPrincipal? user) {
+        public async Task<List<CrearPacienteDto>?> FiltrarMisPacientes(List<CrearPacienteDto>? listaPacientes, ClaimsPrincipal? user) {
             try {
+
                 // Devolvemos la lista porque en los medicos ya tienen filtrados solamente sus pacientes
-                if (user == null || user.IsInRole("medico") || listaPacientes == null) {
+                if (user == null || user.IsInRole("medico") || listaPacientes == null || listaPacientes.Any() == false) {
                     return listaPacientes;
                 }
 
@@ -137,5 +154,56 @@ namespace WebMedicina.FrontEnd.Service {
             }
         }
 
+        // Añadir un nuevo paciente creado a la lista de todos los pacientes
+        public async Task<List<CrearPacienteDto>?> AnadirPacienteALista(CrearPacienteDto nuevoPaciente) {
+            try {
+                List<CrearPacienteDto>? listaPacientes = JsonSerializer.Deserialize<List<CrearPacienteDto>>(await js.GetFromSessionStorage(clavePacientesSession));
+
+                // Añadimos el paciente o sino generamos una nueva lista
+                if(listaPacientes != null && listaPacientes.Any()) {
+                    listaPacientes.Add(nuevoPaciente);
+                } else {
+                    listaPacientes = new() {
+                        nuevoPaciente
+                    };
+                }
+
+                // Guardamos listado de pacientes
+                await GuardarPacientesSession(listaPacientes);
+
+                return listaPacientes;
+            } catch (Exception) {
+                throw;
+            }
+        }
+
+        // Guardar lista pacientes en session
+        public async Task GuardarPacientesSession(List<CrearPacienteDto>? listaPacientes) {
+            try {
+                if(listaPacientes != null && listaPacientes.Any()){
+                    await js.SetInSessionStorage(clavePacientesSession, JsonSerializer.Serialize(listaPacientes));
+                }
+            } catch (Exception) {
+                throw;
+            }
+        }
+
+        // Quitamos scroll del dialogo por medio de js
+        public async Task BloquearScroll(string idDialogo) {
+            try {
+                await js.InvokeVoidAsync("bloquearScroll", idDialogo, "y");
+            } catch (Exception) {
+                throw;
+            }
+        }
+
+        // Devolvemos scroll del dialogo por medio de js
+        public async Task DesbloquearScroll(string idDialogo) {
+            try {
+                await js.InvokeVoidAsync("desbloquearScroll", idDialogo, "y");
+            } catch (Exception) {
+                throw;
+            }
+        }
     }
 }

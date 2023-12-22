@@ -1,0 +1,14 @@
+﻿<div>
+    <MudSelect T="string" Class="filtro" @bind-Value="TipoEpiSel" For="@(() => TipoEpiSel)" Label="Epilepsia" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" OnOpen="BloquearScroll"
+               OnClose="DesbloquearScroll" Clearable="true">
+        @if (ListaEpilepsias != null && ListaEpilepsias.Any()) {
+
+            @* Mapeamos todos los farmacos almacenados *@
+            foreach (EpilepsiasDto epilepsia in ListaEpilepsias) {
+                <MudSelectItem Value="@(epilepsia.IdEpilepsia.ToString())">@epilepsia.Nombre</MudSelectItem>
+            }
+        } else {
+            <MudSelectItem Value="@(string.Empty)" Disabled="true">No hay opciones disponibles</MudSelectItem>
+        }
+    </MudSelect>
+</div>

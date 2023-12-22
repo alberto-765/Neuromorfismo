@@ -22,7 +22,13 @@ namespace WebMedicina.BackEnd.Dal {
         //  Get MUTACION
         public List<MutacionesDto> GetMutaciones() {
             try {
-                return _mapper.Map<List<MutacionesDto>>(_context.Mutaciones.ToList());
+                List<MutacionesDto> listaMutaciones = _mapper.Map<List<MutacionesDto>>(_context.Mutaciones.ToList());
+                if(listaMutaciones.Count > 0) {
+                    for (int i = 0; i < listaMutaciones.Count; i++){
+                        listaMutaciones[i].Indice = i+1;
+                    }
+                }
+                return listaMutaciones;
             } catch (Exception) { throw; }
         }
 

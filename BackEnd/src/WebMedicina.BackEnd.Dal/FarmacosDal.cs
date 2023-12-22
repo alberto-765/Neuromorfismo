@@ -19,7 +19,7 @@ namespace WebMedicina.BackEnd.Dal {
         }
         //  Get FARMACOS
         public List<FarmacosDto> GetFarmacos() {
-            try {
+            try { 
                 return _mapper.Map<List<FarmacosDto>>(_context.Farmacos.ToList());
             } catch (Exception) { throw; }
         }

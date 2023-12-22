@@ -1,7 +1,7 @@
-﻿@using MudBlazor.Components;
-@using static MudBlazor.CategoryTypes;
-@page "/gestionUsers"
+﻿@page "/gestionUsers"
 @attribute [Authorize(Roles = "superAdmin, admin")]
+
+
 <PageTitle>Gestión Médicos</PageTitle>
 
 <h1 class="mt-4 mt-sm-8 ml-sm-8 d-flex align-center">
@@ -22,7 +22,7 @@
     <div>
         <MudTable ServerData="@(new Func<TableState, Task<TableData<UserUploadDto>>>(ServerReload))" Hover="true" @ref="table" CanCancelEdit="true" IsEditRowSwitchingBlocked="false" ApplyButtonPosition="TableApplyButtonPosition.End"
                     EditTrigger="TableEditTrigger.RowClick" SortLabel="Ordenar por" CommitEditTooltip="Editar usuario" CancelEditTooltip="Cancelar edición" 
-                    RowEditPreview="CopiaSeguridadItem" RowEditCancel="ResetearUserInfo" RowEditCommit="ActualizarUsuario"
+                    RowEditPreview="CopiaSeguridadItem" RowEditCancel="ResetearUserInfo" RowEditCommit="ActualizarUsuario"                                                       
                   Breakpoint="Breakpoint.Md" Id="tablaGestionUsers" Elevation="3" Class="rounded-lg">
             <ToolBarContent>
                 <MudText Typo="Typo.h6" Class="ml-md-5 mt-5 mt-md-0">Usuarios dados de alta</MudText>
@@ -30,17 +30,19 @@
                 <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Buscar" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="ml-4 ml-sm-0 mt-0 sinMargin"></MudTextField>
             </ToolBarContent>
             <HeaderContent>
-                <MudTh Class="tituloTabla filaId"><MudTableSortLabel SortLabel="campo_idMedico" T="UserUploadDto">#</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="campo_nombre" T="UserUploadDto">Nombre</MudTableSortLabel></MudTh>
-                <MudTh Class="filaApellidos"><MudTableSortLabel SortLabel="campo_apellidos" T="UserUploadDto">Apellidos</MudTableSortLabel></MudTh>
-                <MudTh Class="tituloTabla"><MudTableSortLabel SortLabel="campo_fechaNac" T="UserUploadDto">Fecha Nacimiento</MudTableSortLabel></MudTh>
-                <MudTh Class="tituloTabla filaGenero"><MudTableSortLabel SortLabel="campo_sexo" T="UserUploadDto">Género</MudTableSortLabel></MudTh>
-                <MudTh Class="tituloTabla"><MudTableSortLabel SortLabel="campo_rol" T="UserUploadDto" >Rol</MudTableSortLabel></MudTh>
-                <MudTh Class="tituloTabla"><MudTableSortLabel SortLabel="campo_fechaCreac" T="UserUploadDto">Fecha Creación</MudTableSortLabel></MudTh>
-                <MudTh Class="tituloTabla"><MudTableSortLabel SortLabel="campo_fechaUltMod" T="UserUploadDto">Fecha Última Modificación</MudTableSortLabel></MudTh>
+                <MudTh Class="tituloTabla filaId"><MudTableSortLabel SortLabel="IdMedico" T="UserUploadDto">#</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="UserLogin" T="UserUploadDto">User Login</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="Nombre" T="UserUploadDto">Nombre</MudTableSortLabel></MudTh>
+                <MudTh Class="filaApellidos"><MudTableSortLabel SortLabel="Apellidos" T="UserUploadDto">Apellidos</MudTableSortLabel></MudTh>
+                <MudTh Class="tituloTabla"><MudTableSortLabel SortLabel="FechaNac" T="UserUploadDto">Fecha Nacimiento</MudTableSortLabel></MudTh>
+                <MudTh Class="tituloTabla filaGenero"><MudTableSortLabel SortLabel="Sexo" T="UserUploadDto">Género</MudTableSortLabel></MudTh>
+                <MudTh Class="tituloTabla filaRol">Rol</MudTh>
+                <MudTh Class="tituloTabla"><MudTableSortLabel SortLabel="FechaCreac" T="UserUploadDto">Fecha Creación</MudTableSortLabel></MudTh>
+                <MudTh Class="tituloTabla"><MudTableSortLabel SortLabel="FechaUltMod" T="UserUploadDto">Fecha Última Modificación</MudTableSortLabel></MudTh>
             </HeaderContent>
             <RowTemplate>
-                <MudTd DataLabel="#" Class="inputField">@context.IdMedico</MudTd>
+                <MudTd DataLabel="#" Class="inputField">@context.Indice</MudTd>
+                <MudTd DataLabel="User Login" Class="inputField">@context.UserLogin</MudTd>
                 <MudTd DataLabel="Nombre" Class="inputField">@context.Nombre</MudTd>
                 <MudTd DataLabel="Apellidos" Class="inputField">@context.Apellidos</MudTd>
                 <MudTd DataLabel="Fecha Nacimiento" Class="inputField">@context.FechaNac?.ToString("dd/MM/yyyy")</MudTd>
@@ -87,7 +89,8 @@
                 </MudTd>
             </RowTemplate>
             <RowEditingTemplate>
-                <MudTd Class="justify-start">@context.IdMedico</MudTd>
+                <MudTd Class="justify-start">@context.Indice</MudTd>
+                <MudTd Class="justify-start">@context.UserLogin</MudTd>
                 <MudTd>
                     <MudTextField @bind-Value="@context.Nombre" For="@(() => context.Nombre)" OnlyValidateIfDirty="true" Clearable="true" Placeholder="Nombre" Class="inputField" />
                 </MudTd>

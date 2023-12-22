@@ -1,68 +1,38 @@
 ﻿<MudDialog Class="@idDialogo" ClassActions="contenedorBotones">
-    <TitleContent>
-        <h1>Nuevo Paciente</h1>
-    </TitleContent>
     <DialogContent>
         <div>
             <EditForm @ref="form" Model="@nuevoPaciente" Class="flex-grow-1 p">
                 <DataAnnotationsValidator />
 
                 @* Numero de historia *@
-                <MudTextField @bind-Value="nuevoPaciente.NumHistoria" Counter="12" MaxLength="12" For="@(() => nuevoPaciente.NumHistoria)" OnlyValidateIfDirty="true" Immediate="true" Clearable="true" Label="Número de Historia*" Variant="Variant.Text"
-                              OnBlur="ValidarNumHistoria" />
+                <NumHistoria @bind-NumHistoriaSel="@nuevoPaciente.NumHistoria" />
 
                 @* Fecha Nacimiento *@
-                <Picker pickerName="fechaNac" label="Fecha de Nacimiento" Fecha="nuevoPaciente.FechaNac" ActualizarFecha="ActFecha" FechaMaxima="ValidacionesRegistro.ObtenerFechaMaxNacimiento()" />
+                <Picker label="Fecha de Nacimiento"@bind-Fecha="nuevoPaciente.FechaNac"FechaMaxima="ValidacionesRegistro.ObtenerFechaMaxNacimiento()" />
 
                 @* Genero *@
-                <MudSelect Class="filtro" T="string" Label="Género*" @bind-Value="nuevoPaciente.Sexo" For="@(() => nuevoPaciente.Sexo)" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Variant="Variant.Text" OnOpen="BloquearScroll" OnClose="DesbloquearScroll">
-                    <MudSelectItem Value="@("H")"><div class="d-flex align-center"> <MudIcon Icon="@Icons.Material.Outlined.Man" Class="mr-2" Size="Size.Small"></MudIcon> Hombre </div></MudSelectItem>
-                    <MudSelectItem Value="@("M")"><div class="d-flex align-center"><MudIcon Icon="@Icons.Material.Outlined.Woman" Class="mr-2" Size="Size.Small"></MudIcon> Mujer </div></MudSelectItem>
-                </MudSelect>
+                <Genero @bind-GeneroSel="nuevoPaciente.Sexo" IdDialogo="idDialogo" />
 
                 @* Talla *@
-                <MudSlider T="int" @bind-Value="@nuevoPaciente.Talla" For="@(() => nuevoPaciente.Talla)" ValueLabel="true" Max="200" Min="50" id="sliderTalla">Talla*: @nuevoPaciente.Talla cm</MudSlider>
+                <Talla @bind-TallaSel="nuevoPaciente.Talla" />
 
                 @* Fecha Diagnostico *@
-                <Picker pickerName="fechaDiag" clases="filtro" label="Fecha de Diagnóstico" Fecha="nuevoPaciente.FechaDiagnostico" variante="PickerVariant.Inline" ActualizarFecha="ActFecha" />
+                <Picker label="Fecha de Diagnóstico" @bind-Fecha="nuevoPaciente.FechaDiagnostico" variante="PickerVariant.Inline" />
       
-
                 @* Fecha fractalidad *@
-                <Picker pickerName="fechaDiag" clases="filtro" label="Fecha de Fractalidad" Fecha="nuevoPaciente.FechaFractalidad" variante="PickerVariant.Inline" ActualizarFecha="ActFecha" />
+                <Picker label="Fecha de Fractalidad" @bind-Fecha="nuevoPaciente.FechaFractalidad" variante="PickerVariant.Inline" />
 
                 @* Farmaco *@
-                <MudTextField T="string" Label="Fármacos" OnlyValidateIfDirty="true" Clearable="true" Variant="Variant.Text" @bind-Value="nuevoPaciente.Farmaco" For="@(() => nuevoPaciente.Farmaco)"></MudTextField>
+                <Farmaco @bind-FarmacoSel="nuevoPaciente.Farmaco" />
 
                 @* Tipo Epilepsia *@
-                <MudSelect T="string" Class="filtro" @bind-Value="nuevoPaciente.Epilepsia" For="@(() => nuevoPaciente.Epilepsia)" Label="Epilepsia" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" OnOpen="BloquearScroll" OnClose="DesbloquearScroll">
-                    @if (ListaEpilepsias != null && ListaEpilepsias.Any()) {
-
-                        @* Mapeamos todos los farmacos almacenados *@
-                        foreach (EpilepsiasDto epilepsia in ListaEpilepsias) {
-                            <MudSelectItem Value="@(epilepsia.IdEpilepsia.ToString())">@epilepsia.Nombre</MudSelectItem>
-                        }
-                    } else {
-                        <MudSelectItem Value="@(string.Empty)" Disabled="true">No hay opciones disponibles</MudSelectItem>
-                    }
-                </MudSelect>
+                <TipoEpilepsia @bind-TipoEpiSel="nuevoPaciente.Epilepsia" IdDialogo="idDialogo" />
 
                 @* Tipo Mutacion *@
-                <MudSelect T="string" Class="filtro" Label="Tipo Mutación*" @bind-Value="nuevoPaciente.IdMutacion" For="@(() => nuevoPaciente.IdMutacion)" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" OnOpen="BloquearScroll" OnClose="DesbloquearScroll">
-                    @if (ListaMutaciones != null && ListaMutaciones.Any()) {
-
-                        @* Mapeamos todos los farmacos almacenados *@
-                        foreach (MutacionesDto mutacion in ListaMutaciones) {
-                            <MudSelectItem Value="@(mutacion.IdMutacion.ToString())">@mutacion.Nombre</MudSelectItem>
-                        }
-                    } else {
-                        <MudSelectItem Value="@(string.Empty)" Disabled="true">No hay opciones disponibles</MudSelectItem>
-                    }
-                </MudSelect>
+                <TipoMutacion @bind-TipoMutacionSel="nuevoPaciente.IdMutacion" IdDialogo="idDialogo" />
 
                 @* Enfermedad Rara *@
-                <MudCheckBox T="bool" Class="filtro checkEnfRara" For="@(() => nuevoPaciente.EnfermRaras)" Label="Enfermedad rara" Color="Color.Primary" @bind-Checked="nuevoPaciente.EnfermRaras"></MudCheckBox>
-                <MudTextField T="string" Class="filtro" Label="Descripción enfermedades raras" Variant="Variant.Outlined" Lines="10" 
-                For="@(() => nuevoPaciente.DescripEnferRaras)" Disabled="@((nuevoPaciente.EnfermRaras ? false : true))" @bind-Text="nuevoPaciente.DescripEnferRaras" />
+                <EnfermedadRara @bind-EnfermedadRaraCheck="nuevoPaciente.EnfermRaras" @bind-Descripcion="nuevoPaciente.DescripEnferRaras" MostrarDescripcion="true" />
             </EditForm>
         </div>
     </DialogContent>

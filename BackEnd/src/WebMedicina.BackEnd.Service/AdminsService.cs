@@ -37,14 +37,14 @@ namespace WebMedicina.BackEnd.Service {
         }
 
         // Filtrar tabla de usuarios
-        public async Task<List<UserUploadDto>> ObtenerFiltradoUsuarios(Dictionary<string, string> filtros, ClaimsPrincipal user) {
+        public async Task<List<UserUploadDto>> ObtenerFiltradoUsuarios(FiltradoTablaDefaultDto camposFiltrado, ClaimsPrincipal user) {
             try {
-                return FiltrarUsuarios(await _adminDal.ObtenerMedicos(filtros, _mapper.Map<UserInfoDto>(user)), user);
+                return FiltrarUsuariosPorPermisos(await _adminDal.ObtenerMedicos(camposFiltrado, _mapper.Map<UserInfoDto>(user)), user);
             } catch (Exception) { throw; }
         }
 
         // Filtramos por los permisos del administrador 
-        public List<UserUploadDto> FiltrarUsuarios(List<UserUploadDto> listaUsuarios, ClaimsPrincipal user) {
+        public List<UserUploadDto> FiltrarUsuariosPorPermisos(List<UserUploadDto> listaUsuarios, ClaimsPrincipal user) {
 
             // Los administradores no podrán editar a super administradores
             if (user.IsInRole("admin")) {

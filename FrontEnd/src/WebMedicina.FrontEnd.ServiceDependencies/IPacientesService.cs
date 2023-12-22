@@ -12,8 +12,13 @@ namespace WebMedicina.FrontEnd.ServiceDependencies {
         Task<(List<FarmacosDto>? ListaFarmacos, List<EpilepsiasDto>? ListaEpilepsias, List<MutacionesDto>? ListaMutaciones)> ObtenerFiltros();
         Task<bool> ValidarNumHistoria(string numHistoria);
         Task<HttpResponseMessage> CrearPaciente(CrearPacienteDto nuevoPaciente);
-        Task<List<PacienteDto>?> ObtenerPacientes();
-        Task<List<PacienteDto>?> FiltrarPacientes(FiltroPacienteDto filtrsPacientes, List<PacienteDto>? listaPacientes);
-        List<PacienteDto>? FiltrarMisPacientes(List<PacienteDto>? listaPacientes, ClaimsPrincipal? user);
+        Task<HttpResponseMessage> EditarPaciente(CrearPacienteDto nuevoPaciente);
+        Task<HttpResponseMessage> EliminarPaciente(CrearPacienteDto nuevoPaciente);
+        Task<List<CrearPacienteDto>?> ObtenerPacientes();
+        Task<List<CrearPacienteDto>?> FiltrarPacientes(FiltroPacienteDto filtrsPacientes, List<CrearPacienteDto>? listaPacientes);
+        Task<List<CrearPacienteDto>?> FiltrarMisPacientes(List<CrearPacienteDto>? listaPacientes, ClaimsPrincipal? user);
+        Task BloquearScroll(string idDialogo);
+        Task DesbloquearScroll(string idDialogo);
+        Task<List<CrearPacienteDto>?> AnadirPacienteALista(CrearPacienteDto nuevoPaciente);
     }
 }
