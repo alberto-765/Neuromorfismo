@@ -187,15 +187,16 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="errores"></param>
         private async void MostrarMensajeError(List<ValidationResult> errores) {
             await DialogService.ShowMessageBox(
                 "Error al editar usuario",
                 new MarkupString(_comun.GenerarHtmlErrores(errores)),
                 yesText: "Entendido");
-        }
-
-        
+        }        
 
         // Filtrar por search
         private void OnSearch(string text) {

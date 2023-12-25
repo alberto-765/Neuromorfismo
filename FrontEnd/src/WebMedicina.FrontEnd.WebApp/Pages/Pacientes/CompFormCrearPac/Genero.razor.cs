@@ -4,20 +4,14 @@ using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.Shared.Dto;
 
 namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.CompFormCrearPac {
-    public partial class Genero {
-        
-        [CascadingParameter(Name = "excepcionPersonalizada")] ExcepcionPersonalizada excepcionPersonalizada { get; set; }
+    public partial class Genero <T> where T : BasePaciente {
         [Inject] private IPacientesService _pacientesService { get; set; }
 
-
-        // Parametros
-        [Parameter] public string GeneroSel { get; set; }
-
-        // Callback para devolver el valor actualizado
-        [Parameter] public EventCallback<string> GeneroSelChanged { get; set; }
-
-        // ID dialogo para bloquear/desbloquear scroll
-        [Parameter] public string IdDialogo { get; set; } = string.Empty;
+       
+        [Parameter] public T Paciente { get; set; }  // Parametros
+        [Parameter] public EventCallback<T> PacienteChanged { get; set; } // Callback para devolver el valor actualizado
+        [Parameter] public string IdDialogo { get; set; } = string.Empty; // ID dialogo para bloquear/desbloquear scroll
+        [Parameter] public string Label { get; set; } = "Género*";
 
         // Bloquear scroll al abrir desplegable
         private async Task BloquearScroll() {

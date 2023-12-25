@@ -20,12 +20,11 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
 
         // Campos formulario
         private EditForm form { get; set; } = new();
-        public bool OrdenarTalla { get; set; } // Mostrar un icono u otro en ordenar por talla
         [Parameter] public CrearPacienteDto nuevoPaciente { get; set; } // Debe pasarse por parametro
         [Parameter] public IEnumerable<EpilepsiasDto>? ListaEpilepsias { get; set; } = null;
         [Parameter] public IEnumerable<MutacionesDto>? ListaMutaciones { get; set; } = null;
         private bool _creandoPaciente { get; set; } = false; 
-        private bool _crearDisabled { get; set; } = false;
+        private bool PacienteValido { get; set; } = true;
 
         // Campos dialogo
         private const string idDialogo = "dialogoCrear";
@@ -48,12 +47,12 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
         // Boton crear
         private async Task Editar() {
             try {
-                if (form.EditContext.Validate()) {
+                if (form.EditContext is not null && form.EditContext.Validate()) {
                     _creandoPaciente = true;
                     HttpResponseMessage respuesta =  await _pacientesService.EditarPaciente(nuevoPaciente);
 
                     // Mensaje para mostrar el usuario
-                    bool pacienteCreado = true;
+                    bool pacienteEditado = true;
                     Severity tipoSnacbar = Severity.Success;
                     string mensaje = "Paciente editado exitosamente.";
 
@@ -61,12 +60,12 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
 
                         // Validamos si el paciente ha podido ser creado
                         if(await respuesta.Content.ReadFromJsonAsync<bool>() == false) {
-                            pacienteCreado = false;
+                            pacienteEditado = false;
                             mensaje = "El paciente no ha podido ser editado. Inténtelo de nuevo o conteacte con un administrador.";
                             tipoSnacbar = Severity.Error;
                         }
                     } else {
-                        pacienteCreado = false;
+                        pacienteEditado = false;
                         mensaje = await respuesta.Content.ReadAsStringAsync();
                         tipoSnacbar = Severity.Error;
                     }
@@ -75,11 +74,14 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
                     _snackbar.Add(mensaje, tipoSnacbar);
 
                     // Cerramos el dialogo
-                    if(pacienteCreado) {
-                        MudDialog.Close(DialogResult.Ok(nuevoPaciente));
+                    if(pacienteEditado) {
+                        MudDialog.Close(DialogResult.Ok(true));
+                    } else {
+                        MudDialog.Close(DialogResult.Ok(false));
                     }
                 }
             } catch (Exception ex) {
+                Cancel();
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
                 throw;
             }

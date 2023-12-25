@@ -8,17 +8,18 @@ using WebMedicina.Shared.Dto;
 
 namespace WebMedicina.FrontEnd.ServiceDependencies {
     public interface IPacientesService {
-        Task<IEnumerable<string>> ObtenerAllMed();
+        Task<IEnumerable<UserInfoDto>> ObtenerAllMed();
         Task<(List<FarmacosDto>? ListaFarmacos, List<EpilepsiasDto>? ListaEpilepsias, List<MutacionesDto>? ListaMutaciones)> ObtenerFiltros();
         Task<bool> ValidarNumHistoria(string numHistoria);
         Task<HttpResponseMessage> CrearPaciente(CrearPacienteDto nuevoPaciente);
         Task<HttpResponseMessage> EditarPaciente(CrearPacienteDto nuevoPaciente);
-        Task<HttpResponseMessage> EliminarPaciente(CrearPacienteDto nuevoPaciente);
+        Task<HttpResponseMessage> EliminarPaciente(int idPaciente);
         Task<List<CrearPacienteDto>?> ObtenerPacientes();
-        Task<List<CrearPacienteDto>?> FiltrarPacientes(FiltroPacienteDto filtrsPacientes, List<CrearPacienteDto>? listaPacientes);
-        Task<List<CrearPacienteDto>?> FiltrarMisPacientes(List<CrearPacienteDto>? listaPacientes, ClaimsPrincipal? user);
+        List<CrearPacienteDto> FiltrarPacientes(FiltroPacienteDto filtrsPacientes, List<CrearPacienteDto>? listaPacientes);
+        List<CrearPacienteDto> FiltrarMisPacientes(List<CrearPacienteDto>? listaPacientes, ClaimsPrincipal? user);
         Task BloquearScroll(string idDialogo);
         Task DesbloquearScroll(string idDialogo);
-        Task<List<CrearPacienteDto>?> AnadirPacienteALista(CrearPacienteDto nuevoPaciente);
+        Task<List<CrearPacienteDto>?> AnadirPacienteALista(int idPaciente);
+        Task<List<CrearPacienteDto>?> EliminarPacienteLista(int idPaciente);
     }
 }

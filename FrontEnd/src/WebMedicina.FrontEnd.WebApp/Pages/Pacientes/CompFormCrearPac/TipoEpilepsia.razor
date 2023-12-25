@@ -1,5 +1,7 @@
-﻿<div>
-    <MudSelect T="string" Class="filtro" @bind-Value="TipoEpiSel" For="@(() => TipoEpiSel)" Label="Epilepsia" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" OnOpen="BloquearScroll"
+﻿@typeparam T where T : BasePaciente
+
+<div>
+    <MudSelect T="string" Class="filtro" @bind-Value="Paciente.Epilepsia" For="@(() => Paciente.Epilepsia)" Label="Epilepsia" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" OnOpen="BloquearScroll"
                OnClose="DesbloquearScroll" Clearable="true">
         @if (ListaEpilepsias != null && ListaEpilepsias.Any()) {
 

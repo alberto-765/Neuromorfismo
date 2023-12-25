@@ -20,12 +20,11 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
 
         // Campos formulario
         private EditForm form { get; set; } = new();
-        public bool OrdenarTalla { get; set; } // Mostrar un icono u otro en ordenar por talla
         private CrearPacienteDto nuevoPaciente { get; set; } = new(); 
         [Parameter] public IEnumerable<EpilepsiasDto>? ListaEpilepsias { get; set; } = null;
         [Parameter] public IEnumerable<MutacionesDto>? ListaMutaciones { get; set; } = null;
-        private bool _creandoPaciente { get; set; } = false; 
-        private bool _crearDisabled { get; set; } = false;
+        private bool _creandoPaciente { get; set; } = false;
+        public bool PacienteValido { get; set; } = true;
 
         // Campos dialogo
         private const string idDialogo = "dialogoCrear";
@@ -48,19 +47,21 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
         // Boton crear
         private async Task Crear() {
             try {
-                if (form.EditContext.Validate()) {
+                if (form.EditContext is not null && form.EditContext.Validate()) { 
                     _creandoPaciente = true;
-                    HttpResponseMessage respuesta =  await _pacientesService.CrearPaciente(nuevoPaciente);
+                    HttpResponseMessage respuesta = await _pacientesService.CrearPaciente(nuevoPaciente);
 
                     // Mensaje para mostrar el usuario
                     bool pacienteCreado = true;
                     Severity tipoSnacbar = Severity.Success;
                     string mensaje = "Nuevo paciente creado exitosamente.";
+                    int idPaciente = 0;
 
                     if (respuesta.IsSuccessStatusCode) {
 
                         // Validamos si el paciente ha podido ser creado
-                        if(await respuesta.Content.ReadFromJsonAsync<bool>() == false) {
+                        idPaciente = await respuesta.Content.ReadFromJsonAsync<int>();
+                        if (idPaciente == 0) {
                             pacienteCreado = false;
                             mensaje = "El nuevo paciente no ha podido ser creado. Inténtelo de nuevo o conteacte con un administrador.";
                             tipoSnacbar = Severity.Error;
@@ -75,8 +76,8 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
                     _snackbar.Add(mensaje, tipoSnacbar);
 
                     // Cerramos el dialogo
-                    if(pacienteCreado) {
-                        MudDialog.Close(DialogResult.Ok(nuevoPaciente));
+                    if (pacienteCreado) {
+                        MudDialog.Close(DialogResult.Ok(idPaciente));
                     }
                 }
             } catch (Exception ex) {
@@ -87,6 +88,5 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
 
         // Boton cancelar
         private void Cancel() => MudDialog.Cancel();
-
     }
 }

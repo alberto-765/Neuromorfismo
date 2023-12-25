@@ -1,5 +1,7 @@
-﻿<div>
-    <MudSelect T="string" Class="filtro" Label="Tipo Mutación*" @bind-Value="TipoMutacionSel" For="@(() =>TipoMutacionSel)" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" OnOpen="BloquearScroll"
+﻿@typeparam T where T : BasePaciente
+
+<div>
+    <MudSelect T="string" Class="filtro" Label="@Label" @bind-Value="Paciente.IdMutacion" For="@(() => Paciente.IdMutacion)" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" OnOpen="BloquearScroll"
                OnClose="DesbloquearScroll"  Clearable="true">
         @if (ListaMutaciones != null && ListaMutaciones.Any()) {
 

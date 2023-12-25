@@ -2,8 +2,8 @@
 <PageTitle>Pacientes</PageTitle>
 @attribute [Authorize]
 
-<CascadingValue Name="ListaMutaciones" Value="ListaMutaciones">
-    <CascadingValue Name="ListaEpilepsias" Value="ListaEpilepsias">
+<CascadingValue Name="ListaMutaciones" Value="ListaMutaciones" IsFixed="true">
+    <CascadingValue Name="ListaEpilepsias" Value="ListaEpilepsias" IsFixed="true">
 
         @* Tab con las subpantallas*@
         <MudStack Spacing="8" Class="mt-5 gap-md-0" >
@@ -30,12 +30,12 @@
                 <AuthorizeView>
                     <Authorized>
                         <MudTabPanel Text="Todos los Pacientes" >
-                            <AllPacientes ListaPacientes="ListaPacientes"/>
+                            <AllPacientes ListaPacientes="ListaPacientes" EliminarPaciente="EliminarPacienteLista" />
                         </MudTabPanel>
                     </Authorized>
                 </AuthorizeView>
                 <MudTabPanel Text="Mis Pacientes">
-                    <MisPacientes ListaPacientes="ListaPacientes" />
+                    <MisPacientes ListaPacientes="ListaPacientes" EliminarPaciente="EliminarPacienteLista" />
                 </MudTabPanel>
             </MudTabs>
         </MudStack>

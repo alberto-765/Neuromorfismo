@@ -3,18 +3,17 @@ using WebMedicina.FrontEnd.Service;
 using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.Shared.Dto;
 namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.CompFormCrearPac {
-    public partial class TipoEpilepsia {
-        [CascadingParameter(Name = "excepcionPersonalizada")] ExcepcionPersonalizada excepcionPersonalizada { get; set; }
+    public partial class TipoEpilepsia <T> where T : BasePaciente {
         [Inject] private IPacientesService _pacientesService { get; set; }
 
         // Parametros
-        [Parameter] public string? TipoEpiSel { get; set; }
+        [Parameter] public T Paciente { get; set; }
 
         // Callback para devolver el valor actualizado
-        [Parameter] public EventCallback<string?> TipoEpiSelChanged { get; set; }
+        [Parameter] public EventCallback<T> PacienteChanged { get; set; }
 
         // Lista Epilepsias
-        [CascadingParameter(Name = "ListaEpilepsias")] public IEnumerable<EpilepsiasDto>? ListaEpilepsias { get; set; } = null;
+        [Parameter] public IEnumerable<EpilepsiasDto>? ListaEpilepsias { get; set; } = null;
 
         // ID dialogo para bloquear/desbloquear scroll
         [Parameter] public string IdDialogo { get; set; } = string.Empty;

@@ -85,8 +85,8 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
                 var result = await dialog.Result;
 
                 // Validamos que el dialogo haya devuelto el nuevo paciente creado y actualizamos la lista
-                if (result.Cancelled == false && result.Data is CrearPacienteDto) {
-                    ListaPacientes = await _pacientesService.AnadirPacienteALista((CrearPacienteDto)result.Data);
+                if (result.Canceled == false && result.Data is int idPaciente && idPaciente > 0) {
+                    ListaPacientes = await _pacientesService.AnadirPacienteALista(idPaciente);
                 }          
             } catch (Exception ex) {
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
@@ -94,7 +94,10 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
             }
         }
 
-        // Obtener pacientes de BD
+        /// <summary>
+        /// Obtener pacientes de BD
+        /// </summary>
+        /// <returns></returns>
         private async Task ObtenerPacientes() {
             try {
                 // Obtenemos el listado de pacientes
@@ -106,6 +109,19 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
                 }
             } catch (Exception) {
                 _snackbar.Add("Ha surgido un error al obtener los pacientes.", Severity.Error);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Eliminar un paciente de la lista de pacientes
+        /// </summary>
+        /// <param name="idPaciente"></param>
+        /// <returns></returns>
+        public async Task EliminarPacienteLista(int idPaciente) {
+            try {
+                ListaPacientes = await _pacientesService.EliminarPacienteLista(idPaciente);
+            } catch (Exception) {
                 throw;
             }
         }

@@ -1,6 +1,6 @@
 ﻿<div>
     <MudDataGrid T="CrearPacienteDto" Items="@ListaPacientes" ReadOnly="false" 
-                 EditTrigger="DataGridEditTrigger.Manual" Elevation="25" SortMode="SortMode.Single" Hover="true" Breakpoint="Breakpoint.Md" Class="mt-4"
+                 EditTrigger="DataGridEditTrigger.Manual" Elevation="25" SortMode="SortMode.Single" Hover="true" Breakpoint="Breakpoint.Sm" Class="mt-4"
                  QuickFilter="Search">
         <ToolBarContent>
             <MudText Typo="Typo.h6" Class="ml-md-5 mt-5 mt-md-0">Pacientes</MudText>
@@ -9,7 +9,7 @@
                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
         <Columns>
-            <HierarchyColumn T="CrearPacienteDto" />
+            <HierarchyColumn T="CrearPacienteDto" Class="" />
 
             @* Numero Historia *@
             <PropertyColumn Property="x => x.NumHistoria" Title="Número de Historia" />
@@ -69,10 +69,10 @@
 
 
             @* Botones Editar y Eliminar *@  
-            <TemplateColumn CellClass="d-flex justify-space-between gap-3">
+            <TemplateColumn CellClass="d-flex justify-space-end justify-sm-space-end gap-3">
                 <CellTemplate>
                     <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => MostrarEditarPac(context.Item))" />
-                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => EliminarPaciente(context.Item))" />
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => ConfirmarEliminacion(context.Item))" />
                 </CellTemplate>
             </TemplateColumn>
         </Columns>
@@ -87,7 +87,7 @@
                 <MudDivider DividerType="DividerType.FullWidth" Class="px-2"/>
 
                 <MudCardContent>
-                   <MudGrid Spacing="3" Justify="Justify.Center" id="gridDecipcionPaciente">
+                   <MudGrid Justify="Justify.FlexStart" id="gridDecipcionPaciente" Class="gap-3">
                        @* Fecha Nacimiento *@
                        <MudItem xs="12" md="6" >
                             <MudText>Fecha Nacimiento: @context.Item.FechaNac?.ToShortDateString()</MudText>
@@ -131,9 +131,14 @@
                                 <MudText>Tipo Mutación: @((!string.IsNullOrEmpty(context.Item.NombreMutacion) ? context.Item.NombreMutacion : "No especificado"))</MudText>
                         </MudItem>
 
+                        @* Farmacos *@
+                        <MudItem xs="12" md="6">
+                            <MudText>Fármacos: @((!string.IsNullOrEmpty(context.Item.Farmaco) ? context.Item.Farmaco : "No especificado"))</MudText>
+                        </MudItem>
+
                         @* Enfermedad Rara *@
                         <MudItem xs="12" md="6">
-                            <MudText>Enfermedad Rara: @context.Item.EnfermRaras
+                            <MudText>Enfermedad Rara: @(context.Item.EnfermRaras ? "Sí" : "No")
 
                                 @* Mostramos tooltip de info si tiene enfermedad rara *@
                                 @if (context.Item.EnfermRaras && !string.IsNullOrEmpty(context.Item.DescripEnferRaras)) {
@@ -148,13 +153,13 @@
 
                 <MudCardActions Class="d-flex justify-space-between">
                     <MudText Typo="Typo.subtitle2">Creado por
-                        <MudChip Variant="Variant.Text" Color="Color.Dark">@(string.IsNullOrEmpty(context.Item.MedicoCreador) ? "-" : $"{context.Item.MedicoCreador}")</MudChip>
+                        <MudChip Variant="Variant.Text" Color="Color.Dark">@(string.IsNullOrEmpty(context.Item.NombreMedicoCreador) ? "-" : $"{context.Item.NombreMedicoCreador}")</MudChip>
                         el
                         <MudChip Variant="Variant.Text" Color="Color.Dark">@(context.Item.FechaCreac == DateOnly.MinValue ? "-" : $"{context.Item.FechaCreac.ToShortDateString()}")</MudChip>
                     </MudText>
                     <MudText Typo="Typo.subtitle2">
                         Modificado por última vez por
-                        <MudChip Variant="Variant.Text" Color="Color.Dark">@(string.IsNullOrEmpty(context.Item.MedicoUltMod) ? "-" : $"{context.Item.MedicoUltMod}")</MudChip>
+                            <MudChip Variant="Variant.Text" Color="Color.Dark">@(string.IsNullOrEmpty(context.Item.NombreMedicoUltMod) ? "-" : $"{context.Item.NombreMedicoUltMod}")</MudChip>
                         el
                         <MudChip Variant="Variant.Text" Color="Color.Dark">@(context.Item.FechaUltMod == DateOnly.MinValue ? "-" : $"{context.Item.FechaUltMod.ToShortDateString()}")</MudChip>
                     </MudText>

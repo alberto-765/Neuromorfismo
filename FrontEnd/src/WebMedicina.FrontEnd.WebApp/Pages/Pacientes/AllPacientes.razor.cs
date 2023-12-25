@@ -5,6 +5,8 @@ using WebMedicina.Shared.Dto;
 namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
     public partial class AllPacientes {
         [Parameter] public List<CrearPacienteDto>? ListaPacientes { get; set; }
+        [Parameter] public EventCallback<int> EliminarPaciente { get; set; } // Evento callback para eliminar paciente
+
         public bool MostrarOverlay { get; set; } = true;
 
 

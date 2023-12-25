@@ -65,7 +65,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => {
 .AddDefaultTokenProviders();  // para los tokens de inicio de sesion
 
 
-// JWT TOKENS
+// JWT TOKENS - AUTENTICACION
 builder.Services.AddAuthentication(x => {
 	x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 	x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -80,8 +80,9 @@ builder.Services.AddAuthentication(x => {
             IssuerSigningKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(builder.Configuration["JWT:key"])),
         });
-
 builder.Services.AddAuthorization();
+
+
 //Annadimos servicio mapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

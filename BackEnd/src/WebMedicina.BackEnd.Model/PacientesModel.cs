@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Pomelo.EntityFrameworkCore.MySql.Metadata.Internal;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebMedicina.BackEnd.Model;
 
@@ -46,4 +48,11 @@ public partial class PacientesModel
     public virtual MedicosModel MedicoUltModNavigation { get; set; } = null!;
 
     public virtual ICollection<MedicospacienteModel> Medicospacientes { get; set; } = new List<MedicospacienteModel>();
+
+    // Comparar propiedades
+    public bool Equals(PacientesModel? obj) {
+        return obj != null && (ReferenceEquals(obj, this) || (obj.IdPaciente == this.IdPaciente && obj.NumHistoria == this.NumHistoria && obj.FechaNac == this.FechaNac && obj.Sexo == this.Sexo && obj.Talla == this.Talla && obj.FechaFractalidad == this.FechaFractalidad && obj.FechaDiagnostico == this.FechaDiagnostico && 
+            obj.IdEpilepsia == this.IdEpilepsia && obj.Farmaco == this.Farmaco && obj.IdMutacion == this.IdMutacion && obj.EnfermRaras == this.EnfermRaras && obj.FechaCreac == this.FechaCreac && obj.FechaUltMod == this.FechaUltMod && obj.MedicoUltMod == this.MedicoUltMod && obj.MedicoCreador == this.MedicoCreador &&
+            obj.DescripEnferRaras == this.DescripEnferRaras && obj.EnfermRaras == this.EnfermRaras));
+    }
 }

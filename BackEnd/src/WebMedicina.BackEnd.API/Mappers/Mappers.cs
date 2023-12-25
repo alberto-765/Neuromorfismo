@@ -6,9 +6,12 @@ using WebMedicina.BackEnd.Dto;
 using WebMedicina.BackEnd.Model;
 using WebMedicina.Shared.Dto;
 
-namespace WebMedicina.BackEnd.API {
-	public class Mappers :Profile {
-		public Mappers() {
+namespace WebMedicina.BackEnd.API.Mappers
+{
+    public class Mappers : Profile
+    {
+        public Mappers()
+        {
             //// Mapeamos una clase a otra
             //CreateMap<ClaseOrigen, ClaseDestino>()
 
@@ -41,7 +44,7 @@ namespace WebMedicina.BackEnd.API {
 
             // Mapeo Mutaciones
             CreateMap<MutacionesModel, MutacionesDto>().ReverseMap();
-            
+
 
             // Mapeo Farmacos
             //CreateMap<List<FarmacosModel>, List<FarmacosDto>>()
@@ -53,19 +56,16 @@ namespace WebMedicina.BackEnd.API {
             //    })
             //    .ReverseMap();
 
-            // Mapeo tabla medicos pacientes
-            CreateMap<MedicospacienteModel, MedicosPacientesDto>();
+            // Mapeo crear pacientes
+            CreateMap<PacientesModel, CrearPacienteDto>()
+                .ForMember(dest => dest.EnfermRaras, co => co.MapFrom(src => src.EnfermRaras == "S"))
+                .ForMember(dest => dest.MedicosPacientes, co => co.Ignore()); ;
 
             // Mapeo crear pacientes
-            CreateMap<PacientesModel, CrearPacienteDto>().ReverseMap()
-                .ForMember(dest => dest.EnfermRaras, co => co.MapFrom(src => (src.EnfermRaras ? 'S' : 'N')))
-                .ForMember(dest => dest.DescripEnferRaras, co => co.MapFrom(src => (src.EnfermRaras ? src.DescripEnferRaras : "")));
-
-            // Mapeo pacientes
-            CreateMap<PacientesModel, PacienteDto>()
-                .ForMember(dest => dest.EnfermRaras, co => co.MapFrom(src => (src.EnfermRaras == "S" ? "Sí" : "No")))
-                .ForMember(dest => dest.DescripEnferRaras, co => co.MapFrom(src => (src.EnfermRaras == "S" ? src.DescripEnferRaras : "")))
-                .ReverseMap();
+            CreateMap<CrearPacienteDto, PacientesModel>()
+                .ForMember(dest => dest.EnfermRaras, co => co.MapFrom(src => src.EnfermRaras ? "S" : "N"))
+                .ForMember(dest => dest.DescripEnferRaras, co => co.MapFrom(src => src.EnfermRaras ? src.DescripEnferRaras : string.Empty))
+                .ForMember(dest => dest.Medicospacientes, co => co.Ignore());
 
             // Mapeamos listas
             //CreateMap<ListaOrigen, ListaDestino>()

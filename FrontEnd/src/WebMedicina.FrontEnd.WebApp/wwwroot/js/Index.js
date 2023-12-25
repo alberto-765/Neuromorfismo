@@ -37,3 +37,17 @@ function desbloquearScroll(claseElemento, ejes) {
         }
     }
 }
+
+// Simular click en un boton
+function EnviarForm(identificador) {
+    try {
+        let form = document.querySelector(identificador)
+
+        // Validamos que es un formulario
+        if (form.tagName == "FORM") {
+            form.submit();
+        }
+    } catch (e) {
+        throw e;
+    }
+}

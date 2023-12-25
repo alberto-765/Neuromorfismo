@@ -26,19 +26,16 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
         private FiltroPacienteDto FiltrosPacientes { get; set; } = new();
 
         // Lista de medicos para filtrar
-        private IEnumerable<string>? ListaMedicos { get; set; } = null;
+        private IEnumerable<UserInfoDto>? ListaMedicos { get; set; } = null;
 
         // Mostrar un icono u otro en ordenar por talla
         public bool OrdenarTalla { get; set; }
 
-        // String que se puestra en el select
-        private string? EpilepsiaFiltrado { get; set; }
-        private string? MutacionFiltrado { get; set; }
 
         // Filtrar Pacientes 
         private async Task ObtenerPacientesFiltrados() {
             try {
-                ListaPacientes = await _pacientesService.FiltrarPacientes(FiltrosPacientes, ListaPacientes);
+                ListaPacientes = _pacientesService.FiltrarPacientes(FiltrosPacientes, ListaPacientes);
             } catch (Exception ex) {
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
                 throw;
@@ -46,17 +43,17 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
         }
 
         // Buscador para autocomplete de medicos
-        private async Task<IEnumerable<string>> BuscarMedPac(string medico) {
+        private async Task<IEnumerable<UserInfoDto>> BuscarMedPac(string? busqueda) {
             try {
                 // Si la lista es null se obtiene por primera vez de BD
                 ListaMedicos ??= await _pacientesService.ObtenerAllMed();
 
                 // Si hay medicos en la lista se realiza la busqueda
-                if (ListaMedicos != null && ListaMedicos.Any()) {
-                    return ListaMedicos.Where(q => q.Contains(medico, StringComparison.InvariantCultureIgnoreCase));
-                } else {
-                    return Enumerable.Empty<string>();
-                }
+                if (!string.IsNullOrWhiteSpace(busqueda) && ListaMedicos != null && ListaMedicos.Any()) {
+                    return ListaMedicos.Where(q => ($"{q.UserLogin} {q.Nombre} {q.Apellidos}").Contains(busqueda, StringComparison.OrdinalIgnoreCase));
+                } 
+
+                return ListaMedicos ?? Enumerable.Empty<UserInfoDto>();
             } catch (Exception ex) {
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
                 throw;

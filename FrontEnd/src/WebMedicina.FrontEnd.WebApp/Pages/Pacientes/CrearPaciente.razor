@@ -5,16 +5,16 @@
                 <DataAnnotationsValidator />
 
                 @* Numero de historia *@
-                <NumHistoria @bind-NumHistoriaSel="@nuevoPaciente.NumHistoria" />
+                <NumHistoria @bind-Paciente="@nuevoPaciente" T="CrearPacienteDto" @bind-PacienteValido="PacienteValido" />
 
                 @* Fecha Nacimiento *@
                 <Picker label="Fecha de Nacimiento"@bind-Fecha="nuevoPaciente.FechaNac"FechaMaxima="ValidacionesRegistro.ObtenerFechaMaxNacimiento()" />
 
                 @* Genero *@
-                <Genero @bind-GeneroSel="nuevoPaciente.Sexo" IdDialogo="idDialogo" />
+                <Genero @bind-Paciente="@nuevoPaciente" IdDialogo="idDialogo" T="CrearPacienteDto"/>
 
                 @* Talla *@
-                <Talla @bind-TallaSel="nuevoPaciente.Talla" />
+                <Talla @bind-Paciente="@nuevoPaciente" T="CrearPacienteDto"/>
 
                 @* Fecha Diagnostico *@
                 <Picker label="Fecha de Diagnóstico" @bind-Fecha="nuevoPaciente.FechaDiagnostico" variante="PickerVariant.Inline" />
@@ -23,23 +23,23 @@
                 <Picker label="Fecha de Fractalidad" @bind-Fecha="nuevoPaciente.FechaFractalidad" variante="PickerVariant.Inline" />
 
                 @* Farmaco *@
-                <Farmaco @bind-FarmacoSel="nuevoPaciente.Farmaco" />
+                <Farmaco @bind-Paciente="@nuevoPaciente" T="CrearPacienteDto"/>
 
                 @* Tipo Epilepsia *@
-                <TipoEpilepsia @bind-TipoEpiSel="nuevoPaciente.Epilepsia" IdDialogo="idDialogo" />
+                <TipoEpilepsia @bind-Paciente="@nuevoPaciente" IdDialogo="idDialogo" ListaEpilepsias="ListaEpilepsias" T="CrearPacienteDto"/>
 
                 @* Tipo Mutacion *@
-                <TipoMutacion @bind-TipoMutacionSel="nuevoPaciente.IdMutacion" IdDialogo="idDialogo" />
+                <TipoMutacion @bind-Paciente="@nuevoPaciente" IdDialogo="idDialogo" ListaMutaciones="ListaMutaciones" T="CrearPacienteDto"/>
 
                 @* Enfermedad Rara *@
-                <EnfermedadRara @bind-EnfermedadRaraCheck="nuevoPaciente.EnfermRaras" @bind-Descripcion="nuevoPaciente.DescripEnferRaras" MostrarDescripcion="true" />
+                <EnfermedadRara @bind-Paciente="@nuevoPaciente" MostrarDescripcion="true" T="CrearPacienteDto"/>
             </EditForm>
         </div>
     </DialogContent>
     <DialogActions>
         <div>
             <MudButton Variant="Variant.Filled" OnClick="Cancel" DisableElevation>Cancelar</MudButton>
-            <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="Crear" Disabled="_crearDisabled">
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="Crear" Disabled="!PacienteValido">
                 @if (_creandoPaciente) {
                     <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
                     <MudText Class="ms-2">Cargando...</MudText>

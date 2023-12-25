@@ -29,11 +29,7 @@
     justify-content: end;
 }
 ::deep .checkEnfRara {
-    margin-top: 30px;
-}
-/*Estilos check enfermedad rara*/
-::deep .checkEnfRara .mud-icon-button {
-    padding: 0 5px 0 0;
+    margin-top: 5px;
 }
 
 /*Boton orndear talla*/

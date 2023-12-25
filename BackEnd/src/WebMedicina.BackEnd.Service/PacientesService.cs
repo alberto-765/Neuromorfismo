@@ -30,51 +30,47 @@ namespace WebMedicina.BackEnd.Service {
 
         public bool ValidarNumHistoria(string numHistoria) {
             try {
-               return _pacientesDal.ValidarNumHistoria(numHistoria);
+               return _pacientesDal.ExisteNumHistoria(numHistoria);
             } catch (Exception) {
                 throw;
             }
         }
 
-        public async Task<IEnumerable<int>> GetAllMed() {
+        /// <summary>
+        /// Obtener listado con todos los medicos que tienen pacientes relacionados
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<UserInfoDto>> GetAllMed() {
             try {
                 // Obtenemos todos los medicos y sus pacientes
-                IEnumerable<MedicosPacientesDto> listaMedicosPac =  await _pacientesDal.ObtenerAllMedicoPacientes();
-
-                // Obtenemos los id de los medicos de la lista
-                if(listaMedicosPac != null && listaMedicosPac.Any()) {
-                    return listaMedicosPac.Select(q => q.Medico).ToList();
-                }
-
-                return Enumerable.Empty<int>();
+                return await _pacientesDal.ObtenerAllMedicoPacientes();
             } catch (Exception) {
                 throw;
             }
         }
 
         // Crear nuevo paciente
-        public async Task<bool> CrearPaciente(CrearPacienteDto nuevoPaciente, int idMedico) {
-            using (var transaccion = _context.Database.BeginTransaction()) {
-                try {
-                    PacientesModel modeloPaciente = _mapper.Map<PacientesModel>(nuevoPaciente);
+        public async Task<int> CrearPaciente(CrearPacienteDto nuevoPaciente, int idMedico) {
+            using var transaccion = _context.Database.BeginTransaction();
+            try {
+                PacientesModel modeloPaciente = _mapper.Map<PacientesModel>(nuevoPaciente);
+                int idPaciente = 0;
 
-                    // Mapeamos el medico creador
-                    modeloPaciente.MedicoCreador = idMedico;
-                    modeloPaciente.MedicoUltMod = idMedico;
-                    bool pacienteCreado = await _pacientesDal.CrearPaciente(modeloPaciente);
+                // Mapeamos el medico creador
+                modeloPaciente.MedicoCreador = idMedico;
+                modeloPaciente.MedicoUltMod = idMedico;
 
-                    // Si no ha habido ningun error finalizamos la transaccion
-                    await transaccion.CommitAsync();
-                    return pacienteCreado;
-                } catch (Exception) {
-                    await transaccion.RollbackAsync();
-                    throw;
-                }
+                idPaciente = await _pacientesDal.CrearPaciente(modeloPaciente);
+                await transaccion.CommitAsync();
+                return idPaciente;
+            } catch (Exception) {
+                await transaccion.RollbackAsync();
+                throw;
             }
         }
 
         // Obtener todos los pacientes con sus datos
-        public List<CrearPacienteDto> ObtenerPacientes (ClaimsPrincipal user) {
+        public List<CrearPacienteDto> ObtenerPacientes (ClaimsPrincipal? user) {
             try {
                 // Get de todos los pacientes
                 List<InfoPacienteDto>? listaInfoPacientes = null;
@@ -99,28 +95,7 @@ namespace WebMedicina.BackEnd.Service {
                 // Mapeamos y añadimos nombres de medicos a cada paciente
                 if(listaInfoPacientes is not null) {
                     foreach (InfoPacienteDto infoPaciente in listaInfoPacientes) {
-                        CrearPacienteDto nuevoPaciente = new() {
-                            IdPaciente = infoPaciente.Paciente.IdPaciente,
-                            NumHistoria = infoPaciente.Paciente.NumHistoria,
-                            FechaNac = infoPaciente.Paciente.FechaNac,
-                            Sexo = infoPaciente.Paciente.Sexo,
-                            Talla = infoPaciente.Paciente.Talla,
-                            FechaDiagnostico = infoPaciente.Paciente.FechaDiagnostico,
-                            FechaFractalidad = infoPaciente.Paciente.FechaFractalidad,
-                            Farmaco = infoPaciente.Paciente.Farmaco,
-                            Epilepsia = infoPaciente.Paciente.IdEpilepsia.ToString(),
-                            NombreEpilepsia = infoPaciente.NombreEpilepsia,
-                            NombreMutacion = infoPaciente.NombreMutacion,
-                            IdMutacion = infoPaciente.Paciente.IdMutacion.ToString(),
-                            EnfermRaras = (infoPaciente.Paciente.EnfermRaras == "S" ? true : false),
-                            DescripEnferRaras = (infoPaciente.Paciente.EnfermRaras == "S" ? infoPaciente.Paciente.DescripEnferRaras : string.Empty  ),
-                            FechaCreac = infoPaciente.Paciente.FechaCreac,
-                            FechaUltMod = infoPaciente.Paciente.FechaUltMod,
-                            MedicoCreador = infoPaciente.Paciente.MedicoCreadorNavigation?.UserLogin ?? string.Empty,
-                            MedicoUltMod = infoPaciente.Paciente.MedicoUltModNavigation?.UserLogin ?? string.Empty,
-                            MedicosPacientes = infoPaciente.MedicosPacientes.ToDictionary(x => x.IdMedico, x => x.UserLogin)
-                        };
-                        listaPacientes.Add(nuevoPaciente);
+                        listaPacientes.Add(Comun.MapearPacienteModdel(infoPaciente));
                     }
                 }
 
@@ -144,19 +119,105 @@ namespace WebMedicina.BackEnd.Service {
             } catch (Exception) { throw; }
         }
 
-        // Obtener todas las farmacos disponibles 
+        /// <summary>
+        /// Obtener todas las farmacos disponibles 
+        /// </summary>
+        /// <returns>Listado con todos los farmacos</returns>
         public List<FarmacosDto> ObtenerFarmacos() {
             try {
                 return _farmacosDal.GetFarmacos();
             } catch (Exception) { throw; }
         }
 
-        public Task<bool> EditarPaciente(CrearPacienteDto nuevoPaciente, int idMedico) {
-            throw new NotImplementedException();
+        /// <summary>
+        /// Editar paciente 
+        /// </summary>
+        /// <param name="nuevoPaciente"></param>
+        /// <param name="idMedico"></param>
+        /// <returns>Si el paciente ha sido editado</returns>
+        public async Task<bool> EditarPaciente(CrearPacienteDto nuevoPaciente, int idMedico) {
+            try {
+                using var transaccion = _context.Database.BeginTransaction();
+                try {
+                    PacientesModel modeloPaciente = _mapper.Map<PacientesModel>(nuevoPaciente);
+
+                    // Mapeamos el medico ultima modificacion
+                    modeloPaciente.MedicoUltMod = idMedico;
+                    bool pacienteEditado = await _pacientesDal.EditarPaciente(modeloPaciente);
+
+                    // Si no ha habido ningun error finalizamos la transaccion
+                    await transaccion.CommitAsync();
+                    return pacienteEditado;
+                } catch (Exception) {
+                        await transaccion.RollbackAsync();
+                        throw;
+                    }
+            } catch (Exception) {
+                throw;
+            }
         }
 
-        public Task<bool> EliminarPaciente(int idPaciente, int idMedico) {
-            throw new NotImplementedException();
+        /// <summary>
+        /// Eliminar paciente 
+        /// </summary>
+        /// <param name="idPaciente"></param>
+        /// <param name="idMedico"></param>
+        /// <returns>Si el paciente ha sido eliminado o no</returns>
+        public async Task<bool> EliminarPaciente(int idPaciente) {
+            try {
+                using var transaccion = _context.Database.BeginTransaction();
+                    try {
+
+                        // Eliminamos el paciente
+                        bool pacienteEliminado = await _pacientesDal.EliminarPaciente(idPaciente);
+
+                        // Si no ha habido ningun error finalizamos la transaccion
+                        await transaccion.CommitAsync();
+                        return pacienteEliminado;
+                    } catch (Exception) {
+                        await transaccion.RollbackAsync();
+                        throw;
+                    }
+            } catch (Exception) {
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Validar los permisos del medico para un paciente
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="idPaciente"></param>
+        /// <returns>Si el usuario tiene permisos para editar o eliminar el paciente</returns>
+        public async Task<bool> ValidarPermisosEdicYElim(ClaimsPrincipal? user, int idPaciente) {
+            try {
+                bool tienePermisos = false;
+
+                if (user != null) {
+                    UserInfoDto userInfo = _mapper.Map<UserInfoDto>(user);
+
+                    // Permisos sin limites para SuperAdmin y Admin
+                    if (user.IsInRole("superAdmin") || user.IsInRole("admin")) {
+                        tienePermisos = true;
+                    } else {
+                        // Validamos tabla MedicosPacientes 
+                        tienePermisos = await _pacientesDal.ValidarPermisosEdicYElim(userInfo.IdMedico, idPaciente);
+                    }
+                }
+
+                return tienePermisos;
+            } catch (Exception) {
+                throw;
+            }
+        }
+        
+        public async Task<CrearPacienteDto?> GetUnPaciente(int idPaciente) {
+            try {
+                return Comun.MapearPacienteModdel(await _pacientesDal.GetUnPaciente(idPaciente));
+            } catch (Exception) {
+                throw;
+            }
         }
     }
 }

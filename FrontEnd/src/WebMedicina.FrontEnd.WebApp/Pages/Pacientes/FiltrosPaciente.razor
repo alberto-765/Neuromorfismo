@@ -14,7 +14,8 @@
                     @* Filtrado por medico *@
                     <AuthorizeView Roles="admin, superAdmin" Context="context__FiltradoMedico">
                         <Authorized>
-                            <MudAutocomplete T="string" Label="Médicos" @bind-Value="@FiltrosPacientes.Medico" For="@(() => FiltrosPacientes.Medico)" SearchFunc="@BuscarMedPac" ResetValueOnEmptyText="true" CoerceValue="true" ShowProgressIndicator="true">
+                            <MudAutocomplete T="UserInfoDto" Label="Médicos" @bind-Value="@FiltrosPacientes.Medico" For="@(() => FiltrosPacientes.Medico)" SearchFunc="@BuscarMedPac" ResetValueOnEmptyText="true" CoerceValue="true" 
+                                ShowProgressIndicator="true" Clearable="true" ToStringFunc="@(q => q == null ? null : $"{q.UserLogin} - {q.Nombre} {q.Apellidos}")">
                                 <NoItemsTemplate>
                                     <MudText Align="Align.Center" Class="px-4 py-1">
                                         No se han encontrado médicos
@@ -25,18 +26,19 @@
                     </AuthorizeView>
 
                     @* Genero *@
-                    <Genero @bind-GeneroSel="FiltrosPacientes.Sexo" />
+                    <Genero @bind-Paciente="FiltrosPacientes" T="FiltroPacienteDto" Label="Género"/>
 
                     @* Talla *@
-                    <Talla @bind-TallaSel="FiltrosPacientes.Talla" />
+                    <Talla @bind-Paciente="FiltrosPacientes" T="FiltroPacienteDto" Label="Talla" />
 
                     @* Tipo Epilepsia *@
-                    <TipoEpilepsia @bind-TipoEpiSel="FiltrosPacientes.Epilepsia" />
+                    <TipoEpilepsia @bind-Paciente="@FiltrosPacientes" ListaEpilepsias="ListaEpilepsias" T="FiltroPacienteDto" />
+
                     @* Tipo Mutacion *@
-                    <TipoMutacion @bind-TipoMutacionSel="FiltrosPacientes.IdMutacion" />
+                    <TipoMutacion @bind-Paciente="@FiltrosPacientes" ListaMutaciones="ListaMutaciones" T="FiltroPacienteDto" Label="Tipo Mutación"/>
 
                     @* Enfermedad Rara *@
-                    <EnfermedadRara @bind-EnfermedadRaraCheck="FiltrosPacientes.EnfermRaras" @bind-Descripcion="FiltrosPacientes.DescripEnferRaras" />
+                    <EnfermedadRara @bind-Paciente="FiltrosPacientes" T="FiltroPacienteDto" />
                 </div>
 
                 @* Botones Filtrar y Resetear *@

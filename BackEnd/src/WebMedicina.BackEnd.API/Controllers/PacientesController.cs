@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using WebMedicina.BackEnd.Dal;
+using WebMedicina.BackEnd.Dto;
 using WebMedicina.BackEnd.Service;
 using WebMedicina.BackEnd.ServicesDependencies;
 using WebMedicina.Shared.Dto;
@@ -31,21 +34,17 @@ namespace WebMedicina.BackEnd.API.Controllers {
 
         // Obtener todos los medicos que tienen pacientes asignados
         [HttpGet("getMedicosPacientes")]
-        public ActionResult<IEnumerable<string>> GetAllMed() {
+        public async Task<IEnumerable<UserInfoDto>> GetAllMed() {
             try {
-
-                List<MedicosPacientesDto> listMedPac = new();
-
-                // Devolvemos la lista con los id de los medicos
-                return Ok(listMedPac);
+                return await _pacientesService.GetAllMed();
             } catch (Exception) {
-                return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
+                return Enumerable.Empty<UserInfoDto>();
             }
         }
 
         // Crear nuevo paciente
         [HttpPost("crearPaciente")]
-        public async Task<ActionResult<bool>> CrearPaciente([FromBody] CrearPacienteDto nuevoPaciente) {
+        public async Task<ActionResult<int>> CrearPaciente([FromBody] CrearPacienteDto nuevoPaciente) {
             try {
                 if(ModelState.IsValid) {
 
@@ -75,17 +74,15 @@ namespace WebMedicina.BackEnd.API.Controllers {
             try {
                 if (ModelState.IsValid) {
 
-                    // Validamos que el numero de historia sea valido
                     // Validar que el usuario tiene permisos
-                    //if (_pacientesService.ValidarNumHistoria(nuevoPaciente.NumHistoria) == false) {
+                    if (await _pacientesService.ValidarPermisosEdicYElim(User, nuevoPaciente.IdPaciente) && Comun.ObtenerIdUsuario(User, out int idMedico) && idMedico > 0) {
 
-                        // Obtenemos el id del medico y creamos paciente
-                        return Ok(await _pacientesService.CrearPaciente(nuevoPaciente, idMedico));
-                   
-                    //} else {
-                    //    return BadRequest($"No se ha encontrado el paciente.");
-                    //}
-                } else {
+                        // Obtenemos el id del medico y editamos el  paciente
+                        return Ok(await _pacientesService.EditarPaciente(nuevoPaciente, idMedico));
+                    }  else {
+                        return BadRequest($"No posee permisos para editar el paciente {nuevoPaciente.NumHistoria}.");
+                    }
+            } else {
                     return BadRequest("Los datos para cliente no son correctos.");
                 }
             } catch (Exception) {
@@ -96,25 +93,16 @@ namespace WebMedicina.BackEnd.API.Controllers {
 
 
         // Eliminar paciente
-        [HttpDelete("eliminarPaciente")]
-        public async Task<ActionResult<bool>> EliminarPaciente([FromBody] CrearPacienteDto nuevoPaciente) {
+        [HttpDelete("eliminarPaciente/{idPaciente}")]
+        public async Task<ActionResult<bool>> EliminarPaciente(int idPaciente) {
             try {
-                if (ModelState.IsValid) {
+                // Validar que el usuario tiene permisos
+                if (await _pacientesService.ValidarPermisosEdicYElim(User, idPaciente)) {
 
-                    // Validamos que el numero de historia sea valido
-                    if (_pacientesService.ValidarNumHistoria(nuevoPaciente.NumHistoria) == false) {
-
-                        // Obtenemos el id del medico y creamos paciente
-                        if (int.TryParse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value, out int idMedico) && idMedico > 0) {
-                            return Ok(await _pacientesService.CrearPaciente(nuevoPaciente, idMedico));
-                        } else {
-                            return Ok(false);
-                        }
-                    } else {
-                        return BadRequest($"El Número de Historia \"{nuevoPaciente.NumHistoria}\" ya está en uso.");
-                    }
+                    // Obtenemos el id del medico y creamos paciente
+                    return Ok(await _pacientesService.EliminarPaciente(idPaciente));
                 } else {
-                    return BadRequest("Los datos del nuevo cliente no son correctos.");
+                    return BadRequest($"No posee permisos para eliminar el paciente.");
                 }
             } catch (Exception) {
                 return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
@@ -126,8 +114,6 @@ namespace WebMedicina.BackEnd.API.Controllers {
         [HttpGet("obtenerPacientes")]
         public ActionResult ObtenerPacientes() {
             try {
-                var rol = HttpContext.User;
-                var rol2 = User;
                 List<CrearPacienteDto> listaPacientes = _pacientesService.ObtenerPacientes(User);
                 if (listaPacientes.Any()) {
                     return Ok(listaPacientes);
@@ -187,6 +173,15 @@ namespace WebMedicina.BackEnd.API.Controllers {
                 return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
 
+        }
+
+        [HttpGet("obtenerPaciente/{idPaciente}")]
+        public async Task<CrearPacienteDto?> ObtenerPaciente(int idPaciente) {
+            try {
+                return await _pacientesService.GetUnPaciente(idPaciente);
+            } catch (Exception) {
+                return null;
+            }
         }
     }
 }

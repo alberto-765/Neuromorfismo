@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using WebMedicina.Shared.Service;
 
 namespace WebMedicina.Shared.Dto {
-    public class CrearPacienteDto : BasePaciente<DateTime?, bool>, ICloneable{
+    public class CrearPacienteDto : BasePaciente, ICloneable{
         [Required(ErrorMessage = "El número de historia es obligatorio.")]
         [MaxLength(12, ErrorMessage = "El número de historia debe contener 12 dígitos.")]
         [MinLength(12, ErrorMessage = "El número de historia debe contener 12 dígitos.")]
@@ -30,7 +31,7 @@ namespace WebMedicina.Shared.Dto {
         public string? NombreMutacion { get; set; }
 
         // Medicos que tienen permisos sobre el paciente
-        public Dictionary<int, string?> MedicosPacientes { get; set; } = null!;
+        public Dictionary<int, string?>? MedicosPacientes { get; set; }
 
         public object Clone() {
             return this.MemberwiseClone();

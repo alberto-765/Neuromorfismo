@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
 using System.ComponentModel.DataAnnotations;
+using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -16,17 +17,13 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
         [Inject] private IPacientesService _pacientesService { get; set; }
         [Inject] private ISnackbar _snackbar { get; set; }
         [Inject] private IDialogService DialogService { get; set; }
-        [Inject] private IComun _comun { get; set; }
 
 
         // Parametros
         [Parameter] public List<CrearPacienteDto>? ListaPacientes { get; set; }
+        [Parameter] public EventCallback<int> EliminarPacienteList { get; set; } // Evento callback para eliminar paciente
         [CascadingParameter(Name = "ListaEpilepsias")] public IEnumerable<EpilepsiasDto>? ListaEpilepsias { get; set; } = null;
         [CascadingParameter(Name = "ListaMutaciones")] public IEnumerable<MutacionesDto>? ListaMutaciones { get; set; } = null;
-
-
-        // Campos para la edicion de un paciente
-        private bool PacienteValido { get; set; } = false;
 
         // Configuracion de dialogo de edicion
         private DialogOptions OpcionesDialogo { get; set; } = new DialogOptions { FullWidth = true, CloseButton = true, MaxWidth= MaxWidth.Small, 
@@ -36,16 +33,69 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
         private string _searchString { get; set; } = string.Empty;
 
 
-        // Evento para eliminar paciente
-        void EliminarPaciente(CrearPacienteDto paciente) {
+
+
+        /// <summary>
+        /// Confimrar la eliminacion de un paciente
+        /// </summary>
+        /// <param name="paciente"></param>
+        /// <returns></returns>
+        private async Task ConfirmarEliminacion(CrearPacienteDto paciente) {
             try {
-                Console.WriteLine(JsonSerializer.Serialize(paciente));
+                // Mostramos mensaje de confirmacion
+                bool? result = await DialogService.ShowMessageBox(
+                    "Eliminar Paciente",
+                    (MarkupString)$"¿Está seguro que desea eliminar al paciente <b>{paciente.NumHistoria}</b>?",
+                    yesText: "Confirmar", noText: "Cancelar");
+
+                if(result is not null && result == true) {
+                    await EliminarPaciente(paciente);
+                }
+            } catch (Exception) {
+                throw;
+            }
+        }
+        
+
+        /// <summary>
+        ///  Evento para eliminar paciente
+        /// </summary>
+        /// <param name="paciente"></param>
+        /// <returns></returns>
+        private async Task EliminarPaciente(CrearPacienteDto paciente) {
+            try {
+                HttpResponseMessage respuesta = await _pacientesService.EliminarPaciente(paciente.IdPaciente);
+
+                // Mensaje para mostrar el usuario
+                Severity tipoSnacbar = Severity.Success;
+                string mensaje = "Paciente eliminado exitosamente.";
+
+                if (respuesta.IsSuccessStatusCode) {
+
+                    // Validamos si el paciente ha podido ser creado
+                    if (await respuesta.Content.ReadFromJsonAsync<bool>() == false) {
+                        mensaje = "El paciente no ha podido ser eliminado. Inténtelo de nuevo o conteacte con un administrador.";
+                        tipoSnacbar = Severity.Error;
+                    } else {
+                        // Actualizamos la lista de pacientes eliminando al paciente 
+                        await EliminarPacienteList.InvokeAsync(paciente.IdPaciente);
+                    }
+                } else {
+                    mensaje = await respuesta.Content.ReadAsStringAsync();
+                    tipoSnacbar = Severity.Error;
+                }
+
+                _snackbar.Add(mensaje, tipoSnacbar);
             } catch (Exception) {
                 throw;
             }
         }
 
-        // Filtrar por search
+        /// <summary>
+        /// Filtrar por search
+        /// </summary>
+        /// <param name="paciente"></param>
+        /// <returns></returns>
         private bool Search(CrearPacienteDto paciente) {
             try {
                 bool valido = false;
@@ -78,15 +128,11 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
             }
         }
 
-        private async void MostrarMensajeError(List<ValidationResult> errores) {
-            await DialogService.ShowMessageBox(
-                "Campos no válidos",
-                new MarkupString(_comun.GenerarHtmlErrores(errores)),
-                yesText: "Entendido");
-        }
-
-
-        // Mostrar dialogo para editar paciente
+        /// <summary>
+        /// Mostrar dialogo para editar paciente
+        /// </summary>
+        /// <param name="nuevoPaciente"></param>
+        /// <returns></returns>
         private async Task MostrarEditarPac(CrearPacienteDto nuevoPaciente) {
             try {
                 DialogParameters parametros = new() {
@@ -94,13 +140,8 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
                     { "ListaMutaciones", ListaMutaciones },
                     { "nuevoPaciente", nuevoPaciente },
                 };
-                var dialog = DialogService.Show<CrearPaciente>("Nuevo Paciente", parametros, OpcionesDialogo);
+                var dialog = DialogService.Show<EditarPaciente>("Nuevo Paciente", parametros, OpcionesDialogo);
                 var result = await dialog.Result;
-
-                // Validamos que el dialogo haya devuelto el nuevo paciente creado y actualizamos la lista
-                if (result.Cancelled == false && result.Data is CrearPacienteDto) {
-                    ListaPacientes = await _pacientesService.AnadirPacienteALista((CrearPacienteDto)result.Data);
-                }
             } catch (Exception ex) {
                 excepcionPersonalizada.ConstruirPintarExcepcion(ex);
                 throw;
