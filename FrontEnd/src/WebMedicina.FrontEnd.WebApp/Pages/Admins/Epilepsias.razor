@@ -1,4 +1,6 @@
-﻿@attribute [Authorize(Roles = "superAdmin, admin")]
+﻿@using WebMedicina.Shared.Dto.Tipos;
+
+@attribute [Authorize(Roles = "superAdmin, admin")]
 
 @page "/epilepsias"
 <PageTitle>Epilepsias</PageTitle>
@@ -24,8 +26,8 @@
                     <RowTemplate>
                         <MudTd DataLabel="#" Class="cursor-pointer">@context.Indice</MudTd> 
                         <MudTd DataLabel="Nombre" Class="cursor-pointer">@context.Nombre</MudTd> 
-                        <MudTd DataLabel="Fecha Creación" Class="cursor-pointer">@context.FechaCreac</MudTd> 
-                        <MudTd DataLabel="Fecha Última Modificación" Class="cursor-pointer">@context.FechaUltMod</MudTd> 
+                        <MudTd DataLabel="Fecha Creación" Class="cursor-pointer">@context.FechaCreac.ToShortDateString()</MudTd>
+                        <MudTd DataLabel="Fecha Última Modificación" Class="cursor-pointer">@context.FechaUltMod.ToShortDateString()</MudTd>
                     </RowTemplate>
                 </MudTable>
             </div>

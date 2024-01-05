@@ -1,11 +1,11 @@
-﻿using Pomelo.EntityFrameworkCore.MySql.Metadata.Internal;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebMedicina.BackEnd.Model;
 
-public partial class PacientesModel
+public partial class PacientesModel : BaseModel, IEquatable<PacientesModel>
 {
     public int IdPaciente { get; set; }
 
@@ -31,10 +31,6 @@ public partial class PacientesModel
 
     public string DescripEnferRaras { get; set; } = null!;
 
-    public DateOnly FechaCreac { get; set; }
-
-    public DateOnly FechaUltMod { get; set; }
-
     public int MedicoUltMod { get; set; }
 
     public int MedicoCreador { get; set; }
@@ -45,9 +41,12 @@ public partial class PacientesModel
 
     public virtual MedicosModel MedicoCreadorNavigation { get; set; } = null!;
 
+    [ConcurrencyCheck]
     public virtual MedicosModel MedicoUltModNavigation { get; set; } = null!;
 
     public virtual ICollection<MedicospacienteModel> Medicospacientes { get; set; } = new List<MedicospacienteModel>();
+
+    public virtual EtapaLTModel? UltimaEtapa { get; set; } = null;
 
     // Comparar propiedades
     public bool Equals(PacientesModel? obj) {

@@ -7,25 +7,23 @@ using System.Net.Http.Json;
 using System.Security.Claims;
 using WebMedicina.FrontEnd.Service;
 using WebMedicina.FrontEnd.ServiceDependencies;
-using WebMedicina.Shared.Dto;
+using WebMedicina.Shared.Dto.Usuarios;
 
 namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
 {
     public partial class CrearUsuario
     {
-        [Inject] private ISnackbar _snackbar { get; set; }
+        [Inject] private ISnackbar _snackbar { get; set; } = null!;
         [CascadingParameter] private Task<AuthenticationState>? authenticationState { get; set; }
         private ClaimsPrincipal? user { get; set; }
-        [Inject] ICrearHttpClient _crearHttpClient { get; set; }
-        private HttpClient Http { get; set; }
-        [CascadingParameter(Name = "excepcionPersonalizada")] ExcepcionPersonalizada excepcionPersonalizada { get; set; }
-        [Inject] IAdminsService _adminsService { get; set; }
+        [Inject] ICrearHttpClient _crearHttpClient { get; set; } = null!;
+        private HttpClient Http { get; set; } = null!;
+        [Inject] IAdminsService _adminsService { get; set; } = null!;
 
         // CAMPOS EDITFORM
         private bool cargando { get; set; } = false;
         private UserRegistroDto userRegistro = new();
-        private EditContext formContext;
-
+        private EditContext formContext = null!;
 
         protected override async Task OnInitializedAsync()
         {
@@ -44,12 +42,11 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                 _snackbar.Configuration.HideTransitionDuration = 300;
 
                 // Creamos contraseña aleatoria
-                userRegistro.Password = await _adminsService.GenerarContraseñaAleatoria();
+                userRegistro.Password = _adminsService.GenerarContraseñaAleatoria();
 
                 // Crear contexto del editform
                 formContext = new(userRegistro);
-            } catch (Exception ex) {
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+            } catch (Exception) {
                 throw;
             }
         }
@@ -68,7 +65,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                         config.VisibleStateDuration = 5000;
                     });
 
-             
+                    ReiniciarDatos();
                 } else {
                     cargando = false;
                     _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopStart;
@@ -77,9 +74,8 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                         config.VisibleStateDuration = 3000;
                     });
                 }
-            } catch (Exception ex) {
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-                await ReiniciarDatos();
+            } catch (Exception) {
+                ReiniciarDatos();
                 throw;
             }
         }
@@ -108,20 +104,18 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                                         <div>Inténtelo de nuevo o contacte con un administrador.</div>", Severity.Error, config => { config.VisibleStateDuration = 5 * 1000;});
                     }
                 }
-            } catch (Exception ex) {
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+            } catch (Exception) {
                 throw;
             }
         }
 
         // Reiniciar objeto de nuevo usuario y boton de crear
-        private async Task ReiniciarDatos() {
+        private void ReiniciarDatos() {
             try {
                 // Reiniciamos el objeto de nuevo usuario
                 userRegistro = new();
                 cargando = false;
-            } catch (Exception e) {
-                excepcionPersonalizada.ConstruirPintarExcepcion(e);
+            } catch (Exception) {
                 throw;
             }
         }

@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace WebMedicina.Shared.Service {
     public class ValidacionLista : ValidationAttribute {
-        private readonly List<string> _valoresPermitidos;
+        private readonly IEnumerable<string> _valoresPermitidos;
 
         public ValidacionLista(params string[] valoresPermitidos) {
             _valoresPermitidos = new List<string>(valoresPermitidos);
         }
 
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext) {
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext) {
             if (value is not null && _valoresPermitidos.Contains(value.ToString())) {
                 return ValidationResult.Success;
             }

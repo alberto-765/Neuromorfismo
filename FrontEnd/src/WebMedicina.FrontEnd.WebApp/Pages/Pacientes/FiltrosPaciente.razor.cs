@@ -1,22 +1,25 @@
 ﻿using Microsoft.AspNetCore.Components;
 using WebMedicina.FrontEnd.Service;
 using WebMedicina.FrontEnd.ServiceDependencies;
-using WebMedicina.Shared.Dto;
+using WebMedicina.Shared.Dto.Pacientes;
+using WebMedicina.Shared.Dto.Tipos;
+using WebMedicina.Shared.Dto.Usuarios;
 
-namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
+namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
+{
     public partial class FiltrosPaciente {
-        [CascadingParameter(Name = "excepcionPersonalizada")] ExcepcionPersonalizada excepcionPersonalizada { get; set; }
         [CascadingParameter(Name = "modoOscuro")] bool IsDarkMode { get; set; } // Modo oscuro
-        [Inject] private IPacientesService _pacientesService { get; set; }
+        [Inject] private IPacientesService _pacientesService { get; set; } = null!;
+        [Inject] private IComun _comun { get; set; } = null!;
 
 
         // Para identificar si el panel debe estar abierto o no
-        [Parameter] public bool FiltrosAbierto { get; set; }
-        [Parameter] public EventCallback<bool> FiltrosAbiertoChanged { get; set; }
+        [Parameter] public bool FiltroAbierto { get; set; }
+        [Parameter] public EventCallback<bool> FiltroAbiertoChanged { get; set; }
 
         // Lista de pacientes bindeada bidireccinalmente
-        [Parameter] public List<CrearPacienteDto>? ListaPacientes { get; set; }
-        [Parameter] public EventCallback<List<CrearPacienteDto>?> ListaPacientesChanged { get; set; }
+        [Parameter] public List<CrearPacienteDto>? ListaPaciente { get; set; }
+        [Parameter] public EventCallback<List<CrearPacienteDto>?> ListaPacienteChanged { get; set; }
 
         // Listas no bindeadas 
         [CascadingParameter(Name = "ListaEpilepsias")] public IEnumerable<EpilepsiasDto>? ListaEpilepsias { get; set; } = null;
@@ -28,16 +31,17 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
         // Lista de medicos para filtrar
         private IEnumerable<UserInfoDto>? ListaMedicos { get; set; } = null;
 
-        // Mostrar un icono u otro en ordenar por talla
-        public bool OrdenarTalla { get; set; }
-
 
         // Filtrar Pacientes 
         private async Task ObtenerPacientesFiltrados() {
             try {
-                ListaPacientes = _pacientesService.FiltrarPacientes(FiltrosPacientes, ListaPacientes);
-            } catch (Exception ex) {
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+                // Actualizamos la lista de pacientes
+                ListaPaciente = await _pacientesService.FiltrarPacientes(FiltrosPacientes);
+                await ListaPacienteChanged.InvokeAsync(ListaPaciente);
+
+                // Cerramos drawe y bindeamos parametros
+                await CerrarDrawer();
+            } catch (Exception) { 
                 throw;
             }
         }
@@ -54,29 +58,50 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
                 } 
 
                 return ListaMedicos ?? Enumerable.Empty<UserInfoDto>();
-            } catch (Exception ex) {
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-                throw;
-            }
-        }
-
-        // Evento callback para acutualizar uno de los campos del paciente
-        public async Task ActualizarFiltros(FiltroPacienteDto paciente) {
-            try {
-                FiltrosPacientes = paciente;
-            } catch (Exception ex) {
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
-                throw;
-            }
-        }
-
-        private void ResetearFiltrado() {
-            try {
-                FiltrosPacientes = new();
             } catch (Exception) {
                 throw;
             }
         }
 
+
+        /// <summary>
+        /// Resetear filtros y lista de pacientes
+        /// </summary>
+        /// <returns></returns>
+        private async Task ResetearFiltrado() {
+            try {
+                FiltrosPacientes = new();
+                ListaPaciente = await _pacientesService.FiltrarPacientes(null);
+                await ListaPacienteChanged.InvokeAsync(ListaPaciente);
+            } catch (Exception) {
+                throw;
+            }
+        }
+
+        private Func<EpilepsiasDto, string> ConvertirEpi = tipo => tipo.Nombre;
+        private Func<MutacionesDto, string> ConvertirMut = tipo => tipo.Nombre;
+
+        private async Task AbrirCerrarDrawer() {
+            try {
+                if (FiltroAbierto) {
+                    await _comun.BloquearScroll("#app");
+                } else {
+                    await _comun.DesbloquearScroll("#app");
+                }
+                await FiltroAbiertoChanged.InvokeAsync(FiltroAbierto);
+            } catch (Exception) {
+                throw;
+            }
+        }
+
+        // Cerrar drawer 
+        private async Task CerrarDrawer() {
+            try {
+                FiltroAbierto = false;
+                await AbrirCerrarDrawer();
+            } catch (Exception) {
+                throw;
+            }
+        }
     }
 }

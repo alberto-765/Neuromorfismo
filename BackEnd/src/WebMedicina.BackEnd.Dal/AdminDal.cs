@@ -1,35 +1,25 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Identity;
 using System.Linq.Expressions;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using WebMedicina.BackEnd.Model;
-using WebMedicina.Shared.Dto;
-using WebMedicina.Shared.Service;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using WebMedicina.BackEnd.ServicesDependencies.Mappers;
+using WebMedicina.Shared.Dto.Pacientes;
+using WebMedicina.Shared.Dto.Usuarios;
+
 
 namespace WebMedicina.BackEnd.Dal {
     public  class AdminDal {
         private readonly WebmedicinaContext _context;
-        private readonly IMapper _mapper;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public AdminDal(WebmedicinaContext context, IMapper mapper, UserManager<IdentityUser> userManager) {
+        public AdminDal(WebmedicinaContext context, UserManager<IdentityUser> userManager) {
             _context = context;
-            _mapper = mapper;
             _userManager = userManager;
         }
 
 
         public bool CrearNuevoMedico (UserRegistroDto nuevoMedico, string idUsuario) {
             try {
-                MedicosModel medicosModel = _mapper.Map<MedicosModel>(nuevoMedico);
+                MedicosModel medicosModel = nuevoMedico.ToModel();
                 medicosModel.NetuserId = idUsuario;
 
                 _context.Medicos.Add(medicosModel);
@@ -57,7 +47,7 @@ namespace WebMedicina.BackEnd.Dal {
                     roles = await _userManager.GetRolesAsync(user);
                 }
 
-                return roles?.FirstOrDefault().ToString() ?? string.Empty;
+                return roles?.FirstOrDefault()?.ToString();
             } catch (Exception) {
                 throw;
             }
@@ -121,7 +111,7 @@ namespace WebMedicina.BackEnd.Dal {
                 query = query.Skip(camposFiltrado.Page * camposFiltrado.PageSize).Take(camposFiltrado.PageSize);
 
                 // Obtenemos los medicos
-                listaMedicos = _mapper.Map<List<UserUploadDto>>(query.ToList());
+                listaMedicos = query.Select(q => q.ToDto()).ToList();
 
 
                 // Mapeamos los medicos y obtenemos su rol
@@ -135,8 +125,8 @@ namespace WebMedicina.BackEnd.Dal {
                 }
 
                 return listaMedicos;
-            } catch (Exception ex) {
-                    throw;
+            } catch (Exception) {
+                throw;
             }
         }
 

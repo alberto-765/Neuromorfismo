@@ -1,20 +1,20 @@
 ﻿using Microsoft.JSInterop;
-using System.Collections;
 using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Text.Json;
 using WebMedicina.FrontEnd.ServiceDependencies;
-using WebMedicina.Shared.Dto;
+using WebMedicina.Shared.Dto.Pacientes;
+using WebMedicina.Shared.Dto.Tipos;
+using WebMedicina.Shared.Dto.Usuarios;
 
-namespace WebMedicina.FrontEnd.Service {
+namespace WebMedicina.FrontEnd.Service
+{
     public class PacientesService : IPacientesService {
-        private readonly ICrearHttpClient _crearHttpClient;
         private readonly HttpClient Http;
         private readonly IJSRuntime js;
         private const string clavePacientesSession = "ListadoPacientes";
         public PacientesService(ICrearHttpClient crearHttpClient, IJSRuntime js) {
-            _crearHttpClient = crearHttpClient;
-            Http = _crearHttpClient.CrearHttp();
+            Http = crearHttpClient.CrearHttp();
             this.js = js;
         }
 
@@ -33,7 +33,7 @@ namespace WebMedicina.FrontEnd.Service {
         }
 
         // Obtener opciones para filtros farmacos, mutaciones y epilepsias
-        public async Task<(List<FarmacosDto>? ListaFarmacos, List<EpilepsiasDto>? ListaEpilepsias, List<MutacionesDto>? ListaMutaciones)> ObtenerFiltros() {
+        public async Task<(List<FarmacosDto>? ListaFarmacos, List<EpilepsiasDto>? ListaEpilepsias, List<MutacionesDto>? ListaMutaciones)> ObtenerListas() {
             try {
                 // Obtenemos lista de farmacos
                 //List<FarmacosDto>?  listaFarmacos = await Http.GetFromJsonAsync<List<FarmacosDto>>("pacientes/getFarmacos");
@@ -109,24 +109,18 @@ namespace WebMedicina.FrontEnd.Service {
         }
 
         // Filtramos los pacientes con los filtros seleccionados
-        public List<CrearPacienteDto>? FiltrarPacientes(FiltroPacienteDto filtrsPacientes, List<CrearPacienteDto>? listaPacientes) {
+        public async Task<List<CrearPacienteDto>?> FiltrarPacientes(FiltroPacienteDto? filtrsPacientes) {
             try {
-                // Comprobamos si alguna de las propiedades no es null o las que son una lista si contienen elementos
-                if (filtrsPacientes.GetType().GetProperties().Any(prop => 
-                {
-                    var value = prop.GetValue(filtrsPacientes);
-                    return value != null &&
-                           (prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(List<>)) &&
-                           ((IEnumerable)value).Cast<object>().Any(); // Verifica si la lista tiene al menos un elemento
-
-                }))
-                {
-
+                // Comprobamos si existe algun campo por el que filtrar
+                List<CrearPacienteDto>? listaPacientes = JsonSerializer.Deserialize<List<CrearPacienteDto>?>(await js.GetFromSessionStorage(clavePacientesSession));
+                if (filtrsPacientes is not null && listaPacientes is not null) {
                     // Obtenemos el listado de pacientes
-                    listaPacientes = (from q in listaPacientes where ((filtrsPacientes.Sexo == null || q.Sexo == filtrsPacientes.Sexo) &&
-                                      (filtrsPacientes.Talla == null || q.Talla == filtrsPacientes.Talla) && ((filtrsPacientes.EnfermRaras && q.EnfermRaras) || !filtrsPacientes.EnfermRaras && !q.EnfermRaras)
-                                      ) select q).ToList();
-
+                    listaPacientes = (from q in listaPacientes where (string.IsNullOrWhiteSpace(filtrsPacientes.Sexo) || q.Sexo == filtrsPacientes.Sexo) &&
+                                      (filtrsPacientes.FiltrarEnfRara is null || filtrsPacientes.FiltrarEnfRara == q.EnfermRaras) && (filtrsPacientes.Medico is null ||
+                                      (q.MedicosPacientes is not null && q.MedicosPacientes.ContainsKey(filtrsPacientes.Medico.IdMedico))) &&
+                                      (!filtrsPacientes.TipoEpilepsias.Any() || filtrsPacientes.TipoEpilepsias.Any(t => t.IdEpilepsia == q.Epilepsia?.IdEpilepsia)) &&
+                                      (!filtrsPacientes.TipoMutacion.Any() || filtrsPacientes.TipoMutacion.Any(t => t.IdMutacion == q.Mutacion?.IdMutacion))
+                                      select q).ToList();
                 }
                 return listaPacientes;
             } catch (Exception) {
@@ -165,15 +159,18 @@ namespace WebMedicina.FrontEnd.Service {
                    return new();
                 }
 
-                // Si el paciente no es null lo insertamos a la lista
-                List<CrearPacienteDto>? listaPacientes = JsonSerializer.Deserialize<List<CrearPacienteDto>>(await js.GetFromSessionStorage(clavePacientesSession));
-                if(listaPacientes != null && listaPacientes.Any()) {
-                    listaPacientes.Add(nuevoPaciente);
-                } else {
-                    listaPacientes = new() {
-                        nuevoPaciente
-                    };
+                string listaPacientesJSON = await js.GetFromSessionStorage(clavePacientesSession);
+                List<CrearPacienteDto> listaPacientes = new();
+
+                // Deserealizamos JSON de la lista si no es null y contiene pacientes
+                if (!string.IsNullOrWhiteSpace(listaPacientesJSON)) {
+                    listaPacientes = JsonSerializer.Deserialize<List<CrearPacienteDto>>(listaPacientesJSON) ?? new();
                 }
+
+                // Si el paciente no es null lo insertamos a la lista
+                if(listaPacientes is not null) {
+                    listaPacientes.Add(nuevoPaciente);
+                } 
 
                 // Guardamos listado de pacientes
                 await GuardarPacientesSession(listaPacientes);
@@ -214,24 +211,6 @@ namespace WebMedicina.FrontEnd.Service {
                 if(listaPacientes != null && listaPacientes.Any()){
                     await js.SetInSessionStorage(clavePacientesSession, JsonSerializer.Serialize(listaPacientes));
                 }
-            } catch (Exception) {
-                throw;
-            }
-        }
-
-        // Quitamos scroll del dialogo por medio de js
-        public async Task BloquearScroll(string idDialogo) {
-            try {
-                await js.InvokeVoidAsync("bloquearScroll", idDialogo, "y");
-            } catch (Exception) {
-                throw;
-            }
-        }
-
-        // Devolvemos scroll del dialogo por medio de js
-        public async Task DesbloquearScroll(string idDialogo) {
-            try {
-                await js.InvokeVoidAsync("desbloquearScroll", idDialogo, "y");
             } catch (Exception) {
                 throw;
             }

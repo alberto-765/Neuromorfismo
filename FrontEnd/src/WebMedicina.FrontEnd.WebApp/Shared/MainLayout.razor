@@ -1,8 +1,6 @@
 ﻿@inherits LayoutComponentBase
 @inject EstilosBase estilosBase
-@inject ExcepcionPersonalizada excepcionPersonalizada
 @inject IJSRuntime js
-@inject ExcepcionPersonalizada _excepcionPersonalizada
 
 <MudThemeProvider @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode" Theme="estilosBase.currentTheme" />
     <MudDialogProvider />
@@ -11,7 +9,6 @@
 
 
 <CascadingValue Name="modoOscuro" Value="@_isDarkMode">
-<CascadingValue Name="excepcionPersonalizada" Value="@_excepcionPersonalizada">
     <MudLayout Class="d-flex">
         <MudAppBar Class="mud-elevation-25">
             <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
@@ -54,7 +51,6 @@
         </AuthorizeView>
     </MudLayout>
 </CascadingValue>
-</CascadingValue>
 @code {
     // Control del drawer pricnipal
     bool open { get; set; } = true;
@@ -62,7 +58,7 @@
     private DrawerClipMode clipMode = DrawerClipMode.Always;
 
     // Control de modo oscuro
-    private MudThemeProvider _mudThemeProvider;
+    private MudThemeProvider _mudThemeProvider = null!;
     private bool _isDarkMode = false;
     private bool IsDarkMode { 
         get => _isDarkMode; 
@@ -89,8 +85,8 @@
                     _isDarkMode = boolModo;
                 }
             }
-        } catch (Exception ex) {
-            excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+        } catch (Exception) {
+            throw;
         }
     }
 

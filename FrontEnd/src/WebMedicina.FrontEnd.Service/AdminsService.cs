@@ -1,19 +1,14 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Text.Json;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using WebMedicina.FrontEnd.ServiceDependencies;
-using WebMedicina.Shared.Dto;
+using WebMedicina.Shared.Dto.Usuarios;
 
-namespace WebMedicina.FrontEnd.Service {
+namespace WebMedicina.FrontEnd.Service
+{
     public class AdminsService :IAdminsService  {
 
         private IJSRuntime js { get; set; }
@@ -22,7 +17,7 @@ namespace WebMedicina.FrontEnd.Service {
              this.js = js;
         }
 
-        public async Task<string> GenerarContraseñaAleatoria() {
+        public string GenerarContraseñaAleatoria() {
             try {
 
                 // Generamos constantes para la contraseña
@@ -88,27 +83,6 @@ namespace WebMedicina.FrontEnd.Service {
             }
         }
 
-        public async Task<ReadOnlyDictionary<string, string>> ObtenerFiltrosSession() {
-            try {
-
-                // Obtenemos los filtros de session
-                var filtrosSession = await js.GetFromSessionStorage("filtrosGestionUsers");
-
-                // Comprobamos que hay filtros almacenados y si no devolvemos los filtros por defecto
-                if (!string.IsNullOrEmpty(filtrosSession)) {
-                    ReadOnlyDictionary<string, string> filros = JsonSerializer.Deserialize<ReadOnlyDictionary<string, string>>(filtrosSession);
-
-                    if (filros is not null && filros.Any()) {
-                        return filros;
-                    }
-                }
-                return new ReadOnlyDictionary<string, string>(CrearDiccionarioFiltros());
-
-            } catch (Exception) {
-                throw;
-            }
-        }
-
         public Dictionary<string, string> CrearDiccionarioFiltros() {
             return new Dictionary<string, string> {
                 { "busqueda" , "" },
@@ -118,16 +92,16 @@ namespace WebMedicina.FrontEnd.Service {
             };
         }
 
-        public string? ValidarNuevoNombre(string nombre) {
+        public string ValidarNuevoNombre(string nombre) {
             if (!string.IsNullOrWhiteSpace(nombre)) {
                 string patron = "[!@#$%^&*(),.?\":{}|<>]";
                 if (Regex.IsMatch(nombre, patron)) {
-                    return "El nombre no puede contener caracteres espciales";
+                    return "El nombre no puede contener caracteres especiales.";
                 } else if (nombre.Length > 50) {
-                    return "La longitud máxima son 50 caracteres";
+                    return "La longitud máxima son 50 caracteres.";
                 }
             }
-            return null;
+            return string.Empty;
         }
 
         // Validamos si el nombre y apellidos del nuevo usuario son validos 

@@ -9,7 +9,7 @@
     [Parameter] public string mensajeError { get; set; } =  "<span>Página no encontrada</span>";
     private MarkupString errorParaPintar { get; set; }
     // Configuracion de la app
-    [Inject] IConfiguration configuration { get; set; }
+    [Inject] IConfiguration configuration { get; set; } = null!;
 
     protected override void OnInitialized() {
         errorParaPintar = new MarkupString(mensajeError);

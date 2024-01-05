@@ -1,10 +1,10 @@
-﻿<MudTooltip Arrow="true" Placement="Placement.Top" Color="@Color">
+﻿<MudTooltip Arrow="true" Placement="Placement.Top" Color="@Color" >
     <ChildContent>
-        <MudIconButton Icon="@Icono" />
+        <MudIconButton Icon="@Icono" Size="SizeIcono" Class="ml-1" />
     </ChildContent>
     <TooltipContent>
-        <MudText Typo="Typo.h6">@Titulo</MudText>
-        <MudText Typo="Typo.body1">@Contenido</MudText>
+        <MudText Typo="Typo.body2" Align="Align.Center">@Titulo</MudText>
+        <MudText Typo="Typo.body2" Align="Align.Left">@Contenido</MudText>
     </TooltipContent>
 </MudTooltip>
 
@@ -21,4 +21,7 @@
 
     // Color
     [Parameter] public Color Color { get; set; } = Color.Default;
+
+    // Tamaño icono
+    [Parameter] public Size SizeIcono { get; set; } = Size.Medium;
 }

@@ -1,27 +1,26 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using WebMedicina.BackEnd.Model;
 using WebMedicina.BackEnd.ServicesDependencies;
-using WebMedicina.Shared.Dto;
+using WebMedicina.Shared.Dto.Pacientes;
+using WebMedicina.Shared.Dto.Usuarios;
 
-namespace WebMedicina.BackEnd.API.Controllers {
+namespace WebMedicina.BackEnd.API.Controllers
+{
     [Route("/api/gestionUsers")]
     [ApiController]
     [Authorize(Roles = "superAdmin, admin")]
     public class GestionUsersController : Controller {
-        private readonly IMapper _mapper;
         private readonly IAdminsService _adminService;
         private readonly IIdentityService _identityService;
         WebmedicinaContext _context;
 
 
-        public GestionUsersController(IMapper mapper, IAdminsService adminsService, IIdentityService identity, WebmedicinaContext context) {
-            _mapper = mapper;
+        public GestionUsersController(IAdminsService adminsService, IIdentityService identity, WebmedicinaContext context) {
             _adminService = adminsService;
             _context = context;
+            _identityService = identity;
         }
 
         [HttpPost("obtenerUsuariosFiltrados")]
@@ -33,7 +32,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
                 }
 
                 return NoContent();
-            } catch (Exception ex) {
+            } catch (Exception) {
                 return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
         }
@@ -74,7 +73,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
 
                     await transactionContext.RollbackAsync();
                     return BadRequest("Alguno de los campos del usuario no es válido");
-                } catch (Exception ex) {
+                } catch (Exception) {
                     await transactionContext.RollbackAsync();
                     return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
                 }

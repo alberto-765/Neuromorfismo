@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace WebMedicina.BackEnd.Model;
 
-public partial class MutacionesModel
+public partial class MutacionesModel : BaseModel
 {
     public int IdMutacion { get; set; }
 
     public string Nombre { get; set; } = null!;
-
-    public DateOnly FechaCreac { get; set; }
-
-    public DateOnly FechaUltMod { get; set; }
 
     public virtual ICollection<PacientesModel> Pacientes { get; set; } = new List<PacientesModel>();
 }

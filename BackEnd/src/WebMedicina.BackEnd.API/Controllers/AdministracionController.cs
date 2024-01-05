@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebMedicina.BackEnd.ServicesDependencies;
-using WebMedicina.Shared.Dto;
+using WebMedicina.Shared.Dto.Tipos;
 
-namespace WebMedicina.BackEnd.API.Controllers {
+namespace WebMedicina.BackEnd.API.Controllers
+{
     [Route("api/administracion")]
     [ApiController]
     [Authorize(Roles = "superAdmin, admin")]
@@ -17,6 +17,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
 
 
         //  Epilepsias
+        [Authorize]
         [HttpGet("getEpilepsias")]
         public ActionResult<List<EpilepsiasDto>> GetEpilepsias() {
             try {
@@ -84,6 +85,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
         }
 
         //  Mutaciones
+        [Authorize]
         [HttpGet("getMutaciones")]
         public ActionResult<List<MutacionesDto>> GetMutaciones() {
             try {
@@ -152,6 +154,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
 
 
         //  Farmacos
+        [Authorize]
         [HttpGet("getFarmacos")]
         public ActionResult<List<FarmacosDto>> GetFarmacos() {
             try {

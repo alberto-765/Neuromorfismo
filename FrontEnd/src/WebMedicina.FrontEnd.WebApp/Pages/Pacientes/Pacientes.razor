@@ -1,46 +1,68 @@
-﻿@page "/pacientes"
+﻿@using WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal;
+
+@page "/pacientes"
 <PageTitle>Pacientes</PageTitle>
 @attribute [Authorize]
+<div>
+    <CascadingValue Name="ListaMutaciones" Value="ListaMutaciones" IsFixed="true">
+        <CascadingValue Name="ListaEpilepsias" Value="ListaEpilepsias" IsFixed="true">
 
-<CascadingValue Name="ListaMutaciones" Value="ListaMutaciones" IsFixed="true">
-    <CascadingValue Name="ListaEpilepsias" Value="ListaEpilepsias" IsFixed="true">
+            @* Tab con las subpantallas*@
+            <MudStack Spacing="8" Class="mt-5 gap-md-0" >
+                <MudStack Spacing="0" Row="true">
+                    @* Boton crear pacientes *@
+                    <MudStack Row="true" AlignItems="AlignItems.Center">
+                        <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" id="@((IsDarkMode ? "btnCrearPacienteDark" : "btnCrearPacienteDef"))" StartIcon="@Icons.Material.Outlined.PersonAddAlt" @onclick="MostrarCrearPac">
+                            Crear Paciente
+                        </MudButton>
+                        <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Success">
+                            <MudImage Src="@(UrlImagenes + "iconoExcel.png")" Alt="Icono Excel" Height="20" Class="mr-4" /> Excel
+                        </MudButton>
+                    </MudStack>
 
-        @* Tab con las subpantallas*@
-        <MudStack Spacing="8" Class="mt-5 gap-md-0" >
-            <MudStack Spacing="0" Row="true">
-                @* Boton crear pacientes *@
-                <MudStack Row="true" AlignItems="AlignItems.Center">
-                    <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" id="@((IsDarkMode ? "btnCrearPacienteDark" : "btnCrearPacienteDef"))" StartIcon="@Icons.Material.Outlined.PersonAddAlt" @onclick="MostrarCrearPac">
-                        Crear Paciente
-                    </MudButton>
-                    <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Success">
-                        <MudImage Src="@(UrlImagenes + "iconoExcel.png")" Alt="Icono Excel" Height="20" Class="mr-4" /> Excel
-                    </MudButton>
+                    <MudSpacer />
+
+                    @* Boton bloquear filtros *@
+                    <div id="btnFiltros">
+                        <MudIconButton Icon="@Icons.Material.Filled.FilterAlt" OnClick="@(() => FiltrosAbierto = !FiltrosAbierto)" Size="Size.Medium"/>
+                    </div>
                 </MudStack>
 
-                <MudSpacer />
-
-                @* Boton bloquear filtros *@
-                <div id="btnFiltros">
-                    <MudIconButton Icon="@Icons.Material.Filled.FilterAlt" OnClick="@(() => FiltrosAbierto = !FiltrosAbierto)" Size="Size.Medium"/>
-                </div>
+                <MudTabs Elevation="2" Rounded="true" id="mudTab-Pacientes" Class="gap-4" AlwaysShowScrollButtons="false">
+                    <AuthorizeView>
+                        <Authorized>
+                            <MudTabPanel Text="Todos los Pacientes" >
+                                <AllPacientes ListaPacientes="ListaPacientes" EliminarPaciente="EliminarPacienteLista" />
+                            </MudTabPanel>
+                        </Authorized>
+                    </AuthorizeView>
+                    <MudTabPanel Text="Mis Pacientes">
+                        <MisPacientes ListaPacientes="ListaPacientes" EliminarPaciente="EliminarPacienteLista" />
+                    </MudTabPanel>
+                </MudTabs>
             </MudStack>
 
-            <MudTabs Elevation="2" Rounded="true" id="mudTab-Pacientes" Class="gap-4" AlwaysShowScrollButtons="false">
-                <AuthorizeView>
-                    <Authorized>
-                        <MudTabPanel Text="Todos los Pacientes" >
-                            <AllPacientes ListaPacientes="ListaPacientes" EliminarPaciente="EliminarPacienteLista" />
-                        </MudTabPanel>
-                    </Authorized>
-                </AuthorizeView>
-                <MudTabPanel Text="Mis Pacientes">
-                    <MisPacientes ListaPacientes="ListaPacientes" EliminarPaciente="EliminarPacienteLista" />
-                </MudTabPanel>
-            </MudTabs>
-        </MudStack>
-
-        @* Drawer de filtros *@
-        <FiltrosPaciente @bind-FiltrosAbierto="FiltrosAbierto" @bind-ListaPacientes="ListaPacientes" />
+            @* Drawer de filtros *@
+            <FiltrosPaciente @bind-FiltroAbierto="FiltrosAbierto" @bind-ListaPaciente="ListaPacientes"  />
+        </CascadingValue>
     </CascadingValue>
-</CascadingValue>
+
+
+    @* Linea temporal *@
+    <MudCollapse Expanded="_lineaTempExpanded" Class="contenedor-lineaTemporal">
+        <div class="d-flex">
+            <MudSpacer />
+            <MudIconButton Icon="@Icons.Material.Outlined.Close" OnClick="@(() => _lineaTempExpanded = !_lineaTempExpanded)"></MudIconButton>
+        </div>
+        <CascadingValue Name="Etapas" Value="etapasLineaTemporal">
+            <MudGrid Justify="Justify.Center" Class="align-center">
+                <MudItem sm="12" md="6">
+                    <LineaTemporal />
+                </MudItem>
+                <MudItem sm="12" md="6">
+                    <FormularioLT />
+                </MudItem>
+            </MudGrid>
+        </CascadingValue>
+    </MudCollapse>
+</div>

@@ -1,28 +1,20 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
 using WebMedicina.BackEnd.Model;
-using WebMedicina.Shared.Dto;
+using WebMedicina.BackEnd.ServicesDependencies.Mappers;
+using WebMedicina.Shared.Dto.Tipos;
 
 namespace WebMedicina.BackEnd.Dal {
     public class EpilepsiasDal {
         private readonly WebmedicinaContext _context;
-        private readonly IMapper _mapper;
 
-        public EpilepsiasDal(WebmedicinaContext context, IMapper mapper) {
+        public EpilepsiasDal(WebmedicinaContext context) {
             _context = context;
-            _mapper = mapper;
         }
 
         // Get EPILEPSIAS
         public List<EpilepsiasDto> GetEpilepsias() {
             try {
-                List<EpilepsiasDto> listaEpilepsias = _mapper.Map<List<EpilepsiasDto>>(_context.Epilepsias.ToList());
+                List<EpilepsiasDto> listaEpilepsias = _context.Epilepsias.Select(q => q.ToDto()).ToList();
                 if (listaEpilepsias.Count > 0) {
                     for (int i = 0; i < listaEpilepsias.Count; i++) {
                         listaEpilepsias[i].Indice = i+1;
@@ -62,7 +54,7 @@ namespace WebMedicina.BackEnd.Dal {
         // Update EPILEPSIAS
         public async Task<(bool validacionEntry, bool filasModif)> UpdateEpilepsia(EpilepsiasDto epilepsia) {
             try {
-                EpilepsiaModel ep = _context.Epilepsias.Find(epilepsia.IdEpilepsia);
+                EpilepsiaModel? ep = await _context.Epilepsias.FindAsync(epilepsia.IdEpilepsia);
                 bool validacionEntry = false, filasModif = false;
                 if (ep != null) {
 

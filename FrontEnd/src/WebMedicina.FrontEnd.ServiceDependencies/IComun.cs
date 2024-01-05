@@ -8,5 +8,9 @@ using System.Threading.Tasks;
 namespace WebMedicina.FrontEnd.ServiceDependencies {
     public interface IComun {
         string GenerarHtmlErrores(List<ValidationResult> errores);
+        Task BloquearScroll(string idDialogo, string eje);
+        Task BloquearScroll(string idDialogo);
+        Task DesbloquearScroll(string idDialogo, string eje);
+        Task DesbloquearScroll(string idDialogo);
     }
 }

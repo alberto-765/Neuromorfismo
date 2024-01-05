@@ -1,4 +1,11 @@
-﻿<MudDialog Class="@idDialogo" ClassActions="contenedorBotones">
+﻿@using WebMedicina.FrontEnd.WebApp.Pages.Pacientes.CompFormCrearPac;
+@using WebMedicina.Shared.Dto.Usuarios;
+@using WebMedicina.Shared.Dto.Pacientes;
+@using WebMedicina.Shared.Dto.Tipos;
+
+@attribute [Authorize]
+
+<MudDialog ClassActions="contenedorBotones" Class="@idDialogo">
     <DialogContent>
         <div>
             <EditForm @ref="form" Model="@nuevoPaciente" Class="flex-grow-1 p">
@@ -8,28 +15,28 @@
                 <NumHistoria @bind-Paciente="@nuevoPaciente" T="CrearPacienteDto" @bind-PacienteValido="PacienteValido" />
 
                 @* Fecha Nacimiento *@
-                <Picker label="Fecha de Nacimiento"@bind-Fecha="nuevoPaciente.FechaNac"FechaMaxima="ValidacionesRegistro.ObtenerFechaMaxNacimiento()" />
+                <Picker label="Fecha de Nacimiento" @bind-Fecha="nuevoPaciente.FechaNac" FechaMaxima="ValidacionesRegistro.ObtenerFechaMaxNacimiento()" variante="PickerVariant.Dialog" IdDialogo="@IdDialogo" />
 
                 @* Genero *@
-                <Genero @bind-Paciente="@nuevoPaciente" IdDialogo="idDialogo" T="CrearPacienteDto"/>
+                <Genero @bind-Paciente="@nuevoPaciente" IdDialogo="@IdDialogo" T="CrearPacienteDto"/>
 
                 @* Talla *@
                 <Talla @bind-Paciente="@nuevoPaciente" T="CrearPacienteDto"/>
 
                 @* Fecha Diagnostico *@
-                <Picker label="Fecha de Diagnóstico" @bind-Fecha="nuevoPaciente.FechaDiagnostico" variante="PickerVariant.Inline" />
+                <Picker label="Fecha de Diagnóstico" @bind-Fecha="nuevoPaciente.FechaDiagnostico" variante="PickerVariant.Dialog" IdDialogo="@IdDialogo" />
       
                 @* Fecha fractalidad *@
-                <Picker label="Fecha de Fractalidad" @bind-Fecha="nuevoPaciente.FechaFractalidad" variante="PickerVariant.Inline" />
+                <Picker label="Fecha de Fractalidad" @bind-Fecha="nuevoPaciente.FechaFractalidad" variante="PickerVariant.Dialog" IdDialogo="@IdDialogo" />
 
                 @* Farmaco *@
                 <Farmaco @bind-Paciente="@nuevoPaciente" T="CrearPacienteDto"/>
 
                 @* Tipo Epilepsia *@
-                <TipoEpilepsia @bind-Paciente="@nuevoPaciente" IdDialogo="idDialogo" ListaEpilepsias="ListaEpilepsias" T="CrearPacienteDto"/>
+                <TipoEpilepsia @bind-Paciente="@nuevoPaciente" IdDialogo="@IdDialogo" ListaEpilepsias="ListaEpilepsias" T="CrearPacienteDto" />
 
                 @* Tipo Mutacion *@
-                <TipoMutacion @bind-Paciente="@nuevoPaciente" IdDialogo="idDialogo" ListaMutaciones="ListaMutaciones" T="CrearPacienteDto"/>
+                <TipoMutacion @bind-Paciente="@nuevoPaciente" IdDialogo="@IdDialogo" ListaMutaciones="ListaMutaciones" T="CrearPacienteDto" />
 
                 @* Enfermedad Rara *@
                 <EnfermedadRara @bind-Paciente="@nuevoPaciente" MostrarDescripcion="true" T="CrearPacienteDto"/>

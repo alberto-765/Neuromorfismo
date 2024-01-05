@@ -1,4 +1,5 @@
 ﻿@using System.Text.RegularExpressions
+@attribute [Authorize(Roles = "superAdmin, admin")]
 @inject IAdminsService _adminsService 
 
 <EditForm Model="@(new object())">

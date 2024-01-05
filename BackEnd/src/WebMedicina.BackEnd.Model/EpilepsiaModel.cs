@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace WebMedicina.BackEnd.Model;
 
-namespace WebMedicina.BackEnd.Model;
-
-public partial class EpilepsiaModel
+public partial class EpilepsiaModel : BaseModel
 {
     public int IdEpilepsia { get; set; }
 
     public string Nombre { get; set; } = null!;
-
-    public DateOnly FechaCreac { get; set; }
-
-    public DateOnly FechaUltMod { get; set; }
 
     public virtual ICollection<PacientesModel> Pacientes { get; set; } = new List<PacientesModel>();
 }

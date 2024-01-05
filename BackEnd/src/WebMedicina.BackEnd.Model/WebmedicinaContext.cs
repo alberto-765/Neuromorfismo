@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using WebMedicina.BackEnd.Model.Seeds;
 
 namespace WebMedicina.BackEnd.Model;
 
-public partial class WebmedicinaContext : DbContext
-{
-    public WebmedicinaContext()
-    {
+public class WebmedicinaContext : DbContext {
+    public WebmedicinaContext() {
     }
 
     public WebmedicinaContext(DbContextOptions<WebmedicinaContext> options)
         : base(options)
     {
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
+        string connectionString = "Server=127.0.0.1;Port=3306;Database=webmedicina2;User=root;Password=12345;AllowUserVariables=True;";
+        optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
     }
 
     public virtual DbSet<AspnetroleModel> Aspnetroles { get; set; }
@@ -39,12 +43,19 @@ public partial class WebmedicinaContext : DbContext
 
     public virtual DbSet<PacientesModel> Pacientes { get; set; }
 
- 
+    public virtual DbSet<EvolucionLTModel> EvolucionLTModels { get; set; }
+
+    public virtual DbSet<EtapaLTModel> EtapaLTModel { get; set; }
+
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder
-            .UseCollation("utf8mb4_general_ci")
-            .HasCharSet("utf8mb4");
+        // Seeds
+        modelBuilder.ApplyConfiguration(new RolesSeed());
+        modelBuilder.ApplyConfiguration(new EpilepsiasSeed());
+        modelBuilder.ApplyConfiguration(new MutacionSeed());
+        modelBuilder.ApplyConfiguration(new EtapasLTSeed());
+
 
         modelBuilder.Entity<AspnetroleModel>(entity =>
         {
@@ -156,19 +167,9 @@ public partial class WebmedicinaContext : DbContext
         {
             entity.HasKey(e => e.IdEpilepsia).HasName("PRIMARY");
 
-            entity
-                .ToTable("epilepsias")
-                .UseCollation("utf8mb4_spanish2_ci");
-
             entity.Property(e => e.IdEpilepsia)
                 .HasColumnType("int(11)")
                 .HasColumnName("idEpilepsia");
-            entity.Property(e => e.FechaCreac)
-                .HasDefaultValueSql("curdate()")
-                .HasColumnName("fechaCreac");
-            entity.Property(e => e.FechaUltMod)
-                .HasDefaultValueSql("curdate()")
-                .HasColumnName("fechaUltMod");
             entity.Property(e => e.Nombre)
                 .HasMaxLength(50)
                 .HasDefaultValueSql("''")
@@ -179,19 +180,9 @@ public partial class WebmedicinaContext : DbContext
         {
             entity.HasKey(e => e.IdFarmaco).HasName("PRIMARY");
 
-            entity
-                .ToTable("farmacos")
-                .UseCollation("utf8mb4_spanish2_ci");
-
             entity.Property(e => e.IdFarmaco)
                 .HasColumnType("int(11)")
                 .HasColumnName("idFarmaco");
-            entity.Property(e => e.FechaCreac)
-                .HasDefaultValueSql("curdate()")
-                .HasColumnName("fechaCreac");
-            entity.Property(e => e.FechaUltMod)
-                .HasDefaultValueSql("curdate()")
-                .HasColumnName("fechaUltMod");
             entity.Property(e => e.Nombre)
                 .HasMaxLength(50)
                 .HasDefaultValueSql("''")
@@ -201,10 +192,6 @@ public partial class WebmedicinaContext : DbContext
         modelBuilder.Entity<MedicosModel>(entity =>
         {
             entity.HasKey(e => e.IdMedico).HasName("PRIMARY");
-
-            entity
-                .ToTable("medicos")
-                .UseCollation("utf8mb4_spanish2_ci");
 
             entity.HasIndex(e => e.UserLogin, "userLogin").IsUnique();
 
@@ -216,16 +203,9 @@ public partial class WebmedicinaContext : DbContext
             entity.Property(e => e.Apellidos)
                 .HasMaxLength(50)
                 .HasColumnName("apellidos");
-            entity.Property(e => e.FechaCreac)
-                .HasDefaultValueSql("curdate()")
-                .HasColumnName("fechaCreac");
             entity.Property(e => e.FechaNac)
-                .HasDefaultValueSql("curdate()")
                 .HasColumnType("datetime")
                 .HasColumnName("fechaNac");
-            entity.Property(e => e.FechaUltMod)
-                .HasDefaultValueSql("curdate()")
-                .HasColumnName("fechaUltMod");
             entity.Property(e => e.NetuserId)
                 .HasColumnName("netuserId")
                 .UseCollation("utf8mb4_general_ci");
@@ -278,19 +258,10 @@ public partial class WebmedicinaContext : DbContext
         {
             entity.HasKey(e => e.IdMutacion).HasName("PRIMARY");
 
-            entity
-                .ToTable("mutaciones")
-                .UseCollation("utf8mb4_spanish2_ci");
 
             entity.Property(e => e.IdMutacion)
                 .HasColumnType("int(11)")
                 .HasColumnName("idMutacion");
-            entity.Property(e => e.FechaCreac)
-                .HasDefaultValueSql("curdate()")
-                .HasColumnName("fechaCreac");
-            entity.Property(e => e.FechaUltMod)
-                .HasDefaultValueSql("curdate()")
-                .HasColumnName("fechaUltMod");
             entity.Property(e => e.Nombre)
                 .HasMaxLength(50)
                 .HasDefaultValueSql("''")
@@ -299,10 +270,6 @@ public partial class WebmedicinaContext : DbContext
 
         modelBuilder.Entity<PacientesModel>(entity => {
             entity.HasKey(e => e.IdPaciente).HasName("PRIMARY");
-
-            entity
-                .ToTable("pacientes")
-                .UseCollation("utf8mb4_spanish2_ci");
 
             entity.HasIndex(e => e.IdMutacion, "idMutacion");
 
@@ -326,9 +293,6 @@ public partial class WebmedicinaContext : DbContext
             entity.Property(e => e.Farmaco)
                 .HasMaxLength(250)
                 .HasColumnName("farmaco");
-            entity.Property(e => e.FechaCreac)
-                .HasDefaultValueSql("curdate()")
-                .HasColumnName("fechaCreac");
             entity.Property(e => e.FechaDiagnostico)
                 .HasDefaultValueSql("curdate()")
                 .HasColumnType("datetime")
@@ -341,9 +305,6 @@ public partial class WebmedicinaContext : DbContext
                 .HasDefaultValueSql("curdate()")
                 .HasColumnType("datetime")
                 .HasColumnName("fechaNac");
-            entity.Property(e => e.FechaUltMod)
-                .HasDefaultValueSql("curdate()")
-                .HasColumnName("fechaUltMod");
             entity.Property(e => e.IdEpilepsia)
                 .HasColumnType("int(11)")
                 .HasColumnName("idEpilepsia");
@@ -385,8 +346,5 @@ public partial class WebmedicinaContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_pacientes_medicos");
         });
-        OnModelCreatingPartial(modelBuilder);
     }
-
-    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

@@ -1,29 +1,24 @@
-﻿using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
 using WebMedicina.BackEnd.Dal;
 using WebMedicina.BackEnd.ServicesDependencies;
-using WebMedicina.Shared.Dto;
+using WebMedicina.BackEnd.ServicesDependencies.Mappers;
+using WebMedicina.Shared.Dto.Pacientes;
+using WebMedicina.Shared.Dto.Tipos;
+using WebMedicina.Shared.Dto.Usuarios;
 
-namespace WebMedicina.BackEnd.Service {
+namespace WebMedicina.BackEnd.Service
+{
     public class AdminsService : IAdminsService {
 
         private readonly AdminDal _adminDal;
         private readonly EpilepsiasDal _epilepsiasDal;
         private readonly FarmacosDal _farmacosDal;
         private readonly MutacionesDal _mutacionesDal;
-        private readonly IMapper _mapper;
 
 
         // Constructor con dependencias
-        public AdminsService(AdminDal adminDal, IMapper mapper, EpilepsiasDal epilepsiasDal, FarmacosDal farmacosDal, MutacionesDal mutacionesDal) {
+        public AdminsService(AdminDal adminDal, EpilepsiasDal epilepsiasDal, FarmacosDal farmacosDal, MutacionesDal mutacionesDal) {
             _adminDal = adminDal;
-            _mapper = mapper;   
             _epilepsiasDal = epilepsiasDal;
             _farmacosDal = farmacosDal;
             _mutacionesDal = mutacionesDal;
@@ -37,9 +32,9 @@ namespace WebMedicina.BackEnd.Service {
         }
 
         // Filtrar tabla de usuarios
-        public async Task<List<UserUploadDto>> ObtenerFiltradoUsuarios(FiltradoTablaDefaultDto camposFiltrado, ClaimsPrincipal user) {
+        public async Task<List<UserUploadDto>> ObtenerFiltradoUsuarios(FiltradoTablaDefaultDto camposFiltrado, ClaimsPrincipal userClaims) {
             try {
-                return FiltrarUsuariosPorPermisos(await _adminDal.ObtenerMedicos(camposFiltrado, _mapper.Map<UserInfoDto>(user)), user);
+                return FiltrarUsuariosPorPermisos(await _adminDal.ObtenerMedicos(camposFiltrado, userClaims.ToUserInfoDto()), userClaims);
             } catch (Exception) { throw; }
         }
 

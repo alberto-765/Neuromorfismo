@@ -1,30 +1,27 @@
 ﻿using AutoMapper;
-using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using WebMedicina.BackEnd.Dal;
-using WebMedicina.BackEnd.Dto;
 using WebMedicina.BackEnd.Model;
 using WebMedicina.BackEnd.ServicesDependencies;
-using WebMedicina.Shared.Dto;
-using System.IdentityModel.Tokens.Jwt;
+using WebMedicina.BackEnd.ServicesDependencies.Mappers;
+using WebMedicina.Shared.Dto.Pacientes;
+using WebMedicina.Shared.Dto.Tipos;
+using WebMedicina.Shared.Dto.Usuarios;
 
-
-namespace WebMedicina.BackEnd.Service {
+namespace WebMedicina.BackEnd.Service
+{
     public class PacientesService : IPacientesService {
         private readonly PacientesDal _pacientesDal;
         private readonly EpilepsiasDal _epilepsiasDal;
         private readonly FarmacosDal _farmacosDal;
         private readonly MutacionesDal _mutacionesDal;
-        private readonly IMapper _mapper;
         private readonly WebmedicinaContext _context;
 
-        public PacientesService(PacientesDal pacientesDal, EpilepsiasDal epilepsiasDal, FarmacosDal farmacosDal, MutacionesDal mutacionesDal, 
-            IMapper mapper, WebmedicinaContext context) {
+        public PacientesService(PacientesDal pacientesDal, EpilepsiasDal epilepsiasDal, FarmacosDal farmacosDal, MutacionesDal mutacionesDal, WebmedicinaContext context) {
             _pacientesDal = pacientesDal;
             _epilepsiasDal = epilepsiasDal;
             _farmacosDal = farmacosDal;
             _mutacionesDal = mutacionesDal;
-            _mapper = mapper;
             _context = context;
         }
 
@@ -53,7 +50,7 @@ namespace WebMedicina.BackEnd.Service {
         public async Task<int> CrearPaciente(CrearPacienteDto nuevoPaciente, int idMedico) {
             using var transaccion = _context.Database.BeginTransaction();
             try {
-                PacientesModel modeloPaciente = _mapper.Map<PacientesModel>(nuevoPaciente);
+                PacientesModel modeloPaciente = nuevoPaciente.ToModel();
                 int idPaciente = 0;
 
                 // Mapeamos el medico creador
@@ -73,29 +70,19 @@ namespace WebMedicina.BackEnd.Service {
         public List<CrearPacienteDto> ObtenerPacientes (ClaimsPrincipal? user) {
             try {
                 // Get de todos los pacientes
-                List<InfoPacienteDto>? listaInfoPacientes = null;
+                List<CrearPacienteDto> listaPacientes = new();
 
                 // Obtenemos todos los pacientes o solamente los del medico 
-                if(user is not null) {
-                    UserInfoDto userInfo = _mapper.Map<UserInfoDto>(user);
+                if (user is not null) {
+                    UserInfoDto userInfo = user.ToUserInfoDto();
 
                     // Validamos que el id del medico sea valido
                     if (user.IsInRole("superAdmin") || user.IsInRole("superAdmin")) {
-                        listaInfoPacientes = _pacientesDal.GetAllPacientes();
+                        listaPacientes = _pacientesDal.GetAllPacientes();
                     } else {
                         if (userInfo.IdMedico != 0) {
-                            listaInfoPacientes = _pacientesDal.GetPacientesMed(userInfo);
+                            listaPacientes = _pacientesDal.GetPacientesMed(userInfo);
                         }
-                    }
-                }
-
-                // Creamos listado de pacientes
-                List<CrearPacienteDto> listaPacientes = new();
-
-                // Mapeamos y añadimos nombres de medicos a cada paciente
-                if(listaInfoPacientes is not null) {
-                    foreach (InfoPacienteDto infoPaciente in listaInfoPacientes) {
-                        listaPacientes.Add(Comun.MapearPacienteModdel(infoPaciente));
                     }
                 }
 
@@ -139,9 +126,11 @@ namespace WebMedicina.BackEnd.Service {
             try {
                 using var transaccion = _context.Database.BeginTransaction();
                 try {
-                    PacientesModel modeloPaciente = _mapper.Map<PacientesModel>(nuevoPaciente);
 
-                    // Mapeamos el medico ultima modificacion
+                    // Mapeamos el modelo y editamos el paciente
+                    PacientesModel modeloPaciente = nuevoPaciente.ToModel();
+
+                    // Asignamos al medico como el ultimo que ha modificado el paciente
                     modeloPaciente.MedicoUltMod = idMedico;
                     bool pacienteEditado = await _pacientesDal.EditarPaciente(modeloPaciente);
 
@@ -166,18 +155,17 @@ namespace WebMedicina.BackEnd.Service {
         public async Task<bool> EliminarPaciente(int idPaciente) {
             try {
                 using var transaccion = _context.Database.BeginTransaction();
-                    try {
+                try {
+                    // Eliminamos el paciente
+                    bool pacienteEliminado = await _pacientesDal.EliminarPaciente(idPaciente);
 
-                        // Eliminamos el paciente
-                        bool pacienteEliminado = await _pacientesDal.EliminarPaciente(idPaciente);
-
-                        // Si no ha habido ningun error finalizamos la transaccion
-                        await transaccion.CommitAsync();
-                        return pacienteEliminado;
-                    } catch (Exception) {
-                        await transaccion.RollbackAsync();
-                        throw;
-                    }
+                    // Si no ha habido ningun error finalizamos la transaccion
+                    await transaccion.CommitAsync();
+                    return pacienteEliminado;
+                } catch (Exception) {
+                    await transaccion.RollbackAsync();
+                    throw;
+                }
             } catch (Exception) {
 
                 throw;
@@ -195,7 +183,7 @@ namespace WebMedicina.BackEnd.Service {
                 bool tienePermisos = false;
 
                 if (user != null) {
-                    UserInfoDto userInfo = _mapper.Map<UserInfoDto>(user);
+                    UserInfoDto userInfo = user.ToUserInfoDto();
 
                     // Permisos sin limites para SuperAdmin y Admin
                     if (user.IsInRole("superAdmin") || user.IsInRole("admin")) {
@@ -214,7 +202,7 @@ namespace WebMedicina.BackEnd.Service {
         
         public async Task<CrearPacienteDto?> GetUnPaciente(int idPaciente) {
             try {
-                return Comun.MapearPacienteModdel(await _pacientesDal.GetUnPaciente(idPaciente));
+                return await _pacientesDal.GetUnPaciente(idPaciente);
             } catch (Exception) {
                 throw;
             }

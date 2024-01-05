@@ -1,31 +1,33 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components;
-using System.Security.Claims;
 using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.FrontEnd.Service;
-using System.Runtime.CompilerServices;
-using WebMedicina.Shared.Dto;
 using MudBlazor;
-using System.Drawing;
-using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.Extensions.Configuration;
+using WebMedicina.Shared.Dto.Tipos;
+using WebMedicina.Shared.Dto.Pacientes;
+using System.Collections.Immutable;
 
-namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
+namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
+{
     public partial class Pacientes {
         // Dependencias
         [CascadingParameter] private Task<AuthenticationState>? AuthenticationState { get; set; }
-        [CascadingParameter(Name = "excepcionPersonalizada")] ExcepcionPersonalizada excepcionPersonalizada { get; set; }
         [CascadingParameter(Name = "modoOscuro")] bool IsDarkMode { get; set; } // Modo oscuro
-        [Inject] private IPacientesService _pacientesService { get; set; }
-        [Inject] private IDialogService _dialogoService { get; set; }
-        [Inject] private ISnackbar _snackbar { get; set; }
-        [Inject] private IConfiguration _configuracion { get; set; }
+        [Inject] private IPacientesService _pacientesService { get; set; } = null!;
+        [Inject] private IDialogService _dialogoService { get; set; } = null!;
+        [Inject] private ISnackbar _snackbar { get; set; } = null!;
+        [Inject] private IConfiguration _configuracion { get; set; } = null!;
+        [Inject] private IComun _comun { get; set; } = null!;
+        [Inject] private ILineaTemporalService _lineaTemporalService { get; set; } = null!;
 
-        // Panel de filtros
-        private bool FiltrosAbierto { get; set; } = false;
+
+
+        //  FILTROS
+        public bool FiltrosAbierto { get; set; } = false;
+
 
         // Listado de objetos
-        private List<CrearPacienteDto>? ListaPacientes { get; set; } = null;
+        public List<CrearPacienteDto>? ListaPacientes { get; set; } = null;
         private IEnumerable<EpilepsiasDto>? ListaEpilepsias { get; set; } = null;
         private IEnumerable<MutacionesDto>? ListaMutaciones { get; set; } = null;
 
@@ -33,8 +35,13 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
         // Pop up crear paciente
         DialogOptions OpcionesDialogo { get; set; } = new DialogOptions{ FullWidth=true, CloseButton=true, DisableBackdropClick=true, Position=DialogPosition.Center, CloseOnEscapeKey=true};
 
-        // Url imagenes server
+        // Url imagenes server PARA LOS ICONOS
         private string? UrlImagenes { get; set; }
+
+
+        // LINEA TEMPORAL
+        private ImmutableSortedDictionary<int, EtapasDto>? etapasLineaTemporal { get; set; }
+        private bool _lineaTempExpanded { get; set; } = true;  
 
 
         protected override async Task OnInitializedAsync() {
@@ -48,28 +55,31 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
                 _snackbar.Configuration.HideTransitionDuration = 300;
                 _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopLeft;
                 _snackbar.Configuration.ShowCloseIcon = false;
+                _snackbar.Configuration.VisibleStateDuration = 7000;
 
-
-                await ObtenerFiltrosSelects();
+                await ObtenerEtapasLT();
+                await ObtenerListas();
                 await ObtenerPacientes();
-            } catch (Exception ex) {
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+            } catch (Exception) {
+                // Creamos lista de pacientes vacia para no mostrar cargando en la tabla de pacientes
+                ListaPacientes = new List<CrearPacienteDto>();
+                throw;
             }
         }
 
-        // Obtener listas de filtros
-        private async Task ObtenerFiltrosSelects() {
+        // Obtener listas de mutaciones y epilepsias
+        private async Task ObtenerListas() {
             try {
-                var opcionesSelects = await _pacientesService.ObtenerFiltros();
+                var listas = await _pacientesService.ObtenerListas();
 
                 // Asignamos la lista de epilepsias
-                ListaEpilepsias = opcionesSelects.ListaEpilepsias;
+                ListaEpilepsias = listas.ListaEpilepsias;
                 // Asignamos la lista de mutaciones
-                ListaMutaciones = opcionesSelects.ListaMutaciones;
+                ListaMutaciones = listas.ListaMutaciones;
                 // Asignamos la lista de farmacos
                 //ListaFarmacos = opcionesSelects.ListaFarmacos;
             } catch (Exception) {
-                _snackbar.Add("Ha surgido un error los filtros.", Severity.Error);
+                _snackbar.Add("No ha sido posible obtener los filtros.", Severity.Error);
                 throw;
             }
         }
@@ -88,8 +98,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
                 if (result.Canceled == false && result.Data is int idPaciente && idPaciente > 0) {
                     ListaPacientes = await _pacientesService.AnadirPacienteALista(idPaciente);
                 }          
-            } catch (Exception ex) {
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+            } catch (Exception) {
                 throw;
             }
         }
@@ -105,6 +114,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
 
                 // Validamos si la lista de pacientes no es null
                 if (ListaPacientes == null) {
+                    ListaPacientes = new List<CrearPacienteDto>();
                     _snackbar.Add("No se han encontrado pacientes para mostrar.", Severity.Error);
                 }
             } catch (Exception) {
@@ -121,6 +131,14 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
         public async Task EliminarPacienteLista(int idPaciente) {
             try {
                 ListaPacientes = await _pacientesService.EliminarPacienteLista(idPaciente);
+            } catch (Exception) {
+                throw;
+            }
+        }
+
+        private async Task ObtenerEtapasLT() {
+            try {
+                etapasLineaTemporal = await _lineaTemporalService.ObtenerEtapas();
             } catch (Exception) {
                 throw;
             }

@@ -1,12 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WebMedicina.BackEnd.Dal;
 using WebMedicina.BackEnd.Model;
-using WebMedicina.Shared.Dto;
+using WebMedicina.Shared.Dto.Usuarios;
 
 namespace WebMedicina.BackEnd.ServicesDependencies {
     public interface IIdentityService  {

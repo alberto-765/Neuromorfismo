@@ -1,20 +1,20 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
 using MudBlazor;
-using System.ComponentModel.DataAnnotations;
 using System.Net.Http.Json;
 using WebMedicina.FrontEnd.Service;
 using WebMedicina.FrontEnd.ServiceDependencies;
-using WebMedicina.Shared.Dto;
-namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
+using WebMedicina.Shared.Dto.Pacientes;
+using WebMedicina.Shared.Dto.Tipos;
+
+namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
+{
     public partial class CrearPaciente {
-        [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-        [CascadingParameter(Name = "excepcionPersonalizada")] ExcepcionPersonalizada excepcionPersonalizada { get; set; }
-        [Inject] private IPacientesService _pacientesService { get; set; }
-        [Inject] private IJSRuntime _js { get; set; }
-        [Inject] private ISnackbar _snackbar { get; set; }
+        [CascadingParameter] MudDialogInstance MudDialog { get; set; } = null!;
+        [Inject] private IPacientesService _pacientesService { get; set; } = null!;
+        [Inject] private IJSRuntime _js { get; set; } = null!;
+        [Inject] private ISnackbar _snackbar { get; set; } = null!;
 
 
 
@@ -28,18 +28,18 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
 
         // Campos dialogo
         private const string idDialogo = "dialogoCrear";
+        private string IdDialogo { get => $".{idDialogo}";}
 
         protected override void OnInitialized() {
             try {
 
                 // Configuracion default snackbar
                 _snackbar.Configuration.PreventDuplicates = true;
-                _snackbar.Configuration.ShowTransitionDuration = 300;
-                _snackbar.Configuration.HideTransitionDuration = 300;
+                _snackbar.Configuration.ShowTransitionDuration = 400;
+                _snackbar.Configuration.HideTransitionDuration = 400;
                 _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopLeft;
-                _snackbar.Configuration.ShowCloseIcon = false;
-            } catch (Exception ex) {
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+                _snackbar.Configuration.ClearAfterNavigation = true;
+            } catch (Exception) {
                 throw;
             }
         }
@@ -80,8 +80,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
                         MudDialog.Close(DialogResult.Ok(idPaciente));
                     }
                 }
-            } catch (Exception ex) {
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+            } catch (Exception) {
                 throw;
             }
         }

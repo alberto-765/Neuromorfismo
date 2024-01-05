@@ -3,17 +3,17 @@ using MudBlazor;
 using System.ComponentModel.DataAnnotations;
 using WebMedicina.FrontEnd.Service;
 using WebMedicina.FrontEnd.ServiceDependencies;
-using WebMedicina.Shared.Dto;
+using WebMedicina.Shared.Dto.Pacientes;
 
-namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.CompFormCrearPac {
+namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.CompFormCrearPac
+{
     public partial class NumHistoria <T> where T : BasePaciente {
-        [CascadingParameter(Name = "excepcionPersonalizada")] ExcepcionPersonalizada excepcionPersonalizada { get; set; }
-        [Inject] private IPacientesService _pacientesService { get; set; }
-        [Inject] private ISnackbar _snackbar { get; set; }
+        [Inject] private IPacientesService _pacientesService { get; set; } = null!;
+        [Inject] private ISnackbar _snackbar { get; set; } = null!;
 
 
         // Parametros
-        [Parameter] public T Paciente { get; set; }
+        [Parameter] public T Paciente { get; set; } = null!;
 
         // Callback para devolver el valor actualizado
         [Parameter] public EventCallback<T> PacienteChanged { get; set; }
@@ -32,16 +32,15 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.CompFormCrearPac {
                                                 validationErrors);
                 if (PacienteValido) {
                     if (await _pacientesService.ValidarNumHistoria(Paciente.NumHistoria)) {
-                        _snackbar.Add("Ya existe un paciente con el Número de Historia insertado.", Severity.Warning);
+                        _snackbar.Add("Ya existe un paciente con el Número de Historia insertado.", Severity.Warning, config => { config.VisibleStateDuration = 2000; }) ;
                         PacienteValido = false;
                     } else {
-                        _snackbar.Add("Número de Historia válido", Severity.Success);
+                        _snackbar.Add("Número de Historia válido", Severity.Success, config => { config.VisibleStateDuration = 2000; });
                         PacienteValido = true;
                     }
                 }
                 await PacienteValidoChanged.InvokeAsync(PacienteValido);
-            } catch (Exception ex) {
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+            } catch (Exception) {
                 throw;
             }
         }

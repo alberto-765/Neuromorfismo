@@ -7,20 +7,22 @@ using System.ComponentModel.DataAnnotations;
 using System.Net.Http.Json;
 using WebMedicina.FrontEnd.Service;
 using WebMedicina.FrontEnd.ServiceDependencies;
-using WebMedicina.Shared.Dto;
-namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
+using WebMedicina.Shared.Dto.Pacientes;
+using WebMedicina.Shared.Dto.Tipos;
+
+namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
+{
     public partial class EditarPaciente {
-        [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-        [CascadingParameter(Name = "excepcionPersonalizada")] ExcepcionPersonalizada excepcionPersonalizada { get; set; }
-        [Inject] private IPacientesService _pacientesService { get; set; }
-        [Inject] private IJSRuntime _js { get; set; }
-        [Inject] private ISnackbar _snackbar { get; set; }
+        [CascadingParameter] MudDialogInstance MudDialog { get; set; } = null!;
+        [Inject] private IPacientesService _pacientesService { get; set; } = null!;
+        [Inject] private IJSRuntime _js { get; set; } = null!;
+        [Inject] private ISnackbar _snackbar { get; set; } = null!;
 
 
 
         // Campos formulario
         private EditForm form { get; set; } = new();
-        [Parameter] public CrearPacienteDto nuevoPaciente { get; set; } // Debe pasarse por parametro
+        [Parameter] public CrearPacienteDto nuevoPaciente { get; set; } = null!;// Debe pasarse por parametro
         [Parameter] public IEnumerable<EpilepsiasDto>? ListaEpilepsias { get; set; } = null;
         [Parameter] public IEnumerable<MutacionesDto>? ListaMutaciones { get; set; } = null;
         private bool _creandoPaciente { get; set; } = false; 
@@ -28,6 +30,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
 
         // Campos dialogo
         private const string idDialogo = "dialogoCrear";
+        private string IdDialogo { get => $".{idDialogo}"; }
 
         protected override void OnInitialized() {
             try {
@@ -38,8 +41,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
                 _snackbar.Configuration.HideTransitionDuration = 300;
                 _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopLeft;
                 _snackbar.Configuration.ShowCloseIcon = false;
-            } catch (Exception ex) {
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+            } catch (Exception) {
                 throw;
             }
         }
@@ -75,14 +77,13 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
 
                     // Cerramos el dialogo
                     if(pacienteEditado) {
-                        MudDialog.Close(DialogResult.Ok(true));
+                        MudDialog.Close(nuevoPaciente);
                     } else {
-                        MudDialog.Close(DialogResult.Ok(false));
+                        MudDialog.Close();
                     }
                 }
-            } catch (Exception ex) {
+            } catch (Exception) {
                 Cancel();
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
                 throw;
             }
         }

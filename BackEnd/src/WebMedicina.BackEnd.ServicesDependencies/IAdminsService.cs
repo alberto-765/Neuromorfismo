@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using WebMedicina.Shared.Dto;
+﻿using System.Security.Claims;
+using WebMedicina.Shared.Dto.Pacientes;
+using WebMedicina.Shared.Dto.Tipos;
+using WebMedicina.Shared.Dto.Usuarios;
 
 namespace WebMedicina.BackEnd.ServicesDependencies {
     public interface IAdminsService {
         // USUARIOS Y MEDICOS
         bool CrearMedico(UserRegistroDto nuevoMedico, String idUsuario);
-        Task<List<UserUploadDto>> ObtenerFiltradoUsuarios(FiltradoTablaDefaultDto camposFiltrado, ClaimsPrincipal user);
+        Task<List<UserUploadDto>> ObtenerFiltradoUsuarios(FiltradoTablaDefaultDto camposFiltrado, ClaimsPrincipal userClaims);
         List<UserUploadDto> FiltrarUsuariosPorPermisos(List<UserUploadDto> listaUsuarios, ClaimsPrincipal user);
         Task<bool> ActualizarMedico(UserUploadDto medicoActualizado);
 

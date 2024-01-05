@@ -1,28 +1,22 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WebMedicina.BackEnd.Model;
-using WebMedicina.Shared.Dto;
+using WebMedicina.BackEnd.ServicesDependencies.Mappers;
+using WebMedicina.Shared.Dto.Tipos;
 
 namespace WebMedicina.BackEnd.Dal {
     public class MutacionesDal {
 
         private readonly WebmedicinaContext _context;
-        private readonly IMapper _mapper;
 
-        public MutacionesDal(WebmedicinaContext context, IMapper mapper) {
+        public MutacionesDal(WebmedicinaContext context) {
             _context = context;
-            _mapper = mapper;
         }
 
         //  Get MUTACION
         public List<MutacionesDto> GetMutaciones() {
             try {
-                List<MutacionesDto> listaMutaciones = _mapper.Map<List<MutacionesDto>>(_context.Mutaciones.ToList());
+                List<MutacionesDto> listaMutaciones = _context.Mutaciones.Select(q => q.ToDto()).ToList();
                 if(listaMutaciones.Count > 0) {
                     for (int i = 0; i < listaMutaciones.Count; i++){
                         listaMutaciones[i].Indice = i+1;
@@ -62,7 +56,7 @@ namespace WebMedicina.BackEnd.Dal {
         //  Update MUTACION
         public async Task<(bool validacionEntry, bool filasModif)> UpdateMutacion(MutacionesDto mutacion) {
             try {
-                MutacionesModel mut = _context.Mutaciones.Find(mutacion.IdMutacion);
+                MutacionesModel? mut = await _context.Mutaciones.FindAsync(mutacion.IdMutacion);
                 bool validacionEntry = false, filasModif = false;
                 if (mut != null) {
 

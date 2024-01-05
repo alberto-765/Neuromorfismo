@@ -11,3 +11,7 @@
 }
 
 
+/*Contenedor linea temporal */
+::deep .contenedor-lineaTemporal {
+    box-shadow: var(--mud-elevation-3);
+}

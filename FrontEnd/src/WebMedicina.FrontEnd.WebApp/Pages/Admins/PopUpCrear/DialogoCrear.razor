@@ -1,4 +1,6 @@
-﻿ @inject IAdminsService adminService
+﻿@attribute [Authorize(Roles = "superAdmin, admin")]
+@inject IAdminsService adminService
+
 <MudDialog MaxWidth="MaxWidth.ExtraSmall" CloseButton="true" DisableBackdropClick="true" CloseOnEscapeKey="true">
     <DialogContent>
         @formulario
@@ -9,9 +11,9 @@
     </DialogActions>
 </MudDialog>
 @code {
-    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-    public RenderFragment formulario { get; set; }
-    public FormularioCrear _formularioCrear { get; set; }
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; } = null!;
+    public RenderFragment formulario { get; set; } = null!;
+    public FormularioCrear _formularioCrear { get; set; } = null!;
 
     // Creamos el componente con el tipo de formulario a crear
     protected override void OnInitialized() {
@@ -24,7 +26,7 @@
     private void Crear() {
 
         if (!string.IsNullOrWhiteSpace(_formularioCrear.nombre)) {
-            if (adminService.ValidarNuevoNombre(_formularioCrear.nombre) == null) {
+            if (string.IsNullOrWhiteSpace(adminService.ValidarNuevoNombre(_formularioCrear.nombre))) {
                 MudDialog.Close(DialogResult.Ok(_formularioCrear.nombre));
             }
         }

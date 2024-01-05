@@ -9,25 +9,25 @@ using System.Security.Claims;
 using WebMedicina.FrontEnd.Service;
 using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.FrontEnd.WebApp.Pages.Admins.PopUpCrear;
-using WebMedicina.Shared.Dto;
+using WebMedicina.Shared.Dto.Tipos;
 using static MudBlazor.CategoryTypes;
 using static System.Net.WebRequestMethods;
 
-namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
+namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
+{
     public partial class Epilepsias {
-        [CascadingParameter(Name = "excepcionPersonalizada")] ExcepcionPersonalizada excepcionPersonalizada { get; set; }
-        [Inject] private IDialogService DialogService { get; set; } // Pop up eliminar epilepsia
-        [Inject] private ISnackbar _snackbar { get; set; }
-        [Inject] ICrearHttpClient _crearHttpClient { get; set; }
+        [Inject] private IDialogService DialogService { get; set; } = null!; // Pop up eliminar epilepsia
+        [Inject] private ISnackbar _snackbar { get; set; } = null!;
+        [Inject] ICrearHttpClient _crearHttpClient { get; set; } = null!;
 
-        private MudTable<EpilepsiasDto> tabla;
-        private HttpClient Http { get; set; }
+        private MudTable<EpilepsiasDto> tabla = null!;
+        private HttpClient Http { get; set; } = null!;
         private bool mostrarTabla { get; set; } = true; // mostrar o no la tabla de epilepsias
         private bool mostrarEpilepsia { get; set; } = false; // mostrar o no la formulario para editar epilepsia
         private bool mostrarCargandoTabla { get; set; } = true; // mostrar cargando en la tabla
         private bool mostrarCargandoInicial { get; set; } = true; // mostrar cargando inicial mientras se obtienen datos
         private EpilepsiasDto epilepsiaSeleccionada { get; set; } = new();
-        private IEnumerable<EpilepsiasDto> EpilepsiasTabla { get; set; }
+        private IEnumerable<EpilepsiasDto> EpilepsiasTabla { get; set; } = null!;
 
 
         protected override async Task OnInitializedAsync() {
@@ -44,10 +44,9 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopLeft;
 
                 mostrarCargandoInicial = false;
-            } catch (Exception ex) {
+            } catch (Exception) {
                 mostrarCargandoInicial = false;
-                mostrarTabla = false;
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+                mostrarTabla = false; 
                 throw;
             }
         }
@@ -60,8 +59,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 } else {
                     return string.Empty;
                 }
-            } catch (Exception ex) {
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+            } catch (Exception) {
                 throw;
             }
         }
@@ -78,8 +76,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                     epilepsiaSeleccionada = new();
                     mostrarEpilepsia = false;
                 }
-            } catch (Exception ex) {
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+            } catch (Exception) {
                 throw;
             }
         }
@@ -158,10 +155,9 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                     }
                     _snackbar.Add(mensajeSnackBar, tipoSnackBar);
                 }
-            } catch (Exception ex) {
+            } catch (Exception) {
                 mostrarCargandoTabla = false;
                 mostrarTabla = false;
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
                 throw;
             }
         }
@@ -196,10 +192,9 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                     }
                     _snackbar.Add(mensajeSnackBar, tipoSnackBar);
                 }
-            } catch (Exception ex) {
+            } catch (Exception) {
                 mostrarCargandoTabla = false;
                 mostrarTabla = false;
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
                 throw;
             }
         }
@@ -238,10 +233,9 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                     }
                     _snackbar.Add(mensajeSnackBar, tipoSnackBar);
                 }
-            } catch (Exception ex) {
+            } catch (Exception) {
                 mostrarCargandoTabla = false;
                 mostrarTabla = false;
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
                 throw;
             }
         }

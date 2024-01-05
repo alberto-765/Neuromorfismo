@@ -6,23 +6,23 @@ using System.Net.Http.Json;
 using WebMedicina.FrontEnd.Service;
 using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.FrontEnd.WebApp.Pages.Admins.PopUpCrear;
-using WebMedicina.Shared.Dto;
+using WebMedicina.Shared.Dto.Tipos;
 
-namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
+namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
+{
     public partial class Mutaciones {
-        [CascadingParameter(Name = "excepcionPersonalizada")] ExcepcionPersonalizada excepcionPersonalizada { get; set; }
-        [Inject] private IDialogService DialogService { get; set; } // Pop up eliminar mutacion
-        [Inject] private ISnackbar _snackbar { get; set; }
-        [Inject] ICrearHttpClient _crearHttpClient { get; set; }
+        [Inject] private IDialogService DialogService { get; set; } = null!; // Pop up eliminar mutacion
+        [Inject] private ISnackbar _snackbar { get; set; } = null!;
+        [Inject] ICrearHttpClient _crearHttpClient { get; set; } = null!;
 
-        private MudTable<MutacionesDto> tabla;
-        private HttpClient Http { get; set; }
+        private MudTable<MutacionesDto> tabla = null!;
+        private HttpClient Http { get; set; } = null!;
         private bool mostrarTabla { get; set; } = true; // mostrar o no la tabla de mutaciones
         private bool mostrarMutacion { get; set; } = false; // mostrar o no la formulario para editar mutacion
         private bool mostrarCargandoTabla { get; set; } = true; // mostrar cargando en la tabla
         private bool mostrarCargandoInicial { get; set; } = true; // mostrar cargando inicial mientras se obtienen datos
         private MutacionesDto mutacionSeleccionada { get; set; } = new();
-        private IEnumerable<MutacionesDto> MutacionesTabla { get; set; }
+        private IEnumerable<MutacionesDto> MutacionesTabla { get; set; } = null!;
 
 
         protected override async Task OnInitializedAsync() {
@@ -39,10 +39,9 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopLeft;
 
                 mostrarCargandoInicial = false;
-            } catch (Exception ex) {
+            } catch (Exception) {
                 mostrarCargandoInicial = false;
                 mostrarTabla = false;
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
                 throw;
             }
         }
@@ -55,8 +54,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 } else {
                     return string.Empty;
                 }
-            } catch (Exception ex) {
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+            } catch (Exception) {
                 throw;
             }
         }
@@ -73,8 +71,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                     mutacionSeleccionada = new();
                     mostrarMutacion = false;
                 }
-            } catch (Exception ex) {
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+            } catch (Exception) {
                 throw;
             }
         }
@@ -154,10 +151,9 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                     }
                     _snackbar.Add(mensajeSnackBar, tipoSnackBar);
                 }
-            } catch (Exception ex) {
+            } catch (Exception) {
                 mostrarCargandoInicial = false;
                 mostrarTabla = false;
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
                 throw; 
             }
         }
@@ -192,10 +188,9 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                     }
                     _snackbar.Add(mensajeSnackBar, tipoSnackBar);
                 }
-            } catch (Exception ex) {
+            } catch (Exception) {
                 mostrarCargandoInicial = false;
                 mostrarTabla = false;
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
                 throw;
             }
         }
@@ -235,10 +230,9 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                     }
                     _snackbar.Add(mensajeSnackBar, tipoSnackBar);
                 }
-            } catch (Exception ex) {
+            } catch (Exception) {
                 mostrarCargandoInicial = false;
                 mostrarTabla = false;
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
                 throw;
             }
         }

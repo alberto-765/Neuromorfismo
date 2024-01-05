@@ -1,26 +1,19 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
 using WebMedicina.BackEnd.Model;
-using WebMedicina.Shared.Dto;
+using WebMedicina.BackEnd.ServicesDependencies.Mappers;
+using WebMedicina.Shared.Dto.Tipos;
 
 namespace WebMedicina.BackEnd.Dal {
     public class FarmacosDal {
         private readonly WebmedicinaContext _context;
-        private readonly IMapper _mapper;
 
-        public FarmacosDal(WebmedicinaContext context, IMapper mapper) {
+        public FarmacosDal(WebmedicinaContext context) {
             _context = context;
-            _mapper = mapper;
         }
         //  Get FARMACOS
         public List<FarmacosDto> GetFarmacos() {
             try { 
-                return _mapper.Map<List<FarmacosDto>>(_context.Farmacos.ToList());
+                return _context.Farmacos.Select(q => q.ToDto()).ToList();
             } catch (Exception) { throw; }
         }
 
@@ -54,7 +47,7 @@ namespace WebMedicina.BackEnd.Dal {
         //  Update FARMACOS
         public async Task<(bool validacionEntry, bool filasModif)> UpdateFarnaco(FarmacosDto farmaco) {
             try {
-                FarmacosModel far = _context.Farmacos.Find(farmaco.IdFarmaco);
+                FarmacosModel? far = await _context.Farmacos.FindAsync(farmaco.IdFarmaco);
                 bool validacionEntry = false, filasModif = false;
                 if (far != null) {
 

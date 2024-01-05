@@ -18,8 +18,12 @@ namespace WebMedicina.BackEnd.API
             sb.Append($"Server={dbConfig.Server};");
             sb.Append($"Port={dbConfig.Port};");
             sb.Append($"DataBase={dbConfig.DataBase};");
-            sb.Append($"user={dbConfig.User};");
+            sb.Append($"User={dbConfig.User};");
             sb.Append($"Password={dbConfig.Password};");
+            //sb.Append($"SSL Mode={dbConfig.SslMode};");
+            //sb.Append($"CertificateFile={dbConfig.CertificateFile};");
+            //sb.Append($"CertificatePassword={dbConfig.CertificatePassword};");
+            sb.Append($"AllowUserVariables={dbConfig.AllowUserVariables};");
 
             // devolvemos el string builder
             return sb.ToString();
@@ -28,11 +32,14 @@ namespace WebMedicina.BackEnd.API
 
     public class DbConnectionSettings
     {
-        public string Server { get; set; }
+        public string? Server { get; set; }
         public int Port { get; set; }
-        public string DataBase { get; set; }
-        public string User { get; set; }
-        public string Password { get; set; }
+        public string? DataBase { get; set; }
+        public string? User { get; set; }
+        public string? Password { get; set; }
+        public string? SslMode { get; set; }
+        public string? CertificateFile { get; set; }
+        public string? CertificatePassword { get; set; }
         public bool AllowUserVariables { get; set; }
 
     }

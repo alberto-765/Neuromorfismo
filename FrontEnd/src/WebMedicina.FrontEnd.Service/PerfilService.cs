@@ -1,10 +1,4 @@
-﻿using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.JSInterop;
 using WebMedicina.FrontEnd.ServiceDependencies;
 
 namespace WebMedicina.FrontEnd.Service {
@@ -13,8 +7,7 @@ namespace WebMedicina.FrontEnd.Service {
         private readonly ICrearHttpClient http;
         private readonly HttpClient Http;
         private readonly IRedirigirManager redirigirManager;
-        JWTAuthenticationProvider _jwtAuthenticationProvider { get; set; }
-
+        private JWTAuthenticationProvider _jwtAuthenticationProvider { get; set; }
 
 
         public PerfilService(IJSRuntime js, ICrearHttpClient http, JWTAuthenticationProvider jwtAuthenticationProvider, IRedirigirManager redirigirManager) { 
@@ -32,7 +25,7 @@ namespace WebMedicina.FrontEnd.Service {
                 await _jwtAuthenticationProvider.Logout();
 
                 // Redirigimos al login
-                redirigirManager.RedirigirLogin();
+                await redirigirManager.RedirigirLogin();
             } catch (Exception) {
                 throw;
             }

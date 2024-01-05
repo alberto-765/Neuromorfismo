@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
@@ -10,16 +9,9 @@ using WebMedicina.BackEnd.Dal;
 using WebMedicina.BackEnd.Model;
 using WebMedicina.BackEnd.Service;
 using WebMedicina.BackEnd.ServicesDependencies;
-using WebMedicina.Shared.Dto;
 using WebMedicina.Shared.Service;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Obtenemos el entorno de ejecucion para configurar al appsettings que debemos usar
-var entornoEjecucion = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-builder.Configuration
-	.AddJsonFile($"appsettings.json", optional: false, reloadOnChange: true)
-	.AddJsonFile($"appsettings.{entornoEjecucion}.json", optional: true, reloadOnChange: true);
 
 
 // Add services to the controladores
@@ -29,20 +21,19 @@ builder.Services.AddControllers(options =>
 	options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true; 
 });
 
-// para encriptar
-builder.Services.AddDataProtection();
-
 // Para swagger
-builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // conexion para BBDD
-builder.Services.Configure<DbConnectionSettings>(builder.Configuration.GetSection("database"));
 string connectionString = DBSettings.DBConnectionString(builder.Configuration);
 builder.Services.AddDbContext<IdentityContext>(options =>
-	   options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)), ServiceLifetime.Scoped);
-builder.Services.AddDbContext<WebmedicinaContext>(options =>
-	   options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)), ServiceLifetime.Scoped);
+	   options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
+builder.Services.AddDbContext<WebmedicinaContext>(options => {
+	options
+	.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+});
+
 
 // IDENTITY
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => {
@@ -71,26 +62,21 @@ builder.Services.AddAuthentication(x => {
 	x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 	x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
 })
-                   .AddJwtBearer(options =>
+	.AddJwtBearer(options =>
         options.TokenValidationParameters = new TokenValidationParameters {
             ValidateIssuer = false,
             ValidateAudience = false,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(builder.Configuration["JWT:key"])),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("JWT")["key"] ?? throw new InvalidOperationException("No se ha encontrado la key para crear el token."))),
         });
 builder.Services.AddAuthorization();
-
-
-//Annadimos servicio mapper
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 
 // Activamos CORS para permitir llamadas a la api desde otras url
 builder.Services.AddCors(option => {
 	option.AddPolicy("MyPolitica", app => {
-		app.WithOrigins(builder.Configuration["AppSettings:BaseUrl"])
+		app.WithOrigins(builder.Configuration.GetSection("AppSettings")["BaseUrl"] ?? throw new InvalidOperationException("No se ha encontrado la url de app blazor."))
 		.AllowAnyHeader() 
 		.AllowAnyMethod();
 	});
@@ -99,7 +85,6 @@ builder.Services.AddCors(option => {
 
 //DEPENDENCIAS
 builder.Services.AddSingleton<ExcepcionPersonalizada>(); // excepciones
-builder.Services.AddSingleton<IEncriptador, Encriptador>(); // encriptador
 
 // DAL - BASE DE DATOS
 builder.Services.AddScoped<AdminDal>(); // Dal de administradores
@@ -108,12 +93,15 @@ builder.Services.AddScoped<PacientesDal>(); // Dal de pacientes
 builder.Services.AddScoped<EpilepsiasDal>(); // Dal de epilepsias
 builder.Services.AddScoped<FarmacosDal>(); // Dal de farmacos
 builder.Services.AddScoped<MutacionesDal>(); // Dal de mutaciones
+builder.Services.AddScoped<LineaTemporalDal>(); // Dal de mutaciones
 
 // SERVICES
 builder.Services.AddScoped<IIdentityService, IdentityService>(); // Servicios que trabajan con identity
 builder.Services.AddScoped<IAdminsService, AdminsService>(); // Servicios de administradores
 builder.Services.AddScoped<IPacientesService, PacientesService>(); // Servicios de pacientes
+builder.Services.AddScoped<ILineaTemporalService, LineaTemporalService>(); // Servicios de linea temporal
 
+// IOPTIONS PARA CONFIGURACION
 
 
 var app = builder.Build();
@@ -132,7 +120,6 @@ app.MapControllers();
 // Usamos nuestra politica para cors
 app.UseCors("MyPolitica");
 
-
 // Usamos autentificacion y autorizacion
 app.UseAuthentication();
 app.UseAuthorization();
@@ -143,4 +130,5 @@ app.UseStaticFiles(new StaticFileOptions {
         Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Imagenes")),
     RequestPath = "/img", // La URL desde la que se servirán las imágenes
 });
+
 app.Run();

@@ -15,7 +15,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 // CONFIGURACION HTTCLIENT
 builder.Services.AddHttpClient("HttpAPI", client => {
-    client.BaseAddress = new Uri(builder.Configuration["ApiSettings:BaseUrl"]);
+    client.BaseAddress = new Uri(builder.Configuration["ApiSettings:BaseUrl"] ?? throw new InvalidOperationException("No se ha podido obtener la url de la api."));
 });
 
 
@@ -23,13 +23,14 @@ builder.Services.AddHttpClient("HttpAPI", client => {
 
 builder.Services.AddSingleton<IConfigurationBuilder>(builder.Configuration); // para la configuracion
 builder.Services.AddScoped<ICrearHttpClient, CrearHttpClient>(); // para crear Httpclient
-builder.Services.AddScoped<ExcepcionPersonalizada>(); // excepciones
 builder.Services.AddScoped<EstilosBase>(); // Base de estilos mudblazor
 builder.Services.AddScoped<IRedirigirManager, RedirigirManager>(); // Redirigir 
 builder.Services.AddScoped<IAdminsService, AdminsService>(); // Service de admins
 builder.Services.AddScoped<IPerfilService, PerfilService>(); // Service para control del perfil
 builder.Services.AddScoped<IPacientesService, PacientesService>(); // Service para pacientes
 builder.Services.AddScoped<IComun, Comun>(); // Service para funciones comunes y reutilizables
+builder.Services.AddScoped<ILineaTemporalService, LineaTemporalService>(); // Service para linea temporal
+
 
 // Dependencias autenticacion
 builder.Services.AddScoped<JWTAuthenticationProvider>();

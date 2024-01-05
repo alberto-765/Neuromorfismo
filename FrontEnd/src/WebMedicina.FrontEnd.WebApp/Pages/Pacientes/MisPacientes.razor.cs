@@ -4,14 +4,14 @@ using MudBlazor;
 using System.Security.Claims;
 using WebMedicina.FrontEnd.Service;
 using WebMedicina.FrontEnd.ServiceDependencies;
-using WebMedicina.Shared.Dto;
+using WebMedicina.Shared.Dto.Pacientes;
 
-namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
+namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
+{
     public partial class MisPacientes {
         // DEPENDECNIAS
         [CascadingParameter] private Task<AuthenticationState>? authenticationState { get; set; }
-        [CascadingParameter(Name = "excepcionPersonalizada")] private ExcepcionPersonalizada _excepcionPersonalizada { get; set; }
-        [Inject] private IPacientesService _pacientesService { get; set; }
+        [Inject] private IPacientesService _pacientesService { get; set; } = null!;
 
         // PARAMETROS
         [Parameter] public List<CrearPacienteDto>? ListaPacientes { get; set; } // Lista pacientes para mostrar
@@ -25,7 +25,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
         /// </summary>
         protected override async Task OnParametersSetAsync() {
             try {
-                if (ListaPacientes is not null && ListaPacientes.Any()) {
+                if (ListaPacientes is not null) {
 
                     // Filtramos los pacientes para mostrar unicamente los del usuario en caso de ser SuperAdmin y Admin
                     if(authenticationState is not null) {
@@ -34,11 +34,12 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes {
                     }
 
                     // Filtramos el listado de pacientes
-                    ListaPacientes = _pacientesService.FiltrarMisPacientes(ListaPacientes, user);
+                    if (ListaPacientes.Any()) {
+                        ListaPacientes = _pacientesService.FiltrarMisPacientes(ListaPacientes, user);
+                    }
                     MostrarOverlay = false;
                 }
-            } catch (Exception ex) {
-                _excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+            } catch (Exception) {
                 throw;
             }
         }

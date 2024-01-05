@@ -22,14 +22,4 @@
 {
     [CascadingParameter(Name = "modoOscuro")] private bool _isDarkMode { get; set; }
 
-    [CascadingParameter] private Task<AuthenticationState>? authenticationState { get; set; }
-    private ClaimsPrincipal? user { get; set; }
-
-    protected override async Task OnInitializedAsync() {
-        if (authenticationState is not null) {
-            var authState = await authenticationState;
-            user =  authState?.User;
-
-        }
-    }
 }

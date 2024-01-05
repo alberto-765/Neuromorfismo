@@ -1,12 +1,19 @@
-﻿<div>
-    <MudDrawer @bind-Open="@FiltrosAbierto" id="drawerFiltros" Anchor="Anchor.End" Fixed="true" Elevation="4" Variant="@DrawerVariant.Temporary" Color="Color.Default"
+﻿@using WebMedicina.FrontEnd.WebApp.Pages.Pacientes.CompFormCrearPac;
+@using WebMedicina.Shared.Dto.Usuarios;
+@using WebMedicina.Shared.Dto.Pacientes;
+@using WebMedicina.Shared.Dto.Tipos;
+
+@attribute [Authorize(Roles = "superAdmin, admin")]
+
+<div>
+    <MudDrawer Open="FiltroAbierto" OpenChanged="@(async () => await AbrirCerrarDrawer())" id="drawerFiltros" Anchor="Anchor.End" Fixed="true" Elevation="4" Variant="@DrawerVariant.Temporary" Color="Color.Default"
                Class="rounded-tl-lg" Style="@($"background: {(!IsDarkMode ? "white" : "var(--mud-palette-background)")}")">
         <EditForm Model="FiltrosPacientes" class="mx-5 d-flex flex-column flex-1" OnValidSubmit="ObtenerPacientesFiltrados" @onreset="ResetearFiltrado">
             @* Titulo *@
             <MudDrawerHeader Class="justify-center align-center pr-0">
                 <MudText Typo="Typo.h6">Filtros Pacientes</MudText>
                 <MudSpacer />
-                <MudIconButton Icon="@Icons.Material.Outlined.Close" OnClick="@(() => FiltrosAbierto = !FiltrosAbierto)"></MudIconButton>
+                <MudIconButton Icon="@Icons.Material.Outlined.Close" OnClick="@(() => FiltroAbierto = !FiltroAbierto)"></MudIconButton>
             </MudDrawerHeader>
 
             <div class="d-flex flex-column flex-1 justify-space-between">
@@ -26,19 +33,40 @@
                     </AuthorizeView>
 
                     @* Genero *@
-                    <Genero @bind-Paciente="FiltrosPacientes" T="FiltroPacienteDto" Label="Género"/>
-
-                    @* Talla *@
-                    <Talla @bind-Paciente="FiltrosPacientes" T="FiltroPacienteDto" Label="Talla" />
+                    <Genero @bind-Paciente="FiltrosPacientes" T="FiltroPacienteDto" Label="Género" IdDialogo="#app"/>
 
                     @* Tipo Epilepsia *@
-                    <TipoEpilepsia @bind-Paciente="@FiltrosPacientes" ListaEpilepsias="ListaEpilepsias" T="FiltroPacienteDto" />
+                    <MudSelect T="EpilepsiasDto" Class="filtro" Label="Tipo Epilepsia" @bind-SelectedValues="FiltrosPacientes.TipoEpilepsias" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter"
+                               Clearable="true" ToStringFunc="ConvertirEpi" MultiSelection="true" SelectAllText="Seleccionar todas" SelectAll="true" OnOpen="@(async () => await _comun.BloquearScroll("#app"))"
+                               OnClose="@(async () => await _comun.DesbloquearScroll("#app"))">
+                        @if (ListaEpilepsias != null && ListaEpilepsias.Any()) {
+
+                            @* Mapeamos todos los farmacos almacenados *@
+                            foreach (EpilepsiasDto epilepsia in ListaEpilepsias) {
+                                <MudSelectItem Value="epilepsia"/>
+                            }
+                        } else {
+                            <MudSelectItem Value="new EpilepsiasDto()" Disabled="true">No hay opciones disponibles</MudSelectItem>
+                        }
+                    </MudSelect>
 
                     @* Tipo Mutacion *@
-                    <TipoMutacion @bind-Paciente="@FiltrosPacientes" ListaMutaciones="ListaMutaciones" T="FiltroPacienteDto" Label="Tipo Mutación"/>
+                    <MudSelect T="MutacionesDto" Class="filtro" Label="Tipo Mutación" @bind-SelectedValues="FiltrosPacientes.TipoMutacion" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter"
+                               Clearable="true" ToStringFunc="ConvertirMut" MultiSelection="true" SelectAllText="Seleccionar todas" SelectAll="true" OnOpen="@(async () => await _comun.BloquearScroll("#app"))"
+                               OnClose="@(async () => await _comun.DesbloquearScroll("#app"))">
+                        @if (ListaMutaciones != null && ListaMutaciones.Any()) {
+
+                            @* Mapeamos todos los farmacos almacenados *@
+                            foreach (MutacionesDto mutacion in ListaMutaciones) {
+                                <MudSelectItem Value="mutacion" />
+                            }
+                        } else {
+                            <MudSelectItem Value="new MutacionesDto()" Disabled="true">No hay opciones disponibles</MudSelectItem>
+                        }
+                    </MudSelect>
 
                     @* Enfermedad Rara *@
-                    <EnfermedadRara @bind-Paciente="FiltrosPacientes" T="FiltroPacienteDto" />
+                    <MudCheckBox Class="filtro checkEnfRara" @bind-Checked="FiltrosPacientes.FiltrarEnfRara" Color="Color.Primary" For="@(() => FiltrosPacientes.FiltrarEnfRara)" TriState="true">Enfermedad rara: @(FiltrosPacientes.FiltrarEnfRara is null ? "Sin preferencia." : FiltrosPacientes.FiltrarEnfRara == true ? "Sí." : "No.")</MudCheckBox>
                 </div>
 
                 @* Botones Filtrar y Resetear *@

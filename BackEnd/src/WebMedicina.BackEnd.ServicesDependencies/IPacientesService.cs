@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
-using WebMedicina.BackEnd.Dto;
-using WebMedicina.Shared.Dto;
+using WebMedicina.Shared.Dto.Pacientes;
+using WebMedicina.Shared.Dto.Tipos;
+using WebMedicina.Shared.Dto.Usuarios;
 
 namespace WebMedicina.BackEnd.ServicesDependencies {
     public interface IPacientesService {

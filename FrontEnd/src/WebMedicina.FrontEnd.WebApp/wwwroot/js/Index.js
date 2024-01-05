@@ -1,6 +1,6 @@
 ﻿// Bloquear el scroll de un elemento
 function bloquearScroll(claseElemento, ejes) {
-    let elemento = document.querySelector(`.${claseElemento}`);
+    let elemento = document.querySelector(claseElemento);
 
     if (elemento) {
         // Bloqueamos eje x, eje y, o ambos
@@ -20,7 +20,7 @@ function bloquearScroll(claseElemento, ejes) {
 
 
 function desbloquearScroll(claseElemento, ejes) {
-    let elemento = document.querySelector(`.${claseElemento}`);
+    let elemento = document.querySelector(claseElemento);
 
     if (elemento) {
         // Bloqueamos eje x, eje y, o ambos

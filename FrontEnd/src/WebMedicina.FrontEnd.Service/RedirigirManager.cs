@@ -1,12 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WebMedicina.FrontEnd.ServiceDependencies;
-using WebMedicina.Shared.Dto;
 
 
 namespace WebMedicina.FrontEnd.Service {
@@ -14,12 +8,10 @@ namespace WebMedicina.FrontEnd.Service {
         private readonly NavigationManager navigationManager;
         private readonly IJSRuntime js;
         private const string enlaceSeguimiento  = "segEnl";
-        private readonly ExcepcionPersonalizada excepcionPers;
         // replaceHistoryEntry
-        public RedirigirManager(NavigationManager navigationManager, IJSRuntime js, ExcepcionPersonalizada excepcion) {
+        public RedirigirManager(NavigationManager navigationManager, IJSRuntime js) {
             this.navigationManager = navigationManager;
             this.js = js;
-            excepcionPers = excepcion;
         }
 
         public async Task RedirigirLogin() {
@@ -29,8 +21,8 @@ namespace WebMedicina.FrontEnd.Service {
                 if (urlActual.Replace(baseUri, "") != "login") {
                     await RedirigirDefault("login");
                 }
-            } catch (Exception ex) {
-                excepcionPers.ConstruirPintarExcepcion(ex);
+            } catch (Exception) {
+                throw;
             }
         }
 
@@ -41,10 +33,10 @@ namespace WebMedicina.FrontEnd.Service {
                 string paginaActual = urlActual.Replace(baseUri, "");
 
                 await js.SetInSessionStorage(enlaceSeguimiento, paginaActual);
-            } catch (Exception ex) {
-                excepcionPers.ConstruirPintarExcepcion(ex);
+            } catch (Exception) {
+                throw;
             }
-}
+        }
 
         public async Task RedirigirPagAnt() {
             try { 
@@ -55,10 +47,10 @@ namespace WebMedicina.FrontEnd.Service {
                 } else {
                     await RedirigirDefault();
                 }
-            } catch (Exception ex) {
-                excepcionPers.ConstruirPintarExcepcion(ex);
-             }
-}
+            } catch (Exception) {
+                throw;
+            }
+        }
 
         public async Task RedirigirDefault (string enlace = "/") { 
             try  {	        
@@ -66,8 +58,8 @@ namespace WebMedicina.FrontEnd.Service {
                 // Acutalizamos el enlace de seguimiento
                 await ActualizarSeguimientoEnlace();
                 navigationManager.NavigateTo(enlace);
-            } catch (Exception ex) {
-                excepcionPers.ConstruirPintarExcepcion(ex);
+            } catch (Exception) {
+                throw;
             }
         }
     }

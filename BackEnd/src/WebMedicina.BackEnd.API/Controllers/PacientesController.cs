@@ -1,15 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using WebMedicina.BackEnd.Dal;
-using WebMedicina.BackEnd.Dto;
-using WebMedicina.BackEnd.Service;
 using WebMedicina.BackEnd.ServicesDependencies;
-using WebMedicina.Shared.Dto;
+using WebMedicina.Shared.Dto.Pacientes;
+using WebMedicina.Shared.Dto.Tipos;
+using WebMedicina.Shared.Dto.Usuarios;
 
-namespace WebMedicina.BackEnd.API.Controllers {
+namespace WebMedicina.BackEnd.API.Controllers
+{
     [Route("api/pacientes")]
     [ApiController]
     [Authorize]
@@ -33,6 +31,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
         }
 
         // Obtener todos los medicos que tienen pacientes asignados
+        [Authorize(Roles = "superAdmin, admin")]
         [HttpGet("getMedicosPacientes")]
         public async Task<IEnumerable<UserInfoDto>> GetAllMed() {
             try {
@@ -82,7 +81,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
                     }  else {
                         return BadRequest($"No posee permisos para editar el paciente {nuevoPaciente.NumHistoria}.");
                     }
-            } else {
+                } else {
                     return BadRequest("Los datos para cliente no son correctos.");
                 }
             } catch (Exception) {
@@ -115,11 +114,8 @@ namespace WebMedicina.BackEnd.API.Controllers {
         public ActionResult ObtenerPacientes() {
             try {
                 List<CrearPacienteDto> listaPacientes = _pacientesService.ObtenerPacientes(User);
-                if (listaPacientes.Any()) {
-                    return Ok(listaPacientes);
-                }
+                return Ok(listaPacientes);
 
-                return BadRequest("No ha sido posible obtener los pacientes. Si el fallo persiste contacte con un administrador.");
             } catch (Exception) {
                 return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
@@ -131,11 +127,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
             try {
                 List<FarmacosDto> farmacos = _pacientesService.ObtenerFarmacos();
 
-                if (farmacos != null && farmacos.Any()) {
-                    return Ok(farmacos);
-                } else {
-                    return BadRequest();
-                }
+                return Ok(farmacos);
             } catch (Exception) {
                 return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
@@ -148,11 +140,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
             try {
                 List<MutacionesDto> mutaciones = _pacientesService.ObtenerMutaciones();
 
-                if (mutaciones != null && mutaciones.Any()) {
-                    return Ok(mutaciones);
-                } else {
-                    return BadRequest();
-                }
+                return Ok(mutaciones); 
             } catch (Exception) {
                 return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
@@ -164,11 +152,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
             try {
                 List<EpilepsiasDto> epilepsias = _pacientesService.ObtenerEpilepsias();
 
-                if (epilepsias != null && epilepsias.Any()) {
-                    return Ok(epilepsias);
-                } else {
-                    return BadRequest();
-                }
+                return Ok(epilepsias);
             } catch (Exception) {
                 return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
@@ -176,11 +160,11 @@ namespace WebMedicina.BackEnd.API.Controllers {
         }
 
         [HttpGet("obtenerPaciente/{idPaciente}")]
-        public async Task<CrearPacienteDto?> ObtenerPaciente(int idPaciente) {
+        public async Task<ActionResult<CrearPacienteDto?>> ObtenerPaciente(int idPaciente) {
             try {
-                return await _pacientesService.GetUnPaciente(idPaciente);
+                return Ok(await _pacientesService.GetUnPaciente(idPaciente));
             } catch (Exception) {
-                return null;
+                return BadRequest();
             }
         }
     }

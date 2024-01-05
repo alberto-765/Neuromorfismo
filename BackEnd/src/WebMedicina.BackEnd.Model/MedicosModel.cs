@@ -4,11 +4,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebMedicina.BackEnd.Model;
 
-public partial class MedicosModel
+public partial class MedicosModel : BaseModel
 {
     public int IdMedico { get; set; }
 
-    public string? UserLogin { get; set; }
+    public string UserLogin { get; set; } = null!;
 
     public string Nombre { get; set; } = null!;
 
@@ -18,11 +18,7 @@ public partial class MedicosModel
 
     public string Sexo { get; set; } = null!;
 
-    public DateOnly FechaCreac { get; set; }
-
     public string NetuserId { get; set; } = null!;
-
-    public DateOnly FechaUltMod { get; set; }
 
     public virtual ICollection<MedicospacienteModel> Medicospacientes { get; set; } = new List<MedicospacienteModel>();
 
@@ -34,5 +30,5 @@ public partial class MedicosModel
 
     // Propiedad la cual no se mapea porque no existe en la BBDD
     [NotMapped]
-    public string Rol { get; set; }
+    public string Rol { get; set; } = null!;
 }

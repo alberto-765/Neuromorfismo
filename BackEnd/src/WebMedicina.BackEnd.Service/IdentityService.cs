@@ -11,9 +11,10 @@ using System.Threading.Tasks;
 using WebMedicina.BackEnd.Dal;
 using WebMedicina.BackEnd.Model;
 using WebMedicina.BackEnd.ServicesDependencies;
-using WebMedicina.Shared.Dto;
+using WebMedicina.Shared.Dto.Usuarios;
 
-namespace WebMedicina.BackEnd.Service {
+namespace WebMedicina.BackEnd.Service
+{
     public class IdentityService : IIdentityService {
         private readonly MedicoDal _medicoDal;
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -87,6 +88,10 @@ namespace WebMedicina.BackEnd.Service {
 
         public async Task<bool> ComprobarContraseña(UserLoginDto userLogin) {
             try {
+                if (string.IsNullOrWhiteSpace(userLogin.UserName) || string.IsNullOrWhiteSpace(userLogin.Password)) {
+                    return false;
+                }
+
                 var respuesta = await _signInManager.PasswordSignInAsync(userLogin.UserName, userLogin.Password, isPersistent: true, lockoutOnFailure: true);
                 return respuesta.Succeeded;
             } catch (Exception) {

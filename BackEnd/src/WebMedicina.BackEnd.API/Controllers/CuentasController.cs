@@ -1,39 +1,32 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using NuGet.Protocol.Plugins;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Transactions;
-using WebMedicina.BackEnd.Dal;
 using WebMedicina.BackEnd.Model;
 using WebMedicina.BackEnd.ServicesDependencies;
-using WebMedicina.Shared.Dto;
+using WebMedicina.BackEnd.ServicesDependencies.Mappers;
+using WebMedicina.Shared.Dto.Usuarios;
 
-namespace WebMedicina.BackEnd.API.Controllers {
+namespace WebMedicina.BackEnd.API.Controllers
+{
     [Route("/api/cuentas")]
     [ApiController]
     [Authorize(Roles = "superAdmin, admin")]
     public class CuentasController : ControllerBase {
         private readonly IConfiguration _configuration;
-        private readonly IMapper _mapper;
         private readonly IAdminsService _adminService;
         private readonly IIdentityService _identityService;
         IdentityContext _identityContext;
         WebmedicinaContext _context;
 
         // Contructor con inyeccion de dependencias
-        public CuentasController(IConfiguration configuration, IMapper mapper, IAdminsService adminService, IIdentityService identityService,
+        public CuentasController(IConfiguration configuration, IAdminsService adminService, IIdentityService identityService,
             IdentityContext identityContext, WebmedicinaContext context) {
             _configuration = configuration;
-            _mapper = mapper;
             _adminService = adminService;
             _identityService = identityService;
             _identityContext = identityContext;
@@ -86,22 +79,23 @@ namespace WebMedicina.BackEnd.API.Controllers {
                     if (await _identityService.ComprobarContraseña(userLogin)) {
 
                         // Obtenemos los datos del medico y su rol
-                        MedicosModel? medico = await _identityService.ObtenerUsuarioYRolLogin(userLogin.UserName);
+                        MedicosModel? medico = null;
+
+                        // Validamos el username y obtenemos la info del usuario con el rol
+                        if (!string.IsNullOrWhiteSpace(userLogin.UserName)) {
+                            medico = await _identityService.ObtenerUsuarioYRolLogin(userLogin.UserName);
+                        }
 
                         // Generamos la info del usuario si se ha obtenido correctamente
-                        if(medico is not null) {
-                            UserInfoDto userInfo = _mapper.Map<UserInfoDto>(medico);
+                        if (medico is not null) {
+                            UserInfoDto userInfo = medico.ToUserInfoDto();
                             return Ok(BuildToken(userInfo));
                         }
-                        return BadRequest("Error al obtener información del usuario");
-                    } else {
-                        return BadRequest("Credenciales incorrectas");
                     }
-                } else {
-                    return BadRequest("Usuario o contraseña no válidos");
                 }
-            } catch (Exception ex) {
-                return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
+                return BadRequest("Usuario o contraseña no válidos");
+            } catch (Exception) {
+                return BadRequest("Usuario o contraseña no válidos");
             }
         }
 
@@ -115,7 +109,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
                 } else {
                     return BadRequest();
                 }
-               } catch (Exception ex) {
+               } catch (Exception) {
                return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
         }
@@ -123,6 +117,10 @@ namespace WebMedicina.BackEnd.API.Controllers {
 
         private UserToken BuildToken(UserInfoDto userInfo) {
             try { 
+                if (string.IsNullOrWhiteSpace(userInfo.UserLogin) || string.IsNullOrWhiteSpace(userInfo.Nombre) || string.IsNullOrWhiteSpace(userInfo.Apellidos) || string.IsNullOrWhiteSpace(userInfo.Rol)) {
+                    throw new NoNullAllowedException();
+                }
+
                 var claims = new [] {
                     new Claim(ClaimTypes.NameIdentifier, userInfo.IdMedico.ToString()),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), //IDENTIFICADOR
@@ -132,7 +130,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
                     new Claim(ClaimTypes.Role, userInfo.Rol),
                 };
 
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:key"]));
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("JWT")["key"] ?? throw new InvalidOperationException("No se ha encontrado la key para crear el token.")));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
                 // Tiempo de expiración del token. En nuestro caso lo hacemos de una hora.

@@ -10,23 +10,24 @@ using System.Net.Http.Json;
 using System.Security.Claims;
 using WebMedicina.FrontEnd.Service;
 using WebMedicina.FrontEnd.ServiceDependencies;
-using WebMedicina.Shared.Dto;
+using WebMedicina.Shared.Dto.Pacientes;
+using WebMedicina.Shared.Dto.Usuarios;
 
-namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
+namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
+{
     public partial class GestionUsers {
         // DEPENDENCIAS
-        [Inject] private IAdminsService _adminsService { get; set; }
-        [Inject] private IRedirigirManager redirigirManager { get; set; }
+        [Inject] private IAdminsService _adminsService { get; set; } = null!;
+        [Inject] private IRedirigirManager redirigirManager { get; set; } = null!;
         [CascadingParameter(Name = "modoOscuro")] private bool _isDarkMode { get; set; } // Modo oscuro
-        [CascadingParameter(Name = "excepcionPersonalizada")] private ExcepcionPersonalizada excepcionPersonalizada { get; set; }
-        [Inject] private ICrearHttpClient _crearHttpClient { get; set; }
-        [Inject] private ISnackbar _snackbar { get; set; }
-        [Inject] private IJSRuntime js { get; set; }
-        [Inject] private IDialogService DialogService { get; set; }
-        [Inject] private IComun _comun { get; set; }
+        [Inject] private ICrearHttpClient _crearHttpClient { get; set; } = null!;
+        [Inject] private ISnackbar _snackbar { get; set; } = null!;     
+        [Inject] private IJSRuntime js { get; set; } = null!;
+        [Inject] private IDialogService DialogService { get; set; } = null!;
+        [Inject] private IComun _comun { get; set; } = null!;
 
 
-        private HttpClient Http { get; set; }
+        private HttpClient Http { get; set; } = null!;
         [CascadingParameter] private Task<AuthenticationState>? authenticationState { get; set; }
 
         private MarkupString tooltipInfoUser;  // Tooltip de info para el usuario, donde podra ver los permisos que tiene
@@ -34,12 +35,12 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
         private ClaimsPrincipal? user { get; set; } // datos del usuario logueado
 
         // TABLAS
-        private IEnumerable<UserUploadDto> pagedData { get; set; } // datos que se muestran en la tabla
-        private MudTable<UserUploadDto> table { get; set; } // referencia de la tabla
+        private IEnumerable<UserUploadDto> pagedData { get; set; } = null!; // datos que se muestran en la tabla
+        private MudTable<UserUploadDto> table { get; set; } = null!; // referencia de la tabla
         private int totalItems; // ((UserUploadDto) item)s totales obtenidos
         private string searchString = string.Empty; // texto por el que se está buscando
-        private UserUploadDto copiaSeguridadUsuario { get; set; } // copia de seguridad de un elemento editado
-        private MudDatePicker _picker { get; set; }
+        private UserUploadDto copiaSeguridadUsuario { get; set; } = null!; // copia de seguridad de un elemento editado
+        private MudDatePicker _picker { get; set; } = null!;
 
         protected override async Task OnInitializedAsync() {
             try {
@@ -50,7 +51,9 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                     user = authState?.User;
 
                     // Generamos el texto para el tooltip
-                    _adminsService.GenerarTooltipInfoUser(user, ref tooltipInfoUser, ref mostrarTooltip);
+                    if (user is not null) { 
+                        _adminsService.GenerarTooltipInfoUser(user, ref tooltipInfoUser, ref mostrarTooltip);
+                    }
                 }
 
                 // Configuracion default snackbar
@@ -58,8 +61,8 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                 _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopLeft;
                 _snackbar.Configuration.VisibleStateDuration = 5000;
                 _snackbar.Configuration.ShowCloseIcon = false;
-            } catch (Exception ex) {
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+            } catch (Exception) {
+                throw;
             }
         }
 
@@ -98,8 +101,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
 
                 // Saltamos los ((UserUploadDto) item)s de la paginación y obtenemos el maximo que se puede mostrar
                 return new TableData<UserUploadDto>() { TotalItems = totalItems, Items = pagedData };
-            } catch (Exception ex) {
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+            } catch (Exception) {
                 throw;
             }
         }
@@ -181,9 +183,9 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins {
                     }
                 }
 
-            } catch (Exception ex) {
+            } catch (Exception) {
                 _snackbar.Add("Error al editar al médico", Severity.Error);
-                excepcionPersonalizada.ConstruirPintarExcepcion(ex);
+                throw;
             }
         }
 
