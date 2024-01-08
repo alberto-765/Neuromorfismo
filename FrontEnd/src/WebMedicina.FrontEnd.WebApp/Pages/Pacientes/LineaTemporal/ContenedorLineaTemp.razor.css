@@ -1,0 +1,14 @@
+﻿/*Contenedor linea temporal */
+::deep .contenedor-lineaTemporal {
+  
+}
+/*Contenedor linea temporal expandido */
+::deep .contenedor-lineaTemporal-expandido {
+    min-height: 10em;
+    box-shadow: var(--mud-elevation-25);
+}
+
+/* Cerrar linea tempora*/
+::deep .contenedor-lineaTemporal .lt__scrollTop {
+    position: relative !important;
+}

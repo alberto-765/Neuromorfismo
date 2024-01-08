@@ -1,9 +1,5 @@
 ﻿using MudBlazor;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace WebMedicina.FrontEnd.Service {
     public class EstilosBase {
@@ -43,8 +39,5 @@ namespace WebMedicina.FrontEnd.Service {
                 TextPrimary= "#ececf1",
             }
         };
-
-        // Mostrar overlay de carga
-        public bool _mostrarCargando { get; set; }
     }
 }

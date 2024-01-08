@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using System.Net.Http.Json;
-using WebMedicina.FrontEnd.Service;
 using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.Shared.Dto.Pacientes;
 using WebMedicina.Shared.Dto.Tipos;
@@ -20,6 +19,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
         [Parameter] public EventCallback<int> EliminarPacienteList { get; set; } // Evento callback para eliminar paciente
         [CascadingParameter(Name = "ListaEpilepsias")] public IEnumerable<EpilepsiasDto>? ListaEpilepsias { get; set; } = null;
         [CascadingParameter(Name = "ListaMutaciones")] public IEnumerable<MutacionesDto>? ListaMutaciones { get; set; } = null;
+        [Parameter] public EventCallback<int> MostrarLineaTemp { get; set; } // Evento callback para mostrar la linea temporal de un paciente
 
         // Configuracion de dialogo de edicion
         private DialogOptions OpcionesDialogo { get; set; } = new DialogOptions { FullWidth = true, CloseButton = true, MaxWidth= MaxWidth.Small, 
@@ -145,24 +145,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
                 if(!respuesta.Canceled && respuesta.Data != null && respuesta.Data is CrearPacienteDto pacienteEditado) {
                     nuevoPaciente = pacienteEditado;
                 } else {
-                    nuevoPaciente = copiaPaciente;
-                }
-            } catch (Exception) {
-                throw;
-            }
-        }
-
-        private async Task MostrarLineaTemp(CrearPacienteDto nuevoPaciente) {
-            try {
-                DialogParameters parametros = new() {
-                    { "ListaEpilepsias", ListaEpilepsias },
-                    { "ListaMutaciones", ListaMutaciones },
-                    { "nuevoPaciente", nuevoPaciente },
-                };
-                var dialog = DialogService.Show<EditarPaciente>("Nuevo Paciente", parametros, OpcionesDialogo);
-                var respuesta = await dialog.Result;
-                if (!respuesta.Canceled && respuesta.Data != null && respuesta.Data is CrearPacienteDto pacienteEditado) {
-                    nuevoPaciente = pacienteEditado;
+                    _pacientesService.ReiniciarCopiaPaciente(ref nuevoPaciente, copiaPaciente);
                 }
             } catch (Exception) {
                 throw;

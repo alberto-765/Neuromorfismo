@@ -1,5 +1,5 @@
 ﻿namespace WebMedicina.Shared.Dto.Usuarios { 
-    public class UserInfoDto {
+    public record UserInfoDto {
         public int IdMedico { get; set; }
         public string? UserLogin { get; set; }
         public string? Nombre { get; set; } 

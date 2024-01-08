@@ -1,4 +1,6 @@
 ﻿using Microsoft.JSInterop;
+using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Text.Json;
@@ -159,18 +161,10 @@ namespace WebMedicina.FrontEnd.Service
                    return new();
                 }
 
-                string listaPacientesJSON = await js.GetFromSessionStorage(clavePacientesSession);
-                List<CrearPacienteDto> listaPacientes = new();
-
-                // Deserealizamos JSON de la lista si no es null y contiene pacientes
-                if (!string.IsNullOrWhiteSpace(listaPacientesJSON)) {
-                    listaPacientes = JsonSerializer.Deserialize<List<CrearPacienteDto>>(listaPacientesJSON) ?? new();
-                }
+                List<CrearPacienteDto> listaPacientes = await ObtenerListaPacienteSession();
 
                 // Si el paciente no es null lo insertamos a la lista
-                if(listaPacientes is not null) {
-                    listaPacientes.Add(nuevoPaciente);
-                } 
+                listaPacientes?.Add(nuevoPaciente); 
 
                 // Guardamos listado de pacientes
                 await GuardarPacientesSession(listaPacientes);
@@ -186,8 +180,9 @@ namespace WebMedicina.FrontEnd.Service
             try {
 
                 // Si el paciente no es null lo insertamos a la lista
-                List<CrearPacienteDto>? listaPacientes = JsonSerializer.Deserialize<List<CrearPacienteDto>>(await js.GetFromSessionStorage(clavePacientesSession));
-                if (listaPacientes != null && listaPacientes.Any()) {
+                List<CrearPacienteDto> listaPacientes = await ObtenerListaPacienteSession();
+
+                if (listaPacientes.Any()) {
                     int indice = listaPacientes.FindIndex(q => q.IdPaciente == idPaciente);
 
                     if(indice >= 0) {
@@ -204,13 +199,49 @@ namespace WebMedicina.FrontEnd.Service
             }
         }
 
+        // Obtener lista de pacientes de session
+        public async Task<List<CrearPacienteDto>> ObtenerListaPacienteSession() {
+            try {
+                string listaPacientesJSON = await js.GetFromSessionStorage(clavePacientesSession);
+                List<CrearPacienteDto>? pacientes = null;
+
+                // Deserealizamos JSON de la lista si no es null
+                if (!string.IsNullOrWhiteSpace(listaPacientesJSON)) {
+                    pacientes = JsonSerializer.Deserialize<List<CrearPacienteDto>>(listaPacientesJSON);
+                }
+                return pacientes ?? new();
+            } catch (Exception) { throw; }
+        }
 
         // Guardar lista pacientes en session
         public async Task GuardarPacientesSession(List<CrearPacienteDto>? listaPacientes) {
             try {
-                if(listaPacientes != null && listaPacientes.Any()){
-                    await js.SetInSessionStorage(clavePacientesSession, JsonSerializer.Serialize(listaPacientes));
-                }
+                listaPacientes ??= new(); // si es null asignamos lista vacia
+                await js.SetInSessionStorage(clavePacientesSession, JsonSerializer.Serialize(listaPacientes));
+            } catch (Exception) {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Reiniciar paciente al cancelar edicion
+        /// </summary>
+        /// <param name="nuevoPaciente"></param>
+        /// <param name="copiaPaciente"></param>
+        public void ReiniciarCopiaPaciente(ref CrearPacienteDto nuevoPaciente, CrearPacienteDto copiaPaciente) {
+            try {
+                nuevoPaciente.NumHistoria = copiaPaciente.NumHistoria;
+                nuevoPaciente.FechaNac = copiaPaciente.FechaNac;
+                nuevoPaciente.Sexo = copiaPaciente.Sexo;
+                nuevoPaciente.Talla = copiaPaciente.Talla;
+                nuevoPaciente.MedicosPacientes = copiaPaciente.MedicosPacientes;
+                nuevoPaciente.FechaDiagnostico = copiaPaciente.FechaDiagnostico;
+                nuevoPaciente.FechaFractalidad = copiaPaciente.FechaFractalidad;
+                nuevoPaciente.Farmaco = copiaPaciente.Farmaco;
+                nuevoPaciente.EnfermRaras = copiaPaciente.EnfermRaras;
+                nuevoPaciente.DescripEnferRaras = copiaPaciente.DescripEnferRaras;
+                nuevoPaciente.Mutacion = copiaPaciente.Mutacion;
+                nuevoPaciente.Epilepsia = copiaPaciente.Epilepsia;
             } catch (Exception) {
                 throw;
             }

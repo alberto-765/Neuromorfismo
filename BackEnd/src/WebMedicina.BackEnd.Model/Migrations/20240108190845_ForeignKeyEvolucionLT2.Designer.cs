@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebMedicina.BackEnd.Model;
 
@@ -10,9 +11,11 @@ using WebMedicina.BackEnd.Model;
 namespace WebMedicina.BackEnd.Model.Migrations
 {
     [DbContext(typeof(WebmedicinaContext))]
-    partial class WebmedicinaContextModelSnapshot : ModelSnapshot
+    [Migration("20240108190845_ForeignKeyEvolucionLT2")]
+    partial class ForeignKeyEvolucionLT2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

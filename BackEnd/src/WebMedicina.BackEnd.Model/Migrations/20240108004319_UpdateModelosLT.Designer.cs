@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebMedicina.BackEnd.Model;
 
@@ -10,9 +11,11 @@ using WebMedicina.BackEnd.Model;
 namespace WebMedicina.BackEnd.Model.Migrations
 {
     [DbContext(typeof(WebmedicinaContext))]
-    partial class WebmedicinaContextModelSnapshot : ModelSnapshot
+    [Migration("20240108004319_UpdateModelosLT")]
+    partial class UpdateModelosLT
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,21 +67,21 @@ namespace WebMedicina.BackEnd.Model.Migrations
                         new
                         {
                             Id = "1",
-                            ConcurrencyStamp = "f3838c6d-c9bc-4296-9e00-6c75f7ed77da",
+                            ConcurrencyStamp = "adf9bac9-2e4d-41ba-9008-f61eecf2cd88",
                             Name = "superAdmin",
                             NormalizedName = "SUPERADMIN"
                         },
                         new
                         {
                             Id = "2",
-                            ConcurrencyStamp = "ed005d9f-a959-4350-8489-f86633b67b85",
+                            ConcurrencyStamp = "a77900ad-8f57-44c9-ba6d-4ad188d1f7d3",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "3",
-                            ConcurrencyStamp = "4214f545-256c-489a-a80c-1730fb2b2f7a",
+                            ConcurrencyStamp = "c8d788a5-3ace-4dfd-b84b-ee173fe3a47f",
                             Name = "medico",
                             NormalizedName = "MEDICO"
                         });
@@ -301,13 +304,6 @@ namespace WebMedicina.BackEnd.Model.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("IdMedicoCreador")
-                        .HasColumnType("int(11)");
-
-                    b.Property<int?>("IdMedicoUltModif")
-                        .IsConcurrencyToken()
-                        .HasColumnType("int(11)");
-
                     b.Property<string>("Label")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -319,10 +315,6 @@ namespace WebMedicina.BackEnd.Model.Migrations
                         .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("IdMedicoCreador");
-
-                    b.HasIndex("IdMedicoUltModif");
 
                     b.ToTable("EtapaLT");
 
@@ -372,18 +364,21 @@ namespace WebMedicina.BackEnd.Model.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("IdMedicoUltModif")
-                        .HasColumnType("int(11)");
+                        .HasColumnType("int");
 
                     b.Property<int>("IdPaciente")
+                        .HasColumnType("int(11)");
+
+                    b.Property<int>("MedicoUltModifIdMedico")
                         .HasColumnType("int(11)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("IdEtapa");
 
-                    b.HasIndex("IdMedicoUltModif");
-
                     b.HasIndex("IdPaciente");
+
+                    b.HasIndex("MedicoUltModifIdMedico");
 
                     b.ToTable("EvolucionLT");
                 });
@@ -719,21 +714,6 @@ namespace WebMedicina.BackEnd.Model.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("WebMedicina.BackEnd.Model.EtapaLTModel", b =>
-                {
-                    b.HasOne("WebMedicina.BackEnd.Model.MedicosModel", "MedicoCreador")
-                        .WithMany()
-                        .HasForeignKey("IdMedicoCreador");
-
-                    b.HasOne("WebMedicina.BackEnd.Model.MedicosModel", "MedicoUltModif")
-                        .WithMany()
-                        .HasForeignKey("IdMedicoUltModif");
-
-                    b.Navigation("MedicoCreador");
-
-                    b.Navigation("MedicoUltModif");
-                });
-
             modelBuilder.Entity("WebMedicina.BackEnd.Model.EvolucionLTModel", b =>
                 {
                     b.HasOne("WebMedicina.BackEnd.Model.EtapaLTModel", "Etapa")
@@ -742,15 +722,15 @@ namespace WebMedicina.BackEnd.Model.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WebMedicina.BackEnd.Model.MedicosModel", "MedicoUltModif")
-                        .WithMany("EvolucionMedicoUltModif")
-                        .HasForeignKey("IdMedicoUltModif")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("WebMedicina.BackEnd.Model.PacientesModel", "Paciente")
                         .WithMany("Evoluciones")
                         .HasForeignKey("IdPaciente")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebMedicina.BackEnd.Model.MedicosModel", "MedicoUltModif")
+                        .WithMany("EvolucionMedicoUltModif")
+                        .HasForeignKey("MedicoUltModifIdMedico")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

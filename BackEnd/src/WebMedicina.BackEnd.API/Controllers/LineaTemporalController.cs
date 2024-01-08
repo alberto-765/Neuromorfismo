@@ -2,9 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Immutable;
 using WebMedicina.BackEnd.ServicesDependencies;
-using WebMedicina.Shared.Dto.Pacientes;
+using WebMedicina.Shared.Dto.LineaTemporal;
 
-namespace WebMedicina.BackEnd.API.Controllers {
+namespace WebMedicina.BackEnd.API.Controllers
+{
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
@@ -16,13 +17,22 @@ namespace WebMedicina.BackEnd.API.Controllers {
             _lineaTemporalService = lineaTemporalService;
         }
 
-        [HttpGet("obtenerEtapas")]
-        public ImmutableSortedDictionary<int, EtapasDto> ObtenerEtapas() {
+        [HttpGet("ObtenerTodasEtapas")]
+        public ImmutableSortedDictionary<int, EtapaLTDto> ObtenerEtapas() {
             try {
                 return _lineaTemporalService.GetEtapas();
             } catch (Exception) {
-                return ImmutableSortedDictionary<int, EtapasDto>.Empty;
+                return ImmutableSortedDictionary<int, EtapaLTDto>.Empty;
             }
         }
-    }
+
+        [HttpGet("ObtenerEvolucionPaciente/{idPaciente}")]
+        public async Task<ActionResult<SortedList<int, EvolucionLTDto>>> ObtenerEvolucion(int idPaciente) {
+            try {
+                return Ok(await _lineaTemporalService.ObtenerEvolucion(idPaciente));
+            } catch (Exception) {
+                return BadRequest();
+            }
+        }
+}
 }

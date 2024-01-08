@@ -1,0 +1,24 @@
+﻿<div>
+    <MudContainer MaxWidth="MaxWidth.Large" Class="pb-10 mb-10">
+        <MudCollapse Expanded="LineaTemporalExpanded" Class="@($"rounded {(LineaTemporalExpanded ? "contenedor-lineaTemporal-expandido" : "")}")" >
+            <div class="d-flex">
+                <MudSpacer />
+                <MudScrollToTop Selector="" OnClick="@(async () => await CerrarLineaTemporal())" Visible="true" TopOffset="-99999" VisibleCssClass="lt__scrollTop">
+                    <MudIconButton Icon="@Icons.Material.Outlined.Close" Color="Color.Surface"/>
+                </MudScrollToTop>
+            </div>
+            <CascadingValue Name="Etapas" Value="EtapasLineaTemporal">
+                <CascadingValue Name="Evolucion" Value="Evolucion">
+                    <MudGrid Justify="Justify.Center" Class="align-center">
+                        <MudItem sm="12" md="6">
+                            <LineaTemporal />
+                        </MudItem>
+                        <MudItem sm="12" md="6">
+                            <FormularioLT />
+                        </MudItem>
+                    </MudGrid>
+                </CascadingValue>
+            </CascadingValue>
+        </MudCollapse>
+    </MudContainer>
+</div>

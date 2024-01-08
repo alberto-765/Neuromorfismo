@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using WebMedicina.Shared.Dto.LineaTemporal;
 using WebMedicina.Shared.Service;
 
 namespace WebMedicina.Shared.Dto.Pacientes {
@@ -24,5 +25,7 @@ namespace WebMedicina.Shared.Dto.Pacientes {
 
         // Medicos que tienen permisos sobre el paciente
         public Dictionary<int, string>? MedicosPacientes { get; set; }
+
+        public SortedList<int, EvolucionLTDto>? Evoluciones { get; set; }
     }
 }

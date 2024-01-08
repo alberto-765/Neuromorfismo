@@ -13,13 +13,15 @@
                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
         <Columns>
-            <HierarchyColumn T="CrearPacienteDto" Class="" />
+            
+
+            <HierarchyColumn T="CrearPacienteDto" />
 
             @* Numero Historia *@
             <PropertyColumn Property="x => x.NumHistoria" Title="Número de Historia" />
 
             @* Fecha Nacimiento *@
-            <PropertyColumn Property="x => x.FechaNac" Title="Fecha Nacimiento" Format="dd/MM/yyyy" SortBy="@(x => x.FechaNac is not null ? DateOnly.FromDateTime(x.FechaNac.Value) : null)" />
+            <PropertyColumn Property="x => x.FechaNac" Title="Fecha Nacimiento" Format="dd/MM/yyyy" SortBy="@(x => x.FechaNac is not null ? DateOnly.FromDateTime(x.FechaNac.Value) : null)"  />
 
             @* Genero *@
             <TemplateColumn Title="Género" SortBy="@(x => x.Sexo)">
@@ -61,7 +63,7 @@
             </TemplateColumn>
 
             @* Tipo Mutacion *@
-            <TemplateColumn Title="Mutación" SortBy="@(x => x.Mutacion?.Nombre)">
+            <TemplateColumn Title="Mutación" SortBy="@(x => x.Mutacion?.Nombre)" >
                 <CellTemplate>
                     @if (!string.IsNullOrEmpty(context.Item.Mutacion?.Nombre)) {
                         <MudText Typo="Typo.body1">@context.Item.Mutacion.Nombre</MudText>
@@ -75,7 +77,7 @@
             @* Botones Editar y Eliminar *@  
             <TemplateColumn CellClass="d-flex justify-space-end justify-sm-space-end gap-3">
                 <CellTemplate>
-                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Timeline" OnClick="@(() => MostrarLineaTemp(context.Item))" Title="@($"Linea temporal paciente {@context.Item.NumHistoria.ToString()}")" />
+                    <MudIconButton id="@($"Paciente{context.Item.IdPaciente}")" Size="@Size.Small" Icon="@Icons.Material.Filled.Timeline" OnClick="@(async () =>await MostrarLineaTemp.InvokeAsync(context.Item.IdPaciente))" Title="@($"Linea temporal paciente {@context.Item.NumHistoria.ToString()}")" />
                     <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => MostrarEditarPac(context.Item))" Title="@($"Editar paciente {@context.Item.NumHistoria.ToString()}")"/>
                     <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => ConfirmarEliminacion(context.Item))" Title="@($"Eliminar paciente {@context.Item.NumHistoria.ToString()}")" />
                 </CellTemplate>

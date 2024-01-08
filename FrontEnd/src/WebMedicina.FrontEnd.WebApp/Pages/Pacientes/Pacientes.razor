@@ -1,8 +1,9 @@
 ﻿@using WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal;
 
 @page "/pacientes"
-<PageTitle>Pacientes</PageTitle>
 @attribute [Authorize]
+<PageTitle>Pacientes</PageTitle>
+
 <div>
     <CascadingValue Name="ListaMutaciones" Value="ListaMutaciones" IsFixed="true">
         <CascadingValue Name="ListaEpilepsias" Value="ListaEpilepsias" IsFixed="true">
@@ -32,12 +33,12 @@
                     <AuthorizeView>
                         <Authorized>
                             <MudTabPanel Text="Todos los Pacientes" >
-                                <AllPacientes ListaPacientes="ListaPacientes" EliminarPaciente="EliminarPacienteLista" />
+                                <AllPacientes ListaPacientes="ListaPacientes" EliminarPaciente="EliminarPacienteLista" MostrarLineaTemp="_contenedorLineaTempRef.MostrarLineaTemp" />
                             </MudTabPanel>
                         </Authorized>
                     </AuthorizeView>
                     <MudTabPanel Text="Mis Pacientes">
-                        <MisPacientes ListaPacientes="ListaPacientes" EliminarPaciente="EliminarPacienteLista" />
+                        <MisPacientes ListaPacientes="ListaPacientes" EliminarPaciente="EliminarPacienteLista" MostrarLineaTemp="_contenedorLineaTempRef.MostrarLineaTemp" />
                     </MudTabPanel>
                 </MudTabs>
             </MudStack>
@@ -49,20 +50,5 @@
 
 
     @* Linea temporal *@
-    <MudCollapse Expanded="_lineaTempExpanded" Class="contenedor-lineaTemporal">
-        <div class="d-flex">
-            <MudSpacer />
-            <MudIconButton Icon="@Icons.Material.Outlined.Close" OnClick="@(() => _lineaTempExpanded = !_lineaTempExpanded)"></MudIconButton>
-        </div>
-        <CascadingValue Name="Etapas" Value="etapasLineaTemporal">
-            <MudGrid Justify="Justify.Center" Class="align-center">
-                <MudItem sm="12" md="6">
-                    <LineaTemporal />
-                </MudItem>
-                <MudItem sm="12" md="6">
-                    <FormularioLT />
-                </MudItem>
-            </MudGrid>
-        </CascadingValue>
-    </MudCollapse>
+    <ContenedorLineaTemp @ref="_contenedorLineaTempRef" /> 
 </div>

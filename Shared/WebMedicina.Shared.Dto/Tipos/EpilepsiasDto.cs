@@ -1,5 +1,8 @@
-﻿namespace WebMedicina.Shared.Dto.Tipos {
+﻿using System.ComponentModel;
+
+namespace WebMedicina.Shared.Dto.Tipos {
     public class EpilepsiasDto : BaseTipoDto, ICloneable, IEquatable<EpilepsiasDto>{
+        [ReadOnly(true)]
         public int IdEpilepsia { get; set; }
 
         public object Clone() {

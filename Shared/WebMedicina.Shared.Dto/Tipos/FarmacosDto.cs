@@ -1,5 +1,8 @@
-﻿namespace WebMedicina.Shared.Dto.Tipos {
+﻿using System.ComponentModel;
+
+namespace WebMedicina.Shared.Dto.Tipos {
     public class FarmacosDto : BaseTipoDto, ICloneable, IEquatable<FarmacosDto> {
+        [ReadOnly(true)]
         public int IdFarmaco { get; set; }
 
         public object Clone() {

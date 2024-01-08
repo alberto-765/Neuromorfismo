@@ -9,9 +9,3 @@
     background: #64B5F6;
     color: black;
 }
-
-
-/*Contenedor linea temporal */
-::deep .contenedor-lineaTemporal {
-    box-shadow: var(--mud-elevation-3);
-}

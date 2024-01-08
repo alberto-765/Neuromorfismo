@@ -6,5 +6,5 @@ public partial class EpilepsiaModel : BaseModel
 
     public string Nombre { get; set; } = null!;
 
-    public virtual ICollection<PacientesModel> Pacientes { get; set; } = new List<PacientesModel>();
+    public ICollection<PacientesModel> Pacientes { get; set; } = new List<PacientesModel>();
 }

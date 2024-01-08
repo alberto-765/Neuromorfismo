@@ -35,18 +35,23 @@ public partial class PacientesModel : BaseModel, IEquatable<PacientesModel>
 
     public int MedicoCreador { get; set; }
 
-    public virtual EpilepsiaModel? IdEpilepsiaNavigation { get; set; }
+    public EpilepsiaModel? IdEpilepsiaNavigation { get; set; }
 
-    public virtual MutacionesModel? IdMutacionNavigation { get; set; }
+    public MutacionesModel? IdMutacionNavigation { get; set; }
 
-    public virtual MedicosModel MedicoCreadorNavigation { get; set; } = null!;
+    public MedicosModel MedicoCreadorNavigation { get; set; } = null!;
 
     [ConcurrencyCheck]
-    public virtual MedicosModel MedicoUltModNavigation { get; set; } = null!;
+    public MedicosModel MedicoUltModNavigation { get; set; } = null!;
 
-    public virtual ICollection<MedicospacienteModel> Medicospacientes { get; set; } = new List<MedicospacienteModel>();
+    public ICollection<MedicospacienteModel> Medicospacientes { get; set; } = new List<MedicospacienteModel>();
 
-    public virtual EtapaLTModel? UltimaEtapa { get; set; } = null;
+    [ForeignKey("UltimaEtapa")]
+    public int? IdUltimaEtapa { get; set; }
+    public EtapaLTModel? UltimaEtapa { get; set; }
+
+    public virtual ICollection<EvolucionLTModel>? Evoluciones { get; set; }
+
 
     // Comparar propiedades
     public bool Equals(PacientesModel? obj) {

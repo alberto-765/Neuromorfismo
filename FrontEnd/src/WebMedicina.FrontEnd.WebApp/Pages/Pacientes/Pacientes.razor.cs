@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components;
 using WebMedicina.FrontEnd.ServiceDependencies;
-using WebMedicina.FrontEnd.Service;
 using MudBlazor;
 using WebMedicina.Shared.Dto.Tipos;
 using WebMedicina.Shared.Dto.Pacientes;
-using System.Collections.Immutable;
+using WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal;
 
 namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
 {
@@ -18,7 +17,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
         [Inject] private ISnackbar _snackbar { get; set; } = null!;
         [Inject] private IConfiguration _configuracion { get; set; } = null!;
         [Inject] private IComun _comun { get; set; } = null!;
-        [Inject] private ILineaTemporalService _lineaTemporalService { get; set; } = null!;
 
 
 
@@ -40,8 +38,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
 
 
         // LINEA TEMPORAL
-        private ImmutableSortedDictionary<int, EtapasDto>? etapasLineaTemporal { get; set; }
-        private bool _lineaTempExpanded { get; set; } = true;  
+        private ContenedorLineaTemp _contenedorLineaTempRef { get; set; } = null!;
 
 
         protected override async Task OnInitializedAsync() {
@@ -57,7 +54,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
                 _snackbar.Configuration.ShowCloseIcon = false;
                 _snackbar.Configuration.VisibleStateDuration = 7000;
 
-                await ObtenerEtapasLT();
                 await ObtenerListas();
                 await ObtenerPacientes();
             } catch (Exception) {
@@ -115,10 +111,10 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
                 // Validamos si la lista de pacientes no es null
                 if (ListaPacientes == null) {
                     ListaPacientes = new List<CrearPacienteDto>();
-                    _snackbar.Add("No se han encontrado pacientes para mostrar.", Severity.Error);
+                    _snackbar.Add("No se han encontrado pacientes para mostrar.", Severity.Normal);
                 }
             } catch (Exception) {
-                _snackbar.Add("Ha surgido un error al obtener los pacientes.", Severity.Error);
+                _snackbar.Add("No ha sido posible obtener los pacientes. Contacte con un administrador", Severity.Error);
                 throw;
             }
         }
@@ -131,14 +127,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
         public async Task EliminarPacienteLista(int idPaciente) {
             try {
                 ListaPacientes = await _pacientesService.EliminarPacienteLista(idPaciente);
-            } catch (Exception) {
-                throw;
-            }
-        }
-
-        private async Task ObtenerEtapasLT() {
-            try {
-                etapasLineaTemporal = await _lineaTemporalService.ObtenerEtapas();
             } catch (Exception) {
                 throw;
             }

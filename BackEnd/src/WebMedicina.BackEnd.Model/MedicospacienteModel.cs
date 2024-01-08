@@ -11,7 +11,7 @@ public partial class MedicospacienteModel
 
     public int IdPaciente { get; set; }
 
-    public virtual MedicosModel IdMedicoNavigation { get; set; } = null!;
+    public MedicosModel IdMedicoNavigation { get; set; } = null!;
 
-    public virtual PacientesModel IdPacienteNavigation { get; set; } = null!;
+    public PacientesModel IdPacienteNavigation { get; set; } = null!;
 }

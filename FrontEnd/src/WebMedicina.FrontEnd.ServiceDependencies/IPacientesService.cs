@@ -16,5 +16,8 @@ namespace WebMedicina.FrontEnd.ServiceDependencies {
         List<CrearPacienteDto>? FiltrarMisPacientes(List<CrearPacienteDto>? listaPacientes, ClaimsPrincipal? user);
         Task<List<CrearPacienteDto>?> AnadirPacienteALista(int idPaciente);
         Task<List<CrearPacienteDto>?> EliminarPacienteLista(int idPaciente);
+        void ReiniciarCopiaPaciente(ref CrearPacienteDto nuevoPaciente, CrearPacienteDto copiaPaciente);
+        Task<List<CrearPacienteDto>> ObtenerListaPacienteSession();
+        Task GuardarPacientesSession(List<CrearPacienteDto>? listaPacientes);
     }
 }

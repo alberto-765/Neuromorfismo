@@ -1,9 +1,11 @@
 ﻿
 using System.Collections.Immutable;
-using WebMedicina.Shared.Dto.Pacientes;
+using WebMedicina.Shared.Dto.LineaTemporal;
 
-namespace WebMedicina.BackEnd.ServicesDependencies {
+namespace WebMedicina.BackEnd.ServicesDependencies
+{
     public interface ILineaTemporalService {
-        ImmutableSortedDictionary<int, EtapasDto> GetEtapas();
+        ImmutableSortedDictionary<int, EtapaLTDto> GetEtapas();
+        Task<SortedList<int, EvolucionLTDto>> ObtenerEvolucion(int idPaciente);
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebMedicina.BackEnd.Model;
 
@@ -20,13 +18,18 @@ public partial class MedicosModel : BaseModel
 
     public string NetuserId { get; set; } = null!;
 
-    public virtual ICollection<MedicospacienteModel> Medicospacientes { get; set; } = new List<MedicospacienteModel>();
+    public ICollection<MedicospacienteModel> Medicospacientes { get; set; } = new List<MedicospacienteModel>();
 
-    public virtual AspnetuserModel Netuser { get; set; } = null!;
+    public AspnetuserModel Netuser { get; set; } = null!;
 
-    public virtual ICollection<PacientesModel> PacienteMedicoCreadorNavigations { get; set; } = new List<PacientesModel>();
+    public ICollection<PacientesModel> PacienteMedicoCreadorNavigations { get; set; } = new List<PacientesModel>();
 
-    public virtual ICollection<PacientesModel> PacienteMedicoUltModNavigations { get; set; } = new List<PacientesModel>();
+    public ICollection<PacientesModel> PacienteMedicoUltModNavigations { get; set; } = new List<PacientesModel>();
+
+    //public ICollection<EtapaLTModel> EtapaMedicoUltModif { get; set; } = new List<EtapaLTModel>();
+    //public ICollection<EtapaLTModel> EtapaMedicoCreador { get; set; } = new List<EtapaLTModel>();
+
+    public ICollection<EvolucionLTModel> EvolucionMedicoUltModif { get; set; } = new List<EvolucionLTModel>();
 
     // Propiedad la cual no se mapea porque no existe en la BBDD
     [NotMapped]

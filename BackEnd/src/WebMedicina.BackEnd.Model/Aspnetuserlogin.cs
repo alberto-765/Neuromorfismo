@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace WebMedicina.BackEnd.Model;
+﻿namespace WebMedicina.BackEnd.Model;
 
 public partial class Aspnetuserlogin
 {

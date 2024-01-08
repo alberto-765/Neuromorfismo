@@ -71,5 +71,19 @@ namespace WebMedicina.BackEnd.ServicesDependencies.Mappers {
                 Sexo = user.Sexo,
             };
 
+        // UserInfoDto to MedicosModel 
+        public static MedicosModel ToModel(this UserInfoDto user) =>
+            new() {
+                IdMedico = user.IdMedico,
+                Nombre = user.Nombre ?? string.Empty,
+                Apellidos = user.Apellidos ?? string.Empty,
+                FechaCreac = user.FechaCreac,
+                FechaUltMod = user.FechaUltMod,
+                FechaNac = user.FechaUltMod,
+                UserLogin = user.UserLogin ?? string.Empty,
+                Rol = user.Rol ?? string.Empty,
+                Sexo = user.Sexo ?? string.Empty,
+            };
+
     }
 }
