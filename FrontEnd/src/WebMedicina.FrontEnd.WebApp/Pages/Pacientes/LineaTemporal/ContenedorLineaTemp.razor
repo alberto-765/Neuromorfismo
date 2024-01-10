@@ -1,30 +1,28 @@
 ﻿<div>
-    <MudContainer MaxWidth="MaxWidth.Large" id="@IdContenedorLT">
-        <MudCollapse Expanded="LineaTemporalExpanded" class="@($"rounded {(LineaTemporalExpanded ? "contenedor-lineaTemporal-expandido" : "")}")">
-            <MudPaper Elevation="25">
-                <div class="d-flex">
-                    <MudSpacer />
-                    <MudScrollToTop 
-                        Selector="" OnClick="@(async () => await CerrarLineaTemporal())" 
-                        Visible="true" 
-                        TopOffset="-99999" 
-                        VisibleCssClass="lt__scrollTop">
-                        <MudIconButton Icon="@Icons.Material.Outlined.Close" Color="Color.Surface"/>
-                    </MudScrollToTop>
-                </div>
-                <CascadingValue Name="Etapas" Value="EtapasLineaTemporal">
-                    <CascadingValue Name="Evolucion" Value="Evolucion">
-                        <MudGrid Justify="Justify.Center" Class="align-center">
-                            <MudItem sm="12" md="6">
-                                <LineaTemporal />
-                            </MudItem>
-                            <MudItem sm="12" md="6">
-                                <FormularioLT />
-                            </MudItem>
-                        </MudGrid>
-                    </CascadingValue>
+    <MudContainer MaxWidth="MaxWidth.Large" Class="@($"rounded {ClaseContenedor} my-5")" id="@IdContenedorLT">
+        <MudPaper Elevation="25">
+            <div class="d-flex">
+                <MudSpacer />
+                <MudScrollToTop Selector="@SelectorScroll" 
+                    OnClick="@(async () => await CerrarLineaTemporal())"
+                    Visible="true" 
+                    TopOffset="-99999" 
+                    VisibleCssClass="lt__scrollTop">
+                    <MudIconButton Icon="@Icons.Material.Outlined.Close" Color="Color.Surface"/>
+                </MudScrollToTop>
+            </div>
+            <CascadingValue Name="Etapas" Value="EtapasLineaTemporal">
+                <CascadingValue Name="Evolucion" Value="Evolucion">
+                    <MudGrid Justify="Justify.Center" Class="align-center">
+                        <MudItem sm="12" md="6">
+                            <LineaTemporal />
+                        </MudItem>
+                        <MudItem sm="12" md="6">
+                            <FormularioLT />
+                        </MudItem>
+                    </MudGrid>
                 </CascadingValue>
-            </MudPaper>
-        </MudCollapse>
+            </CascadingValue>
+        </MudPaper>
     </MudContainer>
 </div>

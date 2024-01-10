@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Configuration;
 using MudBlazor;
 using System.Collections.Immutable;
 using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.Shared.Dto.LineaTemporal;
-using WebMedicina.Shared.Dto.Pacientes;
 
 namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
     public partial class ContenedorLineaTemp {
@@ -14,11 +12,22 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
         [Inject] private IComun _comun { get; set; } = null!;
         [Inject] private ILineaTemporalService _lineaTemporalService { get; set; } = null!;
 
-        // Parametros 
+        // Clase Contenedor Linea Temporal
         private string SelectorScroll { get; set; } = string.Empty; // Id fila del paciente en la tabla
         private string IdContenedorLT { get; set; } = "contenedor-lineaTemporal";
+        private string ClaseContenedor { get; set; } = string.Empty;
 
-        private bool LineaTemporalExpanded { get; set; } = false; // Mostrar u ocultar contenedor
+        // Mostrar u ocultar contenedor
+        private bool LineaTemporalExpanded = false;
+        private bool LineaTemporalExpandedProp { 
+            get => LineaTemporalExpanded;
+            set {
+                LineaTemporalExpanded = value;
+                ClaseContenedor = IdContenedorLT + (LineaTemporalExpanded ? "-expandido" : "-hidden");
+            }
+        } 
+
+        // Listas etapas y evolucion paciente
         private SortedList<int, EvolucionLTDto> Evolucion = new(); // Evoluciones del paciente
         private ImmutableSortedDictionary<int, EtapaLTDto>? EtapasLineaTemporal { get; set; } // Etapas para la linea temporal
 
@@ -51,8 +60,11 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
         // Cerramos cuadro linea temporal y resetear datos
         private async Task CerrarLineaTemporal() {
             try {
-                LineaTemporalExpanded = false;
+                // Reseteamos datos
+                LineaTemporalExpandedProp = false;
                 Evolucion = new();
+                SelectorScroll = string.Empty;
+
                 StateHasChanged();
                 await Task.Delay(1000);
             } catch (Exception) {
@@ -63,13 +75,14 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
         // Obtenemos evolucion del paciente, abrimos contenedor linea temporal y hacemos scroll al contenedor
         public async Task MostrarLineaTemp(int idPaciente) {
             try {
+                // Mostramos linea temporal y configuramos el selector para el scroll top
+                LineaTemporalExpandedProp = true;
+                StateHasChanged();
+
                 // Obtenemos evolucion del paciente
                 Evolucion = await _lineaTemporalService.ObtenerEvolucionPaciente(idPaciente);
-
-                // Mostramos linea temporal y configuramos el selector para el scroll top
-                LineaTemporalExpanded = true;
                 SelectorScroll = $"#Paciente{idPaciente}";
-                StateHasChanged(); 
+                StateHasChanged();
 
                 // Hacemos scroll al contenedor linea temporal
                 await Task.Delay(1000);

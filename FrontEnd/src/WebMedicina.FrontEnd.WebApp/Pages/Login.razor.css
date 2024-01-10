@@ -1,3 +1,7 @@
 ﻿::deep #botonLogin{
     width: 50% !important;
 }
+::deep #inputPassword ~ .mud-input-adornment {
+    margin: 0;
+}
+

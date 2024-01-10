@@ -3,26 +3,29 @@
 
 <MudContainer MaxWidth="MaxWidth.Small" Class="d-flex justify-center align-center flex-grow-1">
     <MudPaper Class="py-9 px-12 rounded-lg" Elevation="9" Width="100%">
-        <EditForm Model="@userLogin" OnValidSubmit="hacerLogin">
-            <DataAnnotationsValidator />
+        <div>
+            <EditForm Model="@userLogin" OnValidSubmit="hacerLogin">
+                <DataAnnotationsValidator />
 
-            <MudTextField @onfocus="(() => mensajeErrorLogin = String.Empty)" @bind-Value="userLogin.UserName" For="@(() => userLogin.UserName)"  OnlyValidateIfDirty="true" Clearable="true" Label="Usuario" HelperTextOnFocus="true" Variant="Variant.Text" />
-            <MudTextField @onfocus="(() => mensajeErrorLogin = String.Empty)" @bind-Value="userLogin.Password" For="@(() => userLogin.Password)" Label="Contraseña" Variant="Variant.Text" InputType="@tipoInputPass" Adornment="Adornment.End" OnlyValidateIfDirty="true" AdornmentIcon="@iconoPassword" OnAdornmentClick="clickPassword" AdornmentAriaLabel="Ver contraseña" />
+                <MudTextField @onfocus="(() => mensajeErrorLogin = String.Empty)" @bind-Value="userLogin.UserName" For="@(() => userLogin.UserName)"  OnlyValidateIfDirty="true" Clearable="true" Label="Usuario" HelperTextOnFocus="true" Variant="Variant.Text" />
+                <MudTextField @onfocus="(() => mensajeErrorLogin = String.Empty)" @bind-Value="userLogin.Password" For="@(() => userLogin.Password)" Label="Contraseña" Variant="Variant.Text" InputType="@tipoInputPass" Adornment="Adornment.End" OnlyValidateIfDirty="true" 
+                    AdornmentIcon="@iconoPassword" OnAdornmentClick="clickPassword" AdornmentAriaLabel="Ver contraseña" id="inputPassword" />
                 
-            @if (!String.IsNullOrEmpty(mensajeErrorLogin)) {
-                <MudText Typo="Typo.subtitle1" Color="Color.Error">@mensajeErrorLogin</MudText>
-            }
+                @if (!String.IsNullOrEmpty(mensajeErrorLogin)) {
+                    <MudText Typo="Typo.subtitle1" Color="Color.Error">@mensajeErrorLogin</MudText>
+                }
 
-            <div Class="mt-9" Align="center" Typo="Typo.h6">
-                <MudButton Disabled="@cargando" Size="Size.Large" Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit" Id="botonLogin">
-                    @if (cargando) {
-                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                        <MudText Class="ms-2">Cargando</MudText>
-                    } else {
-                        <MudText>Login</MudText>
-                    }
-                </MudButton>
-            </div>
-        </EditForm>
+                <div class="mt-9" Align="center" Typo="Typo.h6">
+                    <MudButton Disabled="@cargando" Size="Size.Large" Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit" Id="botonLogin">
+                        @if (cargando) {
+                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                            <MudText Class="ms-2">Cargando...</MudText>
+                        } else {
+                            <MudText>Login</MudText>
+                        }
+                    </MudButton>
+                </div>
+            </EditForm>
+        </div>
     </MudPaper>
 </MudContainer>
