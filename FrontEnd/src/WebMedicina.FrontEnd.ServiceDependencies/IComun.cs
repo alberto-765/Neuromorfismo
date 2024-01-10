@@ -12,5 +12,6 @@ namespace WebMedicina.FrontEnd.ServiceDependencies {
         Task BloquearScroll(string idDialogo);
         Task DesbloquearScroll(string idDialogo, string eje);
         Task DesbloquearScroll(string idDialogo);
+        Task ScrollHaciaElemento(string idElemento, string posY = "center");
     }
 }

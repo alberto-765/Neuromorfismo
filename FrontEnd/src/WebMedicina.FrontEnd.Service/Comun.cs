@@ -72,5 +72,13 @@ namespace WebMedicina.FrontEnd.Service {
                 throw;
             }
         }
+
+        public async Task ScrollHaciaElemento(string idElemento, string posY = "center") {
+            try {
+                await _js.InvokeVoidAsync("ScrollHaciaElemento", idElemento, posY);
+            } catch (Exception) {
+                throw;
+            }        
+        }
     }
 }

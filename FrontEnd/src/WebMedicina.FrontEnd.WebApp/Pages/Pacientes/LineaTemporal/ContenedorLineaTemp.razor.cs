@@ -15,7 +15,8 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
         [Inject] private ILineaTemporalService _lineaTemporalService { get; set; } = null!;
 
         // Parametros 
-        private string SelectorScroll { get; set; } = string.Empty;
+        private string SelectorScroll { get; set; } = string.Empty; // Id fila del paciente en la tabla
+        private string IdContenedorLT { get; set; } = "contenedor-lineaTemporal";
 
         private bool LineaTemporalExpanded { get; set; } = false; // Mostrar u ocultar contenedor
         private SortedList<int, EvolucionLTDto> Evolucion = new(); // Evoluciones del paciente
@@ -37,12 +38,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
             }
         }
 
-
-
-        /// <summary>
-        /// Obtener todas las etapas de la linea temporal
-        /// </summary>
-        /// <returns></returns>
+        // Obtenemos todas las etapas de la linea temporal
         private async Task ObtenerEtapasLT() {
             try {
                 EtapasLineaTemporal = await _lineaTemporalService.ObtenerEtapas();
@@ -52,6 +48,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
             }
         }
 
+        // Cerramos cuadro linea temporal y resetear datos
         private async Task CerrarLineaTemporal() {
             try {
                 LineaTemporalExpanded = false;
@@ -63,12 +60,21 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
             }
         }
 
+        // Obtenemos evolucion del paciente, abrimos contenedor linea temporal y hacemos scroll al contenedor
         public async Task MostrarLineaTemp(int idPaciente) {
             try {
+                // Obtenemos evolucion del paciente
+                Evolucion = await _lineaTemporalService.ObtenerEvolucionPaciente(idPaciente);
+
+                // Mostramos linea temporal y configuramos el selector para el scroll top
                 LineaTemporalExpanded = true;
                 SelectorScroll = $"#Paciente{idPaciente}";
-                Evolucion = await _lineaTemporalService.ObtenerEvolucionPaciente(idPaciente);
-                StateHasChanged();
+                StateHasChanged(); 
+
+                // Hacemos scroll al contenedor linea temporal
+                await Task.Delay(1000);
+                await _comun.ScrollHaciaElemento(IdContenedorLT, "end");
+
             } catch (Exception) {
                 throw;
             }

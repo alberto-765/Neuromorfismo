@@ -18,7 +18,7 @@ function bloquearScroll(claseElemento, ejes) {
     }
 }
 
-
+// Activar scroll de un contenedor
 function desbloquearScroll(claseElemento, ejes) {
     let elemento = document.querySelector(claseElemento);
 
@@ -38,7 +38,7 @@ function desbloquearScroll(claseElemento, ejes) {
     }
 }
 
-// Simular click en un boton
+// Simular envio de un formulario via js
 function EnviarForm(identificador) {
     try {
         let form = document.querySelector(identificador)
@@ -47,6 +47,20 @@ function EnviarForm(identificador) {
         if (form.tagName == "FORM") {
             form.submit();
         }
+    } catch (e) {
+        throw e;
+    }
+}
+
+// Hacer scroll hacia un elemento
+function ScrollHaciaElemento(idElemento, poxY) {
+    try {
+        let elemento = document.getElementById(idElemento)
+        elemento.scrollIntoView({
+            behavior: "smooth",
+            block: poxY,
+            inline: "nearest"
+        })
     } catch (e) {
         throw e;
     }
