@@ -1,18 +1,5 @@
 ﻿<MudStack Class="mt-sm-10 mt-4 flex-grow-1 gap-sm-3" Row="false" Justify="Justify.Center" AlignItems="AlignItems.Center">
     <MudText Typo="Typo.h4" Align="Align.Center">@errorParaPintar</MudText>
-    <MudImage Src="@(configuration["ApiSettings:ImgUrl"] + "error.png")" Alt="Imagen de error" id="imgError" />
+    <MudImage Src="@UrlImagen" Alt="Imagen de error" id="imgError" />
 </MudStack>
 
-
-@code {
-    // Texto de error para pintar
-    [Parameter] public string mensajeError { get; set; } =  "<span>Página no encontrada</span>";
-    private MarkupString errorParaPintar { get; set; }
-    // Configuracion de la app
-    [Inject] IConfiguration configuration { get; set; } = null!;
-
-    protected override void OnInitialized() {
-        errorParaPintar = new MarkupString(mensajeError);
-    }
-
-}

@@ -5,13 +5,14 @@ using WebMedicina.FrontEnd.Service;
 using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.FrontEnd.WebApp;
 using MudBlazor.Services;
+using WebMedicina.FrontEnd.Dto;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-// CONFIGURACION APISETTINGSº
+
 
 // CONFIGURACION HTTCLIENT
 builder.Services.AddHttpClient("HttpAPI", client => {
@@ -20,7 +21,6 @@ builder.Services.AddHttpClient("HttpAPI", client => {
 
 
 //DEPENDENCIAS
-
 builder.Services.AddSingleton<IConfigurationBuilder>(builder.Configuration); // para la configuracion
 builder.Services.AddScoped<ICrearHttpClient, CrearHttpClient>(); // para crear Httpclient
 builder.Services.AddScoped<EstilosBase>(); // Base de estilos mudblazor
@@ -30,6 +30,10 @@ builder.Services.AddScoped<IPerfilService, PerfilService>(); // Service para con
 builder.Services.AddScoped<IPacientesService, PacientesService>(); // Service para pacientes
 builder.Services.AddScoped<IComun, Comun>(); // Service para funciones comunes y reutilizables
 builder.Services.AddScoped<ILineaTemporalService, LineaTemporalService>(); // Service para linea temporal
+
+
+// Configuracion imagenes
+builder.Services.Configure<ImagenesServerDto>(options => builder.Configuration.GetSection("ImagenesServer").Bind(options));
 
 
 // Dependencias autenticacion

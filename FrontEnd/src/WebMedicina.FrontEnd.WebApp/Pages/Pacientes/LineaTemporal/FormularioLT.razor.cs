@@ -14,8 +14,9 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal
         [Inject] private ILineaTemporalService _lineaTemporalService { get; set; } = null!;
 
         // Parametros
-        [CascadingParameter(Name = "Etapas")] private ImmutableSortedDictionary<int, EtapaLTDto>? EtapasLineaTemporal { get; set; }
-        [CascadingParameter(Name = "Evolucion")] private SortedList<int, EvolucionLTDto> Evolucion { get; set; } = null!;
+        [Parameter] public ImmutableSortedDictionary<int, EtapaLTDto>? EtapasLineaTemporal { get; set; }
+        [Parameter] public SortedList<int, EvolucionLTDto> Evolucion { get; set; } = null!;
+        [Parameter] public EventCallback<SortedList<int, EvolucionLTDto>> EvolucionChanged { get; set; }
 
 
     }

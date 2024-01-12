@@ -1,1 +1,80 @@
-﻿@attribute [Authorize]
+﻿@using WebMedicina.Shared.Dto.LineaTemporal;
+
+@attribute [Authorize]
+
+@* Mapeamos linea temporal y evolucion del paciente *@
+@{
+    if(EtapasLineaTemporal is not null && EtapasLineaTemporal.Any() && Evolucion is not null) {
+
+        @* Creamos variable evolución *@
+        EvolucionLTDto? evolucionPintar = null;
+        string claseColorTexto = string.Empty;
+        Color colorBolaItem = Color.Primary;
+        Color colorTitulo = Color.Dark;
+
+
+        <MudTimeline>
+            @foreach (KeyValuePair<int, EtapaLTDto> etapa in EtapasLineaTemporal) {
+
+
+                @* Reiniciamos variables *@
+                claseColorTexto = string.Empty;
+                colorBolaItem = Color.Primary;
+                colorTitulo = Color.Dark;
+
+                if (Evolucion.TryGetValue(etapa.Key, out evolucionPintar) == false) {
+                    evolucionPintar = null;
+                }
+
+                // Si la etapa ya se ha pasado 
+                if (etapa.Key < UltimaEtapa) {
+                    claseColorTexto = "mud-text-secondary";
+
+                    // Si la etapa aun no ha pasado
+                }else if (etapa.Key > UltimaEtapa) {
+                    colorTitulo = Color.Default;
+                    colorBolaItem = Color.Default;
+                    claseColorTexto = "mud-text-disabled";
+                }
+
+                <MudTimelineItem Color="@colorBolaItem" Size="@(etapa.Key == UltimaEtapa ? Size.Medium : Size.Small)">
+                    <ItemOpposite>
+                        <MudText Class="@claseColorTexto" Color="@colorTitulo" Typo="Typo.h5">@(evolucionPintar is null ? "-" : evolucionPintar.Fecha.ToShortDateString())</MudText>
+                    </ItemOpposite>
+                    <ItemContent>
+                        <MudText Color="Color.Dark" Typo="Typo.button" GutterBottom="true">@etapa.Value.Titulo</MudText>
+                            @if(etapa.Key < UltimaEtapa) {
+                                if (evolucionPintar?.Confirmado == true) {
+                                    <MudAlert Severity="Severity.Success" Class="@claseColorTexto">
+                                        <MudText Typo="Typo.body2">@etapa.Value.Label</MudText>
+                                        <MudText Typo="Typo.body2">Sí.</MudText>
+                                    </MudAlert>
+                                } else {
+                                    <MudAlert Severity="Severity.Warning" Class="@claseColorTexto">
+                                        <MudText Class="@claseColorTexto">@etapa.Value.Label</MudText>
+                                        <MudText>No.</MudText>
+                                    </MudAlert>
+                                }
+                            } else {
+                            <MudCard>
+                                <MudCardHeader>
+                                    <CardHeaderContent>
+                                        <MudText Typo="Typo.h5">@etapa.Value.Titulo</MudText>
+                                    </CardHeaderContent>
+                                </MudCardHeader>
+                                <MudCardContent>
+                                    <MudText Typo="Typo.body2">@etapa.Value.Label</MudText>
+                                </MudCardContent>
+                                <MudCardActions>
+                                    <MudButton Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
+                                </MudCardActions>
+                            </MudCard>
+                            }
+                    </ItemContent>
+                </MudTimelineItem>
+            }
+        </MudTimeline>
+    } else {
+        <Error NombreImagen="Error2" mensajeError="Evolucion del paciente no encontrada." />
+    }
+}

@@ -7,7 +7,6 @@ using WebMedicina.Shared.Dto.LineaTemporal;
 namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
     public partial class ContenedorLineaTemp {
         // Injecciones
-        [Inject] private IDialogService _dialogoService { get; set; } = null!;
         [Inject] private ISnackbar _snackbar { get; set; } = null!;
         [Inject] private IComun _comun { get; set; } = null!;
         [Inject] private ILineaTemporalService _lineaTemporalService { get; set; } = null!;
@@ -52,7 +51,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
             try {
                 EtapasLineaTemporal = await _lineaTemporalService.ObtenerEtapas();
             } catch (Exception) {
-                _snackbar.Add("No ha sido posible cargar la linea temporal. Notifiquelo a un administrador");
+                _snackbar.Add("No ha sido posible cargar la linea temporal");
                 throw;
             }
         }
@@ -77,6 +76,9 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
             try {
                 // Mostramos linea temporal y configuramos el selector para el scroll top
                 LineaTemporalExpandedProp = true;
+
+                // Hacemos scroll al contenedor linea temporal
+                await _comun.ScrollHaciaElemento(IdContenedorLT, "end");
                 StateHasChanged();
 
                 // Obtenemos evolucion del paciente
@@ -84,9 +86,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
                 SelectorScroll = $"#Paciente{idPaciente}";
                 StateHasChanged();
 
-                // Hacemos scroll al contenedor linea temporal
-                await Task.Delay(1000);
-                await _comun.ScrollHaciaElemento(IdContenedorLT, "end");
 
             } catch (Exception) {
                 throw;
