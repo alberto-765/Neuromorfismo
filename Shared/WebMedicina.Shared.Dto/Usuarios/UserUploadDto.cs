@@ -5,13 +5,10 @@ using WebMedicina.Shared.Service;
 namespace WebMedicina.Shared.Dto.Usuarios {
 
     public class UserUploadDto {
-        [ReadOnly(true)]
-        public int IdMedico { get; set; }
+        public int IdMedico { get; init; }
 
-        [ReadOnly(true)]
-        public string UserLogin { get; set; } = null!;
+        public string UserLogin { get; init; } = null!;
 
-        [ReadOnly(true)]
         public int Indice { get; set; }
 
         [Required(ErrorMessage = "El nombre del usuario es obligatorio")]
@@ -26,17 +23,12 @@ namespace WebMedicina.Shared.Dto.Usuarios {
         public string Apellidos { get; set; } = null!;
 
         [Required(ErrorMessage = "La fecha de nacimiento es obligatoria")]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         [CustomValidation(typeof(ValidacionesRegistro), "ValidateFechaNacimiento")]
         public DateTime? FechaNac { get; set; }
 
 
-        [ReadOnly(true)]
-        public DateTime FechaCreac { get; set; } = DateTime.Today;
-
-        [ReadOnly(true)]
-        public DateTime FechaUltMod { get; set; } = DateTime.Today;
+        public DateTime FechaCreac { get; init; } = DateTime.Today;
+        public DateTime FechaUltMod { get; init; } = DateTime.Today;
 
         [Required(ErrorMessage = "Debes seleccionar un rol para el nuevo usuario")]
         [ValidacionLista("admin", "medico", "superAdmin")]

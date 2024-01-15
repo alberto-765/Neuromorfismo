@@ -59,26 +59,14 @@ namespace WebMedicina.FrontEnd.Service {
         /// <param name="eje"></param>
         /// <returns></returns>
         public async Task DesbloquearScroll(string idDialogo) {
-            try {
-                await _js.InvokeVoidAsync("desbloquearScroll", idDialogo, "y");
-            } catch (Exception) {
-                throw;
-            }
+            await _js.InvokeVoidAsync("desbloquearScroll", idDialogo, "y");
         }
         public async Task DesbloquearScroll(string idDialogo, string eje) {
-            try {
-                await _js.InvokeVoidAsync("desbloquearScroll", idDialogo, eje);
-            } catch (Exception) {
-                throw;
-            }
+            await _js.InvokeVoidAsync("desbloquearScroll", idDialogo, eje);
         }
 
         public async Task ScrollHaciaElemento(string idElemento, string posY = "center") {
-            try {
-                await _js.InvokeVoidAsync("ScrollHaciaElemento", idElemento, posY);
-            } catch (Exception) {
-                throw;
-            }        
+            await _js.InvokeVoidAsync("ScrollHaciaElemento", idElemento, posY);   
         }
     }
 }

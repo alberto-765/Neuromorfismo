@@ -2,8 +2,7 @@
 
 namespace WebMedicina.Shared.Dto.Tipos {
     public class FarmacosDto : BaseTipoDto, ICloneable, IEquatable<FarmacosDto> {
-        [ReadOnly(true)]
-        public int IdFarmaco { get; set; }
+        public int IdFarmaco { get; init; }
 
         public object Clone() {
             return this.MemberwiseClone();

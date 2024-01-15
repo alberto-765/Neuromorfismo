@@ -59,7 +59,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
             } catch (Exception) {
                 // Creamos lista de pacientes vacia para no mostrar cargando en la tabla de pacientes
                 ListaPacientes = new List<CrearPacienteDto>();
-                throw;
             }
         }
 
@@ -76,27 +75,22 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
                 //ListaFarmacos = opcionesSelects.ListaFarmacos;
             } catch (Exception) {
                 _snackbar.Add("No ha sido posible obtener los filtros.", Severity.Error);
-                throw;
             }
         }
 
         // Mostrar dialogo para crear paciente nuevo
-        private async Task MostrarCrearPac() {
-            try {
-                DialogParameters parametros = new() {
-                    { "ListaEpilepsias", ListaEpilepsias },
-                    { "ListaMutaciones", ListaMutaciones },
-                };        
-                var dialog = _dialogoService.Show<CrearPaciente>("Nuevo Paciente", parametros ,OpcionesDialogo);
-                var result = await dialog.Result;
+        private async Task MostrarCrearPac() { 
+            DialogParameters parametros = new() {
+                { "ListaEpilepsias", ListaEpilepsias },
+                { "ListaMutaciones", ListaMutaciones },
+            };        
+            var dialog = _dialogoService.Show<CrearPaciente>("Nuevo Paciente", parametros ,OpcionesDialogo);
+            var result = await dialog.Result;
 
-                // Validamos que el dialogo haya devuelto el nuevo paciente creado y actualizamos la lista
-                if (result.Canceled == false && result.Data is int idPaciente && idPaciente > 0) {
-                    ListaPacientes = await _pacientesService.AnadirPacienteALista(idPaciente);
-                }          
-            } catch (Exception) {
-                throw;
-            }
+            // Validamos que el dialogo haya devuelto el nuevo paciente creado y actualizamos la lista
+            if (result.Canceled == false && result.Data is int idPaciente && idPaciente > 0) {
+                ListaPacientes = await _pacientesService.AnadirPacienteALista(idPaciente);
+            } 
         }
 
         /// <summary>
@@ -115,7 +109,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
                 }
             } catch (Exception) {
                 _snackbar.Add("No ha sido posible obtener los pacientes. Contacte con un administrador", Severity.Error);
-                throw;
             }
         }
 
@@ -124,12 +117,8 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
         /// </summary>
         /// <param name="idPaciente"></param>
         /// <returns></returns>
-        public async Task EliminarPacienteLista(int idPaciente) {
-            try {
-                ListaPacientes = await _pacientesService.EliminarPacienteLista(idPaciente);
-            } catch (Exception) {
-                throw;
-            }
+        public async Task EliminarPacienteLista(int idPaciente) { 
+            ListaPacientes = await _pacientesService.EliminarPacienteLista(idPaciente); 
         }
     }
 }

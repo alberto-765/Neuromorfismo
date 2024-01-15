@@ -32,18 +32,13 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
         private const string idDialogo = "dialogoCrear";
         private string IdDialogo { get => $".{idDialogo}"; }
 
-        protected override void OnInitialized() {
-            try {
-
-                // Configuracion default snackbar
-                _snackbar.Configuration.PreventDuplicates = true;
-                _snackbar.Configuration.ShowTransitionDuration = 300;
-                _snackbar.Configuration.HideTransitionDuration = 300;
-                _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopLeft;
-                _snackbar.Configuration.ShowCloseIcon = false;
-            } catch (Exception) {
-                throw;
-            }
+        protected override void OnInitialized() { 
+            // Configuracion default snackbar
+            _snackbar.Configuration.PreventDuplicates = true;
+            _snackbar.Configuration.ShowTransitionDuration = 300;
+            _snackbar.Configuration.HideTransitionDuration = 300;
+            _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopLeft;
+            _snackbar.Configuration.ShowCloseIcon = false; 
         }
 
         // Boton crear
@@ -84,7 +79,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
                 }
             } catch (Exception) {
                 Cancel();
-                throw;
             }
         }
 

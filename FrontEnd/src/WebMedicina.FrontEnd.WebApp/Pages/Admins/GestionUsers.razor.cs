@@ -42,68 +42,60 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
         private UserUploadDto copiaSeguridadUsuario { get; set; } = null!; // copia de seguridad de un elemento editado
         private MudDatePicker _picker { get; set; } = null!;
 
-        protected override async Task OnInitializedAsync() {
-            try {
-                Http = _crearHttpClient.CrearHttp();
+        protected override async Task OnInitializedAsync() { 
+            Http = _crearHttpClient.CrearHttp();
 
-                if (authenticationState is not null) {
-                    var authState = await authenticationState;
-                    user = authState?.User;
+            if (authenticationState is not null) {
+                var authState = await authenticationState;
+                user = authState?.User;
 
-                    // Generamos el texto para el tooltip
-                    if (user is not null) { 
-                        _adminsService.GenerarTooltipInfoUser(user, ref tooltipInfoUser, ref mostrarTooltip);
-                    }
+                // Generamos el texto para el tooltip
+                if (user is not null) { 
+                    _adminsService.GenerarTooltipInfoUser(user, ref tooltipInfoUser, ref mostrarTooltip);
                 }
-
-                // Configuracion default snackbar
-                _snackbar.Configuration.PreventDuplicates = true;
-                _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopLeft;
-                _snackbar.Configuration.VisibleStateDuration = 5000;
-                _snackbar.Configuration.ShowCloseIcon = false;
-            } catch (Exception) {
-                throw;
             }
+
+            // Configuracion default snackbar
+            _snackbar.Configuration.PreventDuplicates = true;
+            _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopLeft;
+            _snackbar.Configuration.VisibleStateDuration = 5000;
+            _snackbar.Configuration.ShowCloseIcon = false; 
         }
 
         // FUNCIONES PARA TABLA TIPO SERVER
-        private async Task<TableData<UserUploadDto>> ServerReload(TableState state) {
-            try {
-                // Rellenamos campos para fitrado
-                FiltradoTablaDefaultDto camposFiltrado = new() {
-                    Page = state.Page,
-                    PageSize = state.PageSize,
-                    SortDirection = (int)state.SortDirection,
-                    SearchString = searchString,
-                    SortLabel = state.SortLabel
-                };
+        private async Task<TableData<UserUploadDto>> ServerReload(TableState state) { 
+            // Rellenamos campos para fitrado
+            FiltradoTablaDefaultDto camposFiltrado = new() {
+                Page = state.Page,
+                PageSize = state.PageSize,
+                SortDirection = (int)state.SortDirection,
+                SearchString = searchString,
+                SortLabel = state.SortLabel
+            };
 
-                // Llamamos a la api para obtener de BBDD los usuarios con los filtros
-                HttpResponseMessage responseMessage = await Http.PostAsJsonAsync("gestionUsers/obtenerUsuariosFiltrados", camposFiltrado);
-                List<UserUploadDto>? list = new ();
-                if(responseMessage.IsSuccessStatusCode) {
-                    if (responseMessage.StatusCode != HttpStatusCode.NoContent) {
-                        list = await responseMessage.Content.ReadFromJsonAsync<List<UserUploadDto>>();
+            // Llamamos a la api para obtener de BBDD los usuarios con los filtros
+            HttpResponseMessage responseMessage = await Http.PostAsJsonAsync("gestionUsers/obtenerUsuariosFiltrados", camposFiltrado);
+            List<UserUploadDto>? list = new ();
+            if(responseMessage.IsSuccessStatusCode) {
+                if (responseMessage.StatusCode != HttpStatusCode.NoContent) {
+                    list = await responseMessage.Content.ReadFromJsonAsync<List<UserUploadDto>>();
 
-                        // Comprobamos que la lista no sea nula
-                        if (list is not null && list.Any()) {
-                            totalItems = list.Count;
-                            pagedData = list;
-                        } else {
-                            totalItems = 0;
-                            pagedData = Enumerable.Empty<UserUploadDto>();
-                        }
+                    // Comprobamos que la lista no sea nula
+                    if (list is not null && list.Any()) {
+                        totalItems = list.Count;
+                        pagedData = list;
                     } else {
                         totalItems = 0;
                         pagedData = Enumerable.Empty<UserUploadDto>();
                     }
-                } 
+                } else {
+                    totalItems = 0;
+                    pagedData = Enumerable.Empty<UserUploadDto>();
+                }
+            } 
 
-                // Saltamos los ((UserUploadDto) item)s de la paginación y obtenemos el maximo que se puede mostrar
-                return new TableData<UserUploadDto>() { TotalItems = totalItems, Items = pagedData };
-            } catch (Exception) {
-                throw;
-            }
+            // Saltamos los ((UserUploadDto) item)s de la paginación y obtenemos el maximo que se puede mostrar
+            return new TableData<UserUploadDto>() { TotalItems = totalItems, Items = pagedData }; 
         }
 
 
@@ -185,7 +177,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
 
             } catch (Exception) {
                 _snackbar.Add("Error al editar al médico", Severity.Error);
-                throw;
             }
         }
 

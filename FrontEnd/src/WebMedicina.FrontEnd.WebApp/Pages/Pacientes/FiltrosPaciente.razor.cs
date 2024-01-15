@@ -33,34 +33,26 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
 
 
         // Filtrar Pacientes 
-        private async Task ObtenerPacientesFiltrados() {
-            try {
-                // Actualizamos la lista de pacientes
-                ListaPaciente = await _pacientesService.FiltrarPacientes(FiltrosPacientes);
-                await ListaPacienteChanged.InvokeAsync(ListaPaciente);
+        private async Task ObtenerPacientesFiltrados() { 
+            // Actualizamos la lista de pacientes
+            ListaPaciente = await _pacientesService.FiltrarPacientes(FiltrosPacientes);
+            await ListaPacienteChanged.InvokeAsync(ListaPaciente);
 
-                // Cerramos drawe y bindeamos parametros
-                await CerrarDrawer();
-            } catch (Exception) { 
-                throw;
-            }
+            // Cerramos drawe y bindeamos parametros
+            await CerrarDrawer(); 
         }
 
         // Buscador para autocomplete de medicos
-        private async Task<IEnumerable<UserInfoDto>> BuscarMedPac(string? busqueda) {
-            try {
-                // Si la lista es null se obtiene por primera vez de BD
-                ListaMedicos ??= await _pacientesService.ObtenerAllMed();
+        private async Task<IEnumerable<UserInfoDto>> BuscarMedPac(string? busqueda) { 
+            // Si la lista es null se obtiene por primera vez de BD
+            ListaMedicos ??= await _pacientesService.ObtenerAllMed();
 
-                // Si hay medicos en la lista se realiza la busqueda
-                if (!string.IsNullOrWhiteSpace(busqueda) && ListaMedicos != null && ListaMedicos.Any()) {
-                    return ListaMedicos.Where(q => ($"{q.UserLogin} {q.Nombre} {q.Apellidos}").Contains(busqueda, StringComparison.OrdinalIgnoreCase));
-                } 
+            // Si hay medicos en la lista se realiza la busqueda
+            if (!string.IsNullOrWhiteSpace(busqueda) && ListaMedicos != null && ListaMedicos.Any()) {
+                return ListaMedicos.Where(q => ($"{q.UserLogin} {q.Nombre} {q.Apellidos}").Contains(busqueda, StringComparison.OrdinalIgnoreCase));
+            } 
 
-                return ListaMedicos ?? Enumerable.Empty<UserInfoDto>();
-            } catch (Exception) {
-                throw;
-            }
+            return ListaMedicos ?? Enumerable.Empty<UserInfoDto>(); 
         }
 
 
@@ -68,40 +60,28 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
         /// Resetear filtros y lista de pacientes
         /// </summary>
         /// <returns></returns>
-        private async Task ResetearFiltrado() {
-            try {
-                FiltrosPacientes = new();
-                ListaPaciente = await _pacientesService.FiltrarPacientes(null);
-                await ListaPacienteChanged.InvokeAsync(ListaPaciente);
-            } catch (Exception) {
-                throw;
-            }
+        private async Task ResetearFiltrado() { 
+            FiltrosPacientes = new();
+            ListaPaciente = await _pacientesService.FiltrarPacientes(null);
+            await ListaPacienteChanged.InvokeAsync(ListaPaciente); 
         }
 
         private Func<EpilepsiasDto, string> ConvertirEpi = tipo => tipo.Nombre;
         private Func<MutacionesDto, string> ConvertirMut = tipo => tipo.Nombre;
 
-        private async Task AbrirCerrarDrawer() {
-            try {
-                if (FiltroAbierto) {
-                    await _comun.BloquearScroll("#app");
-                } else {
-                    await _comun.DesbloquearScroll("#app");
-                }
-                await FiltroAbiertoChanged.InvokeAsync(FiltroAbierto);
-            } catch (Exception) {
-                throw;
+        private async Task AbrirCerrarDrawer() { 
+            if (FiltroAbierto) {
+                await _comun.BloquearScroll("#app");
+            } else {
+                await _comun.DesbloquearScroll("#app");
             }
+            await FiltroAbiertoChanged.InvokeAsync(FiltroAbierto); 
         }
 
         // Cerrar drawer 
-        private async Task CerrarDrawer() {
-            try {
-                FiltroAbierto = false;
-                await AbrirCerrarDrawer();
-            } catch (Exception) {
-                throw;
-            }
+        private async Task CerrarDrawer() { 
+            FiltroAbierto = false;
+            await AbrirCerrarDrawer(); 
         }
     }
 }

@@ -31,22 +31,18 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
         private ImmutableSortedDictionary<int, EtapaLTDto>? EtapasLineaTemporal { get; set; } // Etapas para la linea temporal
 
         protected override async Task OnInitializedAsync() {
-            try {
-                // Clase contenedor ocultada por default
-                ClaseContenedor = IdContenedorLT + "-hidden";
+            // Clase contenedor ocultada por default
+            ClaseContenedor = IdContenedorLT + "-hidden";
 
-                // Configuracion default snackbar
-                _snackbar.Configuration.PreventDuplicates = true;
-                _snackbar.Configuration.ShowTransitionDuration = 300;
-                _snackbar.Configuration.HideTransitionDuration = 300;
-                _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopLeft;
-                _snackbar.Configuration.ShowCloseIcon = false;
-                _snackbar.Configuration.VisibleStateDuration = 7000;
+            // Configuracion default snackbar
+            _snackbar.Configuration.PreventDuplicates = true;
+            _snackbar.Configuration.ShowTransitionDuration = 300;
+            _snackbar.Configuration.HideTransitionDuration = 300;
+            _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopLeft;
+            _snackbar.Configuration.ShowCloseIcon = false;
+            _snackbar.Configuration.VisibleStateDuration = 7000;
 
-                await ObtenerEtapasLT();
-            } catch (Exception) {
-                throw;
-            }
+            await ObtenerEtapasLT(); 
         }
 
         // Obtenemos todas las etapas de la linea temporal
@@ -55,23 +51,18 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
                 EtapasLineaTemporal = await _lineaTemporalService.ObtenerEtapas();
             } catch (Exception) {
                 _snackbar.Add("No ha sido posible cargar la linea temporal");
-                throw;
             }
         }
 
         // Cerramos cuadro linea temporal y resetear datos
-        private async Task CerrarLineaTemporal() {
-            try {
+        private async Task CerrarLineaTemporal() { 
                 // Reseteamos datos
                 LineaTemporalExpandedProp = false;
                 Evoluciones = new();
                 SelectorScroll = string.Empty;
 
                 StateHasChanged();
-                await Task.Delay(1000);
-            } catch (Exception) {
-                throw;
-            }
+                await Task.Delay(1000); 
         }
 
         // Obtenemos evolucion del paciente, abrimos contenedor linea temporal y hacemos scroll al contenedor
@@ -90,7 +81,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
                 StateHasChanged();
             } catch (Exception) {
                 _snackbar.Add("No ha sido posible cargar la linea temporal");
-                throw;
             }
         }
 
@@ -100,8 +90,9 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
         /// <param name="nuevaEvolucion"></param>
         public async Task ActualizarEvolucionPaciente(EvolucionLTDto nuevaEvolucion) {
             try {
-                await Task.FromResult("");
+                Evoluciones = await _lineaTemporalService.ActualizarEvolucionPaciente(nuevaEvolucion);
             } catch (Exception) {
+                _snackbar.Add("No ha sido posible actualizar la etapa de la evolución del paciente.", Severity.Error);
                 throw;
             }
         }

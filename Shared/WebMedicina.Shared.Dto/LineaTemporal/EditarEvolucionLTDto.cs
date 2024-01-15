@@ -4,23 +4,22 @@ using System.ComponentModel.DataAnnotations;
 namespace WebMedicina.Shared.Dto.LineaTemporal
 {
     public class EditarEvolucionLTDto {
-        [ReadOnly(true)]
-        public int Id { get; set; }
+        [Required]
+        public int Id { get; init; }
 
-        [ReadOnly(true)]
-        public int IdPaciente { get; set; }
+        [Required]
+        public int IdPaciente { get; init; }
 
         [Required(ErrorMessage = "Campo obligatorio")]
         public bool Confirmado { get; set; }
 
-        [Required]
-        public DateTime Fecha { get; set; } = DateTime.Today;
+        // Propiedad readonly
+        public DateTime Fecha { get; init; } = DateTime.Today;
 
-        [Required]
         public int IdMedicoUltModif { get; set; }
 
-        [ReadOnly(true)]
-        public int IdEtapa { get; set; }
+        [Required]
+        public int IdEtapa { get; init; }
 
     }
 }

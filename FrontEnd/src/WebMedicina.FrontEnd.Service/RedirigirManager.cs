@@ -14,53 +14,36 @@ namespace WebMedicina.FrontEnd.Service {
             this.js = js;
         }
 
-        public async Task RedirigirLogin() {
-            try {
-                string urlActual = navigationManager.Uri;
-                string baseUri = navigationManager.BaseUri;
-                if (urlActual.Replace(baseUri, "") != "login") {
-                    await RedirigirDefault("login");
-                }
-            } catch (Exception) {
-                throw;
-            }
+        public async Task RedirigirLogin() { 
+            string urlActual = navigationManager.Uri;
+            string baseUri = navigationManager.BaseUri;
+            if (urlActual.Replace(baseUri, "") != "login") {
+                await RedirigirDefault("login");
+            } 
         }
 
-        public async Task ActualizarSeguimientoEnlace() {
-            try { 
-                string urlActual = navigationManager.Uri;
-                string baseUri = navigationManager.BaseUri;
-                string paginaActual = urlActual.Replace(baseUri, "");
+        public async Task ActualizarSeguimientoEnlace() { 
+            string urlActual = navigationManager.Uri;
+            string baseUri = navigationManager.BaseUri;
+            string paginaActual = urlActual.Replace(baseUri, "");
 
-                await js.SetInSessionStorage(enlaceSeguimiento, paginaActual);
-            } catch (Exception) {
-                throw;
-            }
+            await js.SetInSessionStorage(enlaceSeguimiento, paginaActual); 
         }
 
-        public async Task RedirigirPagAnt() {
-            try { 
-                string segEnl = await js.GetFromSessionStorage(enlaceSeguimiento);
+        public async Task RedirigirPagAnt() { 
+            string segEnl = await js.GetFromSessionStorage(enlaceSeguimiento);
 
-                if (!string.IsNullOrWhiteSpace(segEnl)) {
-                   await RedirigirDefault(segEnl);
-                } else {
-                    await RedirigirDefault();
-                }
-            } catch (Exception) {
-                throw;
-            }
+            if (!string.IsNullOrWhiteSpace(segEnl)) {
+                await RedirigirDefault(segEnl);
+            } else {
+                await RedirigirDefault();
+            } 
         }
 
-        public async Task RedirigirDefault (string enlace = "/") { 
-            try  {	        
-	
-                // Acutalizamos el enlace de seguimiento
-                await ActualizarSeguimientoEnlace();
-                navigationManager.NavigateTo(enlace);
-            } catch (Exception) {
-                throw;
-            }
+        public async Task RedirigirDefault (string enlace = "/") {  
+            // Acutalizamos el enlace de seguimiento
+            await ActualizarSeguimientoEnlace();
+            navigationManager.NavigateTo(enlace); 
         }
     }
 }

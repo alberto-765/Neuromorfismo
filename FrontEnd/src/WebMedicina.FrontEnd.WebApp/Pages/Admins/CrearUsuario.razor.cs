@@ -25,9 +25,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
         private UserRegistroDto userRegistro = new();
         private EditContext formContext = null!;
 
-        protected override async Task OnInitializedAsync()
-        {
-            try {
+        protected override async Task OnInitializedAsync() { 
                 // Obtenemos los datos del usuario
                 if (authenticationState is not null) {
                     var authState = await authenticationState;
@@ -45,16 +43,11 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                 userRegistro.Password = _adminsService.GenerarContraseñaAleatoria();
 
                 // Crear contexto del editform
-                formContext = new(userRegistro);
-            } catch (Exception) {
-                throw;
-            }
+                formContext = new(userRegistro); 
         }
 
-        private async Task Crear()
-        {
-            try
-            {
+        private async Task Crear() {
+            try {
                 cargando = true;
                 HttpResponseMessage respuesta = await Http.PostAsJsonAsync("cuentas/crear", userRegistro);
                 if (respuesta.IsSuccessStatusCode)
@@ -76,48 +69,39 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                 }
             } catch (Exception) {
                 ReiniciarDatos();
-                throw;
             }
         }
 
         // LLamada a backend para generar un nombre de usuario valido
-        private async Task ValidarUserName() {
-            try {
-                if (_adminsService.ValidarNomYApellUser(userRegistro.Nombre, userRegistro.Apellidos)) {
-                    bool userNameCorrecto = false; // almacenaremos si ha podido generarse el nuevo nombre del usuario
-                    string[] nomYApell = { userRegistro.Nombre, userRegistro.Apellidos };
-                    HttpResponseMessage respuesta = await Http.PostAsJsonAsync($"cuentas/generarUserName", nomYApell);
-                    if(respuesta.IsSuccessStatusCode) {
+        private async Task ValidarUserName() { 
+            if (_adminsService.ValidarNomYApellUser(userRegistro.Nombre, userRegistro.Apellidos)) {
+                bool userNameCorrecto = false; // almacenaremos si ha podido generarse el nuevo nombre del usuario
+                string[] nomYApell = { userRegistro.Nombre, userRegistro.Apellidos };
+                HttpResponseMessage respuesta = await Http.PostAsJsonAsync($"cuentas/generarUserName", nomYApell);
+                if(respuesta.IsSuccessStatusCode) {
 
-                        // Obtenemos el nuevo username
-                        string userName = await respuesta.Content.ReadAsStringAsync();
-                        if (!string.IsNullOrEmpty(userName)) {
-                            userRegistro.UserLogin = userName;
-                            userNameCorrecto = true;
-                        } 
-                    }
-
-                    // Validamos si se ha generado el nuevo nombre
-                    if (userNameCorrecto == false) {
-                        _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopStart;
-                        _snackbar.Add(@"<div>No ha sido posible generar el nombre de inicio de sesión</div>
-                                        <div>Inténtelo de nuevo o contacte con un administrador.</div>", Severity.Error, config => { config.VisibleStateDuration = 5 * 1000;});
-                    }
+                    // Obtenemos el nuevo username
+                    string userName = await respuesta.Content.ReadAsStringAsync();
+                    if (!string.IsNullOrEmpty(userName)) {
+                        userRegistro.UserLogin = userName;
+                        userNameCorrecto = true;
+                    } 
                 }
-            } catch (Exception) {
-                throw;
-            }
+
+                // Validamos si se ha generado el nuevo nombre
+                if (userNameCorrecto == false) {
+                    _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopStart;
+                    _snackbar.Add(@"<div>No ha sido posible generar el nombre de inicio de sesión</div>
+                                    <div>Inténtelo de nuevo o contacte con un administrador.</div>", Severity.Error, config => { config.VisibleStateDuration = 5 * 1000;});
+                }
+            } 
         }
 
         // Reiniciar objeto de nuevo usuario y boton de crear
-        private void ReiniciarDatos() {
-            try {
-                // Reiniciamos el objeto de nuevo usuario
-                userRegistro = new();
-                cargando = false;
-            } catch (Exception) {
-                throw;
-            }
+        private void ReiniciarDatos() { 
+            // Reiniciamos el objeto de nuevo usuario
+            userRegistro = new();
+            cargando = false; 
         }
     }
 }

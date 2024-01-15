@@ -10,10 +10,8 @@ namespace WebMedicina.Shared.Dto.Tipos {
         [RegularExpression(@"^[^!@#$%^&*(),.?"":{}|<>]*$", ErrorMessage = "El nombre no puede contener caracteres espciales")]
         public string Nombre { get; set; } = string.Empty;
 
-        [DisplayFormat(DataFormatString = "{dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime FechaCreac { get; set; }
 
-        [DisplayFormat(DataFormatString = "{dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime FechaUltMod { get; set; }
 
     }

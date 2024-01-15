@@ -11,21 +11,13 @@ namespace WebMedicina.BackEnd.Dal {
 
         // Obtenemos los datos de un medico filtrando por id
         public MedicosModel? ObtenerInfoUser(int idMedico) {
-            try {
-                return _context.Medicos.Find(idMedico);
-            } catch (Exception) {
-                throw;
-            }
+            return _context.Medicos.Find(idMedico);
         }
         
         // Obtenemos los datos de un medico filtrando por username
         public MedicosModel ObtenerInfoUserLogin(string userName) {
-            try {
-                var medico =  _context.Medicos.First(q => q.UserLogin == userName);
-                return medico;
-            } catch (Exception) {
-                throw;
-            }
+            var medico =  _context.Medicos.First(q => q.UserLogin == userName);
+            return medico;
         }
     }
 }

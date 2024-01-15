@@ -12,59 +12,45 @@ namespace WebMedicina.BackEnd.Dal {
         }
         //  Get FARMACOS
         public List<FarmacosDto> GetFarmacos() {
-            try { 
-                return _context.Farmacos.Select(q => q.ToDto()).ToList();
-            } catch (Exception) { throw; }
+            return _context.Farmacos.Select(q => q.ToDto()).ToList();
         }
 
         //  Create FARMACOS
         public async Task<bool> CrearFarmaco(string nombre) {
-            try {
-                FarmacosModel nuevoFarmaco = new() {
-                    Nombre = nombre
-                };
+            FarmacosModel nuevoFarmaco = new() {
+                Nombre = nombre
+            };
 
-                await _context.Farmacos.AddAsync(nuevoFarmaco);
-                return await _context.SaveChangesAsync() > 0;
-            } catch (Exception) {
-                throw;
-            }
+            await _context.Farmacos.AddAsync(nuevoFarmaco);
+            return await _context.SaveChangesAsync() > 0;
         }
 
         //  Delete FARMACOS
         public async Task<bool> DeleteFarmaco(int idFarmaco) {
-            try {
-                FarmacosModel? farmacoBorrado = await _context.Farmacos.FindAsync(idFarmaco);
-                if (farmacoBorrado != null) {
-                    _context.Farmacos.Remove(farmacoBorrado);
-                }
-                return await _context.SaveChangesAsync() > 0;
-            } catch (Exception) {
-                throw;
+            FarmacosModel? farmacoBorrado = await _context.Farmacos.FindAsync(idFarmaco);
+            if (farmacoBorrado != null) {
+                _context.Farmacos.Remove(farmacoBorrado);
             }
+            return await _context.SaveChangesAsync() > 0;
         }
 
         //  Update FARMACOS
         public async Task<(bool validacionEntry, bool filasModif)> UpdateFarnaco(FarmacosDto farmaco) {
-            try {
-                FarmacosModel? far = await _context.Farmacos.FindAsync(farmaco.IdFarmaco);
-                bool validacionEntry = false, filasModif = false;
-                if (far != null) {
+            FarmacosModel? far = await _context.Farmacos.FindAsync(farmaco.IdFarmaco);
+            bool validacionEntry = false, filasModif = false;
+            if (far != null) {
 
-                    // Asignamos nuevo nombre
-                    far.Nombre = farmaco.Nombre;
+                // Asignamos nuevo nombre
+                far.Nombre = farmaco.Nombre;
 
-                    // Verificamos que el objeto haya sido modicado
-                    if (_context.Entry(far).State == EntityState.Modified) {
-                        validacionEntry = true;
-                        filasModif = await _context.SaveChangesAsync() > 0;
-                    }
-
+                // Verificamos que el objeto haya sido modicado
+                if (_context.Entry(far).State == EntityState.Modified) {
+                    validacionEntry = true;
+                    filasModif = await _context.SaveChangesAsync() > 0;
                 }
-                return (validacionEntry, filasModif);
-            } catch (Exception) {
-                throw;
+
             }
+            return (validacionEntry, filasModif);
         }
 
     }

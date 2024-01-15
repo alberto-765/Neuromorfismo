@@ -35,21 +35,15 @@ namespace WebMedicina.BackEnd.API.Controllers
             }
         }
 
-        [HttpGet("LineaTemporal/ActualizarEvolucionPaciente")]
-        public async Task<ActionResult<SortedList<int, EvolucionLTDto>>> ActualizarEvolucionPaciente([FromBody] RequestActEvo request) {
+        [HttpPut("LineaTemporal/ActOInsertEvolucionPaciente")]
+        public async Task<SortedList<int, EvolucionLTDto>> ActOInsertEvolucionPaciente([FromBody] EditarEvolucionLTDto evoEditada) {
             try {
-                return Ok(await _lineaTemporalService.ActualizarEvolucion(request, User));
+                if (!ModelState.IsValid) {
+                   throw new Exception();
+                }
+                return await _lineaTemporalService.ActOInsertEvolucion(evoEditada, User);
             } catch (Exception) {
-                return BadRequest();
-            }
-        }
-
-        [HttpGet("LineaTemporal/InsertarEvolucionPaciente")]
-        public async Task<ActionResult<SortedList<int, EvolucionLTDto>>> InsertarEvolucionPaciente([FromBody] RequestActEvo request) {
-            try {
-                return Ok(await _lineaTemporalService.InsertarEvolucion(request, User));
-            } catch (Exception) {
-                return BadRequest();
+                return new SortedList<int, EvolucionLTDto>();
             }
         }
     }   

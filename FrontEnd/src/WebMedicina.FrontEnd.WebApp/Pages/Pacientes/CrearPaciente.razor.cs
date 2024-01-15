@@ -30,59 +30,50 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
         private const string idDialogo = "dialogoCrear";
         private string IdDialogo { get => $".{idDialogo}";}
 
-        protected override void OnInitialized() {
-            try {
-
-                // Configuracion default snackbar
-                _snackbar.Configuration.PreventDuplicates = true;
-                _snackbar.Configuration.ShowTransitionDuration = 400;
-                _snackbar.Configuration.HideTransitionDuration = 400;
-                _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopLeft;
-                _snackbar.Configuration.ClearAfterNavigation = true;
-            } catch (Exception) {
-                throw;
-            }
+        protected override void OnInitialized() { 
+            // Configuracion default snackbar
+            _snackbar.Configuration.PreventDuplicates = true;
+            _snackbar.Configuration.ShowTransitionDuration = 400;
+            _snackbar.Configuration.HideTransitionDuration = 400;
+            _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopLeft;
+            _snackbar.Configuration.ClearAfterNavigation = true; 
         }
 
         // Boton crear
-        private async Task Crear() {
-            try {
-                if (form.EditContext is not null && form.EditContext.Validate()) { 
-                    _creandoPaciente = true;
-                    HttpResponseMessage respuesta = await _pacientesService.CrearPaciente(nuevoPaciente);
+        private async Task Crear() { 
+            if (form.EditContext is not null && form.EditContext.Validate()) { 
+                _creandoPaciente = true;
+                HttpResponseMessage respuesta = await _pacientesService.CrearPaciente(nuevoPaciente);
 
-                    // Mensaje para mostrar el usuario
-                    bool pacienteCreado = true;
-                    Severity tipoSnacbar = Severity.Success;
-                    string mensaje = "Nuevo paciente creado exitosamente.";
-                    int idPaciente = 0;
+                // Mensaje para mostrar el usuario
+                bool pacienteCreado = true;
+                Severity tipoSnacbar = Severity.Success;
+                string mensaje = "Nuevo paciente creado exitosamente.";
+                int idPaciente = 0;
 
-                    if (respuesta.IsSuccessStatusCode) {
+                if (respuesta.IsSuccessStatusCode) {
 
-                        // Validamos si el paciente ha podido ser creado
-                        idPaciente = await respuesta.Content.ReadFromJsonAsync<int>();
-                        if (idPaciente == 0) {
-                            pacienteCreado = false;
-                            mensaje = "El nuevo paciente no ha podido ser creado. Inténtelo de nuevo o conteacte con un administrador.";
-                            tipoSnacbar = Severity.Error;
-                        }
-                    } else {
+                    // Validamos si el paciente ha podido ser creado
+                    idPaciente = await respuesta.Content.ReadFromJsonAsync<int>();
+                    if (idPaciente == 0) {
                         pacienteCreado = false;
-                        mensaje = await respuesta.Content.ReadAsStringAsync();
+                        mensaje = "El nuevo paciente no ha podido ser creado. Inténtelo de nuevo o conteacte con un administrador.";
                         tipoSnacbar = Severity.Error;
                     }
-
-                    _creandoPaciente = false;
-                    _snackbar.Add(mensaje, tipoSnacbar);
-
-                    // Cerramos el dialogo
-                    if (pacienteCreado) {
-                        MudDialog.Close(DialogResult.Ok(idPaciente));
-                    }
+                } else {
+                    pacienteCreado = false;
+                    mensaje = await respuesta.Content.ReadAsStringAsync();
+                    tipoSnacbar = Severity.Error;
                 }
-            } catch (Exception) {
-                throw;
-            }
+
+                _creandoPaciente = false;
+                _snackbar.Add(mensaje, tipoSnacbar);
+
+                // Cerramos el dialogo
+                if (pacienteCreado) {
+                    MudDialog.Close(DialogResult.Ok(idPaciente));
+                }
+            } 
         }
 
         // Boton cancelar

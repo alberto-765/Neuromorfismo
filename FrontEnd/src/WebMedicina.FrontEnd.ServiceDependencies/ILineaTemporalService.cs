@@ -7,6 +7,6 @@ namespace WebMedicina.FrontEnd.ServiceDependencies
     public interface ILineaTemporalService {
         Task<ImmutableSortedDictionary<int, EtapaLTDto>?> ObtenerEtapas();
         Task<SortedList<int, EvolucionLTDto>> ObtenerEvolucionPaciente(int idPaciente);
-        Task<SortedList<int, EvolucionLTDto>> ActualizarEvolucionPaciente(SortedList<int, EvolucionLTDto> evoluciones, EvolucionLTDto evolucionNueva, int idPaciente);
+        Task<SortedList<int, EvolucionLTDto>> ActualizarEvolucionPaciente(EvolucionLTDto evoEditada);
     }
 }

@@ -20,15 +20,11 @@ namespace WebMedicina.FrontEnd.Service {
 
         // Cerrar sesion 
         public async Task CerrarSesion() {
-            try {
-                // Cerramos sesion
-                await _jwtAuthenticationProvider.Logout();
+            // Cerramos sesion
+            await _jwtAuthenticationProvider.Logout();
 
-                // Redirigimos al login
-                await redirigirManager.RedirigirLogin();
-            } catch (Exception) {
-                throw;
-            }
+            // Redirigimos al login
+            await redirigirManager.RedirigirLogin();
         }
     }
 }

@@ -29,21 +29,16 @@ namespace WebMedicina.FrontEnd.WebApp.Pages
         }
 
         private void clickPassword() {
-            try {
-
-                if(mostrado)
-                {
-                    mostrado = false;
-                    iconoPassword = Icons.Material.Filled.VisibilityOff;
-                    tipoInputPass = InputType.Password;
-                }
-                else {
-                    mostrado = true;
-                    iconoPassword = Icons.Material.Filled.Visibility;
-                    tipoInputPass = InputType.Text;
-                }
-            } catch (Exception) {
-                throw;
+            if(mostrado)
+            {
+                mostrado = false;
+                iconoPassword = Icons.Material.Filled.VisibilityOff;
+                tipoInputPass = InputType.Password;
+            }
+            else {
+                mostrado = true;
+                iconoPassword = Icons.Material.Filled.Visibility;
+                tipoInputPass = InputType.Text;
             }
         }
 
@@ -73,7 +68,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages
             } catch (Exception) {
                 cargando = false;
                 mensajeErrorLogin = "Error inesperado de autenticación, inténtelo de nuevo";
-                throw;
             }
         }
     }

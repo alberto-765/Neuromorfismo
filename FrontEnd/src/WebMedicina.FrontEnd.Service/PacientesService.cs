@@ -21,206 +21,154 @@ namespace WebMedicina.FrontEnd.Service
         }
 
         // Obtener todos los médicos que tienen pacientes a su cargo
-        public async Task<IEnumerable<UserInfoDto>> ObtenerAllMed() {
-            try {
-                IEnumerable<UserInfoDto>? medicos = await Http.GetFromJsonAsync<IEnumerable<UserInfoDto>>("pacientes/getMedicosPacientes");
+        public async Task<IEnumerable<UserInfoDto>> ObtenerAllMed() { 
+            IEnumerable<UserInfoDto>? medicos = await Http.GetFromJsonAsync<IEnumerable<UserInfoDto>>("pacientes/getMedicosPacientes");
 
-                // Asignamos una lista vacia si el valor devuelto de la llamada es null
-                medicos ??= Enumerable.Empty<UserInfoDto>();
+            // Asignamos una lista vacia si el valor devuelto de la llamada es null
+            medicos ??= Enumerable.Empty<UserInfoDto>();
 
-                return medicos;
-            } catch (Exception) {
-                throw;
-            }
+            return medicos; 
         }
 
         // Obtener opciones para filtros farmacos, mutaciones y epilepsias
-        public async Task<(List<FarmacosDto>? ListaFarmacos, List<EpilepsiasDto>? ListaEpilepsias, List<MutacionesDto>? ListaMutaciones)> ObtenerListas() {
-            try {
-                // Obtenemos lista de farmacos
-                //List<FarmacosDto>?  listaFarmacos = await Http.GetFromJsonAsync<List<FarmacosDto>>("pacientes/getFarmacos");
-                List<FarmacosDto>? listaFarmacos = new();
+        public async Task<(List<FarmacosDto>? ListaFarmacos, List<EpilepsiasDto>? ListaEpilepsias, List<MutacionesDto>? ListaMutaciones)> ObtenerListas() { 
+            // Obtenemos lista de farmacos
+            //List<FarmacosDto>?  listaFarmacos = await Http.GetFromJsonAsync<List<FarmacosDto>>("pacientes/getFarmacos");
+            List<FarmacosDto>? listaFarmacos = new();
 
-                // Obtenemos lista de epilepsias
-                List<EpilepsiasDto>?  listaEpilepsias = await Http.GetFromJsonAsync<List<EpilepsiasDto>>("pacientes/getEpilepsias");
+            // Obtenemos lista de epilepsias
+            List<EpilepsiasDto>?  listaEpilepsias = await Http.GetFromJsonAsync<List<EpilepsiasDto>>("pacientes/getEpilepsias");
 
-                // Obtenemos lista de mutaciones
-                List<MutacionesDto>?  listaMutaciones = await Http.GetFromJsonAsync<List<MutacionesDto>>("pacientes/getMutaciones");
+            // Obtenemos lista de mutaciones
+            List<MutacionesDto>?  listaMutaciones = await Http.GetFromJsonAsync<List<MutacionesDto>>("pacientes/getMutaciones");
 
-                //Devolvemos las tres listas
-                return (listaFarmacos, listaEpilepsias, listaMutaciones);
-            } catch (Exception) {
-                throw;
-            }
+            //Devolvemos las tres listas
+            return (listaFarmacos, listaEpilepsias, listaMutaciones); 
         }
 
         // Validar Numero de Historia de un paciente
-        public async Task<bool> ValidarNumHistoria(string numHistoria) {
-            try {
-                return await Http.GetFromJsonAsync<bool>($"pacientes/validarNumHistoria/{numHistoria}");
-            } catch (Exception) {
-                throw;
-            }
+        public async Task<bool> ValidarNumHistoria(string numHistoria) { 
+            return await Http.GetFromJsonAsync<bool>($"pacientes/validarNumHistoria/{numHistoria}"); 
         }
 
         // LLamada http para crear paciente
-        public async Task<HttpResponseMessage> CrearPaciente(CrearPacienteDto nuevoPaciente) {
-            try {
-                return await Http.PostAsJsonAsync("pacientes/crearPaciente", nuevoPaciente);
-            } catch (Exception) {
-                throw;
-            }
+        public async Task<HttpResponseMessage> CrearPaciente(CrearPacienteDto nuevoPaciente) { 
+            return await Http.PostAsJsonAsync("pacientes/crearPaciente", nuevoPaciente); 
         }
 
         // LLamada http para editar paciente
-        public async Task<HttpResponseMessage> EditarPaciente(CrearPacienteDto nuevoPaciente) {
-            try {
-                return await Http.PutAsJsonAsync("pacientes/editarPaciente", nuevoPaciente);
-            } catch (Exception) {
-                throw;
-            }
+        public async Task<HttpResponseMessage> EditarPaciente(CrearPacienteDto nuevoPaciente) { 
+            return await Http.PutAsJsonAsync("pacientes/editarPaciente", nuevoPaciente); 
         }
 
 
         // LLamada http para eliminar paciente
-        public async Task<HttpResponseMessage> EliminarPaciente(int idPaciente) {
-            try {
-                return await Http.DeleteAsync($"pacientes/eliminarPaciente/{idPaciente}");
-            } catch (Exception) {
-                throw;
-            }
+        public async Task<HttpResponseMessage> EliminarPaciente(int idPaciente) { 
+            return await Http.DeleteAsync($"pacientes/eliminarPaciente/{idPaciente}"); 
         }
 
         // Obtener pacientes de la api y realizar filtrado
-        public async Task<List<CrearPacienteDto>?> ObtenerPacientes() {
-            try {
-                HttpResponseMessage respuesta = await Http.GetAsync("pacientes/obtenerPacientes");
-                List<CrearPacienteDto>? pacientes = null;
+        public async Task<List<CrearPacienteDto>?> ObtenerPacientes() { 
+            HttpResponseMessage respuesta = await Http.GetAsync("pacientes/obtenerPacientes");
+            List<CrearPacienteDto>? pacientes = null;
 
-                // Guardamos el listado de todos los pacientes en session
-                if(respuesta.IsSuccessStatusCode) {
-                    pacientes = await respuesta.Content.ReadFromJsonAsync<List<CrearPacienteDto>>();
-                }
-
-                // Guardamos pacientes en session
-                await GuardarPacientesSession(pacientes);
-                return pacientes;
-            } catch (Exception) {
-                throw;
+            // Guardamos el listado de todos los pacientes en session
+            if(respuesta.IsSuccessStatusCode) {
+                pacientes = await respuesta.Content.ReadFromJsonAsync<List<CrearPacienteDto>>();
             }
+
+            // Guardamos pacientes en session
+            await GuardarPacientesSession(pacientes);
+            return pacientes; 
         }
 
         // Filtramos los pacientes con los filtros seleccionados
-        public async Task<List<CrearPacienteDto>?> FiltrarPacientes(FiltroPacienteDto? filtrsPacientes) {
-            try {
-                // Comprobamos si existe algun campo por el que filtrar
-                List<CrearPacienteDto>? listaPacientes = JsonSerializer.Deserialize<List<CrearPacienteDto>?>(await js.GetFromSessionStorage(clavePacientesSession));
-                if (filtrsPacientes is not null && listaPacientes is not null) {
-                    // Obtenemos el listado de pacientes
-                    listaPacientes = (from q in listaPacientes where (string.IsNullOrWhiteSpace(filtrsPacientes.Sexo) || q.Sexo == filtrsPacientes.Sexo) &&
-                                      (filtrsPacientes.FiltrarEnfRara is null || filtrsPacientes.FiltrarEnfRara == q.EnfermRaras) && (filtrsPacientes.Medico is null ||
-                                      (q.MedicosPacientes is not null && q.MedicosPacientes.ContainsKey(filtrsPacientes.Medico.IdMedico))) &&
-                                      (!filtrsPacientes.TipoEpilepsias.Any() || filtrsPacientes.TipoEpilepsias.Any(t => t.IdEpilepsia == q.Epilepsia?.IdEpilepsia)) &&
-                                      (!filtrsPacientes.TipoMutacion.Any() || filtrsPacientes.TipoMutacion.Any(t => t.IdMutacion == q.Mutacion?.IdMutacion))
-                                      select q).ToList();
-                }
-                return listaPacientes;
-            } catch (Exception) {
-                throw;
+        public async Task<List<CrearPacienteDto>?> FiltrarPacientes(FiltroPacienteDto? filtrsPacientes) { 
+            // Comprobamos si existe algun campo por el que filtrar
+            List<CrearPacienteDto>? listaPacientes = JsonSerializer.Deserialize<List<CrearPacienteDto>?>(await js.GetFromSessionStorage(clavePacientesSession));
+            if (filtrsPacientes is not null && listaPacientes is not null) {
+                // Obtenemos el listado de pacientes
+                listaPacientes = (from q in listaPacientes where (string.IsNullOrWhiteSpace(filtrsPacientes.Sexo) || q.Sexo == filtrsPacientes.Sexo) &&
+                                    (filtrsPacientes.FiltrarEnfRara is null || filtrsPacientes.FiltrarEnfRara == q.EnfermRaras) && (filtrsPacientes.Medico is null ||
+                                    (q.MedicosPacientes is not null && q.MedicosPacientes.ContainsKey(filtrsPacientes.Medico.IdMedico))) &&
+                                    (!filtrsPacientes.TipoEpilepsias.Any() || filtrsPacientes.TipoEpilepsias.Any(t => t.IdEpilepsia == q.Epilepsia?.IdEpilepsia)) &&
+                                    (!filtrsPacientes.TipoMutacion.Any() || filtrsPacientes.TipoMutacion.Any(t => t.IdMutacion == q.Mutacion?.IdMutacion))
+                                    select q).ToList();
             }
+            return listaPacientes; 
         }
 
         // Filtramos los pacientes para "Mis Pacientes" en caso de ser "SuperAdmin o Admin"
-        public List<CrearPacienteDto>? FiltrarMisPacientes(List<CrearPacienteDto>? listaPacientes, ClaimsPrincipal? user) {
-            try {
-
-                // Devolvemos la lista porque en los medicos ya tienen filtrados solamente sus pacientes
-                if (user == null || user.IsInRole("medico") || listaPacientes == null || listaPacientes.Any() == false) {
-                    return listaPacientes;
-                }
-
-                // Obtenemos el id del medico solo para admins o superAdmins
-                if (int.TryParse(user.FindFirst(ClaimTypes.NameIdentifier)?.Value, out int idMedico) == false || idMedico == 0) {
-                    return listaPacientes;
-                }
-
-                return listaPacientes.Where(q => q.MedicosPacientes != null && q.MedicosPacientes.ContainsKey(idMedico)).ToList();
-            } catch (Exception) {
-                throw;
+        public List<CrearPacienteDto>? FiltrarMisPacientes(List<CrearPacienteDto>? listaPacientes, ClaimsPrincipal? user) { 
+            // Devolvemos la lista porque en los medicos ya tienen filtrados solamente sus pacientes
+            if (user == null || user.IsInRole("medico") || listaPacientes == null || listaPacientes.Any() == false) {
+                return listaPacientes;
             }
+
+            // Obtenemos el id del medico solo para admins o superAdmins
+            if (int.TryParse(user.FindFirst(ClaimTypes.NameIdentifier)?.Value, out int idMedico) == false || idMedico == 0) {
+                return listaPacientes;
+            }
+
+            return listaPacientes.Where(q => q.MedicosPacientes != null && q.MedicosPacientes.ContainsKey(idMedico)).ToList(); 
         }
 
         // Añadir un nuevo paciente creado a la lista de todos los pacientes
-        public async Task<List<CrearPacienteDto>?> AnadirPacienteALista(int idPaciente) {
-            try {
-                // Obtenemos el nuevo paciente creado
-                CrearPacienteDto? nuevoPaciente = await Http.GetFromJsonAsync<CrearPacienteDto?>($"pacientes/obtenerPaciente/{idPaciente}");
+        public async Task<List<CrearPacienteDto>?> AnadirPacienteALista(int idPaciente) { 
+            // Obtenemos el nuevo paciente creado
+            CrearPacienteDto? nuevoPaciente = await Http.GetFromJsonAsync<CrearPacienteDto?>($"pacientes/obtenerPaciente/{idPaciente}");
 
-                // Si el paciente es null creamos una lista vacia
-                if (nuevoPaciente is null) {
-                   return new();
-                }
-
-                List<CrearPacienteDto> listaPacientes = await ObtenerListaPacienteSession();
-
-                // Si el paciente no es null lo insertamos a la lista
-                listaPacientes?.Add(nuevoPaciente); 
-
-                // Guardamos listado de pacientes
-                await GuardarPacientesSession(listaPacientes);
-
-                return listaPacientes;
-            } catch (Exception) {
-                throw;
+            // Si el paciente es null creamos una lista vacia
+            if (nuevoPaciente is null) {
+                return new();
             }
+
+            List<CrearPacienteDto> listaPacientes = await ObtenerListaPacienteSession();
+
+            // Si el paciente no es null lo insertamos a la lista
+            listaPacientes?.Add(nuevoPaciente); 
+
+            // Guardamos listado de pacientes
+            await GuardarPacientesSession(listaPacientes);
+
+            return listaPacientes; 
         }
 
         // Eliminar un paciente de la lista
-        public async Task<List<CrearPacienteDto>?> EliminarPacienteLista(int idPaciente) {
-            try {
+        public async Task<List<CrearPacienteDto>?> EliminarPacienteLista(int idPaciente) { 
+            // Si el paciente no es null lo insertamos a la lista
+            List<CrearPacienteDto> listaPacientes = await ObtenerListaPacienteSession();
 
-                // Si el paciente no es null lo insertamos a la lista
-                List<CrearPacienteDto> listaPacientes = await ObtenerListaPacienteSession();
+            if (listaPacientes.Any()) {
+                int indice = listaPacientes.FindIndex(q => q.IdPaciente == idPaciente);
 
-                if (listaPacientes.Any()) {
-                    int indice = listaPacientes.FindIndex(q => q.IdPaciente == idPaciente);
+                if(indice >= 0) {
+                    listaPacientes.RemoveAt(indice);
+                }
+            } 
 
-                    if(indice >= 0) {
-                        listaPacientes.RemoveAt(indice);
-                    }
-                } 
+            // Guardamos listado de pacientes
+            await GuardarPacientesSession(listaPacientes);
 
-                // Guardamos listado de pacientes
-                await GuardarPacientesSession(listaPacientes);
-
-                return listaPacientes;
-            } catch (Exception) {
-                throw;
-            }
+            return listaPacientes; 
         }
 
         // Obtener lista de pacientes de session
-        public async Task<List<CrearPacienteDto>> ObtenerListaPacienteSession() {
-            try {
-                string listaPacientesJSON = await js.GetFromSessionStorage(clavePacientesSession);
-                List<CrearPacienteDto>? pacientes = null;
+        public async Task<List<CrearPacienteDto>> ObtenerListaPacienteSession() { 
+            string listaPacientesJSON = await js.GetFromSessionStorage(clavePacientesSession);
+            List<CrearPacienteDto>? pacientes = null;
 
-                // Deserealizamos JSON de la lista si no es null
-                if (!string.IsNullOrWhiteSpace(listaPacientesJSON)) {
-                    pacientes = JsonSerializer.Deserialize<List<CrearPacienteDto>>(listaPacientesJSON);
-                }
-                return pacientes ?? new();
-            } catch (Exception) { throw; }
+            // Deserealizamos JSON de la lista si no es null
+            if (!string.IsNullOrWhiteSpace(listaPacientesJSON)) {
+                pacientes = JsonSerializer.Deserialize<List<CrearPacienteDto>>(listaPacientesJSON);
+            }
+            return pacientes ?? new(); 
         }
 
         // Guardar lista pacientes en session
         public async Task GuardarPacientesSession(List<CrearPacienteDto>? listaPacientes) {
-            try {
-                listaPacientes ??= new(); // si es null asignamos lista vacia
-                await js.SetInSessionStorage(clavePacientesSession, JsonSerializer.Serialize(listaPacientes));
-            } catch (Exception) {
-                throw;
-            }
+            listaPacientes ??= new(); // si es null asignamos lista vacia
+            await js.SetInSessionStorage(clavePacientesSession, JsonSerializer.Serialize(listaPacientes));
         }
 
         /// <summary>
@@ -229,22 +177,18 @@ namespace WebMedicina.FrontEnd.Service
         /// <param name="nuevoPaciente"></param>
         /// <param name="copiaPaciente"></param>
         public void ReiniciarCopiaPaciente(ref CrearPacienteDto nuevoPaciente, CrearPacienteDto copiaPaciente) {
-            try {
-                nuevoPaciente.NumHistoria = copiaPaciente.NumHistoria;
-                nuevoPaciente.FechaNac = copiaPaciente.FechaNac;
-                nuevoPaciente.Sexo = copiaPaciente.Sexo;
-                nuevoPaciente.Talla = copiaPaciente.Talla;
-                nuevoPaciente.MedicosPacientes = copiaPaciente.MedicosPacientes;
-                nuevoPaciente.FechaDiagnostico = copiaPaciente.FechaDiagnostico;
-                nuevoPaciente.FechaFractalidad = copiaPaciente.FechaFractalidad;
-                nuevoPaciente.Farmaco = copiaPaciente.Farmaco;
-                nuevoPaciente.EnfermRaras = copiaPaciente.EnfermRaras;
-                nuevoPaciente.DescripEnferRaras = copiaPaciente.DescripEnferRaras;
-                nuevoPaciente.Mutacion = copiaPaciente.Mutacion;
-                nuevoPaciente.Epilepsia = copiaPaciente.Epilepsia;
-            } catch (Exception) {
-                throw;
-            }
+            nuevoPaciente.NumHistoria = copiaPaciente.NumHistoria;
+            nuevoPaciente.FechaNac = copiaPaciente.FechaNac;
+            nuevoPaciente.Sexo = copiaPaciente.Sexo;
+            nuevoPaciente.Talla = copiaPaciente.Talla;
+            nuevoPaciente.MedicosPacientes = copiaPaciente.MedicosPacientes;
+            nuevoPaciente.FechaDiagnostico = copiaPaciente.FechaDiagnostico;
+            nuevoPaciente.FechaFractalidad = copiaPaciente.FechaFractalidad;
+            nuevoPaciente.Farmaco = copiaPaciente.Farmaco;
+            nuevoPaciente.EnfermRaras = copiaPaciente.EnfermRaras;
+            nuevoPaciente.DescripEnferRaras = copiaPaciente.DescripEnferRaras;
+            nuevoPaciente.Mutacion = copiaPaciente.Mutacion;
+            nuevoPaciente.Epilepsia = copiaPaciente.Epilepsia;
         }
 
         /// <summary>
@@ -253,20 +197,16 @@ namespace WebMedicina.FrontEnd.Service
         /// <param name="idPaciente"></param>
         /// <returns>PacienteDto o null del Id pasado</returns>
         public async Task<CrearPacienteDto?> ObtenerPacienteSession(int idPaciente) {
-            try {
-                // Obtenemos todos los pacientes de session
-                List<CrearPacienteDto> pacientes = await ObtenerListaPacienteSession();
-                CrearPacienteDto? paciente = null;
+            // Obtenemos todos los pacientes de session
+            List<CrearPacienteDto> pacientes = await ObtenerListaPacienteSession();
+            CrearPacienteDto? paciente = null;
 
-                // Obtenemos los datos de la etapa del cliente
-                if (pacientes.Any()) {
-                    paciente = pacientes.Find(q => q.IdPaciente == idPaciente);
-                }
-
-                return paciente;
-            } catch (Exception) {
-                throw;
+            // Obtenemos los datos de la etapa del cliente
+            if (pacientes.Any()) {
+                paciente = pacientes.Find(q => q.IdPaciente == idPaciente);
             }
+
+            return paciente;
         }
     }
 }

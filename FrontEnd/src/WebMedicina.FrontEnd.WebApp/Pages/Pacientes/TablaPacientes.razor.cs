@@ -37,18 +37,14 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
         /// <param name="paciente"></param>
         /// <returns></returns>
         private async Task ConfirmarEliminacion(CrearPacienteDto paciente) {
-            try {
-                // Mostramos mensaje de confirmacion
-                bool? result = await DialogService.ShowMessageBox(
-                    "Eliminar Paciente",
-                    (MarkupString)$"¿Está seguro que desea eliminar al paciente <b>{paciente.NumHistoria}</b>?",
-                    yesText: "Confirmar", noText: "Cancelar");
+            // Mostramos mensaje de confirmacion
+            bool? result = await DialogService.ShowMessageBox(
+                "Eliminar Paciente",
+                (MarkupString)$"¿Está seguro que desea eliminar al paciente <b>{paciente.NumHistoria}</b>?",
+                yesText: "Confirmar", noText: "Cancelar");
 
-                if(result is not null && result == true) {
-                    await EliminarPaciente(paciente);
-                }
-            } catch (Exception) {
-                throw;
+            if(result is not null && result == true) {
+                await EliminarPaciente(paciente);
             }
         }
         
@@ -58,33 +54,29 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
         /// </summary>
         /// <param name="paciente"></param>
         /// <returns></returns>
-        private async Task EliminarPaciente(CrearPacienteDto paciente) {
-            try {
-                HttpResponseMessage respuesta = await _pacientesService.EliminarPaciente(paciente.IdPaciente);
+        private async Task EliminarPaciente(CrearPacienteDto paciente) { 
+            HttpResponseMessage respuesta = await _pacientesService.EliminarPaciente(paciente.IdPaciente);
 
-                // Mensaje para mostrar el usuario
-                Severity tipoSnacbar = Severity.Success;
-                string mensaje = "Paciente eliminado exitosamente.";
+            // Mensaje para mostrar el usuario
+            Severity tipoSnacbar = Severity.Success;
+            string mensaje = "Paciente eliminado exitosamente.";
 
-                if (respuesta.IsSuccessStatusCode) {
+            if (respuesta.IsSuccessStatusCode) {
 
-                    // Validamos si el paciente ha podido ser creado
-                    if (await respuesta.Content.ReadFromJsonAsync<bool>() == false) {
-                        mensaje = "El paciente no ha podido ser eliminado. Inténtelo de nuevo o conteacte con un administrador.";
-                        tipoSnacbar = Severity.Error;
-                    } else {
-                        // Actualizamos la lista de pacientes eliminando al paciente 
-                        await EliminarPacienteList.InvokeAsync(paciente.IdPaciente);
-                    }
-                } else {
-                    mensaje = await respuesta.Content.ReadAsStringAsync();
+                // Validamos si el paciente ha podido ser creado
+                if (await respuesta.Content.ReadFromJsonAsync<bool>() == false) {
+                    mensaje = "El paciente no ha podido ser eliminado. Inténtelo de nuevo o conteacte con un administrador.";
                     tipoSnacbar = Severity.Error;
+                } else {
+                    // Actualizamos la lista de pacientes eliminando al paciente 
+                    await EliminarPacienteList.InvokeAsync(paciente.IdPaciente);
                 }
-
-                _snackbar.Add(mensaje, tipoSnacbar);
-            } catch (Exception) {
-                throw;
+            } else {
+                mensaje = await respuesta.Content.ReadAsStringAsync();
+                tipoSnacbar = Severity.Error;
             }
+
+            _snackbar.Add(mensaje, tipoSnacbar); 
         }
 
         /// <summary>
@@ -92,35 +84,31 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
         /// </summary>
         /// <param name="paciente"></param>
         /// <returns></returns>
-        private bool Search(CrearPacienteDto paciente) {
-            try {
-                bool valido = false;
+        private bool Search(CrearPacienteDto paciente) { 
+            bool valido = false;
                 
-                // Filtramos la busqueda por el campo search
-                if (string.IsNullOrWhiteSpace(_searchString) || paciente is null) {
-                    valido = true;
-                } else if (paciente.NumHistoria.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) {
-                    valido = true;
-                } else if (paciente.FechaNac?.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase) == true) {
-                    valido = true;
-                } else if (paciente.FechaDiagnostico?.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase) == true) {
-                    valido = true;
-                } else if (paciente.FechaFractalidad?.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase) == true) {
-                    valido = true;
-                } else if (paciente.Farmaco.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) {
-                    valido = true;
-                } else if (paciente.Epilepsia is not null && paciente.Epilepsia.Nombre.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) {
-                    valido = true;
-                } else if (paciente.Mutacion is not null && paciente.Mutacion.Nombre.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) {
-                    valido = true;
-                } else if (paciente.Talla.ToString().Equals(_searchString, StringComparison.OrdinalIgnoreCase)) {
-                    valido = true;
-                }
-
-                return valido;
-            } catch (Exception) {
-                throw;
+            // Filtramos la busqueda por el campo search
+            if (string.IsNullOrWhiteSpace(_searchString) || paciente is null) {
+                valido = true;
+            } else if (paciente.NumHistoria.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) {
+                valido = true;
+            } else if (paciente.FechaNac?.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase) == true) {
+                valido = true;
+            } else if (paciente.FechaDiagnostico?.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase) == true) {
+                valido = true;
+            } else if (paciente.FechaFractalidad?.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase) == true) {
+                valido = true;
+            } else if (paciente.Farmaco.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) {
+                valido = true;
+            } else if (paciente.Epilepsia is not null && paciente.Epilepsia.Nombre.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) {
+                valido = true;
+            } else if (paciente.Mutacion is not null && paciente.Mutacion.Nombre.Contains(_searchString, StringComparison.OrdinalIgnoreCase)) {
+                valido = true;
+            } else if (paciente.Talla.ToString().Equals(_searchString, StringComparison.OrdinalIgnoreCase)) {
+                valido = true;
             }
+
+            return valido; 
         }
 
         /// <summary>
@@ -128,28 +116,24 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
         /// </summary>
         /// <param name="nuevoPaciente"></param>
         /// <returns></returns>
-        private async Task MostrarEditarPac(CrearPacienteDto nuevoPaciente) {
-            try {
-                // Creamos copia de seguridad del paciente
-                CrearPacienteDto copiaPaciente = nuevoPaciente.ClonarManual();
+        private async Task MostrarEditarPac(CrearPacienteDto nuevoPaciente) { 
+            // Creamos copia de seguridad del paciente
+            CrearPacienteDto copiaPaciente = nuevoPaciente.ClonarManual();
 
-                // Generamos parametros para modal crear paciente
-                DialogParameters parametros = new() {
-                    { "ListaEpilepsias", ListaEpilepsias },
-                    { "ListaMutaciones", ListaMutaciones },
-                    { "nuevoPaciente", nuevoPaciente },
-                };
+            // Generamos parametros para modal crear paciente
+            DialogParameters parametros = new() {
+                { "ListaEpilepsias", ListaEpilepsias },
+                { "ListaMutaciones", ListaMutaciones },
+                { "nuevoPaciente", nuevoPaciente },
+            };
 
-                var dialog = DialogService.Show<EditarPaciente>("Nuevo Paciente", parametros, OpcionesDialogo);
-                var respuesta = await dialog.Result;
-                if(!respuesta.Canceled && respuesta.Data != null && respuesta.Data is CrearPacienteDto pacienteEditado) {
-                    nuevoPaciente = pacienteEditado;
-                } else {
-                    _pacientesService.ReiniciarCopiaPaciente(ref nuevoPaciente, copiaPaciente);
-                }
-            } catch (Exception) {
-                throw;
-            }
+            var dialog = DialogService.Show<EditarPaciente>("Nuevo Paciente", parametros, OpcionesDialogo);
+            var respuesta = await dialog.Result;
+            if(!respuesta.Canceled && respuesta.Data != null && respuesta.Data is CrearPacienteDto pacienteEditado) {
+                nuevoPaciente = pacienteEditado;
+            } else {
+                _pacientesService.ReiniciarCopiaPaciente(ref nuevoPaciente, copiaPaciente);
+            } 
         }
     }
 }

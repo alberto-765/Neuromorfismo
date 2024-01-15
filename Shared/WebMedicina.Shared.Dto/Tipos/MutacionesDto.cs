@@ -3,8 +3,7 @@
 namespace WebMedicina.Shared.Dto.Tipos {
 
     public class MutacionesDto : BaseTipoDto, ICloneable, IEquatable<MutacionesDto>{
-        [ReadOnly(true)]
-        public int IdMutacion { get; set; }
+        public int IdMutacion { get; init; }
 
         public object Clone() {
             return this.MemberwiseClone();

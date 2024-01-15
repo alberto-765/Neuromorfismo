@@ -33,12 +33,15 @@
                             <MudText Color="@colorTitulo" Typo="Typo.h5">@Etapa.Value.Titulo</MudText>
                         </CardHeaderContent>
                     </MudCardHeader>
-                    <MudCardContent>
-                        <MudCheckBox @bind-Value="@Label_CheckBox1" Label="Default"></MudCheckBox>
-                    </MudCardContent>
-                    <MudCardActions>
-                        <MudButton></MudButton>
-                    </MudCardActions>
+                <EditForm Model="EvolucionEditar" OnValidSubmit="@(async () => await EventoFormulario())">
+                        <MudCardContent>
+                            <!-- Otros campos del formulario -->
+                            <MudCheckBox @bind-Value="EvolucionEditar.Confirmado" For="@(() => EvolucionEditar.Confirmado)" Label="Default" Dense="true"></MudCheckBox>
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudButton Type="ButtonType.Submit" Variant="Variant.Filled">Enviar</MudButton>
+                        </MudCardActions>
+                    </EditForm>
                 </MudCard>
             break;
             case EstadoEtapa.Futura:
@@ -53,6 +56,7 @@
 
 
 @code {
+    [CascadingParameter(Name = "ActualizarEvolucionPaciente")]  public EventCallback<EditarEvolucionLTDto> ActualizarEvolucionPaciente { get; set; }
     [Parameter] public EstadoEtapa EstadoEtapa { get; set; }
     [Parameter] public KeyValuePair<int, EtapaLTDto> Etapa { get; set; } = new();
     [Parameter] public EvolucionLTDto? EvolucionPintar { get; set; } = null;
@@ -62,7 +66,7 @@
     private Color colorTitulo { get; set; } = Color.Dark;
 
     // Actualizar evolucion
-    private EditarEvolucionLTDto evolucionEditar = new();
+    private EditarEvolucionLTDto EvolucionEditar = new();
 
     // Mapeamos estados y asignamos colores para el item
     protected override void OnAfterRender(bool firstRender) {
@@ -86,8 +90,13 @@
             claseColorTexto = string.Empty;
 
             // Asignamos dto para editar evolucion
-            evolucionEditar = EvolucionPintar?.ToEditDto() ?? new();
+            EvolucionEditar = EvolucionPintar?.ToEditDto() ?? new();
             break;
         }
+    }
+
+    // Evento para actualizar las evoluciones del paciente
+    private async Task EventoFormulario() {
+        await ActualizarEvolucionPaciente.InvokeAsync(EvolucionEditar);
     }
 }

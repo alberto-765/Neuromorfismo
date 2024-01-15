@@ -17,11 +17,7 @@ namespace WebMedicina.FrontEnd.Service {
         }
 
         public HttpClient CrearHttp() {
-            try {
-                return _HttpClientAPI;
-            } catch (Exception ) {
-                throw ;
-            }
+            return _HttpClientAPI;
         }
     }
 }

@@ -42,76 +42,59 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
             } catch (Exception) {
                 mostrarCargandoInicial = false;
                 mostrarTabla = false;
-                throw;
             }
         }
 
         // Asignamos clase para la fila seleccionada
         private string SelectedRowClassFunc(MutacionesDto elemento, int row) {
-            try { 
-                if (mostrarMutacion && mutacionSeleccionada.Equals(elemento)) {
-                    return "selected";
-                } else {
-                    return string.Empty;
-                }
-            } catch (Exception) {
-                throw;
+            if (mostrarMutacion && mutacionSeleccionada.Equals(elemento)) {
+                return "selected";
+            } else {
+                return string.Empty;
             }
         }
         private void RowClickEvent(TableRowClickEventArgs<MutacionesDto> elemento) {
-            try { 
-                // Deseleccionamos si ya ha sido seleccionada anteriormente
-                if (elemento.Item.Equals(mutacionSeleccionada)) {
-                    mutacionSeleccionada = new();
-                    mostrarMutacion = false;
-                } else if (tabla.SelectedItem != null && tabla.SelectedItem.Equals(elemento.Item)) {
-                    mutacionSeleccionada = (MutacionesDto)elemento.Item.Clone() ?? new();
-                    mostrarMutacion = true;
-                } else {
-                    mutacionSeleccionada = new();
-                    mostrarMutacion = false;
-                }
-            } catch (Exception) {
-                throw;
+            // Deseleccionamos si ya ha sido seleccionada anteriormente
+            if (elemento.Item.Equals(mutacionSeleccionada)) {
+                mutacionSeleccionada = new();
+                mostrarMutacion = false;
+            } else if (tabla.SelectedItem != null && tabla.SelectedItem.Equals(elemento.Item)) {
+                mutacionSeleccionada = (MutacionesDto)elemento.Item.Clone() ?? new();
+                mostrarMutacion = true;
+            } else {
+                mutacionSeleccionada = new();
+                mostrarMutacion = false;
             }
         }
 
         // Obtenemos las mutaciones disponibles
-        private async Task<IEnumerable<MutacionesDto>> ObtenerMutaciones() {
-            try {
-                HttpResponseMessage respuesta = await Http.GetAsync("administracion/getMutaciones");
-                if (respuesta.IsSuccessStatusCode) {
-                    List<MutacionesDto>? listaMutaciones = await respuesta.Content.ReadFromJsonAsync<List<MutacionesDto>>();
-                    if (listaMutaciones != null && listaMutaciones.Any()) {
-                        return listaMutaciones;
-                    }
+        private async Task<IEnumerable<MutacionesDto>> ObtenerMutaciones() { 
+            HttpResponseMessage respuesta = await Http.GetAsync("administracion/getMutaciones");
+            if (respuesta.IsSuccessStatusCode) {
+                List<MutacionesDto>? listaMutaciones = await respuesta.Content.ReadFromJsonAsync<List<MutacionesDto>>();
+                if (listaMutaciones != null && listaMutaciones.Any()) {
+                    return listaMutaciones;
                 }
-                return Enumerable.Empty<MutacionesDto>();
-            } catch (Exception) {
-                throw;
             }
+            return Enumerable.Empty<MutacionesDto>(); 
         }
 
         // Recarga los elementos de la tabla y controla la barra de cargando
-        private async Task RecargarElementos() {
-            try {
-                mostrarCargandoTabla = true;
-                MutacionesTabla = await ObtenerMutaciones();
+        private async Task RecargarElementos() { 
+            mostrarCargandoTabla = true;
+            MutacionesTabla = await ObtenerMutaciones();
 
-                // Reseteamos la mutacion seleccionada
-                mutacionSeleccionada = new();
-                mostrarMutacion = false;
+            // Reseteamos la mutacion seleccionada
+            mutacionSeleccionada = new();
+            mostrarMutacion = false;
 
-                if (MutacionesTabla != null && MutacionesTabla.Any()) {
-                    mostrarCargandoTabla = false;
-                    mostrarTabla = true;
-                } else {
-                    mostrarCargandoTabla = false;
-                    mostrarTabla = false;
-                }
-            } catch (Exception) {
-                throw;
-            }
+            if (MutacionesTabla != null && MutacionesTabla.Any()) {
+                mostrarCargandoTabla = false;
+                mostrarTabla = true;
+            } else {
+                mostrarCargandoTabla = false;
+                mostrarTabla = false;
+            } 
         }
 
         // Se abre Dialogo para crear una mutacion
@@ -153,8 +136,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                 }
             } catch (Exception) {
                 mostrarCargandoInicial = false;
-                mostrarTabla = false;
-                throw; 
+                mostrarTabla = false; 
             }
         }
 
@@ -190,8 +172,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                 }
             } catch (Exception) {
                 mostrarCargandoInicial = false;
-                mostrarTabla = false;
-                throw;
+                mostrarTabla = false; 
             }
         }
 
@@ -232,8 +213,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                 }
             } catch (Exception) {
                 mostrarCargandoInicial = false;
-                mostrarTabla = false;
-                throw;
+                mostrarTabla = false; 
             }
         }
     }

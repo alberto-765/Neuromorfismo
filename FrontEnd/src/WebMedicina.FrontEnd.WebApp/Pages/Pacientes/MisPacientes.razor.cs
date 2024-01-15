@@ -24,25 +24,21 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
         /// <summary>
         /// Detectamos cuando cambie el valor de la lista
         /// </summary>
-        protected override async Task OnParametersSetAsync() {
-            try {
-                if (ListaPacientes is not null) {
+        protected override async Task OnParametersSetAsync() { 
+            if (ListaPacientes is not null) {
 
-                    // Filtramos los pacientes para mostrar unicamente los del usuario en caso de ser SuperAdmin y Admin
-                    if(authenticationState is not null) {
-                        var authState = await authenticationState;
-                        user = authState?.User;
-                    }
-
-                    // Filtramos el listado de pacientes
-                    if (ListaPacientes.Any()) {
-                        ListaPacientes = _pacientesService.FiltrarMisPacientes(ListaPacientes, user);
-                    }
-                    MostrarOverlay = false;
+                // Filtramos los pacientes para mostrar unicamente los del usuario en caso de ser SuperAdmin y Admin
+                if(authenticationState is not null) {
+                    var authState = await authenticationState;
+                    user = authState?.User;
                 }
-            } catch (Exception) {
-                throw;
-            }
+
+                // Filtramos el listado de pacientes
+                if (ListaPacientes.Any()) {
+                    ListaPacientes = _pacientesService.FiltrarMisPacientes(ListaPacientes, user);
+                }
+                MostrarOverlay = false;
+            } 
         }
     }
 }

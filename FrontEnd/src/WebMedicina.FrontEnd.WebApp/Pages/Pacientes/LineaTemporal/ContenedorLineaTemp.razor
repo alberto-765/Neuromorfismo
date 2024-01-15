@@ -9,9 +9,9 @@
                 <MudIconButton Icon="@Icons.Material.Outlined.Close" Color="Color.Surface"/>
             </MudScrollToTop>
 
-            @if (LineaTemporalExpandedProp) {   
-                <CascadingValue Name="ActualizarEvolucionPac" Value="">
-                    <LineaTemporal EtapasLineaTemporal="EtapasLineaTemporal" Evoluciones="Evolucion" />
+            @if (LineaTemporalExpandedProp) {
+                <CascadingValue Name="ActualizarEvolucionPac" Value="ActualizarEvolucionPaciente">
+                    <LineaTemporal EtapasLineaTemporal="EtapasLineaTemporal" Evoluciones="Evoluciones" />
                 </CascadingValue>
             }
         </MudPaper>

@@ -42,76 +42,59 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
             } catch (Exception) {
                 mostrarCargandoTabla = false;
                 mostrarTabla = false;
-                throw;
             }
         }
 
         // Asignamos clase para la fila seleccionada
         private string SelectedRowClassFunc(FarmacosDto elemento, int row) {
-            try {
-                if (mostrarFarmaco && farmacoSeleccionado.Equals(elemento)) {
-                    return "selected";
-                } else {
-                    return string.Empty;
-                }
-            } catch (Exception) {
-                throw;
+            if (mostrarFarmaco && farmacoSeleccionado.Equals(elemento)) {
+                return "selected";
+            } else {
+                return string.Empty;
             }
         }
-        private void RowClickEvent(TableRowClickEventArgs<FarmacosDto> elemento) {
-            try {
-                // Deseleccionamos si ya ha sido seleccionada anteriormente
-                if (elemento.Item.Equals(farmacoSeleccionado)) {
-                    farmacoSeleccionado = new();
-                    mostrarFarmaco = false;
-                } else if (tabla.SelectedItem != null && tabla.SelectedItem.Equals(elemento.Item)) {
-                    farmacoSeleccionado = (FarmacosDto)elemento.Item.Clone() ?? new();
-                    mostrarFarmaco = true;
-                } else {
-                    farmacoSeleccionado = new();
-                    mostrarFarmaco = false;
-                }
-            } catch (Exception) {
-                throw;
-            }
+        private void RowClickEvent(TableRowClickEventArgs<FarmacosDto> elemento) { 
+            // Deseleccionamos si ya ha sido seleccionada anteriormente
+            if (elemento.Item.Equals(farmacoSeleccionado)) {
+                farmacoSeleccionado = new();
+                mostrarFarmaco = false;
+            } else if (tabla.SelectedItem != null && tabla.SelectedItem.Equals(elemento.Item)) {
+                farmacoSeleccionado = (FarmacosDto)elemento.Item.Clone() ?? new();
+                mostrarFarmaco = true;
+            } else {
+                farmacoSeleccionado = new();
+                mostrarFarmaco = false;
+            } 
         }
 
         // Obtenemos las farmacos disponibles
-        private async Task<IEnumerable<FarmacosDto>> ObtenerFarmacos() {
-            try {
-                HttpResponseMessage respuesta = await Http.GetAsync("administracion/getFarmacos");
-                if (respuesta.IsSuccessStatusCode) {
-                    List<FarmacosDto>? listaFarmacos = await respuesta.Content.ReadFromJsonAsync<List<FarmacosDto>>();
-                    if (listaFarmacos != null && listaFarmacos.Any()) {
-                        return listaFarmacos;
-                    }
+        private async Task<IEnumerable<FarmacosDto>> ObtenerFarmacos() { 
+            HttpResponseMessage respuesta = await Http.GetAsync("administracion/getFarmacos");
+            if (respuesta.IsSuccessStatusCode) {
+                List<FarmacosDto>? listaFarmacos = await respuesta.Content.ReadFromJsonAsync<List<FarmacosDto>>();
+                if (listaFarmacos != null && listaFarmacos.Any()) {
+                    return listaFarmacos;
                 }
-                return Enumerable.Empty<FarmacosDto>();
-            } catch (Exception) {
-                throw;
             }
+            return Enumerable.Empty<FarmacosDto>(); 
         }
 
         // Recarga los elementos de la tabla y controla la barra de cargando
-        private async Task RecargarElementos() {
-            try {
-                mostrarCargandoTabla = true;
-                FarmacosTabla = await ObtenerFarmacos();
+        private async Task RecargarElementos() { 
+            mostrarCargandoTabla = true;
+            FarmacosTabla = await ObtenerFarmacos();
 
-                // Reseteamos el farmaco seleccionado
-                farmacoSeleccionado = new();
-                mostrarFarmaco = false;
+            // Reseteamos el farmaco seleccionado
+            farmacoSeleccionado = new();
+            mostrarFarmaco = false;
 
-                if (FarmacosTabla != null && FarmacosTabla.Any()) {
-                    mostrarCargandoTabla = false;
-                    mostrarTabla = true;
-                } else {
-                    mostrarCargandoTabla = false;
-                    mostrarTabla = false;
-                }
-            } catch (Exception) {
-                throw;
-            }
+            if (FarmacosTabla != null && FarmacosTabla.Any()) {
+                mostrarCargandoTabla = false;
+                mostrarTabla = true;
+            } else {
+                mostrarCargandoTabla = false;
+                mostrarTabla = false;
+            } 
         }
 
         // Se abre Dialogo para crear una farmaco
@@ -155,7 +138,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
             } catch (Exception) {
                 mostrarCargandoTabla = false;
                 mostrarTabla = false;
-                throw;
             }
         }
 
@@ -192,7 +174,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
             } catch (Exception) {
                 mostrarCargandoTabla = false;
                 mostrarTabla = false;
-                throw;
             }
         }
 
@@ -235,7 +216,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
             } catch (Exception) {
                 mostrarCargandoTabla = false;
                 mostrarTabla = false;
-                throw;
             }
         }
     }

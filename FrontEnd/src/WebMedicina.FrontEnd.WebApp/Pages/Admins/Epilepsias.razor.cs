@@ -47,77 +47,60 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
             } catch (Exception) {
                 mostrarCargandoInicial = false;
                 mostrarTabla = false; 
-                throw;
             }
         }
 
         // Asignamos clase para la fila seleccionada
-        private string SelectedRowClassFunc(EpilepsiasDto elemento, int row) {
-            try {
-                if (mostrarEpilepsia && epilepsiaSeleccionada.Equals(elemento)) {
-                    return "selected";
-                } else {
-                    return string.Empty;
-                }
-            } catch (Exception) {
-                throw;
-            }
+        private string SelectedRowClassFunc(EpilepsiasDto elemento, int row) { 
+            if (mostrarEpilepsia && epilepsiaSeleccionada.Equals(elemento)) {
+                return "selected";
+            } else {
+                return string.Empty;
+            } 
         }
-        private void RowClickEvent(TableRowClickEventArgs<EpilepsiasDto> elemento) {
-            try { 
-                // Deseleccionamos si ya ha sido seleccionada anteriormente
-                if (elemento.Item.Equals(epilepsiaSeleccionada)) {
-                    epilepsiaSeleccionada = new();
-                    mostrarEpilepsia = false;
-                } else if (tabla.SelectedItem != null && tabla.SelectedItem.Equals(elemento.Item)) {
-                    epilepsiaSeleccionada = (EpilepsiasDto)elemento.Item.Clone() ?? new();
-                    mostrarEpilepsia = true;
-                } else {
-                    epilepsiaSeleccionada = new();
-                    mostrarEpilepsia = false;
-                }
-            } catch (Exception) {
-                throw;
-            }
+        private void RowClickEvent(TableRowClickEventArgs<EpilepsiasDto> elemento) { 
+            // Deseleccionamos si ya ha sido seleccionada anteriormente
+            if (elemento.Item.Equals(epilepsiaSeleccionada)) {
+                epilepsiaSeleccionada = new();
+                mostrarEpilepsia = false;
+            } else if (tabla.SelectedItem != null && tabla.SelectedItem.Equals(elemento.Item)) {
+                epilepsiaSeleccionada = (EpilepsiasDto)elemento.Item.Clone() ?? new();
+                mostrarEpilepsia = true;
+            } else {
+                epilepsiaSeleccionada = new();
+                mostrarEpilepsia = false;
+            } 
         }
 
         // Obtenemos las epilepsias disponibles
-        private async Task<IEnumerable<EpilepsiasDto>> ObtenerEpilepsias() {
-            try {
-                HttpResponseMessage respuesta = await Http.GetAsync("administracion/getEpilepsias");
-                if(respuesta.IsSuccessStatusCode) {
-                    List<EpilepsiasDto>? listaEpilepsias = await respuesta.Content.ReadFromJsonAsync<List<EpilepsiasDto>>();
-                    if(listaEpilepsias != null && listaEpilepsias.Any()) {
-                        return listaEpilepsias;
-                    }
+        private async Task<IEnumerable<EpilepsiasDto>> ObtenerEpilepsias() { 
+            HttpResponseMessage respuesta = await Http.GetAsync("administracion/getEpilepsias");
+            if(respuesta.IsSuccessStatusCode) {
+                List<EpilepsiasDto>? listaEpilepsias = await respuesta.Content.ReadFromJsonAsync<List<EpilepsiasDto>>();
+                if(listaEpilepsias != null && listaEpilepsias.Any()) {
+                    return listaEpilepsias;
                 }
-                return Enumerable.Empty<EpilepsiasDto>();
-            } catch (Exception) {
-                throw ;
             }
+            return Enumerable.Empty<EpilepsiasDto>(); 
         }
 
         // Recarga los elementos de la tabla y controla la barra de cargando
-        private async Task RecargarElementos() {
-            try {
-                mostrarCargandoTabla = true;
-                EpilepsiasTabla = await ObtenerEpilepsias();
+        private async Task RecargarElementos() { 
+            mostrarCargandoTabla = true;
+            EpilepsiasTabla = await ObtenerEpilepsias();
 
-                // Reseteamos la epilepsia seleccionada
-                epilepsiaSeleccionada = new();
-                mostrarEpilepsia = false;
+            // Reseteamos la epilepsia seleccionada
+            epilepsiaSeleccionada = new();
+            mostrarEpilepsia = false;
 
-                if (EpilepsiasTabla != null && EpilepsiasTabla.Any()) {
-                    mostrarCargandoTabla = false;
-                    mostrarTabla = true;
-                }else {
-                    mostrarCargandoTabla = false;
-                    mostrarTabla = false;
-                }
-            } catch (Exception) {
-                throw;
-            }
-}
+            if (EpilepsiasTabla != null && EpilepsiasTabla.Any()) {
+                mostrarCargandoTabla = false;
+                mostrarTabla = true;
+            }else {
+                mostrarCargandoTabla = false;
+                mostrarTabla = false;
+            } 
+        }
 
         // Se abre Dialogo para crear una epilepsia
         private async Task crearEpilepsia() {
@@ -158,7 +141,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
             } catch (Exception) {
                 mostrarCargandoTabla = false;
                 mostrarTabla = false;
-                throw;
             }
         }
 
@@ -195,7 +177,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
             } catch (Exception) {
                 mostrarCargandoTabla = false;
                 mostrarTabla = false;
-                throw;
             }
         }
 
@@ -236,7 +217,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
             } catch (Exception) {
                 mostrarCargandoTabla = false;
                 mostrarTabla = false;
-                throw;
             }
         }
     }

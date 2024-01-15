@@ -21,74 +21,65 @@ namespace WebMedicina.BackEnd.Service
         /// </summary>
         /// <returns>ImmutableSortedDictionary de todas las etapas</returns>
         public ImmutableSortedDictionary<int, EtapaLTDto> GetEtapas() {
-			try {
-				return _lineaTemporalDal.GetEtapas();
-			} catch (Exception) {
-				throw;
-			}       
+            return _lineaTemporalDal.GetEtapas();   
 		}
 
+
         /// <summary>
-        /// Actualizar etapa evolucion paciente
+        /// Identificar si existe la evolucion, si existe actualizarla y sino insertarla
         /// </summary>
         /// <param name="request"></param>
-        /// <returns>Lista evoluciones actualizada</returns>
-        public async Task<SortedList<int, EvolucionLTDto>> ActualizarEvolucion(RequestActEvo request, ClaimsPrincipal User) {
-            try {
-                if(Comun.ObtenerIdUsuario(User, out int idMedico) && idMedico > 0) {
+        /// <param name="User"></param>
+        /// <returns></returns>
+        public async Task<SortedList<int, EvolucionLTDto>> ActOInsertEvolucion(EditarEvolucionLTDto evoEditada, ClaimsPrincipal User) {
+            if (Comun.ObtenerIdUsuario(User, out int idMedico) && idMedico > 0) {
+                // Obtenemos la evolucion y comprobamos si hay que insertala o actualizarla
+                EvolucionLTModel? nuevaEvolucion = await _lineaTemporalDal.GetEvolucion(evoEditada.Id, evoEditada.IdPaciente);
+                bool accionOk = false;
 
-                    // Si se ha actualizado correctamente devolvemos de nuevo la lista
-                    if (await _lineaTemporalDal.ActualizarEvolucion(request, idMedico)) {
-                        return await ObtenerEvolucion(request.IdPaciente);
-                    }
+
+                // Si no existe la insertamos
+                if(nuevaEvolucion is null) {
+
+                    // Mapeamos la nueva evolucion
+                    nuevaEvolucion = evoEditada.ToModel();
+                    nuevaEvolucion.IdMedicoUltModif = idMedico;
+
+                    accionOk = await _lineaTemporalDal.InsertarEvolucion(nuevaEvolucion);
+                } else {
+
+                    // Actualizamos campos de la nueva evolucion
+                    nuevaEvolucion.IdMedicoUltModif = idMedico;
+                    nuevaEvolucion.Fecha = DateTime.Today;
+                    nuevaEvolucion.Confirmado = evoEditada.Confirmado;
+
+                    accionOk = await _lineaTemporalDal.ActualizarEvolucion(nuevaEvolucion);
                 }
 
-                throw new Exception();
-            } catch (Exception) {
-                throw;
+                // Si se ha actualizado o insertado devolvemos nuevo listado de evoluciones del paciente
+                if(accionOk) {
+                    return await ObtenerEvolucion(evoEditada.IdPaciente);
+                }
             }
+
+            return new SortedList<int, EvolucionLTDto>();
         }
 
         /// <summary>
-        /// Insertar etapa evolucion paciente
+        /// Obtener todas las evoluciones de un paciente
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns>Lista evoluciones actualizada</returns>
-        public async Task<SortedList<int, EvolucionLTDto>> InsertarEvolucion(RequestActEvo request, ClaimsPrincipal User) {
-            try {
-                if (Comun.ObtenerIdUsuario(User, out int idMedico) && idMedico > 0) {
-
-                    // Creamos evolucion nueva a insertar 
-                    EvolucionLTModel evolucion = request.Evolucion.ToModel();
-                    evolucion.IdMedicoUltModif = idMedico;
-                    evolucion.IdPaciente = request.IdPaciente;
-
-                    // Si se ha actualizado correctamente devolvemos de nuevo la lista
-                    if (await _lineaTemporalDal.InsertarEvolucion(evolucion)) {
-                        return await ObtenerEvolucion(request.IdPaciente);
-                    }
-                }
-
-                throw new Exception();
-            } catch (Exception) {
-                throw;
-            }
-        }
-
+        /// <param name="idPaciente"></param>
+        /// <returns>ShortedList evoluciones del paciente</returns>
         public async Task<SortedList<int, EvolucionLTDto>> ObtenerEvolucion(int idPaciente) {
-            try {
-                List<EvolucionLTDto> evoluciones = await _lineaTemporalDal.GetEvolucion(idPaciente);
+            List<EvolucionLTDto> evoluciones = await _lineaTemporalDal.GetEvoluciones(idPaciente);
 
-                // convertimos la lista en una shortedlist
-                SortedList<int, EvolucionLTDto> evolucionOrdenada = new();
-                foreach (EvolucionLTDto evo in evoluciones) {
-                    evolucionOrdenada.Add(evo.IdEtapa, evo);
-                }
-
-                return evolucionOrdenada;
-            } catch (Exception) {
-                throw;
+            // convertimos la lista en una shortedlist
+            SortedList<int, EvolucionLTDto> evolucionesOrdenadas = new();
+            foreach (EvolucionLTDto evo in evoluciones) {
+                evolucionesOrdenadas.Add(evo.IdEtapa, evo);
             }
+
+            return evolucionesOrdenadas;
         }
     }
 }

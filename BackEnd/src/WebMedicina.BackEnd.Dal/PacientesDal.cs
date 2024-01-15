@@ -17,15 +17,11 @@ namespace WebMedicina.BackEnd.Dal {
         /// </summary>
         /// <returns>Lista Medicos Pacientes</returns>
         public async Task<IEnumerable<UserInfoDto>> ObtenerAllMedicoPacientes() {
-            try {
-                IQueryable<MedicosModel>? query = null;
-                query = from a in _context.Medicospacientes
-                        join b in _context.Medicos on a.IdMedico equals b.IdMedico
-                        select b;
-                return await query.Distinct().Select(q => q.ToUserInfoDto()).ToListAsync();
-            } catch (Exception) {
-                throw;
-            }
+            IQueryable<MedicosModel>? query = null;
+            query = from a in _context.Medicospacientes
+                    join b in _context.Medicos on a.IdMedico equals b.IdMedico
+                    select b;
+            return await query.Distinct().Select(q => q.ToUserInfoDto()).ToListAsync();
         }
 
         /// <summary>
@@ -34,11 +30,7 @@ namespace WebMedicina.BackEnd.Dal {
         /// <param name="numHistoria"></param>
         /// <returns>Bool</returns>
         public bool ExisteNumHistoria(string numHistoria) {
-            try {
-                return _context.Pacientes.Any(paciente => paciente.NumHistoria == numHistoria);
-            } catch (Exception) {
-                throw;
-            }
+            return _context.Pacientes.Any(paciente => paciente.NumHistoria == numHistoria);
         }
 
         /// <summary>
@@ -47,14 +39,10 @@ namespace WebMedicina.BackEnd.Dal {
         /// <param name="nuevoPaciente"></param>
         /// <returns>Bool, paciente creado o no</returns>
         public async Task<int> CrearPaciente(PacientesModel nuevoPaciente) {
-            try {
-                await _context.Pacientes.AddAsync(nuevoPaciente);
-                await _context.SaveChangesAsync();
+            await _context.Pacientes.AddAsync(nuevoPaciente);
+            await _context.SaveChangesAsync();
 
-                return nuevoPaciente.IdPaciente;
-            } catch (Exception) {
-                throw;
-            }
+            return nuevoPaciente.IdPaciente;
         }
 
         /// <summary>
@@ -63,12 +51,8 @@ namespace WebMedicina.BackEnd.Dal {
         /// <param name="nuevoPaciente"></param>
         /// <returns>Bool con paciente editado o no</returns>
         public async Task<bool> EditarPaciente(PacientesModel nuevoPaciente) {
-            try {
-                _context.Update(nuevoPaciente);
-                return await _context.SaveChangesAsync() > 0;
-            } catch (Exception) {
-                throw;
-            }
+            _context.Update(nuevoPaciente);
+            return await _context.SaveChangesAsync() > 0;
         }
 
 
@@ -78,15 +62,11 @@ namespace WebMedicina.BackEnd.Dal {
         /// <param name="nuevoPaciente"></param>
         /// <returns>Bool, paciente eliminado o no</returns>
         public async Task<bool> EliminarPaciente(int idPaciente) {
-            try {
-                PacientesModel? paciente = await _context.Pacientes.FindAsync(idPaciente);
-                if (paciente != null) {
-                    _context.Pacientes.Remove(paciente);
-                }
-                return await _context.SaveChangesAsync() > 0;
-            } catch (Exception) {
-                throw;
+            PacientesModel? paciente = await _context.Pacientes.FindAsync(idPaciente);
+            if (paciente != null) {
+                _context.Pacientes.Remove(paciente);
             }
+            return await _context.SaveChangesAsync() > 0;
         }
 
         /// <summary>
@@ -94,17 +74,13 @@ namespace WebMedicina.BackEnd.Dal {
         /// </summary>
         /// <returns>Lista de todos los pacientes</returns>
         public List<CrearPacienteDto> GetAllPacientes() {
-            try {
-                return _context.Pacientes
-                    .Include(q => q.IdEpilepsiaNavigation)
-                    .Include(q => q.IdMutacionNavigation)
-                    .Include(q => q.Medicospacientes)
-                        .ThenInclude(q => q.IdMedicoNavigation)
-                    .Select(q => q.ToDto())
-                    .ToList();
-            } catch (Exception) {
-                throw;
-            }
+            return _context.Pacientes
+                .Include(q => q.IdEpilepsiaNavigation)
+                .Include(q => q.IdMutacionNavigation)
+                .Include(q => q.Medicospacientes)
+                    .ThenInclude(q => q.IdMedicoNavigation)
+                .Select(q => q.ToDto())
+                .ToList();
         }
 
         /// <summary>
@@ -113,18 +89,14 @@ namespace WebMedicina.BackEnd.Dal {
         /// <param name="userInfo"></param>
         /// <returns>Pacientes de un medico</returns>        
         public List<CrearPacienteDto> GetPacientesMed(UserInfoDto userInfo) {
-            try {
-                return _context.Pacientes
-                    .Where(q => q.Medicospacientes.Any(medpac => medpac.IdMedPac == userInfo.IdMedico))
-                    .Include(q => q.IdEpilepsiaNavigation)
-                    .Include(q => q.IdMutacionNavigation)
-                    .Include(q => q.Medicospacientes)
-                        .ThenInclude(q => q.IdMedicoNavigation)
-                    .Select(q => q.ToDto())
-                    .ToList();
-            } catch (Exception) {
-                throw;
-            }
+            return _context.Pacientes
+                .Where(q => q.Medicospacientes.Any(medpac => medpac.IdMedPac == userInfo.IdMedico))
+                .Include(q => q.IdEpilepsiaNavigation)
+                .Include(q => q.IdMutacionNavigation)
+                .Include(q => q.Medicospacientes)
+                    .ThenInclude(q => q.IdMedicoNavigation)
+                .Select(q => q.ToDto())
+                .ToList();
         }
 
         /// <summary>
@@ -133,21 +105,12 @@ namespace WebMedicina.BackEnd.Dal {
         /// <param name="idMedicos"></param>
         /// <returns>Diccionario IdMedico-Nombre</returns>
         public Dictionary<int, string> ObtenerNombresMed(HashSet<int> idMedicos) {
-            try {
-                Dictionary<int, string> listaNombresMed = _context.Medicos.Where(q => idMedicos.Contains(q.IdMedico)).ToDictionary(medico => medico.IdMedico, medico => medico.Nombre);
-                return listaNombresMed;
-            } catch (Exception) {
-                throw;
-            }
+            Dictionary<int, string> listaNombresMed = _context.Medicos.Where(q => idMedicos.Contains(q.IdMedico)).ToDictionary(medico => medico.IdMedico, medico => medico.Nombre);
+            return listaNombresMed;
         }
 
         public async Task<bool> ValidarPermisosEdicYElim(int idMedico, int idPaciente) {
-            try {
-                return await _context.Medicospacientes.AnyAsync(q => q.IdPaciente == idPaciente && q.IdMedico == idMedico);
-            } catch (Exception) {
-                throw;
-            }
-
+            return await _context.Medicospacientes.AnyAsync(q => q.IdPaciente == idPaciente && q.IdMedico == idMedico);
         }
 
         /// <summary>
@@ -156,17 +119,13 @@ namespace WebMedicina.BackEnd.Dal {
         /// <param name="idPaciente"></param>
         /// <returns>InfoPacienteDto de un paciente</returns>
         public async Task<CrearPacienteDto?> GetUnPaciente(int idPaciente) {
-            try {
-                PacientesModel? paciente =  await _context.Pacientes
-                    .Include(q => q.IdEpilepsiaNavigation)
-                    .Include(q => q.IdMutacionNavigation)
-                    .Include(q => q.Medicospacientes)
-                        .ThenInclude(q => q.IdMedicoNavigation)
-                    .SingleOrDefaultAsync(q => q.IdPaciente == idPaciente);
-                return paciente?.ToDto();
-            } catch (Exception) {
-                throw;
-            }
+            PacientesModel? paciente =  await _context.Pacientes
+                .Include(q => q.IdEpilepsiaNavigation)
+                .Include(q => q.IdMutacionNavigation)
+                .Include(q => q.Medicospacientes)
+                    .ThenInclude(q => q.IdMedicoNavigation)
+                .SingleOrDefaultAsync(q => q.IdPaciente == idPaciente);
+            return paciente?.ToDto();
         }
     }
 }

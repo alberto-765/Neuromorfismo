@@ -23,43 +23,34 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
         // Ultima etapa de la evolucion del paciente
         private int? UltimaEtapaPaciente { get; set; }
 
-     
-
+    
 
         // Creamos linea temporal
         protected override void OnInitialized() {
-            try {
-                UltimaEtapaPaciente = Evoluciones.LastOrDefault().Key;
-            } catch (Exception) {
-                throw;
-            }
+            UltimaEtapaPaciente = Evoluciones.LastOrDefault().Key; 
         }
 
         // Calcular estado de una etapa
         private EstadoEtapa CalcularEstadoEtapa(KeyValuePair<int, EtapaLTDto> etapa, int indice, EvolucionLTDto? evolucionPintar) {
-            try {
-                EstadoEtapa estadoEtapa = EstadoEtapa.Pasada;
+            EstadoEtapa estadoEtapa = EstadoEtapa.Pasada;
 
-                // Si el paciente aun no tiene evolucion 
-                if (evolucionPintar is null) {
+            // Si el paciente aun no tiene evolucion 
+            if (evolucionPintar is null) {
 
-                    // Validamos si es la primera etapa que debe ser rellenada
-                    if(indice == 0) {
-                        estadoEtapa = EstadoEtapa.Presente;
-                    } else {
-                        estadoEtapa = EstadoEtapa.Futura;
-                    }
-
-                } else if(etapa.Key == UltimaEtapaPaciente) {
+                // Validamos si es la primera etapa que debe ser rellenada
+                if(indice == 0) {
                     estadoEtapa = EstadoEtapa.Presente;
-                } else if (etapa.Key > UltimaEtapaPaciente) {
-                     estadoEtapa = EstadoEtapa.Futura;
+                } else {
+                    estadoEtapa = EstadoEtapa.Futura;
                 }
 
-                return estadoEtapa;
-            } catch (Exception) {
-                throw;
+            } else if(etapa.Key == UltimaEtapaPaciente) {
+                estadoEtapa = EstadoEtapa.Presente;
+            } else if (etapa.Key > UltimaEtapaPaciente) {
+                    estadoEtapa = EstadoEtapa.Futura;
             }
+
+            return estadoEtapa;
         }
     }
 }

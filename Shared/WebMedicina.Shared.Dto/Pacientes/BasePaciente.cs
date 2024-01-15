@@ -11,11 +11,7 @@ namespace WebMedicina.Shared.Dto.Pacientes
         public virtual string Sexo { get; set; } = string.Empty;
         public virtual int Talla { get; set; } = 50;
 
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public virtual DateTime? FechaDiagnostico { get; set; }
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public virtual DateTime? FechaFractalidad { get; set; }
         public virtual string Farmaco { get; set; } = string.Empty;
         public virtual bool EnfermRaras { get; set; }
