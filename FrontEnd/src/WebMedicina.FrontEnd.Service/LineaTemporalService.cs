@@ -6,6 +6,7 @@ using System.Text.Json;
 using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.Shared.Dto.LineaTemporal;
 using WebMedicina.Shared.Dto.Pacientes;
+using static WebMedicina.FrontEnd.Dto.EstadosEtapasLTDto;
 
 namespace WebMedicina.FrontEnd.Service
 {
@@ -80,6 +81,30 @@ namespace WebMedicina.FrontEnd.Service
 
                 // Si el paciente no tiene evolucion se recibiria una lista vacia, nunca null
                 return paciente?.Evoluciones ?? throw new Exception();
+            } catch (Exception) {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Actualizar una etapa de la evolucion del paciente o añadirla si es nueva
+        /// </summary>
+        /// <param name="idPaciente"></param>
+        /// <returns>Datos linea temporal del paciente requerido</returns>
+        public async Task<SortedList<int, EvolucionLTDto>> ActualizarEvolucionPaciente(SortedList<int, EvolucionLTDto> evoluciones, EvolucionLTDto evolucionNueva, int idPaciente) {
+            try {
+                HttpResponseMessage respuesta = new();
+                RequestActEvo requestActEvo = new(idPaciente, evolucionNueva);
+
+                // Hacemos llamada actualizar evolucion
+                if(evoluciones.ContainsKey(evolucionNueva.IdEtapa)) {
+                    respuesta = await Http.PutAsJsonAsync("LineaTemporal/ActualizarEvolucionPaciente", requestActEvo);
+                } else {
+                    respuesta = await Http.PostAsJsonAsync("LineaTemporal/InsertarEvolucionPaciente", requestActEvo);
+                }
+
+                // Actualizamos evolucion del paciente en session y devolvemos nueva lista
+                return await ObtenerEvolucionPaciente(idPaciente);
             } catch (Exception) {
                 throw;
             }

@@ -12,10 +12,10 @@
 <CascadingValue Name="modoOscuro" Value="@_isDarkMode">
     <MudLayout Class="d-flex">
         <MudAppBar Class="mud-elevation-25">
-            <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
+            <MudHidden Breakpoint="Breakpoint.SmAndDown">
                 <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Dark" Edge="Edge.Start" OnClick="@ToggleDrawer" />
             </MudHidden>
-            <MudHidden Breakpoint="Breakpoint.MdAndUp" Invert="true">
+            <MudHidden Breakpoint="Breakpoint.MdAndUp">
                 <a href="">
                     <img id="iconoNavBar" src="icono.png" alt="Icono" />
                 </a>

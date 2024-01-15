@@ -27,11 +27,14 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
         } 
 
         // Listas etapas y evolucion paciente
-        private SortedList<int, EvolucionLTDto> Evolucion = new(); // Evoluciones del paciente
+        private SortedList<int, EvolucionLTDto> Evoluciones = new(); // Evoluciones del paciente
         private ImmutableSortedDictionary<int, EtapaLTDto>? EtapasLineaTemporal { get; set; } // Etapas para la linea temporal
 
         protected override async Task OnInitializedAsync() {
             try {
+                // Clase contenedor ocultada por default
+                ClaseContenedor = IdContenedorLT + "-hidden";
+
                 // Configuracion default snackbar
                 _snackbar.Configuration.PreventDuplicates = true;
                 _snackbar.Configuration.ShowTransitionDuration = 300;
@@ -61,7 +64,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
             try {
                 // Reseteamos datos
                 LineaTemporalExpandedProp = false;
-                Evolucion = new();
+                Evoluciones = new();
                 SelectorScroll = string.Empty;
 
                 StateHasChanged();
@@ -82,11 +85,22 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
                 StateHasChanged();
 
                 // Obtenemos evolucion del paciente
-                Evolucion = await _lineaTemporalService.ObtenerEvolucionPaciente(idPaciente);
+                Evoluciones = await _lineaTemporalService.ObtenerEvolucionPaciente(idPaciente);
                 SelectorScroll = $"#Paciente{idPaciente}";
                 StateHasChanged();
+            } catch (Exception) {
+                _snackbar.Add("No ha sido posible cargar la linea temporal");
+                throw;
+            }
+        }
 
-
+        /// <summary>
+        /// Actualizar una etapa de la evolucion del paciente o añadirla si es nueva
+        /// </summary>
+        /// <param name="nuevaEvolucion"></param>
+        public async Task ActualizarEvolucionPaciente(EvolucionLTDto nuevaEvolucion) {
+            try {
+                await Task.FromResult("");
             } catch (Exception) {
                 throw;
             }

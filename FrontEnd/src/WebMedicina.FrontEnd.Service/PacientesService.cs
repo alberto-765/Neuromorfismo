@@ -246,5 +246,27 @@ namespace WebMedicina.FrontEnd.Service
                 throw;
             }
         }
+
+        /// <summary>
+        /// Obtener paciente de session
+        /// </summary>
+        /// <param name="idPaciente"></param>
+        /// <returns>PacienteDto o null del Id pasado</returns>
+        public async Task<CrearPacienteDto?> ObtenerPacienteSession(int idPaciente) {
+            try {
+                // Obtenemos todos los pacientes de session
+                List<CrearPacienteDto> pacientes = await ObtenerListaPacienteSession();
+                CrearPacienteDto? paciente = null;
+
+                // Obtenemos los datos de la etapa del cliente
+                if (pacientes.Any()) {
+                    paciente = pacientes.Find(q => q.IdPaciente == idPaciente);
+                }
+
+                return paciente;
+            } catch (Exception) {
+                throw;
+            }
+        }
     }
 }

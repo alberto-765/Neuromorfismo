@@ -1,12 +1,14 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using WebMedicina.Shared.Dto.Usuarios;
 
 namespace WebMedicina.Shared.Dto.LineaTemporal
 {
-    public class EditarEvolucionEtapaDto {
+    public class EditarEvolucionLTDto {
         [ReadOnly(true)]
         public int Id { get; set; }
+
+        [ReadOnly(true)]
+        public int IdPaciente { get; set; }
 
         [Required(ErrorMessage = "Campo obligatorio")]
         public bool Confirmado { get; set; }
@@ -15,9 +17,10 @@ namespace WebMedicina.Shared.Dto.LineaTemporal
         public DateTime Fecha { get; set; } = DateTime.Today;
 
         [Required]
-        public UserInfoDto MedicoUltModif { get; set; } = null!;
+        public int IdMedicoUltModif { get; set; }
 
-        [Required]
+        [ReadOnly(true)]
         public int IdEtapa { get; set; }
+
     }
 }

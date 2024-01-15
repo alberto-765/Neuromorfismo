@@ -1,24 +1,19 @@
 ﻿<div>
-    <MudContainer MaxWidth="MaxWidth.Large" Class="@($"rounded {ClaseContenedor} my-5")" id="@IdContenedorLT">
-        <MudPaper Elevation="25">
-            <div class="d-flex">
-                <MudSpacer />
-                <MudScrollToTop Selector="@SelectorScroll" 
-                    OnClick="@(async () => await CerrarLineaTemporal())"
-                    Visible="true" 
-                    TopOffset="-99999" 
-                    VisibleCssClass="lt__scrollTop">
-                    <MudIconButton Icon="@Icons.Material.Outlined.Close" Color="Color.Surface"/>
-                </MudScrollToTop>
-            </div>
-            <CascadingValue Name="Etapas" Value="EtapasLineaTemporal">
-                <CascadingValue Name="Evolucion" Value="Evolucion">
-                    <div>
-                        <LineaTemporal />
-                        <FormularioLT />
-q                   </div>                        
+    <MudContainer MaxWidth="MaxWidth.Large" Class="mt-5 mb-10">
+        <MudPaper Elevation="25" Class="@($"rounded relative {ClaseContenedor}")" id="@IdContenedorLT">
+            <MudScrollToTop Selector="@SelectorScroll" 
+                OnClick="@(async () => await CerrarLineaTemporal())"
+                Visible="true" 
+                TopOffset="-99999" 
+                VisibleCssClass="lt__scrollTop">
+                <MudIconButton Icon="@Icons.Material.Outlined.Close" Color="Color.Surface"/>
+            </MudScrollToTop>
+
+            @if (LineaTemporalExpandedProp) {   
+                <CascadingValue Name="ActualizarEvolucionPac" Value="">
+                    <LineaTemporal EtapasLineaTemporal="EtapasLineaTemporal" Evoluciones="Evolucion" />
                 </CascadingValue>
-            </CascadingValue>
+            }
         </MudPaper>
     </MudContainer>
 </div>

@@ -1,19 +1,16 @@
 ﻿/*Contenedor linea temporal expandido */
 ::deep .contenedor-lineaTemporal-expandido {
-    height: auto !important;
-    opacity: 1 !important;
+    display: block;
 }
 ::deep .contenedor-lineaTemporal-hidden {
-
+   display: none;
 }
 /* Boton cerrar linea temporal */
 ::deep #contenedor-lineaTemporal .lt__scrollTop {
-    position: relative !important;
+    position: absolute !important;
+    right: 0;
 }
 
 /* Animacion Contenedor */
 ::deep #contenedor-lineaTemporal {
-    height: 0;
-    opacity: 0;
-    transition: opacity ease-in-out 2s;
 }

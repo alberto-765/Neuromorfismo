@@ -1,13 +1,13 @@
 ﻿namespace WebMedicina.Shared.Dto.Usuarios { 
     public record UserInfoDto {
-        public int IdMedico { get; set; }
-        public string? UserLogin { get; set; }
-        public string? Nombre { get; set; } 
-        public string? Apellidos { get; set; } 
-        public DateTime FechaNac { get; set; } 
-        public DateTime FechaCreac { get; set; } 
-        public DateTime FechaUltMod { get; set; }
-        public string? Rol { get; set; } 
-        public string? Sexo { get; set; } 
+        public int IdMedico { get; init; }
+        public string? UserLogin { get; init; }
+        public string? Nombre { get; init; } 
+        public string? Apellidos { get; init; } 
+        public DateTime FechaNac { get; init; } 
+        public DateTime FechaCreac { get; init; } 
+        public DateTime FechaUltMod { get; init; }
+        public string? Rol { get; init; } 
+        public string? Sexo { get; init; } 
     }
 }

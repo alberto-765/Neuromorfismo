@@ -1,0 +1,93 @@
+﻿@using WebMedicina.Shared.Dto.LineaTemporal;
+@using static WebMedicina.FrontEnd.Dto.EstadosEtapasLTDto;
+
+<MudTimelineItem Color="@colorBolaItem" Size="@(EstadoEtapa == EstadoEtapa.Presente ? Size.Medium : Size.Small)" Elevation="25" Variant="Variant.Filled" Class="hola">
+    <ItemContent>
+        @* Si el paciente no tiene etapas solo pintamos la tarjeta de la primera Etapa, el resto desactivadas *@
+        @switch (EstadoEtapa) {
+            case EstadoEtapa.Pasada:
+                <MudText Color="@colorTitulo" Typo="Typo.h5" Class="@claseColorTexto" GutterBottom="true">
+                    @if (EvolucionPintar is not null && EvolucionPintar.Fecha != DateTime.MinValue) {
+                        <MudChip Color="Color.Primary" Disabled="true" Icon="@Icons.Material.Filled.CalendarMonth">@EvolucionPintar.Fecha.ToShortDateString()</MudChip>
+                    }
+
+                    @Etapa.Value.Titulo
+                </MudText>
+
+                if (EvolucionPintar?.Confirmado == true) {
+                    <MudAlert Severity="Severity.Success" Class="@claseColorTexto">
+                        <MudText Class="@claseColorTexto" Typo="Typo.body2">(evol) @Etapa.Value.Label </MudText>
+                        <MudText Class="@claseColorTexto" Typo="Typo.body2">Sí.</MudText>
+                    </MudAlert>
+                } else {
+                    <MudAlert Severity="Severity.Warning" Class="@claseColorTexto">
+                        <MudText Class="@claseColorTexto">@Etapa.Value.Label</MudText>
+                        <MudText Class="@claseColorTexto">No.</MudText>
+                    </MudAlert>
+                }
+            break;
+            case EstadoEtapa.Presente:
+                <MudCard Elevation="25">
+                    <MudCardHeader>
+                        <CardHeaderContent>
+                            <MudText Color="@colorTitulo" Typo="Typo.h5">@Etapa.Value.Titulo</MudText>
+                        </CardHeaderContent>
+                    </MudCardHeader>
+                    <MudCardContent>
+                        <MudCheckBox @bind-Value="@Label_CheckBox1" Label="Default"></MudCheckBox>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton></MudButton>
+                    </MudCardActions>
+                </MudCard>
+            break;
+            case EstadoEtapa.Futura:
+                <MudText Color="@colorTitulo" Typo="Typo.h5" GutterBottom="true" Class="@claseColorTexto">@Etapa.Value.Titulo</MudText>
+                <MudText Typo="Typo.body2" Class="@claseColorTexto">@Etapa.Value.Label</MudText>
+                <MudText Typo="Typo.body2" Class="@claseColorTexto">Sí.</MudText>
+            break;
+        }
+    </ItemContent>
+</MudTimelineItem>
+
+
+
+@code {
+    [Parameter] public EstadoEtapa EstadoEtapa { get; set; }
+    [Parameter] public KeyValuePair<int, EtapaLTDto> Etapa { get; set; } = new();
+    [Parameter] public EvolucionLTDto? EvolucionPintar { get; set; } = null;
+
+    private string claseColorTexto { get; set; } = string.Empty;
+    private Color colorBolaItem { get; set; } = Color.Primary;
+    private Color colorTitulo { get; set; } = Color.Dark;
+
+    // Actualizar evolucion
+    private EditarEvolucionLTDto evolucionEditar = new();
+
+    // Mapeamos estados y asignamos colores para el item
+    protected override void OnAfterRender(bool firstRender) {
+
+
+        // Asignamos estilos para los textos
+        switch (EstadoEtapa) {
+            case EstadoEtapa.Pasada:
+            claseColorTexto = "mud-text-secondary";
+            break;
+
+            case EstadoEtapa.Futura:
+            colorTitulo = Color.Default;
+            colorBolaItem = Color.Default;
+            claseColorTexto = "mud-text-disabled";
+            break;
+
+            default:
+            colorTitulo = Color.Dark;
+            colorBolaItem = Color.Primary;
+            claseColorTexto = string.Empty;
+
+            // Asignamos dto para editar evolucion
+            evolucionEditar = EvolucionPintar?.ToEditDto() ?? new();
+            break;
+        }
+    }
+}

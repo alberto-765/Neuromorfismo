@@ -31,5 +31,32 @@ namespace WebMedicina.BackEnd.Dal
 				throw;
 			}
         }
+
+        // Obtener la evolucion de un paciente
+        public async Task<bool> ActualizarEvolucion(RequestActEvo request, int idMedico) {
+            try {
+                EvolucionLTModel? evolucion = await _context.EvolucionLTModels.FindAsync(request.IdPaciente);
+
+                if (evolucion is not null) {
+                    evolucion.IdMedicoUltModif = idMedico;
+                    evolucion.Fecha = request.Evolucion.Fecha;
+                    evolucion.Confirmado = request.Evolucion.Confirmado;
+                }
+                return await _context.SaveChangesAsync() > 0;
+            } catch (Exception) {
+                throw;
+            }
+        }
+
+
+        // Obtener la evolucion de un paciente
+        public async Task<bool> InsertarEvolucion(EvolucionLTModel evolucion) {
+            try {
+                await _context.AddAsync(evolucion);
+                return await _context.SaveChangesAsync() > 0;
+            } catch (Exception) {
+                throw;
+            }
+        }
     }
 }
