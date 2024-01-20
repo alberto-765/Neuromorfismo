@@ -32,7 +32,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
 
         protected override async Task OnInitializedAsync() {
             try {
-                Http = _crearHttpClient.CrearHttp(); // creamos http
+                Http = _crearHttpClient.CrearHttpApi(); // creamos http
 
                 // Recargamos los elementos de la tabla 
                 await RecargarElementos();
@@ -46,7 +46,8 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                 mostrarCargandoInicial = false;
             } catch (Exception) {
                 mostrarCargandoInicial = false;
-                mostrarTabla = false; 
+                mostrarTabla = false;
+                throw;
             }
         }
 
@@ -74,7 +75,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
 
         // Obtenemos las epilepsias disponibles
         private async Task<IEnumerable<EpilepsiasDto>> ObtenerEpilepsias() { 
-            HttpResponseMessage respuesta = await Http.GetAsync("administracion/getEpilepsias");
+            HttpResponseMessage respuesta = await Http.GetAsync("administracion/getepilepsias");
             if(respuesta.IsSuccessStatusCode) {
                 List<EpilepsiasDto>? listaEpilepsias = await respuesta.Content.ReadFromJsonAsync<List<EpilepsiasDto>>();
                 if(listaEpilepsias != null && listaEpilepsias.Any()) {
@@ -118,7 +119,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                     if (!string.IsNullOrWhiteSpace(nuevoNombre)) {
 
                         // Realizamos llamada httpget para creaer la nueva epilepsia
-                        HttpResponseMessage respuesta = await Http.PostAsJsonAsync("administracion/crearEpilepsia", resultado.Data);
+                        HttpResponseMessage respuesta = await Http.PostAsJsonAsync("administracion/crearepilepsia", resultado.Data);
 
                         // Validamos si la respuesta es OK y ha podido ser creado
                         if (respuesta.IsSuccessStatusCode) {
@@ -141,6 +142,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
             } catch (Exception) {
                 mostrarCargandoTabla = false;
                 mostrarTabla = false;
+                throw;
             }
         }
 
@@ -157,7 +159,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                     string mensajeSnackBar = "Epilepsia eliminada exitosamente";
 
                     // Realizamos llamada httpget 
-                    HttpResponseMessage respuesta = await Http.DeleteAsync($"administracion/eliminarEpilepsia/{epilepsiaSeleccionada.IdEpilepsia}");
+                    HttpResponseMessage respuesta = await Http.DeleteAsync($"administracion/eliminarepilepsia/{epilepsiaSeleccionada.IdEpilepsia}");
 
                     // Validamos si la respuesta es OK y ha podido ser eliminado
                     if (respuesta.IsSuccessStatusCode) {
@@ -177,6 +179,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
             } catch (Exception) {
                 mostrarCargandoTabla = false;
                 mostrarTabla = false;
+                throw;
             }
         }
 
@@ -189,7 +192,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                     string mensajeSnackBar = "Epilepsia editada exitosamente";
 
                     // Realizamos llamada httpget 
-                    HttpResponseMessage respuesta = await Http.PutAsJsonAsync("administracion/updateEpilepsia", ep);
+                    HttpResponseMessage respuesta = await Http.PutAsJsonAsync("administracion/updateepilepsia", ep);
 
                     // Validamos si la respuesta es OK y ha podido ser editado
                     if (respuesta.IsSuccessStatusCode) {
@@ -217,6 +220,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
             } catch (Exception) {
                 mostrarCargandoTabla = false;
                 mostrarTabla = false;
+                throw;
             }
         }
     }

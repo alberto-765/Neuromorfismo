@@ -6,7 +6,7 @@ using WebMedicina.Shared.Dto.LineaTemporal;
 
 namespace WebMedicina.BackEnd.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/lineatemporal")]
     [ApiController]
     [Authorize]
     public class LineaTemporalController : ControllerBase {
@@ -17,7 +17,7 @@ namespace WebMedicina.BackEnd.API.Controllers
             _lineaTemporalService = lineaTemporalService;
         }
 
-        [HttpGet("ObtenerTodasEtapas")]
+        [HttpGet("obtenertodasetapas")]
         public ImmutableSortedDictionary<int, EtapaLTDto> ObtenerEtapas() {
             try {
                 return _lineaTemporalService.GetEtapas();
@@ -26,7 +26,7 @@ namespace WebMedicina.BackEnd.API.Controllers
             }
         }
 
-        [HttpGet("ObtenerEvolucionPaciente/{idPaciente}")]
+        [HttpGet("obtenerevolucionpaciente/{idpaciente}")]
         public async Task<ActionResult<SortedList<int, EvolucionLTDto>>> ObtenerEvolucion(int idPaciente) {
             try {
                 return Ok(await _lineaTemporalService.ObtenerEvolucion(idPaciente));
@@ -35,11 +35,11 @@ namespace WebMedicina.BackEnd.API.Controllers
             }
         }
 
-        [HttpPut("LineaTemporal/ActOInsertEvolucionPaciente")]
-        public async Task<SortedList<int, EvolucionLTDto>> ActOInsertEvolucionPaciente([FromBody] EditarEvolucionLTDto evoEditada) {
+        [HttpPut("actoinsertevolucionpaciente")]
+        public async Task<SortedList<int, EvolucionLTDto>> ActOInsertEvolucionPaciente([FromBody] LLamadaEditarEvoDto evoEditada) {
             try {
                 if (!ModelState.IsValid) {
-                   throw new Exception();
+                    return new SortedList<int, EvolucionLTDto>();
                 }
                 return await _lineaTemporalService.ActOInsertEvolucion(evoEditada, User);
             } catch (Exception) {

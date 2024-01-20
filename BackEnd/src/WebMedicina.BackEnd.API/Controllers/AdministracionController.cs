@@ -18,7 +18,7 @@ namespace WebMedicina.BackEnd.API.Controllers
 
         //  Epilepsias
         [Authorize]
-        [HttpGet("getEpilepsias")]
+        [HttpGet("getepilepsias")]
         public ActionResult<List<EpilepsiasDto>> GetEpilepsias() {
             try {
                 List<EpilepsiasDto> epilepsias = _adminsService.ObtenerEpilepsias();
@@ -35,7 +35,7 @@ namespace WebMedicina.BackEnd.API.Controllers
         }
 
         //  Epilepsias
-        [HttpPost("crearEpilepsia")]
+        [HttpPost("crearepilepsia")]
         public async Task<ActionResult<bool>> CrearEpilepsia([FromBody] string nombre) {
             try {
                 if(ModelState.IsValid) {
@@ -50,7 +50,7 @@ namespace WebMedicina.BackEnd.API.Controllers
 
 
         //  Epilepsias
-        [HttpDelete("eliminarEpilepsia/{idEpilepsia}")]
+        [HttpDelete("eliminarepilepsia/{idepilepsia}")]
         public async Task<ActionResult<bool>> DeleteEpilepsia(int idEpilepsia) {
             try {
                 if(idEpilepsia > 0) {
@@ -64,7 +64,7 @@ namespace WebMedicina.BackEnd.API.Controllers
         }
 
         //  Epilepsias
-        [HttpPut("updateEpilepsia")]
+        [HttpPut("updateepilepsia")]
         public async Task<ActionResult<bool>> UpdateEpilepsia([FromBody] EpilepsiasDto epilepsia) {
             try {
                 if (ModelState.IsValid) {
@@ -86,7 +86,7 @@ namespace WebMedicina.BackEnd.API.Controllers
 
         //  Mutaciones
         [Authorize]
-        [HttpGet("getMutaciones")]
+        [HttpGet("getmutaciones")]
         public ActionResult<List<MutacionesDto>> GetMutaciones() {
             try {
                 List<MutacionesDto> mutaciones = _adminsService.ObtenerMutaciones();
@@ -103,7 +103,7 @@ namespace WebMedicina.BackEnd.API.Controllers
         }
 
         //  Mutaciones
-        [HttpPost("crearMutacion")]
+        [HttpPost("crearmutacion")]
         public async Task<ActionResult<bool>> CrearMutacion([FromBody] string nombre) {
             try {
                 if (ModelState.IsValid) {
@@ -118,7 +118,7 @@ namespace WebMedicina.BackEnd.API.Controllers
 
 
         //  Mutaciones
-        [HttpDelete("eliminarMutacion/{idMutacion}")]
+        [HttpDelete("eliminarmutacion/{idmutacion}")]
         public async Task<ActionResult<bool>> DeleteMutacion(int idMutacion) {
             try {
                 if (idMutacion > 0) {
@@ -132,7 +132,7 @@ namespace WebMedicina.BackEnd.API.Controllers
         }
 
         //  Mutaciones
-        [HttpPut("updateMutacion")]
+        [HttpPut("updatemutacion")]
         public async Task<ActionResult<bool>> UpdateMutacion([FromBody] MutacionesDto mutacion) {
             try {
                 if (ModelState.IsValid) {
@@ -155,7 +155,7 @@ namespace WebMedicina.BackEnd.API.Controllers
 
         //  Farmacos
         [Authorize]
-        [HttpGet("getFarmacos")]
+        [HttpGet("getfarmacos")]
         public ActionResult<List<FarmacosDto>> GetFarmacos() {
             try {
                 List<FarmacosDto> farmacos = _adminsService.ObtenerFarmacos();
@@ -171,7 +171,7 @@ namespace WebMedicina.BackEnd.API.Controllers
         }
 
         //  Farmacos
-        [HttpPost("crearFarmaco")]
+        [HttpPost("crearfarmaco")]
         public async Task<ActionResult<bool>> CrearFarmaco([FromBody] string nombre) {
             try {
                 if (ModelState.IsValid) {
@@ -186,7 +186,7 @@ namespace WebMedicina.BackEnd.API.Controllers
 
 
         //  Farmacos
-        [HttpDelete("eliminarFarmaco/{idFarmaco}")]
+        [HttpDelete("eliminarfarmaco/{idfarmaco}")]
         public async Task<ActionResult<bool>> DeleteFarmaco(int idFarmaco) {
             try {
                 if (idFarmaco > 0) {
@@ -200,7 +200,7 @@ namespace WebMedicina.BackEnd.API.Controllers
         }
 
         //  Farmacos 
-        [HttpPut("updateFarmaco")]
+        [HttpPut("updatefarmaco")]
         public async Task<ActionResult<bool>> UpdateFarmaco([FromBody] FarmacosDto farmaco) {
             try {
                 if (ModelState.IsValid) {

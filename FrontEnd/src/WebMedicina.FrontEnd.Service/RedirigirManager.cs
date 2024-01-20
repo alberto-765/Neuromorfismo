@@ -7,13 +7,13 @@ namespace WebMedicina.FrontEnd.Service {
     public class RedirigirManager : IRedirigirManager {
         private readonly NavigationManager navigationManager;
         private readonly IJSRuntime js;
-        private const string enlaceSeguimiento  = "segEnl";
-        // replaceHistoryEntry
+        private const string enlaceSeguimientoKey  = "segEnl"; // clave del enlace de seguimiento sessionStorage
         public RedirigirManager(NavigationManager navigationManager, IJSRuntime js) {
             this.navigationManager = navigationManager;
             this.js = js;
         }
 
+        // Redirigimos al login si no se esta ya en el
         public async Task RedirigirLogin() { 
             string urlActual = navigationManager.Uri;
             string baseUri = navigationManager.BaseUri;
@@ -22,16 +22,9 @@ namespace WebMedicina.FrontEnd.Service {
             } 
         }
 
-        public async Task ActualizarSeguimientoEnlace() { 
-            string urlActual = navigationManager.Uri;
-            string baseUri = navigationManager.BaseUri;
-            string paginaActual = urlActual.Replace(baseUri, "");
-
-            await js.SetInSessionStorage(enlaceSeguimiento, paginaActual); 
-        }
-
+        // Obtenemos la url de segumiento y redirigimos a esta misma
         public async Task RedirigirPagAnt() { 
-            string segEnl = await js.GetFromSessionStorage(enlaceSeguimiento);
+            string segEnl = await js.GetFromSessionStorage(enlaceSeguimientoKey);
 
             if (!string.IsNullOrWhiteSpace(segEnl)) {
                 await RedirigirDefault(segEnl);
@@ -44,6 +37,18 @@ namespace WebMedicina.FrontEnd.Service {
             // Acutalizamos el enlace de seguimiento
             await ActualizarSeguimientoEnlace();
             navigationManager.NavigateTo(enlace); 
+        }
+
+        // Actualizar variable de url seguimiento de session
+        public async Task ActualizarSeguimientoEnlace() {
+            string urlActual = navigationManager.Uri;
+            string baseUri = navigationManager.BaseUri;
+
+            // Quitamos de la url actual la base url
+            string paginaActual = urlActual.Replace(baseUri, "");
+
+            // Guardamos en sessino la nueva url de seguimiento
+            await js.SetInSessionStorage(enlaceSeguimientoKey, paginaActual);
         }
     }
 }

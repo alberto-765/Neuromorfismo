@@ -57,6 +57,9 @@ public class WebmedicinaContext : DbContext {
         modelBuilder.ApplyConfiguration(new EtapasLTSeed());
 
 
+
+
+
         modelBuilder.Entity<AspnetroleModel>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");

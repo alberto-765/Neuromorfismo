@@ -1,86 +1,132 @@
 ﻿@using WebMedicina.Shared.Dto.LineaTemporal;
 @using static WebMedicina.FrontEnd.Dto.EstadosEtapasLTDto;
 
-<MudTimelineItem Color="@colorBolaItem" Size="@(EstadoEtapa == EstadoEtapa.Presente ? Size.Medium : Size.Small)" Elevation="25" Variant="Variant.Filled" Class="hola">
-    <ItemContent>
-        @* Si el paciente no tiene etapas solo pintamos la tarjeta de la primera Etapa, el resto desactivadas *@
-        @switch (EstadoEtapa) {
-            case EstadoEtapa.Pasada:
-                <MudText Color="@colorTitulo" Typo="Typo.h5" Class="@claseColorTexto" GutterBottom="true">
-                    @if (EvolucionPintar is not null && EvolucionPintar.Fecha != DateTime.MinValue) {
-                        <MudChip Color="Color.Primary" Disabled="true" Icon="@Icons.Material.Filled.CalendarMonth">@EvolucionPintar.Fecha.ToShortDateString()</MudChip>
+<div>
+    <MudTimelineItem Color="@colorBolaItem" Size="@TamanoBolaItem" Elevation="25" Variant="Variant.Filled">
+        <ItemContent>
+            @* Si el paciente no tiene etapas solo pintamos la tarjeta de la primera Etapa, el resto desactivadas *@
+            @switch (EstadoEtapa) {
+                case EstadoEtapa.Pasada:
+                    if (EvolucionPintar?.Confirmado == false) {
+                        ColorAlert = Color.Warning;
+                        SeverityAlert = Severity.Warning;
+                        TextoAlert = "No";
                     }
 
-                    @Etapa.Value.Titulo
-                </MudText>
+                    // Titulo TimeLineItem
+                    <MudText Color="@colorTitulo" Typo="Typo.h5" Class="@claseColorTexto" GutterBottom="true">
+                        @Etapa.Value.Titulo
 
-                if (EvolucionPintar?.Confirmado == true) {
-                    <MudAlert Severity="Severity.Success" Class="@claseColorTexto">
-                        <MudText Class="@claseColorTexto" Typo="Typo.body2">(evol) @Etapa.Value.Label </MudText>
-                        <MudText Class="@claseColorTexto" Typo="Typo.body2">Sí.</MudText>
+                        @if (EvolucionPintar is not null && EvolucionPintar.Fecha != DateTime.MinValue) {
+                            <MudChip Color="ColorAlert" Disabled="true" Icon="@Icons.Material.Filled.CalendarMonth" Class="ml-3">@EvolucionPintar.Fecha.ToShortDateString()</MudChip>
+                        }
+
+                    </MudText>
+
+                    // Alert TimeLine
+                    <MudAlert Severity="SeverityAlert" Class="lt__evoEditar__tarjeta lt__evoEditar__tarjeta--alert">
+                        <MudText Class="claseColorTexto" Typo="Typo.body2">@Etapa.Value.Label</MudText>
+                        <MudText Class="claseColorTexto" Typo="Typo.body2"><b>@TextoAlert</b></MudText>
                     </MudAlert>
-                } else {
-                    <MudAlert Severity="Severity.Warning" Class="@claseColorTexto">
-                        <MudText Class="@claseColorTexto">@Etapa.Value.Label</MudText>
-                        <MudText Class="@claseColorTexto">No.</MudText>
-                    </MudAlert>
-                }
-            break;
-            case EstadoEtapa.Presente:
-                <MudCard Elevation="25">
-                    <MudCardHeader>
-                        <CardHeaderContent>
-                            <MudText Color="@colorTitulo" Typo="Typo.h5">@Etapa.Value.Titulo</MudText>
-                        </CardHeaderContent>
-                    </MudCardHeader>
-                <EditForm Model="EvolucionEditar" OnValidSubmit="@(async () => await EventoFormulario())">
-                        <MudCardContent>
+                break;
+                case EstadoEtapa.Presente:
+                <MudCard Elevation="25" Class="lt__evoEditar__tarjeta">
+                        <MudCardHeader Class="py-3">
+                            <CardHeaderContent>
+                                <MudText Color="@colorTitulo" Class="@claseColorTexto" Typo="Typo.h5">@Etapa.Value.Titulo</MudText>
+                            </CardHeaderContent>
+                        </MudCardHeader>
+                        <MudCardContent Class="py-0">
                             <!-- Otros campos del formulario -->
-                            <MudCheckBox @bind-Value="EvolucionEditar.Confirmado" For="@(() => EvolucionEditar.Confirmado)" Label="Default" Dense="true"></MudCheckBox>
+                            <MudText Typo="Typo.body2" Color="@colorTitulo" Class="@($"{claseColorTexto} mb-1")">
+                                @Etapa.Value.Label
+                                @if (!string.IsNullOrWhiteSpace(Etapa.Value.Descripcion)){
+                                    <Tooltip Contenido="new MarkupString(Etapa.Value.Descripcion)" Posicion="Placement.Bottom" SizeIcono="Size.Small"  />
+                                }
+                            </MudText>
+
+                            <MudChipSet @bind-SelectedChip="ChipSetSeleccionado" Mandatory="true" Filter="true" >
+                                <MudChip Value="true" Color="Color.Success" Default="true">Sí</MudChip>
+                                <MudChip Value="false" Color="Color.Error">No</MudChip>
+                            </MudChipSet>
                         </MudCardContent>
-                        <MudCardActions>
-                            <MudButton Type="ButtonType.Submit" Variant="Variant.Filled">Enviar</MudButton>
+                        <MudCardActions Class="d-flex px-5 pb-5" >
+                            <MudSpacer />
+                            <MudButton Size="Size.Small" Variant="Variant.Filled" Color="Color.Primary" Disabled="@Enviando" Class="pa" OnClick="@(async () => await EventoFormulario())">
+                                @if (Enviando) {
+                                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"  />        
+                                    <MudText Class="ms-2"> Enviando...</MudText>                                
+                                } else {
+                                    <MudText> Enviar</MudText>                                
+                                }
+                            </MudButton>
                         </MudCardActions>
-                    </EditForm>
-                </MudCard>
-            break;
-            case EstadoEtapa.Futura:
-                <MudText Color="@colorTitulo" Typo="Typo.h5" GutterBottom="true" Class="@claseColorTexto">@Etapa.Value.Titulo</MudText>
-                <MudText Typo="Typo.body2" Class="@claseColorTexto">@Etapa.Value.Label</MudText>
-                <MudText Typo="Typo.body2" Class="@claseColorTexto">Sí.</MudText>
-            break;
-        }
-    </ItemContent>
-</MudTimelineItem>
+                    </MudCard>
+                break;
+                case EstadoEtapa.Futura:
+                case EstadoEtapa.FinEtapas:
+                    <MudText Color="@colorTitulo" Typo="Typo.h5" GutterBottom="true" Class="@claseColorTexto">@Etapa.Value.Titulo</MudText>
+                    <MudText Typo="Typo.body2" Class="@claseColorTexto">@Etapa.Value.Label</MudText>
+                    @if (EstadoEtapa is EstadoEtapa.Futura) {
+                        <MudText Typo="Typo.body2" Class="@claseColorTexto">Pendiente</MudText>
+                    }
+                break;
+            }
+        </ItemContent>
+    </MudTimelineItem>
+</div>
 
 
 
 @code {
-    [CascadingParameter(Name = "ActualizarEvolucionPaciente")]  public EventCallback<EditarEvolucionLTDto> ActualizarEvolucionPaciente { get; set; }
+    [Parameter] public EventCallback<EditarEvolucionLTDto> ActualizarEvolucionPaciente { get; set; }
     [Parameter] public EstadoEtapa EstadoEtapa { get; set; }
-    [Parameter] public KeyValuePair<int, EtapaLTDto> Etapa { get; set; } = new();
+    [Parameter] public KeyValuePair<int, EtapaLTDto> Etapa { get; set; } 
     [Parameter] public EvolucionLTDto? EvolucionPintar { get; set; } = null;
 
     private string claseColorTexto { get; set; } = string.Empty;
     private Color colorBolaItem { get; set; } = Color.Primary;
     private Color colorTitulo { get; set; } = Color.Dark;
+    private Size TamanoBolaItem { get; set; } = Size.Small;
+
+    // Propiedades para cuando es etapa pasada
+    private Color ColorAlert { get; set; } = Color.Success;
+    private Severity SeverityAlert { get; set; } = Severity.Success;
+    private string TextoAlert { get; set; } = "Sí";
 
     // Actualizar evolucion
     private EditarEvolucionLTDto EvolucionEditar = new();
+    private MudChip? _chipSetSeleccionado;
+
+    private MudChip? ChipSetSeleccionado {
+        get => _chipSetSeleccionado;
+        set {
+            _chipSetSeleccionado = value;
+            // Asignamos el valor a la variable de confirmacion
+            bool? valueBool = _chipSetSeleccionado?.Value as bool?;
+            EvolucionEditar.Confirmado = valueBool is not null ? valueBool.Value : false;
+        }
+    }
+
+    // Boton de enviar
+    private bool Enviando { get; set; } = false;
 
     // Mapeamos estados y asignamos colores para el item
-    protected override void OnAfterRender(bool firstRender) {
-
+    protected override void OnParametersSet() {
 
         // Asignamos estilos para los textos
         switch (EstadoEtapa) {
             case EstadoEtapa.Pasada:
+            colorTitulo = Color.Default;
+            colorBolaItem = Color.Primary;
+            TamanoBolaItem = Size.Small;
             claseColorTexto = "mud-text-secondary";
             break;
 
             case EstadoEtapa.Futura:
             colorTitulo = Color.Default;
             colorBolaItem = Color.Default;
+            TamanoBolaItem = Size.Small;
             claseColorTexto = "mud-text-disabled";
             break;
 
@@ -88,7 +134,7 @@
             colorTitulo = Color.Dark;
             colorBolaItem = Color.Primary;
             claseColorTexto = string.Empty;
-
+            TamanoBolaItem = Size.Medium;
             // Asignamos dto para editar evolucion
             EvolucionEditar = EvolucionPintar?.ToEditDto() ?? new();
             break;
@@ -97,6 +143,8 @@
 
     // Evento para actualizar las evoluciones del paciente
     private async Task EventoFormulario() {
+        Enviando = true;
         await ActualizarEvolucionPaciente.InvokeAsync(EvolucionEditar);
+        Enviando = false;
     }
 }

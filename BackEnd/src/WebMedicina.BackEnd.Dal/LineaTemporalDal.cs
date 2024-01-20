@@ -21,7 +21,7 @@ namespace WebMedicina.BackEnd.Dal
 
         // Obtener las evoluciones de un paciente
         public async Task<List<EvolucionLTDto>> GetEvoluciones(int idPaciente) {
-            return await (from q in _context.EvolucionLTModels where q.Etapa.Id == idPaciente select q.ToDto()).ToListAsync();
+            return await (from q in _context.EvolucionLTModels where q.IdPaciente == idPaciente select q.ToDto()).ToListAsync();
         }
 
         // Obtener una evolucion de un paciente
@@ -36,7 +36,7 @@ namespace WebMedicina.BackEnd.Dal
         }
 
 
-        // Obtener la evolucion de un paciente
+        // Insetar evolucion 
         public async Task<bool> InsertarEvolucion(EvolucionLTModel evolucion) {
             await _context.AddAsync(evolucion);
             return await _context.SaveChangesAsync() > 0;

@@ -42,8 +42,8 @@ namespace WebMedicina.BackEnd.ServicesDependencies.Mappers
                 DescripEnferRaras = (modelo.EnfermRaras == "S" ? modelo.DescripEnferRaras : string.Empty),
                 FechaCreac = modelo.FechaCreac,
                 FechaUltMod = modelo.FechaUltMod,
-                NombreMedicoCreador = modelo.MedicoCreadorNavigation?.UserLogin ?? string.Empty,
-                NombreMedicoUltMod = modelo.MedicoUltModNavigation?.UserLogin ?? string.Empty,
+                NombreMedicoCreador = modelo.MedicoCreadorNavigation?.Nombre ?? string.Empty,
+                NombreMedicoUltMod = modelo.MedicoUltModNavigation?.Nombre ?? string.Empty,
                 MedicoCreador = modelo.MedicoCreador,
                 MedicoUltMod = modelo.MedicoUltMod,
                 MedicosPacientes = modelo.Medicospacientes.ToDictionary(x => x.IdMedico, x => x.IdMedico.ToString())

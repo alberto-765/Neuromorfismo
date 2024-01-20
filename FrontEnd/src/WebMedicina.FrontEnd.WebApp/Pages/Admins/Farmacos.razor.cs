@@ -27,7 +27,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
 
         protected override async Task OnInitializedAsync() {
             try {
-                Http = _crearHttpClient.CrearHttp(); // creamos http
+                Http = _crearHttpClient.CrearHttpApi(); // creamos http
 
                 // Recargamos los elementos de la tabla 
                 await RecargarElementos();
@@ -42,6 +42,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
             } catch (Exception) {
                 mostrarCargandoTabla = false;
                 mostrarTabla = false;
+                throw;
             }
         }
 
@@ -69,7 +70,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
 
         // Obtenemos las farmacos disponibles
         private async Task<IEnumerable<FarmacosDto>> ObtenerFarmacos() { 
-            HttpResponseMessage respuesta = await Http.GetAsync("administracion/getFarmacos");
+            HttpResponseMessage respuesta = await Http.GetAsync("administracion/getfarmacos");
             if (respuesta.IsSuccessStatusCode) {
                 List<FarmacosDto>? listaFarmacos = await respuesta.Content.ReadFromJsonAsync<List<FarmacosDto>>();
                 if (listaFarmacos != null && listaFarmacos.Any()) {
@@ -113,7 +114,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                     if (!string.IsNullOrWhiteSpace(nuevoNombre)) {
 
                         // Realizamos llamada httpget para creaer la nueva farmaco
-                        HttpResponseMessage respuesta = await Http.PostAsJsonAsync("administracion/crearFarmaco", resultado.Data);
+                        HttpResponseMessage respuesta = await Http.PostAsJsonAsync("administracion/crearfarmaco", resultado.Data);
 
                         // Validamos si la respuesta es OK y ha podido ser creado
                         if (respuesta.IsSuccessStatusCode) {
@@ -138,6 +139,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
             } catch (Exception) {
                 mostrarCargandoTabla = false;
                 mostrarTabla = false;
+                throw;
             }
         }
 
@@ -154,7 +156,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                     string mensajeSnackBar = "Fármaco eliminada exitosamente";
 
                     // Realizamos llamada httpget 
-                    HttpResponseMessage respuesta = await Http.DeleteAsync($"administracion/eliminarFarmaco/{farmacoSeleccionado.IdFarmaco}");
+                    HttpResponseMessage respuesta = await Http.DeleteAsync($"administracion/eliminarfarmaco/{farmacoSeleccionado.IdFarmaco}");
 
                     // Validamos si la respuesta es OK y ha podido ser eliminado
                     if (respuesta.IsSuccessStatusCode) {
@@ -174,6 +176,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
             } catch (Exception) {
                 mostrarCargandoTabla = false;
                 mostrarTabla = false;
+                throw;
             }
         }
 
@@ -187,7 +190,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                     string mensajeSnackBar = "Fármaco editada exitosamente";
                     
                     // Realizamos llamada httpget 
-                    HttpResponseMessage respuesta = await Http.PutAsJsonAsync("administracion/updateFarmaco", far);
+                    HttpResponseMessage respuesta = await Http.PutAsJsonAsync("administracion/updatefarmaco", far);
 
                     // Validamos si la respuesta es OK y ha podido ser editado
                     if (respuesta.IsSuccessStatusCode) {
@@ -216,6 +219,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
             } catch (Exception) {
                 mostrarCargandoTabla = false;
                 mostrarTabla = false;
+                throw;
             }
         }
     }

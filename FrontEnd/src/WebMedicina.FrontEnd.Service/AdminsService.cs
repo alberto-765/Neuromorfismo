@@ -17,7 +17,9 @@ namespace WebMedicina.FrontEnd.Service
              this.js = js;
         }
 
-        public string GenerarContraseñaAleatoria() {
+        public Task<string> GenerarContraseñaAleatoria() {
+            Console.Write("Entra a generar contraseña");
+
             // Generamos constantes para la contraseña
             const string letrasMin = "abcdefghijklmnopqrstuvwxyz";
             const string letrasMay = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -25,8 +27,8 @@ namespace WebMedicina.FrontEnd.Service
             const string especiales = "!@#$%^&*()_+";
 
             // Generamos objeto random y contraseña la cual se rellenará
-            Random random = new Random();
-            StringBuilder constra = new StringBuilder();
+            Random random = new();
+            StringBuilder constra = new();
 
             // Añadimos 1 letra minuscula
             constra.Append(letrasMay[random.Next(letrasMay.Length)]);
@@ -40,7 +42,7 @@ namespace WebMedicina.FrontEnd.Service
             // Añadimos 1 caracter especial
             constra.Append(especiales[random.Next(especiales.Length)]);
 
-            return constra.ToString();
+            return Task.FromResult(constra.ToString());
         }
 
         // GESTION DE USUARIOS

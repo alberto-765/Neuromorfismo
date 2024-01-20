@@ -46,10 +46,6 @@ public partial class PacientesModel : BaseModel, IEquatable<PacientesModel>
 
     public ICollection<MedicospacienteModel> Medicospacientes { get; set; } = new List<MedicospacienteModel>();
 
-    [ForeignKey("UltimaEtapa")]
-    public int? IdUltimaEtapa { get; set; }
-    public EtapaLTModel? UltimaEtapa { get; set; }
-
     public virtual ICollection<EvolucionLTModel>? Evoluciones { get; set; }
 
 

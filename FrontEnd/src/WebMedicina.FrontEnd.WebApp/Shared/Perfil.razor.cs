@@ -4,11 +4,11 @@ using WebMedicina.FrontEnd.ServiceDependencies;
 
 namespace WebMedicina.FrontEnd.WebApp.Shared {
     public partial class Perfil {
-        [Inject] IPerfilService perfilService { get; set; } = null!;
+        [Inject] private IPerfilService _perfilService { get; set; } = null!;
         // Cerrar Sesion 
         private async Task CerrarSesion() {
             try {
-                await perfilService.CerrarSesion();
+                await _perfilService.CerrarSesion();
             } catch (Exception) {
                 throw;
             }

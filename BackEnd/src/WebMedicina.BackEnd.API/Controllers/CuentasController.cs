@@ -100,7 +100,7 @@ namespace WebMedicina.BackEnd.API.Controllers
         }
 
         // Generamos y comprobamos si el userName está disponible 
-        [HttpPost("generarUserName")]
+        [HttpPost("generarusername")]
         public async Task<IActionResult> GenerarUserName([FromBody] string[] nomYApell) {
             try { 
                 var respuesta = await _identityService.GenerarUserName(nomYApell);
@@ -109,7 +109,7 @@ namespace WebMedicina.BackEnd.API.Controllers
                 } else {
                     return BadRequest();
                 }
-               } catch (Exception) {
+            } catch (Exception) {
                return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
         }

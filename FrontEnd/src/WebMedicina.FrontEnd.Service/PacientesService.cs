@@ -16,13 +16,13 @@ namespace WebMedicina.FrontEnd.Service
         private readonly IJSRuntime js;
         private const string clavePacientesSession = "ListadoPacientes";
         public PacientesService(ICrearHttpClient crearHttpClient, IJSRuntime js) {
-            Http = crearHttpClient.CrearHttp();
+            Http = crearHttpClient.CrearHttpApi();
             this.js = js;
         }
 
         // Obtener todos los médicos que tienen pacientes a su cargo
         public async Task<IEnumerable<UserInfoDto>> ObtenerAllMed() { 
-            IEnumerable<UserInfoDto>? medicos = await Http.GetFromJsonAsync<IEnumerable<UserInfoDto>>("pacientes/getMedicosPacientes");
+            IEnumerable<UserInfoDto>? medicos = await Http.GetFromJsonAsync<IEnumerable<UserInfoDto>>("pacientes/getmedicospacientes");
 
             // Asignamos una lista vacia si el valor devuelto de la llamada es null
             medicos ??= Enumerable.Empty<UserInfoDto>();
@@ -37,10 +37,10 @@ namespace WebMedicina.FrontEnd.Service
             List<FarmacosDto>? listaFarmacos = new();
 
             // Obtenemos lista de epilepsias
-            List<EpilepsiasDto>?  listaEpilepsias = await Http.GetFromJsonAsync<List<EpilepsiasDto>>("pacientes/getEpilepsias");
+            List<EpilepsiasDto>?  listaEpilepsias = await Http.GetFromJsonAsync<List<EpilepsiasDto>>("pacientes/getepilepsias");
 
             // Obtenemos lista de mutaciones
-            List<MutacionesDto>?  listaMutaciones = await Http.GetFromJsonAsync<List<MutacionesDto>>("pacientes/getMutaciones");
+            List<MutacionesDto>?  listaMutaciones = await Http.GetFromJsonAsync<List<MutacionesDto>>("pacientes/getmutaciones");
 
             //Devolvemos las tres listas
             return (listaFarmacos, listaEpilepsias, listaMutaciones); 
@@ -48,28 +48,28 @@ namespace WebMedicina.FrontEnd.Service
 
         // Validar Numero de Historia de un paciente
         public async Task<bool> ValidarNumHistoria(string numHistoria) { 
-            return await Http.GetFromJsonAsync<bool>($"pacientes/validarNumHistoria/{numHistoria}"); 
+            return await Http.GetFromJsonAsync<bool>($"pacientes/validarnumhistoria/{numHistoria}"); 
         }
 
         // LLamada http para crear paciente
         public async Task<HttpResponseMessage> CrearPaciente(CrearPacienteDto nuevoPaciente) { 
-            return await Http.PostAsJsonAsync("pacientes/crearPaciente", nuevoPaciente); 
+            return await Http.PostAsJsonAsync("pacientes/crearpaciente", nuevoPaciente); 
         }
 
         // LLamada http para editar paciente
         public async Task<HttpResponseMessage> EditarPaciente(CrearPacienteDto nuevoPaciente) { 
-            return await Http.PutAsJsonAsync("pacientes/editarPaciente", nuevoPaciente); 
+            return await Http.PutAsJsonAsync("pacientes/editarpaciente", nuevoPaciente); 
         }
 
 
         // LLamada http para eliminar paciente
         public async Task<HttpResponseMessage> EliminarPaciente(int idPaciente) { 
-            return await Http.DeleteAsync($"pacientes/eliminarPaciente/{idPaciente}"); 
+            return await Http.DeleteAsync($"pacientes/eliminarpaciente/{idPaciente}"); 
         }
 
         // Obtener pacientes de la api y realizar filtrado
         public async Task<List<CrearPacienteDto>?> ObtenerPacientes() { 
-            HttpResponseMessage respuesta = await Http.GetAsync("pacientes/obtenerPacientes");
+            HttpResponseMessage respuesta = await Http.GetAsync("pacientes/obtenerpacientes");
             List<CrearPacienteDto>? pacientes = null;
 
             // Guardamos el listado de todos los pacientes en session
@@ -116,7 +116,7 @@ namespace WebMedicina.FrontEnd.Service
         // Añadir un nuevo paciente creado a la lista de todos los pacientes
         public async Task<List<CrearPacienteDto>?> AnadirPacienteALista(int idPaciente) { 
             // Obtenemos el nuevo paciente creado
-            CrearPacienteDto? nuevoPaciente = await Http.GetFromJsonAsync<CrearPacienteDto?>($"pacientes/obtenerPaciente/{idPaciente}");
+            CrearPacienteDto? nuevoPaciente = await Http.GetFromJsonAsync<CrearPacienteDto?>($"pacientes/obtenerpaciente/{idPaciente}");
 
             // Si el paciente es null creamos una lista vacia
             if (nuevoPaciente is null) {

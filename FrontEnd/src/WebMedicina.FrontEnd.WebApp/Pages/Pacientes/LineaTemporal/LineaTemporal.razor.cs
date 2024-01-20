@@ -17,40 +17,66 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
         [Inject] private ILineaTemporalService _lineaTemporalService { get; set; } = null!;
 
         // Parametros
-        [Parameter] public ImmutableSortedDictionary<int, EtapaLTDto>? EtapasLineaTemporal { get; set; }
+        [Parameter] public ImmutableSortedDictionary<int, EtapaLTDto> EtapasLineaTemporal { get; set; } = null!;
         [Parameter] public SortedList<int, EvolucionLTDto> Evoluciones { get; set; } = null!;
+        [Parameter] public EventCallback<SortedList<int, EvolucionLTDto>> EvolucionesChanged { get; set; }
+        [Parameter] public int IdPaciente { get; set; }
 
         // Ultima etapa de la evolucion del paciente
-        private int? UltimaEtapaPaciente { get; set; }
+        private int UltimaEtapaPaciente { get; set; }
+        private EvolucionLTDto? evolucionPintar  = null!;
+        private EstadoEtapa estadoEtapa { get; set; } = EstadoEtapa.Pasada;
 
-    
+        // Etapa de fin de evolutivo
+        private int EtapaFinEvolutivo { get; set; } 
+
+        protected override void OnInitialized() {
+            EtapaFinEvolutivo = EtapasLineaTemporal.Keys.LastOrDefault();
+        }
 
         // Creamos linea temporal
-        protected override void OnInitialized() {
-            UltimaEtapaPaciente = Evoluciones.LastOrDefault().Key; 
+        protected override void OnAfterRender(bool firstRender) {
+            try {
+                int ultEvoPac = Evoluciones.Keys.LastOrDefault();
+
+                // Si el paciente ya acabado la evolucion asignamos el id de la etpa de fin evolutivo
+                UltimaEtapaPaciente = (ultEvoPac == EtapaFinEvolutivo ? EtapaFinEvolutivo : EtapasLineaTemporal.Keys.FirstOrDefault(q => q > ultEvoPac));
+            } catch (Exception) {
+                _snackbar.Add("No ha sido posible cargar la linea temporal", Severity.Error);
+            }
         }
 
         // Calcular estado de una etapa
-        private EstadoEtapa CalcularEstadoEtapa(KeyValuePair<int, EtapaLTDto> etapa, int indice, EvolucionLTDto? evolucionPintar) {
+        private EstadoEtapa CalcularEstadoEtapa(KeyValuePair<int, EtapaLTDto> etapa) {
             EstadoEtapa estadoEtapa = EstadoEtapa.Pasada;
 
-            // Si el paciente aun no tiene evolucion 
-            if (evolucionPintar is null) {
+            if (etapa.Key == EtapaFinEvolutivo && UltimaEtapaPaciente == EtapaFinEvolutivo) {
+                estadoEtapa = EstadoEtapa.FinEtapas;
 
-                // Validamos si es la primera etapa que debe ser rellenada
-                if(indice == 0) {
+                // Si la ultima etapa es 0 es porque no hay etapas en BD
+            } else if (UltimaEtapaPaciente > 0) {
+                if (etapa.Key == UltimaEtapaPaciente) {
                     estadoEtapa = EstadoEtapa.Presente;
-                } else {
+                } else if (etapa.Key > UltimaEtapaPaciente) {
                     estadoEtapa = EstadoEtapa.Futura;
                 }
-
-            } else if(etapa.Key == UltimaEtapaPaciente) {
-                estadoEtapa = EstadoEtapa.Presente;
-            } else if (etapa.Key > UltimaEtapaPaciente) {
-                    estadoEtapa = EstadoEtapa.Futura;
-            }
+            } 
 
             return estadoEtapa;
+        }
+
+        /// <summary>
+        /// Actualizar una etapa de la evolucion del paciente o añadirla si es nueva
+        /// </summary>
+        /// <param name="nuevaEvolucion"></param>
+        public async Task ActualizarEvolucionPaciente(EditarEvolucionLTDto nuevaEvolucion) {
+            try {
+                LLamadaEditarEvoDto evoEditada = new(nuevaEvolucion, UltimaEtapaPaciente, IdPaciente);
+                Evoluciones = await _lineaTemporalService.ActEvoPac(evoEditada);
+                StateHasChanged();
+            } catch (Exception) {
+                _snackbar.Add("No ha sido posible actualizar la etapa de la evolución del paciente", Severity.Error);
+            }
         }
     }
 }

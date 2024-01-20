@@ -31,10 +31,10 @@ namespace WebMedicina.BackEnd.Service
         /// <param name="request"></param>
         /// <param name="User"></param>
         /// <returns></returns>
-        public async Task<SortedList<int, EvolucionLTDto>> ActOInsertEvolucion(EditarEvolucionLTDto evoEditada, ClaimsPrincipal User) {
+        public async Task<SortedList<int, EvolucionLTDto>> ActOInsertEvolucion(LLamadaEditarEvoDto evoEditada, ClaimsPrincipal User) {
             if (Comun.ObtenerIdUsuario(User, out int idMedico) && idMedico > 0) {
                 // Obtenemos la evolucion y comprobamos si hay que insertala o actualizarla
-                EvolucionLTModel? nuevaEvolucion = await _lineaTemporalDal.GetEvolucion(evoEditada.Id, evoEditada.IdPaciente);
+                EvolucionLTModel? nuevaEvolucion = await _lineaTemporalDal.GetEvolucion(evoEditada.Evolucion.Id, evoEditada.IdPaciente);
                 bool accionOk = false;
 
 
@@ -42,7 +42,9 @@ namespace WebMedicina.BackEnd.Service
                 if(nuevaEvolucion is null) {
 
                     // Mapeamos la nueva evolucion
-                    nuevaEvolucion = evoEditada.ToModel();
+                    nuevaEvolucion = evoEditada.Evolucion.ToModel();
+                    nuevaEvolucion.IdPaciente = evoEditada.IdPaciente;
+                    nuevaEvolucion.IdEtapa = evoEditada.UltimaEtapaPaciente;
                     nuevaEvolucion.IdMedicoUltModif = idMedico;
 
                     accionOk = await _lineaTemporalDal.InsertarEvolucion(nuevaEvolucion);
@@ -51,7 +53,7 @@ namespace WebMedicina.BackEnd.Service
                     // Actualizamos campos de la nueva evolucion
                     nuevaEvolucion.IdMedicoUltModif = idMedico;
                     nuevaEvolucion.Fecha = DateTime.Today;
-                    nuevaEvolucion.Confirmado = evoEditada.Confirmado;
+                    nuevaEvolucion.Confirmado = evoEditada.Evolucion.Confirmado;
 
                     accionOk = await _lineaTemporalDal.ActualizarEvolucion(nuevaEvolucion);
                 }

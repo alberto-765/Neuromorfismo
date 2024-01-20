@@ -77,7 +77,7 @@
             @* Botones Editar y Eliminar *@  
             <TemplateColumn CellClass="d-flex justify-space-end justify-sm-space-end gap-3">
                 <CellTemplate>
-                    <MudIconButton id="@($"Paciente{context.Item.IdPaciente}")" Size="@Size.Small" Icon="@Icons.Material.Filled.Timeline" OnClick="@(async () =>await MostrarLineaTemp.InvokeAsync(context.Item.IdPaciente))" Title="@($"Linea temporal paciente {@context.Item.NumHistoria.ToString()}")" />
+                    <MudIconButton id="@($"Paciente{context.Item.NumHistoria}")" Size="@Size.Small" Icon="@Icons.Material.Filled.Timeline" OnClick="@(async () =>await MostrarLineaTemp.InvokeAsync(context.Item))" Title="@($"Evolución paciente {@context.Item.NumHistoria.ToString()}")" />
                     <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => MostrarEditarPac(context.Item))" Title="@($"Editar paciente {@context.Item.NumHistoria.ToString()}")"/>
                     <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => ConfirmarEliminacion(context.Item))" Title="@($"Eliminar paciente {@context.Item.NumHistoria.ToString()}")" />
                 </CellTemplate>

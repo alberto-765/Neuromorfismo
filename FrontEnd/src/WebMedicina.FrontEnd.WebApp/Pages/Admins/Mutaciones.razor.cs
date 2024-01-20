@@ -27,7 +27,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
 
         protected override async Task OnInitializedAsync() {
             try {
-                Http = _crearHttpClient.CrearHttp(); // creamos http
+                Http = _crearHttpClient.CrearHttpApi(); // creamos http
 
                 // Recargamos los elementos de la tabla 
                 await RecargarElementos();
@@ -42,6 +42,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
             } catch (Exception) {
                 mostrarCargandoInicial = false;
                 mostrarTabla = false;
+                throw;
             }
         }
 
@@ -69,7 +70,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
 
         // Obtenemos las mutaciones disponibles
         private async Task<IEnumerable<MutacionesDto>> ObtenerMutaciones() { 
-            HttpResponseMessage respuesta = await Http.GetAsync("administracion/getMutaciones");
+            HttpResponseMessage respuesta = await Http.GetAsync("administracion/getmutaciones");
             if (respuesta.IsSuccessStatusCode) {
                 List<MutacionesDto>? listaMutaciones = await respuesta.Content.ReadFromJsonAsync<List<MutacionesDto>>();
                 if (listaMutaciones != null && listaMutaciones.Any()) {
@@ -113,7 +114,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                     if (!string.IsNullOrWhiteSpace(nuevoNombre)) {
 
                         // Realizamos llamada httpget para creaer la nueva mutacion
-                        HttpResponseMessage respuesta = await Http.PostAsJsonAsync("administracion/crearMutacion", resultado.Data);
+                        HttpResponseMessage respuesta = await Http.PostAsJsonAsync("administracion/crearmutacion", resultado.Data);
 
                         // Validamos si la respuesta es OK y ha podido ser creado
                         if (respuesta.IsSuccessStatusCode) {
@@ -136,7 +137,8 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                 }
             } catch (Exception) {
                 mostrarCargandoInicial = false;
-                mostrarTabla = false; 
+                mostrarTabla = false;
+                throw;
             }
         }
 
@@ -153,7 +155,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                     string mensajeSnackBar = "Mutacion eliminada exitosamente";
 
                     // Realizamos llamada httpget 
-                    HttpResponseMessage respuesta = await Http.DeleteAsync($"administracion/eliminarMutacion/{mutacionSeleccionada.IdMutacion}");
+                    HttpResponseMessage respuesta = await Http.DeleteAsync($"administracion/eliminarmutacion/{mutacionSeleccionada.IdMutacion}");
 
                     // Validamos si la respuesta es OK y ha podido ser eliminado
                     if (respuesta.IsSuccessStatusCode) {
@@ -172,7 +174,8 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                 }
             } catch (Exception) {
                 mostrarCargandoInicial = false;
-                mostrarTabla = false; 
+                mostrarTabla = false;
+                throw;
             }
         }
 
@@ -186,7 +189,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                     string mensajeSnackBar = "Mutacion editada exitosamente";
 
                     // Realizamos llamada httpget 
-                    HttpResponseMessage respuesta = await Http.PutAsJsonAsync("administracion/updateMutacion", mut);
+                    HttpResponseMessage respuesta = await Http.PutAsJsonAsync("administracion/updatemutacion", mut);
 
                     // Validamos si la respuesta es OK y ha podido ser editado
                     if (respuesta.IsSuccessStatusCode) {
@@ -213,7 +216,8 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                 }
             } catch (Exception) {
                 mostrarCargandoInicial = false;
-                mostrarTabla = false; 
+                mostrarTabla = false;
+                throw;
             }
         }
     }

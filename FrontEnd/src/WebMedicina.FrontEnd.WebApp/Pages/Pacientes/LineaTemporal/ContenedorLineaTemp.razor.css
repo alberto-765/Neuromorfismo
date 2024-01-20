@@ -1,6 +1,7 @@
 ﻿/*Contenedor linea temporal expandido */
 ::deep .contenedor-lineaTemporal-expandido {
     display: block;
+    min-height: 50vh;
 }
 ::deep .contenedor-lineaTemporal-hidden {
    display: none;
@@ -9,6 +10,9 @@
 ::deep #contenedor-lineaTemporal .lt__scrollTop {
     position: absolute !important;
     right: 0;
+}
+::deep #contenedor-lineaTemporal .lt__scrollTop:hover > .mud-icon-button {
+    background-color: var(--mud-palette-action-default-hover);
 }
 
 /* Animacion Contenedor */

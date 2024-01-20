@@ -10,8 +10,8 @@
         <EditForm Model="@userRegistro" OnValidSubmit="Crear" Class="flex-grow-1">
             <DataAnnotationsValidator />
                  
-            <MudTextField Class="mb-3" @bind-Value="userRegistro.Nombre" For="@(() => userRegistro.Nombre)" OnlyValidateIfDirty="true" Clearable="true" Label="Nombre*" Variant="Variant.Text" OnBlur="ValidarUserName"/>
-            <MudTextField Class="mb-3" @bind-Value="userRegistro.Apellidos" For="@(() => userRegistro.Apellidos)" OnlyValidateIfDirty="true" Label="Apellidos*" Clearable="true" Variant="Variant.Text" OnBlur="ValidarUserName" />
+            <MudTextField Class="mb-3" @bind-Value="userRegistro.Nombre" For="@(() => userRegistro.Nombre)" OnlyValidateIfDirty="true" Clearable="true" Label="Nombre*" Variant="Variant.Text" OnKeyDown="ValidarUserName" Immediate="true"/>
+            <MudTextField Class="mb-3" @bind-Value="userRegistro.Apellidos" For="@(() => userRegistro.Apellidos)" OnlyValidateIfDirty="true" Label="Apellidos*" Clearable="true" Variant="Variant.Text" OnKeyDown="ValidarUserName" Immediate="true" />
             <MudTextField Class="mb-3" @bind-Value="@userRegistro.UserLogin" For="@(() => userRegistro.UserLogin)" HelperText="El nombre es generado automáticamente al rellanar 'Nombre' y 'Apellidos'" Label="Nombre de inicio de sesión*" Variant="Variant.Text" ReadOnly="true"/>
 
             <Picker label="Fecha de Nacimiento*" @bind-Fecha="userRegistro.FechaNac" variante="PickerVariant.Dialog" 

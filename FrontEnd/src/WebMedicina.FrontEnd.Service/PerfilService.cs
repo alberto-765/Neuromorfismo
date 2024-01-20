@@ -13,7 +13,7 @@ namespace WebMedicina.FrontEnd.Service {
         public PerfilService(IJSRuntime js, ICrearHttpClient http, JWTAuthenticationProvider jwtAuthenticationProvider, IRedirigirManager redirigirManager) { 
             this.http = http;
 			this.js = js;
-			Http = http.CrearHttp();
+			Http = http.CrearHttpApi();
             _jwtAuthenticationProvider = jwtAuthenticationProvider;
             this.redirigirManager = redirigirManager;
 		}

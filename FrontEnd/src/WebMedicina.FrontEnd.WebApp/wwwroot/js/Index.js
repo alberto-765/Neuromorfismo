@@ -55,7 +55,7 @@ function EnviarForm(identificador) {
 // Hacer scroll hacia un elemento
 function ScrollHaciaElemento(idElemento, poxY) {
     try {
-        let elemento = document.getElementById(idElemento)
+        let elemento = document.getElementById(idElemento);
         elemento.scrollIntoView({
             behavior: "smooth",
             block: poxY,
@@ -64,4 +64,14 @@ function ScrollHaciaElemento(idElemento, poxY) {
     } catch (e) {
         throw e;
     }
+}
+
+
+// Hacer scroll al bottom de la pantalla
+function ScrollBottom() {
+    scrollTo({
+        left: 0,
+        top: document.body.scrollHeight,
+        behavior: "smooth"
+    });
 }

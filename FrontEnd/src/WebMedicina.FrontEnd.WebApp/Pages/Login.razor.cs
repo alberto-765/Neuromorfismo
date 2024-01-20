@@ -25,7 +25,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages
         private HttpClient Http { get; set; } = null!;
 
         protected override void OnInitialized() {
-            Http = _crearHttpClient.CrearHttp();
+            Http = _crearHttpClient.CrearHttpApi();
         }
 
         private void clickPassword() {
@@ -68,6 +68,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages
             } catch (Exception) {
                 cargando = false;
                 mensajeErrorLogin = "Error inesperado de autenticación, inténtelo de nuevo";
+                throw;
             }
         }
     }

@@ -6,32 +6,20 @@
 <div class="pa-10">
     @* Mapeamos linea temporal y evolucion del paciente *@
     @{
-        if(EtapasLineaTemporal is not null && EtapasLineaTemporal.Any()) {
+        <MudTimeline TimelinePosition="TimelinePosition.Start">
+            @* Se debe usar bucle for porque debemos saber el indice de cada etapa *@
+            @foreach (KeyValuePair<int, EtapaLTDto> etapa in EtapasLineaTemporal) {
 
-            @* Creamos variable evolución *@
-            EvolucionLTDto? evolucionPintar = null;
-            int indice = 0;
-            EstadoEtapa estadoEtapa = EstadoEtapa.Pasada;
-
-            <MudTimeline TimelinePosition="TimelinePosition.Start">
-                @* Se debe usar bucle for porque debemos saber el indice de cada etapa *@
-                @foreach (KeyValuePair<int, EtapaLTDto> etapa in EtapasLineaTemporal) {
-
-                    if (Evoluciones.TryGetValue(etapa.Key, out evolucionPintar) == false) {
-                        evolucionPintar = null;
-                    }
-
-                    @* Obtenemos estado de la etapa *@
-                    estadoEtapa = CalcularEstadoEtapa(etapa, indice, evolucionPintar);
-
-                    <ItemLineaTemp EstadoEtapa="estadoEtapa" Etapa="etapa" EvolucionPintar="evolucionPintar" />
-
-                    // Aumentamos indice
-                    indice++;
+                if (Evoluciones.TryGetValue(etapa.Key, out evolucionPintar) == false) {
+                    evolucionPintar = null;
                 }
-            </MudTimeline>
-        } else {
-            <Error NombreImagen="Error2" mensajeError="Evolucion del paciente no encontrada." />
-        }
+
+                @* Obtenemos estado de la etapa *@
+                estadoEtapa = CalcularEstadoEtapa(etapa);
+
+                <ItemLineaTemp EstadoEtapa="estadoEtapa" Etapa="etapa" EvolucionPintar="evolucionPintar" ActualizarEvolucionPaciente="ActualizarEvolucionPaciente" />
+
+            }
+        </MudTimeline>
     }
 </div>

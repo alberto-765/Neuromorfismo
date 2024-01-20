@@ -25,7 +25,9 @@ namespace WebMedicina.BackEnd.Dal {
         // [WEB V1] - Create EPILEPSIAS
         public async Task<bool> CrearEpilepsia(string nombre) {
             EpilepsiaModel nuevaEpilepsia = new() {
-                Nombre = nombre
+                Nombre = nombre,
+                FechaUltMod = DateTime.Today,
+                FechaCreac = DateTime.Today
             };
 
             await _context.Epilepsias.AddAsync(nuevaEpilepsia);

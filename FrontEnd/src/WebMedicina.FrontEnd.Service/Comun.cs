@@ -1,5 +1,6 @@
 ﻿using Microsoft.JSInterop;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 using WebMedicina.FrontEnd.ServiceDependencies;
 
 namespace WebMedicina.FrontEnd.Service {
@@ -65,8 +66,24 @@ namespace WebMedicina.FrontEnd.Service {
             await _js.InvokeVoidAsync("desbloquearScroll", idDialogo, eje);
         }
 
+
+        /// <summary>
+        /// Hacer scroll a una posicion de un elemento por el id
+        /// </summary>
+        /// <param name="idElemento"></param>
+        /// <param name="posY"></param>
+        /// <returns></returns>
         public async Task ScrollHaciaElemento(string idElemento, string posY = "center") {
             await _js.InvokeVoidAsync("ScrollHaciaElemento", idElemento, posY);   
+        }
+
+
+        /// <summary>
+        /// Hacer scroll al bottom de la pantalla
+        /// </summary>
+        /// <returns></returns>
+        public async Task ScrollBottom() {
+            await _js.InvokeVoidAsync("ScrollBottom");
         }
     }
 }

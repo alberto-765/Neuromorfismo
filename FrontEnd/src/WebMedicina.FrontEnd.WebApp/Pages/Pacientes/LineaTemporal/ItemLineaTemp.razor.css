@@ -1,0 +1,20 @@
+﻿::deep .lt__evoEditar__tarjeta{
+    max-width: 40%;
+}
+::deep .lt__evoEditar__tarjeta--alert {
+    opacity: .7;
+}
+
+/* Tarjeta tamaño medio */
+@media screen and (960px < width <= 1280px) {
+    ::deep .lt__evoEditar__tarjeta {
+        max-width: 60%;
+    }
+}
+
+/* Tarjeta tamaño movil */
+@media screen and (width <= 960px) {
+    ::deep .lt__evoEditar__tarjeta {
+        max-width: 100%;
+    }
+}

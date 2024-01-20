@@ -25,10 +25,10 @@ namespace WebMedicina.BackEnd.Model {
 
         [ConcurrencyCheck]
         public int? IdMedicoUltModif { get; set; }
+
         [ForeignKey("IdMedicoUltModif")]
         public MedicosModel? MedicoUltModif { get; set; }
 
         public ICollection<EvolucionLTModel> EvolucionEtapa { get; set;} = new List<EvolucionLTModel>();
-        public ICollection<PacientesModel> PacienteUltimaEtapa { get; set;}= new List<PacientesModel>();
     }
 }

@@ -5,7 +5,7 @@ namespace WebMedicina.Shared.Dto.Pacientes
 {
     public class BasePaciente
     {
-        public int IdPaciente { get; set; }
+        public int IdPaciente { get; init; }
         public virtual string NumHistoria { get; set; } = string.Empty;
         public virtual DateTime? FechaNac { get; set; }
         public virtual string Sexo { get; set; } = string.Empty;

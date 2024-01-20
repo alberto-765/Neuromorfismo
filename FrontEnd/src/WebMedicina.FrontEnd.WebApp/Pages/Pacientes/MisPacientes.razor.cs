@@ -16,7 +16,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
         // PARAMETROS
         [Parameter] public List<CrearPacienteDto>? ListaPacientes { get; set; } // Lista pacientes para mostrar
         [Parameter] public EventCallback<int> EliminarPaciente { get; set; } // Evento callback para eliminar paciente
-        [Parameter] public EventCallback<int> MostrarLineaTemp { get; set; } // Evento callback para mostrar la linea temporal de un paciente
+        [Parameter] public EventCallback<CrearPacienteDto> MostrarLineaTemp { get; set; } // Evento callback para mostrar la linea temporal de un paciente
         public bool MostrarOverlay { get; set; } = true; // Bool para mostrar overlay de carga
         private ClaimsPrincipal? user { get; set; } // Datos del usuario
 

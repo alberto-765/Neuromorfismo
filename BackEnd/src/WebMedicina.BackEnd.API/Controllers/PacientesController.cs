@@ -19,7 +19,7 @@ namespace WebMedicina.BackEnd.API.Controllers
         }
 
         // Validar si el numero de historia es valido par el paciente
-        [HttpGet("validarNumHistoria/{numHistoria}")]
+        [HttpGet("validarnumhistoria/{numhistoria}")]
         public ActionResult<IEnumerable<string>> ValidarNumHistoria(string numHistoria) {
             try {
 
@@ -32,7 +32,7 @@ namespace WebMedicina.BackEnd.API.Controllers
 
         // Obtener todos los medicos que tienen pacientes asignados
         [Authorize(Roles = "superAdmin, admin")]
-        [HttpGet("getMedicosPacientes")]
+        [HttpGet("getmedicospacientes")]
         public async Task<IEnumerable<UserInfoDto>> GetAllMed() {
             try {
                 return await _pacientesService.GetAllMed();
@@ -42,7 +42,7 @@ namespace WebMedicina.BackEnd.API.Controllers
         }
 
         // Crear nuevo paciente
-        [HttpPost("crearPaciente")]
+        [HttpPost("crearpaciente")]
         public async Task<ActionResult<int>> CrearPaciente([FromBody] CrearPacienteDto nuevoPaciente) {
             try {
                 if(ModelState.IsValid) {
@@ -68,7 +68,7 @@ namespace WebMedicina.BackEnd.API.Controllers
         }
 
         // Editar paciente
-        [HttpPut("editarPaciente")]
+        [HttpPut("editarpaciente")]
         public async Task<ActionResult<bool>> EditarPaciente([FromBody] CrearPacienteDto nuevoPaciente) {
             try {
                 if (ModelState.IsValid) {
@@ -92,7 +92,7 @@ namespace WebMedicina.BackEnd.API.Controllers
 
 
         // Eliminar paciente
-        [HttpDelete("eliminarPaciente/{idPaciente}")]
+        [HttpDelete("eliminarpaciente/{idpaciente}")]
         public async Task<ActionResult<bool>> EliminarPaciente(int idPaciente) {
             try {
                 // Validar que el usuario tiene permisos
@@ -110,7 +110,7 @@ namespace WebMedicina.BackEnd.API.Controllers
 
 
         // Obtener pacientes y devolver listado
-        [HttpGet("obtenerPacientes")]
+        [HttpGet("obtenerpacientes")]
         public ActionResult ObtenerPacientes() {
             try {
                 List<CrearPacienteDto> listaPacientes = _pacientesService.ObtenerPacientes(User);
@@ -122,7 +122,7 @@ namespace WebMedicina.BackEnd.API.Controllers
         }
 
         //  Farmacos
-        [HttpGet("getFarmacos")]
+        [HttpGet("getfarmacos")]
         public ActionResult<List<FarmacosDto>> GetFarmacos() {
             try {
                 List<FarmacosDto> farmacos = _pacientesService.ObtenerFarmacos();
@@ -135,7 +135,7 @@ namespace WebMedicina.BackEnd.API.Controllers
 
 
         //  Mutaciones
-        [HttpGet("getMutaciones")]
+        [HttpGet("getmutaciones")]
         public ActionResult<List<MutacionesDto>> GetMutaciones() {
             try {
                 List<MutacionesDto> mutaciones = _pacientesService.ObtenerMutaciones();
@@ -147,7 +147,7 @@ namespace WebMedicina.BackEnd.API.Controllers
         }
 
         //  Epilepsias
-        [HttpGet("getEpilepsias")]
+        [HttpGet("getepilepsias")]
         public ActionResult<List<EpilepsiasDto>> GetEpilepsias() {
             try {
                 List<EpilepsiasDto> epilepsias = _pacientesService.ObtenerEpilepsias();
@@ -159,7 +159,7 @@ namespace WebMedicina.BackEnd.API.Controllers
 
         }
 
-        [HttpGet("obtenerPaciente/{idPaciente}")]
+        [HttpGet("obtenerpaciente/{idpaciente}")]
         public async Task<ActionResult<CrearPacienteDto?>> ObtenerPaciente(int idPaciente) {
             try {
                 return Ok(await _pacientesService.GetUnPaciente(idPaciente));

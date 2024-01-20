@@ -1,7 +1,7 @@
 ﻿/*Slider de la talla*/
 ::deep .sliderTalla .mud-slider-container {
-    margin-left: 5px;
+    margin-left: .3rem;
 }
-::deep .sliderTalla{
-    padding: 5px 0;
+::deep .sliderTalla {
+    padding: .3rem 0;
 }

@@ -26,8 +26,11 @@ public partial class MedicosModel : BaseModel
 
     public ICollection<PacientesModel> PacienteMedicoUltModNavigations { get; set; } = new List<PacientesModel>();
 
-    //public ICollection<EtapaLTModel> EtapaMedicoUltModif { get; set; } = new List<EtapaLTModel>();
-    //public ICollection<EtapaLTModel> EtapaMedicoCreador { get; set; } = new List<EtapaLTModel>();
+    [InverseProperty("MedicoCreador")]
+    public ICollection<EtapaLTModel> EtapaMedicoCreador { get; set; } = new List<EtapaLTModel>();
+
+    [InverseProperty("MedicoUltModif")]
+    public ICollection<EtapaLTModel> EtapaMedicoUltModif { get; set; } = new List<EtapaLTModel>();
 
     public ICollection<EvolucionLTModel> EvolucionMedicoUltModif { get; set; } = new List<EvolucionLTModel>();
 

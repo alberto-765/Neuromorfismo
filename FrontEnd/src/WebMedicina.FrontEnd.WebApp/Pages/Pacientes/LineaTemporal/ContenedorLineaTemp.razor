@@ -1,18 +1,20 @@
 ﻿<div>
-    <MudContainer MaxWidth="MaxWidth.Large" Class="mt-5 mb-10">
+    <MudContainer MaxWidth="MaxWidth.Large" Class="mt-5 mb-15">
         <MudPaper Elevation="25" Class="@($"rounded relative {ClaseContenedor}")" id="@IdContenedorLT">
             <MudScrollToTop Selector="@SelectorScroll" 
-                OnClick="@(async () => await CerrarLineaTemporal())"
+                OnClick="@(() => CerrarLineaTemporal())"
                 Visible="true" 
                 TopOffset="-99999" 
-                VisibleCssClass="lt__scrollTop">
-                <MudIconButton Icon="@Icons.Material.Outlined.Close" Color="Color.Surface"/>
+                VisibleCssClass="lt__scrollTop" >
+                <MudIconButton Icon="@Icons.Material.Outlined.Close" Color="Color.Default" />
             </MudScrollToTop>
 
-            @if (LineaTemporalExpandedProp) {
-                <CascadingValue Name="ActualizarEvolucionPac" Value="ActualizarEvolucionPaciente">
-                    <LineaTemporal EtapasLineaTemporal="EtapasLineaTemporal" Evoluciones="Evoluciones" />
-                </CascadingValue>
+            <MudText Typo="Typo.h4" Class="pt-10 pl-10">Evolución Paciente @Paciente.NumHistoria</MudText>
+
+            @if (LineaTemporalExpandedProp && EtapasLineaTemporal is not null && EtapasLineaTemporal.Any()) {
+                <LineaTemporal EtapasLineaTemporal="EtapasLineaTemporal" @bind-Evoluciones="Evoluciones" IdPaciente="Paciente.IdPaciente" />
+            } else {
+                <Error NombreImagen="Error2" mensajeError="Evolucion del paciente no encontrada." />
             }
         </MudPaper>
     </MudContainer>

@@ -19,15 +19,15 @@ namespace WebMedicina.BackEnd.Model {
 
         public int IdMedicoUltModif { get; set; }
         [ForeignKey("IdMedicoUltModif")]
-        public MedicosModel MedicoUltModif { get; set; } = null!;
+        public MedicosModel? MedicoUltModif { get; set; }
 
         public int IdEtapa { get; set; }
         [ForeignKey("IdEtapa")]
-        public EtapaLTModel Etapa { get; set; } = null!;
+        public EtapaLTModel? Etapa { get; set; }
 
         public int IdPaciente { get; set; }
         [ForeignKey("IdPaciente")]
-        public PacientesModel Paciente { get; set; } = null!;
+        public PacientesModel? Paciente { get; set; } 
 
     }
 }

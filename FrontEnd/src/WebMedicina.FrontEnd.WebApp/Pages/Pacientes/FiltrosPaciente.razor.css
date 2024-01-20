@@ -13,7 +13,7 @@
 }
 
 ::deep #drawerFiltros .drawerFiltros__Opcion {
-    padding: 20px;
+    padding: 1.1rem;
 }
 
 ::deep #drawerFiltros.mud-drawer--open {
@@ -33,9 +33,9 @@
 }
 /*Estilos check enfermedad rara*/
 ::deep .checkEnfRara .mud-icon-button {
-    padding: 0 5px 0 0;
+    padding: 0 .3rem 0 0;
 }
 /*Estilos filtros panel filtros*/
 ::deep .filtro {
-    padding: 5px 0;
+    padding: .3rem 0;
 }

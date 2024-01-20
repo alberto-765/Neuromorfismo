@@ -13,37 +13,44 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
 {
     public partial class CrearUsuario
     {
+        // Dependecias
         [Inject] private ISnackbar _snackbar { get; set; } = null!;
-        [CascadingParameter] private Task<AuthenticationState>? authenticationState { get; set; }
-        private ClaimsPrincipal? user { get; set; }
         [Inject] ICrearHttpClient _crearHttpClient { get; set; } = null!;
-        private HttpClient Http { get; set; } = null!;
         [Inject] IAdminsService _adminsService { get; set; } = null!;
+
+        // Parametros
+        [CascadingParameter] private Task<AuthenticationState>? authenticationState { get; set; }
+
+        // Configuracion
+        private ClaimsPrincipal? user { get; set; }
+        private HttpClient Http { get; set; } = null!;
 
         // CAMPOS EDITFORM
         private bool cargando { get; set; } = false;
         private UserRegistroDto userRegistro = new();
         private EditContext formContext = null!;
 
-        protected override async Task OnInitializedAsync() { 
-                // Obtenemos los datos del usuario
-                if (authenticationState is not null) {
-                    var authState = await authenticationState;
-                    user = authState?.User;    
-                }
+        protected override async Task OnInitializedAsync() {
+            // Creamos contraseña aleatoria
+            Task<string> taskCrearContra = _adminsService.GenerarContraseñaAleatoria();
 
-                Http = _crearHttpClient.CrearHttp(); // creamos http
+            // Obtenemos los datos del usuario
+            if (authenticationState is not null) {
+                var authState = await authenticationState;
+                user = authState?.User;    
+            }
 
-                // Configuracion default snackbar
-                _snackbar.Configuration.PreventDuplicates = true;
-                _snackbar.Configuration.ShowTransitionDuration = 300;
-                _snackbar.Configuration.HideTransitionDuration = 300;
+            Http = _crearHttpClient.CrearHttpApi(); // creamos http
 
-                // Creamos contraseña aleatoria
-                userRegistro.Password = _adminsService.GenerarContraseñaAleatoria();
+            // Configuracion default snackbar
+            _snackbar.Configuration.PreventDuplicates = true;
+            _snackbar.Configuration.ShowTransitionDuration = 300;
+            _snackbar.Configuration.HideTransitionDuration = 300;
 
-                // Crear contexto del editform
-                formContext = new(userRegistro); 
+            // Crear contexto del editform
+            formContext = new(userRegistro); 
+
+            userRegistro.Password = await taskCrearContra; 
         }
 
         private async Task Crear() {
@@ -69,6 +76,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                 }
             } catch (Exception) {
                 ReiniciarDatos();
+                throw;
             }
         }
 
@@ -77,7 +85,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
             if (_adminsService.ValidarNomYApellUser(userRegistro.Nombre, userRegistro.Apellidos)) {
                 bool userNameCorrecto = false; // almacenaremos si ha podido generarse el nuevo nombre del usuario
                 string[] nomYApell = { userRegistro.Nombre, userRegistro.Apellidos };
-                HttpResponseMessage respuesta = await Http.PostAsJsonAsync($"cuentas/generarUserName", nomYApell);
+                HttpResponseMessage respuesta = await Http.PostAsJsonAsync($"cuentas/generarusername", nomYApell);
                 if(respuesta.IsSuccessStatusCode) {
 
                     // Obtenemos el nuevo username

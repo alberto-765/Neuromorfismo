@@ -1,9 +1,8 @@
 ﻿/*Estilos filtros panel filtros*/
 ::deep .filtro {
-    padding: 13px 0;
+    padding: .9rem 0;
 }
-
 /*Estilos check enfermedad rara*/
 ::deep .checkEnfRara .mud-icon-button {
-    padding: 0 5px 0 0;
+    padding: 0 .4rem 0 0;
 }

@@ -48,6 +48,8 @@ namespace WebMedicina.BackEnd.Service
                 // Mapeamos el medico creador
                 modeloPaciente.MedicoCreador = idMedico;
                 modeloPaciente.MedicoUltMod = idMedico;
+                modeloPaciente.FechaCreac = DateTime.Today;
+                modeloPaciente.FechaUltMod = DateTime.Today;
 
                 idPaciente = await _pacientesDal.CrearPaciente(modeloPaciente);
                 await transaccion.CommitAsync();

@@ -43,7 +43,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
         private MudDatePicker _picker { get; set; } = null!;
 
         protected override async Task OnInitializedAsync() { 
-            Http = _crearHttpClient.CrearHttp();
+            Http = _crearHttpClient.CrearHttpApi();
 
             if (authenticationState is not null) {
                 var authState = await authenticationState;
@@ -74,7 +74,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
             };
 
             // Llamamos a la api para obtener de BBDD los usuarios con los filtros
-            HttpResponseMessage responseMessage = await Http.PostAsJsonAsync("gestionUsers/obtenerUsuariosFiltrados", camposFiltrado);
+            HttpResponseMessage responseMessage = await Http.PostAsJsonAsync("gestionusers/obtenerusuariosfiltrados", camposFiltrado);
             List<UserUploadDto>? list = new ();
             if(responseMessage.IsSuccessStatusCode) {
                 if (responseMessage.StatusCode != HttpStatusCode.NoContent) {
@@ -118,13 +118,15 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
 
         // Reseteamos el userInfo a sus valores por defecto
         private void ResetearUserInfo(object item) {
-            ((UserUploadDto)item).IdMedico = copiaSeguridadUsuario.IdMedico;
-            ((UserUploadDto)item).UserLogin = copiaSeguridadUsuario.UserLogin;
-            ((UserUploadDto)item).Nombre = copiaSeguridadUsuario.Nombre;
-            ((UserUploadDto)item).Apellidos = copiaSeguridadUsuario.Apellidos;
-            ((UserUploadDto)item).FechaNac = copiaSeguridadUsuario.FechaNac;
-            ((UserUploadDto)item).Rol = copiaSeguridadUsuario.Rol;
-            ((UserUploadDto)item).Sexo = copiaSeguridadUsuario.Sexo;
+            item = new UserUploadDto() {
+                IdMedico = copiaSeguridadUsuario.IdMedico,
+                UserLogin = copiaSeguridadUsuario.UserLogin,
+                Nombre = copiaSeguridadUsuario.Nombre,
+                Apellidos = copiaSeguridadUsuario.Apellidos,
+                FechaNac = copiaSeguridadUsuario.FechaNac,
+                Rol = copiaSeguridadUsuario.Rol,
+                Sexo = copiaSeguridadUsuario.Sexo
+            };
         }
 
         // Actualizamos los datos del usuario editado
@@ -158,7 +160,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                         usuarioHttp.rolModificado = true;
                     }
 
-                    HttpResponseMessage httpResponseMessage = await Http.PutAsJsonAsync("gestionUsers/actualizarUsuario", usuarioHttp);
+                    HttpResponseMessage httpResponseMessage = await Http.PutAsJsonAsync("gestionusers/actualizarusuario", usuarioHttp);
 
                     // Verificamos si el medico se ha editado correctamente
                     if (httpResponseMessage.IsSuccessStatusCode) {

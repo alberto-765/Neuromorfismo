@@ -44,7 +44,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
             if (form.EditContext is not null && form.EditContext.Validate()) { 
                 _creandoPaciente = true;
                 HttpResponseMessage respuesta = await _pacientesService.CrearPaciente(nuevoPaciente);
-
                 // Mensaje para mostrar el usuario
                 bool pacienteCreado = true;
                 Severity tipoSnacbar = Severity.Success;
@@ -73,7 +72,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
                 if (pacienteCreado) {
                     MudDialog.Close(DialogResult.Ok(idPaciente));
                 }
-            } 
+            }
         }
 
         // Boton cancelar

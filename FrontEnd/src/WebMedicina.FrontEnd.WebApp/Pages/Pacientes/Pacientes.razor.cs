@@ -59,6 +59,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
             } catch (Exception) {
                 // Creamos lista de pacientes vacia para no mostrar cargando en la tabla de pacientes
                 ListaPacientes = new List<CrearPacienteDto>();
+                throw;
             }
         }
 
@@ -75,6 +76,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
                 //ListaFarmacos = opcionesSelects.ListaFarmacos;
             } catch (Exception) {
                 _snackbar.Add("No ha sido posible obtener los filtros.", Severity.Error);
+                throw;
             }
         }
 
@@ -109,6 +111,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
                 }
             } catch (Exception) {
                 _snackbar.Add("No ha sido posible obtener los pacientes. Contacte con un administrador", Severity.Error);
+                throw;
             }
         }
 

@@ -2,8 +2,8 @@
 
 namespace WebMedicina.Shared.Service {
     public static class ValidacionesRegistro {
-        public const string PatronNombres = @"^[A-ZÁÉÍÓÚÜÑ][a-záéíóúüñ]*( [A-ZÁÉÍÓÚÜÑ][a-záéíóúüñ]*){0,2}$";
-        public const string PatronApellidos = @"^[A-ZÁÉÍÓÚÜÑ][a-záéíóúüñ]*( [A-ZÁÉÍÓÚÜÑ][a-záéíóúüñ]*){1,2}$";
+        public const string PatronNombres = @"^[A-ZÁÉÍÓÚÜÑ][a-záéíóúüñ]+( [A-ZÁÉÍÓÚÜÑ][a-záéíóúüñ]+){0,2}$";
+        public const string PatronApellidos = @"^[A-ZÁÉÍÓÚÜÑ][a-záéíóúüñ]+( [A-ZÁÉÍÓÚÜÑ][a-záéíóúüñ]+){1,2}$";
 
 
          // Valida que la persona tenga al menos 18 años

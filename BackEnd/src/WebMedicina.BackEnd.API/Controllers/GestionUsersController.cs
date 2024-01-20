@@ -8,7 +8,7 @@ using WebMedicina.Shared.Dto.Usuarios;
 
 namespace WebMedicina.BackEnd.API.Controllers
 {
-    [Route("/api/gestionUsers")]
+    [Route("/api/gestionusers")]
     [ApiController]
     [Authorize(Roles = "superAdmin, admin")]
     public class GestionUsersController : Controller {
@@ -23,7 +23,7 @@ namespace WebMedicina.BackEnd.API.Controllers
             _identityService = identity;
         }
 
-        [HttpPost("obtenerUsuariosFiltrados")]
+        [HttpPost("obtenerusuariosfiltrados")]
         public async Task<IActionResult> ObtenerUsuariosFiltrados([FromBody] FiltradoTablaDefaultDto camposFiltrado) {
             try {
                 List<UserUploadDto> listaMedicos = await _adminService.ObtenerFiltradoUsuarios(camposFiltrado, HttpContext.User);
@@ -37,7 +37,7 @@ namespace WebMedicina.BackEnd.API.Controllers
             }
         }
 
-        [HttpPut("actualizarUsuario")]
+        [HttpPut("actualizarusuario")]
         public async Task<IActionResult> ActualizarUsuario([FromBody] LLamadaUploadUser usuarioEditado) {
             using (var transactionContext = _context.Database.BeginTransaction()) {
 

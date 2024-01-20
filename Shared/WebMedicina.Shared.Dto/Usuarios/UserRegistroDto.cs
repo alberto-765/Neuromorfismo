@@ -6,14 +6,16 @@ namespace WebMedicina.Shared.Dto.Usuarios {
 
     public class UserRegistroDto {
         [Required(ErrorMessage = "El nombre del usuario es obligatorio")]
-        [RegularExpression(ValidacionesRegistro.PatronNombres, ErrorMessage = "La primera letra del nombre debe ser mayúscula.")]
+        [RegularExpression(ValidacionesRegistro.PatronNombres, ErrorMessage = "La primera letra del nombre debe ser mayúscula y contener mínimo 2 caracteres.")]
         [MaxLength(50, ErrorMessage = "El nombre puede contener máximo 50 caracteres")]
+        [MinLength(2, ErrorMessage = "El nombre debe tener mínimo 2 caracteres")]
         public string Nombre { get; set; } = null!;
 
         [Required(ErrorMessage = "Los apellidos del usuario es obligatorio")]
         [MaxLength(50, ErrorMessage = "Los apellidos pueden contener máximo 50 caracteres")]
-        [RegularExpression(ValidacionesRegistro.PatronApellidos, ErrorMessage = "Debe ingresar los dos apellidos del usuario. " +
+        [RegularExpression(ValidacionesRegistro.PatronApellidos, ErrorMessage = "Debe ingresar los dos apellidos del usuario y contener mínimo 2 caracteres cada uno. " +
             "La primera letra debe ser mayúscula.")]
+        [MinLength(4, ErrorMessage = "El nombre debe tener mínimo 3 caracteres")]
         public string Apellidos { get; set; } = null!;
 
         [Required(ErrorMessage = "La fecha de nacimiento es obligatoria")]

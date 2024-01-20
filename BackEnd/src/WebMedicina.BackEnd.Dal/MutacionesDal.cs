@@ -27,7 +27,9 @@ namespace WebMedicina.BackEnd.Dal {
         //  Create MUTACION
         public async Task<bool> CrearMutacion(string nombre) {
             MutacionesModel nuevaMutacion = new() {
-                Nombre = nombre
+                Nombre = nombre,
+                FechaUltMod = DateTime.Today,
+                FechaCreac = DateTime.Today
             };
 
             await _context.Mutaciones.AddAsync(nuevaMutacion);

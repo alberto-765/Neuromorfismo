@@ -19,7 +19,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
         [Parameter] public EventCallback<int> EliminarPacienteList { get; set; } // Evento callback para eliminar paciente
         [CascadingParameter(Name = "ListaEpilepsias")] public IEnumerable<EpilepsiasDto>? ListaEpilepsias { get; set; } = null;
         [CascadingParameter(Name = "ListaMutaciones")] public IEnumerable<MutacionesDto>? ListaMutaciones { get; set; } = null;
-        [Parameter] public EventCallback<int> MostrarLineaTemp { get; set; } // Evento callback para mostrar la linea temporal de un paciente
+        [Parameter] public EventCallback<CrearPacienteDto> MostrarLineaTemp { get; set; } // Evento callback para mostrar la linea temporal de un paciente
 
         // Configuracion de dialogo de edicion
         private DialogOptions OpcionesDialogo { get; set; } = new DialogOptions { FullWidth = true, CloseButton = true, MaxWidth= MaxWidth.Small, 

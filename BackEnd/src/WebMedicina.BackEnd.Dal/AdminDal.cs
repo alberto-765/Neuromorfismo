@@ -76,12 +76,6 @@ namespace WebMedicina.BackEnd.Dal {
                     var typeAs = Expression.TypeAs(conversion, typeof(object));
 
                     lambda = Expression.Lambda<Func<MedicosModel, object>>(typeAs, parametro);
-                } else if (tipoDePropiedad == typeof(DateOnly) || tipoDePropiedad == typeof(DateOnly?)) {
-
-                    // Convertir DateTime a object de manera segura
-                    var conversion = Expression.Convert(propiedad, typeof(object));
-                    var typeAs = Expression.TypeAs(conversion, typeof(object));
-                    lambda = Expression.Lambda<Func<MedicosModel, object>>(typeAs, parametro);
                 } else {
                     lambda = Expression.Lambda<Func<MedicosModel, object>>(propiedad, parametro);
                 }

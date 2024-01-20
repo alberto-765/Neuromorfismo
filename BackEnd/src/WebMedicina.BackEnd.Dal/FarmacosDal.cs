@@ -18,7 +18,9 @@ namespace WebMedicina.BackEnd.Dal {
         //  Create FARMACOS
         public async Task<bool> CrearFarmaco(string nombre) {
             FarmacosModel nuevoFarmaco = new() {
-                Nombre = nombre
+                Nombre = nombre,
+                FechaUltMod = DateTime.Today,
+                FechaCreac = DateTime.Today
             };
 
             await _context.Farmacos.AddAsync(nuevoFarmaco);

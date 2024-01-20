@@ -1,4 +1,4 @@
-﻿<MudTooltip Arrow="true" Placement="Placement.Top" Color="@Color" >
+﻿<MudTooltip Arrow="true" Placement="@Posicion" Color="@Color">
     <ChildContent>
         <MudIconButton Icon="@Icono" Size="SizeIcono" Class="ml-1" />
     </ChildContent>
@@ -24,4 +24,7 @@
 
     // Tamaño icono
     [Parameter] public Size SizeIcono { get; set; } = Size.Medium;
+
+    // Posicion 
+    [Parameter] public Placement Posicion { get; set; } = Placement.Top;
 }

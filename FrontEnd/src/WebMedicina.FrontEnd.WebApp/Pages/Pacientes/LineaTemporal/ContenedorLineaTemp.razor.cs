@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using System.Collections.Immutable;
+using System.Threading;
 using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.Shared.Dto.LineaTemporal;
+using WebMedicina.Shared.Dto.Pacientes;
 
 namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
     public partial class ContenedorLineaTemp {
@@ -22,13 +24,16 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
             get => LineaTemporalExpanded;
             set {
                 LineaTemporalExpanded = value;
-                ClaseContenedor = IdContenedorLT + (LineaTemporalExpanded ? "-expandido" : "-hidden");
+                ClaseContenedor = string.Concat(IdContenedorLT, (LineaTemporalExpanded ? "-expandido" : "-hidden"));
             }
         } 
 
         // Listas etapas y evolucion paciente
         private SortedList<int, EvolucionLTDto> Evoluciones = new(); // Evoluciones del paciente
         private ImmutableSortedDictionary<int, EtapaLTDto>? EtapasLineaTemporal { get; set; } // Etapas para la linea temporal
+
+        // Idpaciente del que se muestran las evoluciones
+        private CrearPacienteDto Paciente { get; set; } = new();
 
         protected override async Task OnInitializedAsync() {
             // Clase contenedor ocultada por default
@@ -55,46 +60,32 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
         }
 
         // Cerramos cuadro linea temporal y resetear datos
-        private async Task CerrarLineaTemporal() { 
+        private void CerrarLineaTemporal() { 
                 // Reseteamos datos
                 LineaTemporalExpandedProp = false;
                 Evoluciones = new();
                 SelectorScroll = string.Empty;
-
-                StateHasChanged();
-                await Task.Delay(1000); 
         }
 
         // Obtenemos evolucion del paciente, abrimos contenedor linea temporal y hacemos scroll al contenedor
-        public async Task MostrarLineaTemp(int idPaciente) {
+        public async Task MostrarLineaTemp(CrearPacienteDto paciente) {
             try {
                 // Mostramos linea temporal y configuramos el selector para el scroll top
                 LineaTemporalExpandedProp = true;
+                SelectorScroll = $"#Paciente{paciente.NumHistoria}";
+                Paciente = paciente;
+                Evoluciones = await _lineaTemporalService.ObtenerEvolucionPaciente(Paciente.IdPaciente);
 
-                // Hacemos scroll al contenedor linea temporal
-                await _comun.ScrollHaciaElemento(IdContenedorLT, "end");
-                StateHasChanged();
 
                 // Obtenemos evolucion del paciente
-                Evoluciones = await _lineaTemporalService.ObtenerEvolucionPaciente(idPaciente);
-                SelectorScroll = $"#Paciente{idPaciente}";
+                await _comun.ScrollBottom();
                 StateHasChanged();
-            } catch (Exception) {
-                _snackbar.Add("No ha sido posible cargar la linea temporal");
+            } catch (Exception ex) {
+                Console.WriteLine(ex);
+                Evoluciones = new();
+                _snackbar.Add("No ha sido posible cargar la linea temporal", Severity.Error);
             }
         }
 
-        /// <summary>
-        /// Actualizar una etapa de la evolucion del paciente o añadirla si es nueva
-        /// </summary>
-        /// <param name="nuevaEvolucion"></param>
-        public async Task ActualizarEvolucionPaciente(EvolucionLTDto nuevaEvolucion) {
-            try {
-                Evoluciones = await _lineaTemporalService.ActualizarEvolucionPaciente(nuevaEvolucion);
-            } catch (Exception) {
-                _snackbar.Add("No ha sido posible actualizar la etapa de la evolución del paciente.", Severity.Error);
-                throw;
-            }
-        }
     }
 }
