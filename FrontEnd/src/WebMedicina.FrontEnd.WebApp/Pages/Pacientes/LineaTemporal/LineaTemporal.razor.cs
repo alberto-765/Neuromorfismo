@@ -1,30 +1,27 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Options;
 using MudBlazor;
 using System.Collections.Immutable;
 using WebMedicina.FrontEnd.Dto;
 using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.Shared.Dto.LineaTemporal;
-using static WebMedicina.FrontEnd.Dto.EstadosEtapasLTDto;
 
 namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
     public partial class LineaTemporal {
         // Injecciones
-        [Inject] private IOptions<ImagenesServerDto> _imgOptions { get; set; } = null!;
-        [Inject] private IConfiguration _configuration { get; set; } = null!;
-        [Inject] private ISnackbar _snackbar { get; set; } = null!;
-        [Inject] private IComun _comun { get; set; } = null!;
-        [Inject] private ILineaTemporalService _lineaTemporalService { get; set; } = null!;
+        [Inject] private IConfiguration _configuration { get; set; } = default!;
+        [Inject] private ISnackbar _snackbar { get; set; } = default!;
+        [Inject] private IComun _comun { get; set; } = default!;
+        [Inject] private ILineaTemporalService _lineaTemporalService { get; set; } = default!;
 
         // Parametros
-        [Parameter] public ImmutableSortedDictionary<int, EtapaLTDto> EtapasLineaTemporal { get; set; } = null!;
-        [Parameter] public SortedList<int, EvolucionLTDto> Evoluciones { get; set; } = null!;
+        [Parameter] public ImmutableSortedDictionary<int, EtapaLTDto> EtapasLineaTemporal { get; set; } = default!;
+        [Parameter] public SortedList<int, EvolucionLTDto> Evoluciones { get; set; } = default!;
         [Parameter] public EventCallback<SortedList<int, EvolucionLTDto>> EvolucionesChanged { get; set; }
         [Parameter] public int IdPaciente { get; set; }
 
         // Ultima etapa de la evolucion del paciente
         private int UltimaEtapaPaciente { get; set; }
-        private EvolucionLTDto? evolucionPintar  = null!;
+        private EvolucionLTDto? evolucionPintar  = default!;
         private EstadoEtapa estadoEtapa { get; set; } = EstadoEtapa.Pasada;
 
         // Etapa de fin de evolutivo

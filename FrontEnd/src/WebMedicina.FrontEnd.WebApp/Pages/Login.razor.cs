@@ -2,26 +2,31 @@
 using MudBlazor;
 using System.Data;
 using System.Net.Http.Json;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+
 using WebMedicina.FrontEnd.Service;
 using WebMedicina.FrontEnd.ServiceDependencies;
+using WebMedicina.Shared.Dto.UserAccount;
 using WebMedicina.Shared.Dto.Usuarios;
-using static System.Net.WebRequestMethods;
 
 namespace WebMedicina.FrontEnd.WebApp.Pages
 {
     public partial class Login {
+        // INJECCIONES
+        [Inject] JWTAuthenticationProvider _jwtAuthenticationProvider { get; set; } = default!;
+        [Inject] IRedirigirManager redirigirManager { get; set; } = default!;
+        [Inject] ICrearHttpClient _crearHttpClient { get; set; } = default!;
+
+
         private UserLoginDto userLogin = new();
         private bool mostrado { get; set; } = false;
         private bool cargando { get; set; } = false;
         private string iconoPassword { get; set; } = Icons.Material.Filled.VisibilityOff;
         private string mensajeErrorLogin { get; set; } = String.Empty;
-        // Tipo de input para el 
+
+
+        // Tipo de input para la contraseña
         private InputType tipoInputPass { get; set; } = InputType.Password;
-        [Inject] JWTAuthenticationProvider _jwtAuthenticationProvider { get; set; } = null!;
-        [Inject] IRedirigirManager redirigirManager { get; set; } = null!;
-        [Inject] ICrearHttpClient _crearHttpClient { get; set; } = null!;
+   
         private HttpClient Http { get; set; } = null!;
 
         protected override void OnInitialized() {
@@ -42,33 +47,26 @@ namespace WebMedicina.FrontEnd.WebApp.Pages
             }
         }
 
-        private async Task hacerLogin() {
+        private async Task HacerLogin() {
             try {
                 HttpResponseMessage respuesta;
 
                 // validamos el formulario
                 cargando = true;
-                respuesta = await Http.PostAsJsonAsync("cuentas/login", userLogin);
+                respuesta = await Http.PostAsJsonAsync("cuentas/autenticarusuario", userLogin);
                 if (respuesta.IsSuccessStatusCode) {
-                    UserToken? token = await respuesta.Content.ReadFromJsonAsync<UserToken>();
-                    if (token is not null && token.Expiration >= DateTime.Now && !string.IsNullOrWhiteSpace(token.Token)) {
-                        await _jwtAuthenticationProvider.Login(token.Token);
+                    Tokens? token = await respuesta.Content.ReadFromJsonAsync<Tokens>();
+                    if (token is not null) {
+                        await _jwtAuthenticationProvider.Login(token);
                         await redirigirManager.RedirigirDefault();
-                    } else {
-                        throw new NoNullAllowedException();
                     }
                 } else {
                     mensajeErrorLogin = await respuesta.Content.ReadAsStringAsync();
                     cargando = false;
                 }
-            } catch (NoNullAllowedException) {
-                cargando = false;
-                mensajeErrorLogin = "Error en el token de autenticación";
-                throw;
             } catch (Exception) {
                 cargando = false;
                 mensajeErrorLogin = "Error inesperado de autenticación, inténtelo de nuevo";
-                throw;
             }
         }
     }

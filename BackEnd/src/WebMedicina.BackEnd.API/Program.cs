@@ -1,3 +1,4 @@
+using IdentityModel;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -6,13 +7,19 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using WebMedicina.BackEnd.API;
 using WebMedicina.BackEnd.Dal;
+using WebMedicina.BackEnd.Dto;
 using WebMedicina.BackEnd.Model;
 using WebMedicina.BackEnd.Service;
 using WebMedicina.BackEnd.ServicesDependencies;
-using WebMedicina.Shared.Service;
 
 var builder = WebApplication.CreateBuilder(args);
+string urlClientApp = builder.Configuration.GetSection("ClientApp")["BaseUrl"] ?? throw new InvalidOperationException("No se ha encontrado la url la client app");
 
+// JWT SETTINGS
+JWTConfig? jwtSettings = builder.Configuration.GetSection("JWT").Get<JWTConfig>();
+if (jwtSettings is null || string.IsNullOrWhiteSpace(jwtSettings.Key) || string.IsNullOrWhiteSpace(jwtSettings.Issuer) || string.IsNullOrWhiteSpace(jwtSettings.Audience)) {
+    throw new InvalidOperationException();
+}
 
 // Add services to the controladores
 builder.Services.AddControllers(options =>
@@ -26,33 +33,35 @@ builder.Services.AddSwaggerGen();
 
 // conexion para BBDD
 string connectionString = DBSettings.DBConnectionString(builder.Configuration);
-builder.Services.AddDbContext<IdentityContext>(options =>
-	   options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 builder.Services.AddDbContext<WebmedicinaContext>(options => {
-	options
-	.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+	options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 });
 
 
 // IDENTITY
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => {
+builder.Services.AddIdentity<UserModel, IdentityRole>(options => {
 	// no requerir cuenta confirmada
 	options.SignIn.RequireConfirmedAccount = false;
-	// Ajustamos la cantidad de intentos fallidos para el bloqueo de 1 dia
+
+
+	// Bloqueo settings
 	options.Lockout.MaxFailedAccessAttempts = 5; // 5 intentos fallidos para bloqueo 
 	options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromDays(1);
 
-
-	// Persinalizacion politicas para contraseñas
+	// Password settings
 	options.Password.RequiredLength = 8;
 	options.Password.RequireNonAlphanumeric = true;
 	options.Password.RequireLowercase = true;
 	options.Password.RequireUppercase = true;
 	options.Password.RequireDigit = true;
 
+	// User settings
+	options.User.RequireUniqueEmail = false;
+	options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZÁÉÍÓÚÜÑáéíóúñü";
+
 })
-	.AddEntityFrameworkStores<IdentityContext>() // usar entityframework core para trabajar con la BBDD
+	.AddEntityFrameworkStores<WebmedicinaContext>() // usar entityframework core para trabajar con la BBDD
 .AddDefaultTokenProviders();  // para los tokens de inicio de sesion
 
 
@@ -62,29 +71,33 @@ builder.Services.AddAuthentication(x => {
 	x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 	x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
 })
-	.AddJwtBearer(options =>
-        options.TokenValidationParameters = new TokenValidationParameters {
-            ValidateIssuer = false,
-            ValidateAudience = false,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("JWT")["key"] ?? throw new InvalidOperationException("No se ha encontrado la key para crear el token."))),
-        });
+	.AddJwtBearer(options => {
+		options.SaveToken = true; // guardamos el token para que sea accesible desde los services
+
+		options.TokenValidationParameters = new TokenValidationParameters {
+			ValidateIssuer = true,
+			ValidateAudience = true,
+			NameClaimType = JwtClaimTypes.Name,
+			RoleClaimType = JwtClaimTypes.Role,
+			ValidateLifetime = true,
+			ValidateIssuerSigningKey = true,
+			ValidIssuer = jwtSettings.Issuer,
+			ValidAudience = jwtSettings.Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
+		};
+});
 builder.Services.AddAuthorization();
 
 
 // Activamos CORS para permitir llamadas a la api desde otras url
 builder.Services.AddCors(option => {
 	option.AddPolicy("MyPolitica", app => {
-		app.WithOrigins(builder.Configuration.GetSection("AppSettings")["BaseUrl"] ?? throw new InvalidOperationException("No se ha encontrado la url de app blazor."))
+		app.WithOrigins(urlClientApp)
 		.AllowAnyHeader() 
 		.AllowAnyMethod();
 	});
 });
 
-
-//DEPENDENCIAS
-builder.Services.AddSingleton<ExcepcionPersonalizada>(); // excepciones
 
 // DAL - BASE DE DATOS
 builder.Services.AddScoped<AdminDal>(); // Dal de administradores
@@ -94,15 +107,22 @@ builder.Services.AddScoped<EpilepsiasDal>(); // Dal de epilepsias
 builder.Services.AddScoped<FarmacosDal>(); // Dal de farmacos
 builder.Services.AddScoped<MutacionesDal>(); // Dal de mutaciones
 builder.Services.AddScoped<LineaTemporalDal>(); // Dal de mutaciones
+builder.Services.AddScoped<TokensDal>(); // Dal de tokens, registro y login
 
 // SERVICES
 builder.Services.AddScoped<IIdentityService, IdentityService>(); // Servicios que trabajan con identity
 builder.Services.AddScoped<IAdminsService, AdminsService>(); // Servicios de administradores
 builder.Services.AddScoped<IPacientesService, PacientesService>(); // Servicios de pacientes
 builder.Services.AddScoped<ILineaTemporalService, LineaTemporalService>(); // Servicios de linea temporal
+builder.Services.AddScoped<IUserAccountService, UserAccountService>(); // Servicios de cuentas de usuario
 
 // IOPTIONS PARA CONFIGURACION
-
+builder.Services.Configure<JWTConfig>(builder.Configuration.GetSection("JWT"))
+	.PostConfigure<JWTConfig>(config => {
+		if(string.IsNullOrWhiteSpace(config.Key) || string.IsNullOrWhiteSpace(config.Issuer) || string.IsNullOrWhiteSpace(config.Audience) || !double.TryParse(config.ValidezRefreshTokenEnDias, out double dias) || dias == 0 || !double.TryParse(config.ValidezTokenEnHoras, out double horas) || horas == 0) {
+			throw new Exception();
+		}
+});
 
 var app = builder.Build();
 

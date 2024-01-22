@@ -4,7 +4,7 @@
 <MudContainer MaxWidth="MaxWidth.Small" Class="d-flex justify-center align-center flex-grow-1">
     <MudPaper Class="py-9 px-12 rounded-lg" Elevation="9" Width="100%">
         <div>
-            <EditForm Model="@userLogin" OnValidSubmit="hacerLogin">
+            <EditForm Model="@userLogin" OnValidSubmit="HacerLogin">
                 <DataAnnotationsValidator />
 
                 <MudTextField @onfocus="(() => mensajeErrorLogin = String.Empty)" @bind-Value="userLogin.UserName" For="@(() => userLogin.UserName)"  OnlyValidateIfDirty="true" Clearable="true" Label="Usuario" HelperTextOnFocus="true" Variant="Variant.Text" />

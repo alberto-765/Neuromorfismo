@@ -6,18 +6,17 @@ using System.Text.Json;
 using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.Shared.Dto.LineaTemporal;
 using WebMedicina.Shared.Dto.Pacientes;
-using static WebMedicina.FrontEnd.Dto.EstadosEtapasLTDto;
 
 namespace WebMedicina.FrontEnd.Service
 {
     public class LineaTemporalService : ILineaTemporalService {
-        private readonly HttpClient Http;
+        private readonly HttpClient _http;
         private readonly IPacientesService _pacienteService;
         private readonly IJSRuntime _js;
         private readonly string keyEtapas = "EtapasLineaTemp";
 
         public LineaTemporalService(ICrearHttpClient crearHttpClient, IJSRuntime js, IPacientesService pacienteService) {
-            this.Http = crearHttpClient.CrearHttpApi();
+            _http = crearHttpClient.CrearHttpApi();
             _js = js;
             _pacienteService = pacienteService;
         }

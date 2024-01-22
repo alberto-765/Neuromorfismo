@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using WebMedicina.BackEnd.Model.Seeds;
 
 namespace WebMedicina.BackEnd.Model;
 
-public class WebmedicinaContext : DbContext {
+public class WebmedicinaContext : IdentityDbContext<UserModel, RoleModel, string> {
     public WebmedicinaContext() {
     }
 
@@ -19,11 +21,11 @@ public class WebmedicinaContext : DbContext {
         optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
     }
 
-    public virtual DbSet<AspnetroleModel> Aspnetroles { get; set; }
+    public virtual DbSet<RoleModel> Aspnetroles { get; set; }
 
     public virtual DbSet<AspnetroleclaimModel> Aspnetroleclaims { get; set; }
 
-    public virtual DbSet<AspnetuserModel> Aspnetusers { get; set; }
+    public virtual DbSet<UserModel> Aspnetusers { get; set; }
 
     public virtual DbSet<Aspnetuserclaim> Aspnetuserclaims { get; set; }
 
@@ -47,6 +49,8 @@ public class WebmedicinaContext : DbContext {
 
     public virtual DbSet<EtapaLTModel> EtapaLTModel { get; set; }
 
+    public virtual DbSet<UserRefreshTokens> UserRefreshToken { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -60,7 +64,7 @@ public class WebmedicinaContext : DbContext {
 
 
 
-        modelBuilder.Entity<AspnetroleModel>(entity =>
+        modelBuilder.Entity<IdentityRole>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
@@ -87,7 +91,7 @@ public class WebmedicinaContext : DbContext {
                 .HasConstraintName("FK_AspNetRoleClaims_AspNetRoles_RoleId");
         });
 
-        modelBuilder.Entity<AspnetuserModel>(entity =>
+        modelBuilder.Entity<UserModel>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
@@ -104,7 +108,7 @@ public class WebmedicinaContext : DbContext {
             entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
             entity.Property(e => e.UserName).HasMaxLength(256);
 
-            entity.HasMany(d => d.Roles).WithMany(p => p.Users)
+            entity.HasMany(d => d.Roles).WithMany(p => p.Us)
                 .UsingEntity<Dictionary<string, object>>(
                     "Aspnetuserrole",
                     r => r.HasOne<AspnetroleModel>().WithMany()

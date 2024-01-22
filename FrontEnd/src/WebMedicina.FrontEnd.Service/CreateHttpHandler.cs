@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Headers;
+using WebMedicina.Shared.Dto.UserAccount;
 
 namespace WebMedicina.FrontEnd.Service {
     public class CreateHttpHandler : DelegatingHandler {
@@ -15,13 +16,13 @@ namespace WebMedicina.FrontEnd.Service {
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
-            string token = await _JWTAuthenticationProvider.ObtenerTokenSession();
+            Tokens? token = await _JWTAuthenticationProvider.ObtenerTokenSession();
 
             // Si el token es valido lo asignamos al header
-            if (string.IsNullOrWhiteSpace(token)) {
+            if (token is null || string.IsNullOrWhiteSpace(token.AccessToken)) {
                 request.Headers.Authorization = null;
             } else {
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
             }
 
             return await base.SendAsync(request, cancellationToken);

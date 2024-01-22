@@ -17,15 +17,18 @@ namespace WebMedicina.BackEnd.Model {
         [Description("Fecha de la ultima modificacion de la evolucion del paciente.")]
         public DateTime Fecha { get; set; } = DateTime.Today;
 
-        public int IdMedicoUltModif { get; set; }
+        [Required]
+        public int IdMedicoUltModif { get; set; } = default!;
         [ForeignKey("IdMedicoUltModif")]
         public MedicosModel? MedicoUltModif { get; set; }
 
-        public int IdEtapa { get; set; }
+        [Required]
+        public int IdEtapa { get; set; } = default!;
         [ForeignKey("IdEtapa")]
         public EtapaLTModel? Etapa { get; set; }
 
-        public int IdPaciente { get; set; }
+        [Required]
+        public int IdPaciente { get; set; } = default!;
         [ForeignKey("IdPaciente")]
         public PacientesModel? Paciente { get; set; } 
 

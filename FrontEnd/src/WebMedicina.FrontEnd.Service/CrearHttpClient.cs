@@ -1,5 +1,4 @@
-﻿using System.Net.Http;
-using WebMedicina.FrontEnd.ServiceDependencies;
+﻿using WebMedicina.FrontEnd.ServiceDependencies;
 
 namespace WebMedicina.FrontEnd.Service {
     public class CrearHttpClient : ICrearHttpClient{

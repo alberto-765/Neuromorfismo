@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using WebMedicina.BackEnd.Dal;
 using WebMedicina.BackEnd.Model;
 using WebMedicina.BackEnd.ServicesDependencies;
+using WebMedicina.BackEnd.ServicesDependencies.ExtensionMethods;
 using WebMedicina.Shared.Dto.Usuarios;
 
 namespace WebMedicina.BackEnd.Service

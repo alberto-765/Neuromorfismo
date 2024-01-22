@@ -6,7 +6,7 @@ namespace WebMedicina.FrontEnd.WebApp.Shared.Reutilizables {
     public partial class Error {
         // Configuracion de la app
         [Inject] private IConfiguration configuration { get; set; } = null!;
-        [Inject] private IOptions<ImagenesServerDto> _imgOptions { get; set; } = null!;
+        [Inject] private IOptionsSnapshot<ImagenesServerDto> _imgOptions { get; set; } = null!;
 
         // Texto de error para pintar
         [Parameter] public string mensajeError { get; set; } = "<span>Página no encontrada</span>";

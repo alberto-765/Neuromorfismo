@@ -3,47 +3,65 @@ using Microsoft.JSInterop;
 using System.Security.Claims;
 using WebMedicina.FrontEnd.ServiceDependencies;
 using System.IdentityModel.Tokens.Jwt;
+using WebMedicina.Shared.Dto.UserAccount;
+using Microsoft.Extensions.Configuration;
+using System.Text.Json;
+using System.Net.Http.Json;
 
 namespace WebMedicina.FrontEnd.Service {
     public class JWTAuthenticationProvider : AuthenticationStateProvider, ILoginService {
+        // INJECCIONES
+        private readonly IConfiguration _configuration;
         private readonly IJSRuntime js;
-        public const string TOKENKEY = "OIJWRGU8G28238U2GIUG2H2VUHUIVWU89WEVIU";
-        private JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
-        // Identidad anonima por si el usuario no está autenticado
-        private AuthenticationState Anonimo => new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
+        private readonly HttpClient _httpClient;
 
-         public JWTAuthenticationProvider(IJSRuntime js) {
+        
+        private JwtSecurityTokenHandler handler = new ();
+        private readonly string KeyTokenSession; // Clave del localStorage en session
+        private AuthenticationState Anonimo => new(new ClaimsPrincipal(new ClaimsIdentity())); // Identidad anonima por si el usuario no está autenticado
+
+        public JWTAuthenticationProvider(IJSRuntime js, IConfiguration configuration, ICrearHttpClient crearHttpClient) {
             this.js = js;
+            _configuration = configuration;
+
+            // Obtenemos key token para localStorage
+            KeyTokenSession = _configuration["TokenKey"] ?? throw new NullReferenceException();
+            _httpClient = crearHttpClient.CrearHttpApi();
         }
 
         public async override Task<AuthenticationState> GetAuthenticationStateAsync() {
             // Revisamos si tenemos un token en localstorage para autentical al usuario
-            string token = await ObtenerTokenSession();
-            if (string.IsNullOrWhiteSpace(token)) {
+            Tokens? token = await ObtenerTokenSession();
+
+            if (token is null || string.IsNullOrWhiteSpace(token.AccessToken) || string.IsNullOrWhiteSpace(token.RefreshToken)) {
                 return Anonimo;
             } else {
-                JwtSecurityToken jsonToken = handler.ReadJwtToken(token);
+                JwtSecurityToken jsonToken = handler.ReadJwtToken(token.AccessToken);
 
                 // Validamos la expiracion del token
                 if (jsonToken is null || jsonToken.ValidTo < DateTime.UtcNow) {
+
+                    // Intentamos refrescar el token
+                    if() {
+
+                    }              
+                }
+
+                if (token is not null && !string.IsNullOrWhiteSpace(token.AccessToken)) {
+                    return ConstruirAuthenticationState(token.AccessToken);
+                } else {
                     await Logout();
                     return Anonimo;
-                } else {
-                    return ConstruirAuthenticationState(token);
                 }
             }
         }
 
         /// <summary>
-        /// Devolver token de session, creado para el handler de crear http
+        /// Devolver tokens de autenticacion de localStorafge
         /// </summary>
         /// <returns></returns>
-        public async Task<string> ObtenerTokenSession() {
-            try {
-                return await js.GetFromLocalStorage(TOKENKEY);
-            } catch (Exception) {
-                return string.Empty;
-            }
+        public async Task<Tokens?> ObtenerTokenSession() {
+            return JsonSerializer.Deserialize<Tokens>(await js.GetFromLocalStorage(KeyTokenSession));
         }
 
 
@@ -52,19 +70,26 @@ namespace WebMedicina.FrontEnd.Service {
             return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(handler.ReadJwtToken(token).Claims, "jwt")));
         }
 
-        // Guardamos en localStorage el token del usuario
-        public async Task Login (string token) {
-            await js.SetInLocalStorage(TOKENKEY, token);
+        // Guardamos en localStorage los tokens del usuario
+        public async Task Login (Tokens tokens) {
+            await js.SetInLocalStorage(KeyTokenSession, JsonSerializer.Serialize(tokens));
 
             // Actualizar el estado de los authorizationView
-            var authState = ConstruirAuthenticationState(token);
+            AuthenticationState authState = ConstruirAuthenticationState(tokens.AccessToken);
             NotifyAuthenticationStateChanged(Task.FromResult(authState));
-
         }
 
         // Eliminamos token y colocamos el perfil del usuario como anonimo
         public async Task Logout () {
-            await js.RemoveItemlocalStorage(TOKENKEY);
+            // Llamamos a API para cerrar sesion
+            Tokens? tokens = await ObtenerTokenSession();
+
+            if (tokens is not null) { 
+                await _httpClient.PostAsJsonAsync("cuentas/cerrarsesion", tokens);
+            }
+
+            // Tras haber eliminado el refreshToken, limpiados localStorage
+            await js.RemoveItemlocalStorage(KeyTokenSession);
             NotifyAuthenticationStateChanged(Task.FromResult(Anonimo));
         }
     }

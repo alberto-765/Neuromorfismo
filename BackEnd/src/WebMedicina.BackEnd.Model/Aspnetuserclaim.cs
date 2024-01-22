@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace WebMedicina.BackEnd.Model;
+﻿namespace WebMedicina.BackEnd.Model;
 
 public partial class Aspnetuserclaim
 {
@@ -13,5 +10,5 @@ public partial class Aspnetuserclaim
 
     public string? ClaimValue { get; set; }
 
-    public virtual AspnetuserModel User { get; set; } = null!;
+    public virtual UserModel User { get; set; } = null!;
 }

@@ -10,21 +10,23 @@ namespace WebMedicina.BackEnd.Model {
         
         [MaxLength(50)]
         [Required]
-        public string Titulo { get; set; } = null!; 
-        
+        public string Titulo { get; set; } = default!;
+
         [Required]
         [MaxLength(50)]
-        public string Label { get; set; } = null!;
+        public string Label { get; set; } = default!;
 
         [MaxLength(250)]
         public string? Descripcion { get; set; }
 
-        public int? IdMedicoCreador { get; set; }
+        [Required]
+        public int IdMedicoCreador { get; set; }
         [ForeignKey("IdMedicoCreador")]
         public MedicosModel? MedicoCreador { get; set; }
 
         [ConcurrencyCheck]
-        public int? IdMedicoUltModif { get; set; }
+        [Required]
+        public int IdMedicoUltModif { get; set; }
 
         [ForeignKey("IdMedicoUltModif")]
         public MedicosModel? MedicoUltModif { get; set; }
