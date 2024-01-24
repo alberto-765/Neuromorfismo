@@ -19,76 +19,11 @@ namespace WebMedicina.BackEnd.Model.Migrations
                 .HasAnnotation("ProductVersion", "7.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("Aspnetuserrole", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("RoleId")
-                        .HasColumnType("varchar(255)");
-
-                    b.HasKey("UserId", "RoleId")
-                        .HasName("PRIMARY")
-                        .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
-
-                    b.HasIndex(new[] { "RoleId" }, "IX_AspNetUserRoles_RoleId");
-
-                    b.ToTable("aspnetuserroles", (string)null);
-                });
-
-            modelBuilder.Entity("WebMedicina.BackEnd.Model.AspnetroleModel", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
-
-                    b.HasKey("Id")
-                        .HasName("PRIMARY");
-
-                    b.HasIndex(new[] { "NormalizedName" }, "RoleNameIndex")
-                        .IsUnique();
-
-                    b.ToTable("aspnetroles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "1",
-                            ConcurrencyStamp = "bba3c48f-4c62-427d-93e0-87009d4cee03",
-                            Name = "superAdmin",
-                            NormalizedName = "SUPERADMIN"
-                        },
-                        new
-                        {
-                            Id = "2",
-                            ConcurrencyStamp = "a6e1b727-8913-4300-aa4d-266b7b89862c",
-                            Name = "admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "3",
-                            ConcurrencyStamp = "05131c3a-7e98-4327-8791-7be004a716ad",
-                            Name = "medico",
-                            NormalizedName = "MEDICO"
-                        });
-                });
-
-            modelBuilder.Entity("WebMedicina.BackEnd.Model.AspnetroleclaimModel", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int(11)");
+                        .HasColumnType("int");
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("longtext");
@@ -100,82 +35,18 @@ namespace WebMedicina.BackEnd.Model.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
-                    b.HasKey("Id")
-                        .HasName("PRIMARY");
+                    b.HasKey("Id");
 
-                    b.HasIndex(new[] { "RoleId" }, "IX_AspNetRoleClaims_RoleId");
+                    b.HasIndex("RoleId");
 
-                    b.ToTable("aspnetroleclaims", (string)null);
+                    b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("WebMedicina.BackEnd.Model.AspnetuserModel", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int(11)");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<DateTime?>("LockoutEnd")
-                        .HasMaxLength(6)
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
-
-                    b.HasKey("Id")
-                        .HasName("PRIMARY");
-
-                    b.HasIndex(new[] { "NormalizedEmail" }, "EmailIndex");
-
-                    b.HasIndex(new[] { "NormalizedUserName" }, "UserNameIndex")
-                        .IsUnique();
-
-                    b.ToTable("aspnetusers", (string)null);
-                });
-
-            modelBuilder.Entity("WebMedicina.BackEnd.Model.Aspnetuserclaim", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int(11)");
+                        .HasColumnType("int");
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("longtext");
@@ -187,15 +58,14 @@ namespace WebMedicina.BackEnd.Model.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
-                    b.HasKey("Id")
-                        .HasName("PRIMARY");
+                    b.HasKey("Id");
 
-                    b.HasIndex(new[] { "UserId" }, "IX_AspNetUserClaims_UserId");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("aspnetuserclaims", (string)null);
+                    b.ToTable("AspNetUserClaims", (string)null);
                 });
 
-            modelBuilder.Entity("WebMedicina.BackEnd.Model.Aspnetuserlogin", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasColumnType("varchar(255)");
@@ -210,16 +80,29 @@ namespace WebMedicina.BackEnd.Model.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
-                    b.HasKey("LoginProvider", "ProviderKey")
-                        .HasName("PRIMARY")
-                        .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+                    b.HasKey("LoginProvider", "ProviderKey");
 
-                    b.HasIndex(new[] { "UserId" }, "IX_AspNetUserLogins_UserId");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("aspnetuserlogins", (string)null);
+                    b.ToTable("AspNetUserLogins", (string)null);
                 });
 
-            modelBuilder.Entity("WebMedicina.BackEnd.Model.AspnetusertokenModel", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
                     b.Property<string>("UserId")
                         .HasColumnType("varchar(255)");
@@ -233,11 +116,9 @@ namespace WebMedicina.BackEnd.Model.Migrations
                     b.Property<string>("Value")
                         .HasColumnType("longtext");
 
-                    b.HasKey("UserId", "LoginProvider", "Name")
-                        .HasName("PRIMARY")
-                        .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0, 0 });
+                    b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("aspnetusertokens", (string)null);
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("WebMedicina.BackEnd.Model.EpilepsiaModel", b =>
@@ -265,21 +146,21 @@ namespace WebMedicina.BackEnd.Model.Migrations
                     b.HasKey("IdEpilepsia")
                         .HasName("PRIMARY");
 
-                    b.ToTable("Epilepsias");
+                    b.ToTable("Epilepsias", (string)null);
 
                     b.HasData(
                         new
                         {
                             IdEpilepsia = 1,
-                            FechaCreac = new DateTime(2024, 1, 20, 0, 0, 0, 0, DateTimeKind.Local),
-                            FechaUltMod = new DateTime(2024, 1, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            FechaCreac = new DateTime(2024, 1, 24, 0, 0, 0, 0, DateTimeKind.Local),
+                            FechaUltMod = new DateTime(2024, 1, 24, 0, 0, 0, 0, DateTimeKind.Local),
                             Nombre = "Epilepsia1"
                         },
                         new
                         {
                             IdEpilepsia = 2,
-                            FechaCreac = new DateTime(2024, 1, 20, 0, 0, 0, 0, DateTimeKind.Local),
-                            FechaUltMod = new DateTime(2024, 1, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            FechaCreac = new DateTime(2024, 1, 24, 0, 0, 0, 0, DateTimeKind.Local),
+                            FechaUltMod = new DateTime(2024, 1, 24, 0, 0, 0, 0, DateTimeKind.Local),
                             Nombre = "Epilepsia2"
                         });
                 });
@@ -305,7 +186,6 @@ namespace WebMedicina.BackEnd.Model.Migrations
                         .HasColumnType("int(11)");
 
                     b.Property<int?>("IdMedicoUltModif")
-                        .IsConcurrencyToken()
                         .HasColumnType("int(11)");
 
                     b.Property<string>("Label")
@@ -324,15 +204,15 @@ namespace WebMedicina.BackEnd.Model.Migrations
 
                     b.HasIndex("IdMedicoUltModif");
 
-                    b.ToTable("EtapaLT");
+                    b.ToTable("EtapaLT", (string)null);
 
                     b.HasData(
                         new
                         {
                             Id = 1,
                             Descripcion = "",
-                            FechaCreac = new DateTime(2024, 1, 20, 0, 0, 0, 0, DateTimeKind.Local),
-                            FechaUltMod = new DateTime(2024, 1, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            FechaCreac = new DateTime(2024, 1, 24, 0, 0, 0, 0, DateTimeKind.Local),
+                            FechaUltMod = new DateTime(2024, 1, 24, 0, 0, 0, 0, DateTimeKind.Local),
                             Label = "¿Ha dado su consentimiento el paciente?",
                             Titulo = "Consentimiento Informado"
                         },
@@ -340,7 +220,7 @@ namespace WebMedicina.BackEnd.Model.Migrations
                         {
                             Id = 2,
                             Descripcion = "Descripcion",
-                            FechaCreac = new DateTime(2024, 1, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            FechaCreac = new DateTime(2024, 1, 24, 0, 0, 0, 0, DateTimeKind.Local),
                             FechaUltMod = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Label = "¿Ha dado su consentimiento el paciente?",
                             Titulo = "Paciente Acude a Extracción Analítica"
@@ -349,8 +229,8 @@ namespace WebMedicina.BackEnd.Model.Migrations
                         {
                             Id = 3,
                             Descripcion = "",
-                            FechaCreac = new DateTime(2024, 1, 20, 0, 0, 0, 0, DateTimeKind.Local),
-                            FechaUltMod = new DateTime(2024, 1, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            FechaCreac = new DateTime(2024, 1, 24, 0, 0, 0, 0, DateTimeKind.Local),
+                            FechaUltMod = new DateTime(2024, 1, 24, 0, 0, 0, 0, DateTimeKind.Local),
                             Label = "¿Ha dado su consentimiento el paciente?",
                             Titulo = "Muestra de Genética"
                         },
@@ -358,8 +238,8 @@ namespace WebMedicina.BackEnd.Model.Migrations
                         {
                             Id = 999,
                             Descripcion = "",
-                            FechaCreac = new DateTime(2024, 1, 20, 0, 0, 0, 0, DateTimeKind.Local),
-                            FechaUltMod = new DateTime(2024, 1, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            FechaCreac = new DateTime(2024, 1, 24, 0, 0, 0, 0, DateTimeKind.Local),
+                            FechaUltMod = new DateTime(2024, 1, 24, 0, 0, 0, 0, DateTimeKind.Local),
                             Label = "",
                             Titulo = "Fin de la evolución del paciente"
                         });
@@ -394,7 +274,7 @@ namespace WebMedicina.BackEnd.Model.Migrations
 
                     b.HasIndex("IdPaciente");
 
-                    b.ToTable("EvolucionLT");
+                    b.ToTable("EvolucionLT", (string)null);
                 });
 
             modelBuilder.Entity("WebMedicina.BackEnd.Model.FarmacosModel", b =>
@@ -422,7 +302,7 @@ namespace WebMedicina.BackEnd.Model.Migrations
                     b.HasKey("IdFarmaco")
                         .HasName("PRIMARY");
 
-                    b.ToTable("Farmacos");
+                    b.ToTable("Farmacos", (string)null);
                 });
 
             modelBuilder.Entity("WebMedicina.BackEnd.Model.MedicosModel", b =>
@@ -478,12 +358,29 @@ namespace WebMedicina.BackEnd.Model.Migrations
                     b.HasKey("IdMedico")
                         .HasName("PRIMARY");
 
+                    b.HasIndex("NetuserId")
+                        .IsUnique();
+
                     b.HasIndex(new[] { "UserLogin" }, "userLogin")
                         .IsUnique();
 
                     b.HasIndex(new[] { "NetuserId" }, "Índice 2");
 
-                    b.ToTable("Medicos");
+                    b.ToTable("Medicos", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            IdMedico = 1,
+                            Apellidos = "Mimbrero Gu",
+                            FechaCreac = new DateTime(2024, 1, 24, 0, 0, 0, 0, DateTimeKind.Local),
+                            FechaNac = new DateTime(2003, 2, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FechaUltMod = new DateTime(2024, 1, 24, 0, 0, 0, 0, DateTimeKind.Local),
+                            NetuserId = "a4d628bb-4986-4b5c-adda-6e7e2c2991b7",
+                            Nombre = "Alberto",
+                            Sexo = "H",
+                            UserLogin = "alberto"
+                        });
                 });
 
             modelBuilder.Entity("WebMedicina.BackEnd.Model.MedicospacienteModel", b =>
@@ -539,21 +436,21 @@ namespace WebMedicina.BackEnd.Model.Migrations
                     b.HasKey("IdMutacion")
                         .HasName("PRIMARY");
 
-                    b.ToTable("Mutaciones");
+                    b.ToTable("Mutaciones", (string)null);
 
                     b.HasData(
                         new
                         {
                             IdMutacion = 1,
-                            FechaCreac = new DateTime(2024, 1, 20, 0, 0, 0, 0, DateTimeKind.Local),
-                            FechaUltMod = new DateTime(2024, 1, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            FechaCreac = new DateTime(2024, 1, 24, 0, 0, 0, 0, DateTimeKind.Local),
+                            FechaUltMod = new DateTime(2024, 1, 24, 0, 0, 0, 0, DateTimeKind.Local),
                             Nombre = "Mutacion1"
                         },
                         new
                         {
                             IdMutacion = 2,
-                            FechaCreac = new DateTime(2024, 1, 20, 0, 0, 0, 0, DateTimeKind.Local),
-                            FechaUltMod = new DateTime(2024, 1, 20, 0, 0, 0, 0, DateTimeKind.Local),
+                            FechaCreac = new DateTime(2024, 1, 24, 0, 0, 0, 0, DateTimeKind.Local),
+                            FechaUltMod = new DateTime(2024, 1, 24, 0, 0, 0, 0, DateTimeKind.Local),
                             Nombre = "Mutacion2"
                         });
                 });
@@ -655,72 +552,215 @@ namespace WebMedicina.BackEnd.Model.Migrations
 
                     b.HasIndex(new[] { "MedicoUltMod" }, "medicoUltMod");
 
-                    b.ToTable("Pacientes");
+                    b.ToTable("Pacientes", (string)null);
                 });
 
-            modelBuilder.Entity("Aspnetuserrole", b =>
+            modelBuilder.Entity("WebMedicina.BackEnd.Model.RoleModel", b =>
                 {
-                    b.HasOne("WebMedicina.BackEnd.Model.AspnetroleModel", null)
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex");
+
+                    b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            ConcurrencyStamp = "60d3b5be-7e00-41e0-84e7-44ecd3a4965b",
+                            Name = "superAdmin",
+                            NormalizedName = "SUPERADMIN"
+                        },
+                        new
+                        {
+                            Id = "2",
+                            ConcurrencyStamp = "e1b6efff-994a-42bc-b760-b91eb2d1b27a",
+                            Name = "admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "3",
+                            ConcurrencyStamp = "e81bb18e-498f-4754-a2d6-efbc69a8ead3",
+                            Name = "medico",
+                            NormalizedName = "MEDICO"
+                        });
+                });
+
+            modelBuilder.Entity("WebMedicina.BackEnd.Model.UserModel", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("IdMedico")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex");
+
+                    b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "a4d628bb-4986-4b5c-adda-6e7e2c2991b7",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "d2bb3fa6-734d-4ead-9e12-b95657e2fb4f",
+                            EmailConfirmed = false,
+                            IdMedico = 1,
+                            LockoutEnabled = false,
+                            NormalizedUserName = "ALBERTO",
+                            PasswordHash = "AQAAAAIAAYagAAAAECWeQIf5nj4O5nN0TbkE1sYL6aSI1dXhrPE1KD++LMN9hMaR4ZAW7CEr3ld73O6AkQ==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "4F6ACO5QK3P5XBDISEIFH27CXIFNKOJ5",
+                            TwoFactorEnabled = false,
+                            UserName = "alberto"
+                        });
+                });
+
+            modelBuilder.Entity("WebMedicina.BackEnd.Model.UserRefreshTokens", b =>
+                {
+                    b.Property<int>("RefreshTokenId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FechaExpiracion")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("IdMedico")
+                        .HasColumnType("int(11)");
+
+                    b.Property<string>("RefreshToken")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("RefreshTokenId");
+
+                    b.HasIndex("IdMedico")
+                        .IsUnique();
+
+                    b.ToTable("UserRefreshToken", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.HasOne("WebMedicina.BackEnd.Model.RoleModel", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_AspNetUserRoles_AspNetRoles_RoleId");
+                        .IsRequired();
+                });
 
-                    b.HasOne("WebMedicina.BackEnd.Model.AspnetuserModel", null)
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("WebMedicina.BackEnd.Model.UserModel", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_AspNetUserRoles_AspNetUsers_UserId");
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("WebMedicina.BackEnd.Model.AspnetroleclaimModel", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("WebMedicina.BackEnd.Model.AspnetroleModel", "Role")
-                        .WithMany("Aspnetroleclaims")
+                    b.HasOne("WebMedicina.BackEnd.Model.UserModel", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("WebMedicina.BackEnd.Model.RoleModel", null)
+                        .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_AspNetRoleClaims_AspNetRoles_RoleId");
+                        .IsRequired();
 
-                    b.Navigation("Role");
-                });
-
-            modelBuilder.Entity("WebMedicina.BackEnd.Model.Aspnetuserclaim", b =>
-                {
-                    b.HasOne("WebMedicina.BackEnd.Model.AspnetuserModel", "User")
-                        .WithMany("Aspnetuserclaims")
+                    b.HasOne("WebMedicina.BackEnd.Model.UserModel", null)
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_AspNetUserClaims_AspNetUsers_UserId");
-
-                    b.Navigation("User");
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("WebMedicina.BackEnd.Model.Aspnetuserlogin", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("WebMedicina.BackEnd.Model.AspnetuserModel", "User")
-                        .WithMany("Aspnetuserlogins")
+                    b.HasOne("WebMedicina.BackEnd.Model.UserModel", null)
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_AspNetUserLogins_AspNetUsers_UserId");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("WebMedicina.BackEnd.Model.AspnetusertokenModel", b =>
-                {
-                    b.HasOne("WebMedicina.BackEnd.Model.AspnetuserModel", "User")
-                        .WithMany("Aspnetusertokens")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_AspNetUserTokens_AspNetUsers_UserId");
-
-                    b.Navigation("User");
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("WebMedicina.BackEnd.Model.EtapaLTModel", b =>
@@ -767,9 +807,9 @@ namespace WebMedicina.BackEnd.Model.Migrations
 
             modelBuilder.Entity("WebMedicina.BackEnd.Model.MedicosModel", b =>
                 {
-                    b.HasOne("WebMedicina.BackEnd.Model.AspnetuserModel", "Netuser")
-                        .WithMany("Medicos")
-                        .HasForeignKey("NetuserId")
+                    b.HasOne("WebMedicina.BackEnd.Model.UserModel", "Netuser")
+                        .WithOne("Medico")
+                        .HasForeignKey("WebMedicina.BackEnd.Model.MedicosModel", "NetuserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_medicos_aspnetusers");
@@ -833,20 +873,15 @@ namespace WebMedicina.BackEnd.Model.Migrations
                     b.Navigation("MedicoUltModNavigation");
                 });
 
-            modelBuilder.Entity("WebMedicina.BackEnd.Model.AspnetroleModel", b =>
+            modelBuilder.Entity("WebMedicina.BackEnd.Model.UserRefreshTokens", b =>
                 {
-                    b.Navigation("Aspnetroleclaims");
-                });
+                    b.HasOne("WebMedicina.BackEnd.Model.MedicosModel", "Medico")
+                        .WithOne("RefreshToken")
+                        .HasForeignKey("WebMedicina.BackEnd.Model.UserRefreshTokens", "IdMedico")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-            modelBuilder.Entity("WebMedicina.BackEnd.Model.AspnetuserModel", b =>
-                {
-                    b.Navigation("Aspnetuserclaims");
-
-                    b.Navigation("Aspnetuserlogins");
-
-                    b.Navigation("Aspnetusertokens");
-
-                    b.Navigation("Medicos");
+                    b.Navigation("Medico");
                 });
 
             modelBuilder.Entity("WebMedicina.BackEnd.Model.EpilepsiaModel", b =>
@@ -872,6 +907,8 @@ namespace WebMedicina.BackEnd.Model.Migrations
                     b.Navigation("PacienteMedicoCreadorNavigations");
 
                     b.Navigation("PacienteMedicoUltModNavigations");
+
+                    b.Navigation("RefreshToken");
                 });
 
             modelBuilder.Entity("WebMedicina.BackEnd.Model.MutacionesModel", b =>
@@ -884,6 +921,12 @@ namespace WebMedicina.BackEnd.Model.Migrations
                     b.Navigation("Evoluciones");
 
                     b.Navigation("Medicospacientes");
+                });
+
+            modelBuilder.Entity("WebMedicina.BackEnd.Model.UserModel", b =>
+                {
+                    b.Navigation("Medico")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

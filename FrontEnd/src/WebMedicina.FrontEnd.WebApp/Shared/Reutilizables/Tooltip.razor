@@ -1,4 +1,4 @@
-﻿<MudTooltip Arrow="true" Placement="@Posicion" Color="@Color">
+﻿<MudTooltip Arrow="true" Placement="@Posicion" Color="@ColorTooltip">
     <ChildContent>
         <MudIconButton Icon="@Icono" Size="SizeIcono" Class="ml-1" />
     </ChildContent>
@@ -20,11 +20,23 @@
     [Parameter] public MarkupString Contenido { get; set; } = new MarkupString();
 
     // Color
-    [Parameter] public Color Color { get; set; } = Color.Default;
+    [Parameter] public Color ColorTooltip { get; set; } = Color.Default;
 
     // Tamaño icono
     [Parameter] public Size SizeIcono { get; set; } = Size.Medium;
 
     // Posicion 
     [Parameter] public Placement Posicion { get; set; } = Placement.Top;
+
+    // Modo Oscuro 
+    [CascadingParameter(Name = "modoOscuro")] bool IsDarkMode { get; set; }
+
+    protected override void OnInitialized() {
+        base.OnInitialized();
+
+        if (IsDarkMode) {
+            ColorTooltip = Color.Primary;
+        }
+    }
+
 }

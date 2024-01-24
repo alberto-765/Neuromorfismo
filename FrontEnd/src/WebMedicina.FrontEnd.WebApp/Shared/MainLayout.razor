@@ -81,7 +81,6 @@
                 }
                 if (modoOscuro is null) {
                     _isDarkMode = await _mudThemeProvider.GetSystemPreference();
-                    await js.SetInLocalStorage(CLAVE, JsonSerializer.Serialize(_isDarkMode));
                 }else {
                     _isDarkMode = boolModo;
                 }

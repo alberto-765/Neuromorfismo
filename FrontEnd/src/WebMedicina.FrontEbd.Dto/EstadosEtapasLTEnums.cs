@@ -2,18 +2,21 @@
 
 namespace WebMedicina.FrontEnd.Dto {
 
-    // Estados de una etapa
-    public enum EstadoEtapa {
-        [Description("La etapa ya ha sido confirmada por un médico.")]
-        Pasada,
+    public static class EstadosEtapasLT {
 
-        [Description("La etapa es la siguiente a confirmar.")]
-        Presente,
+        // Estados de una etapa
+        public enum EstadoEtapa {
+            [Description("La etapa ya ha sido confirmada por un médico.")]
+            Pasada,
 
-        [Description("La etapa es futura y aún hay etapas por pasar.")]
-        Futura,
+            [Description("La etapa es la siguiente a confirmar.")]
+            Presente,
 
-        [Description("Fin de la evolución del paciente.")]
-        FinEtapas
+            [Description("La etapa es futura y aún hay etapas por pasar.")]
+            Futura,
+
+            [Description("Fin de la evolución del paciente.")]
+            FinEtapas
+        }
     }
 }

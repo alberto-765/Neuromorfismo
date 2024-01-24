@@ -1,5 +1,4 @@
 ﻿using Microsoft.JSInterop;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -29,7 +28,7 @@ namespace WebMedicina.FrontEnd.Service
 
             // Si estapas es null significa que es la primera vez que se obtiene
             if (string.IsNullOrWhiteSpace(jsonEtapas)) {
-                etapas = await Http.GetFromJsonAsync<ImmutableSortedDictionary<int, EtapaLTDto>>("lineatemporal/obtenertodasetapas");
+                etapas = await _http.GetFromJsonAsync<ImmutableSortedDictionary<int, EtapaLTDto>>("lineatemporal/obtenertodasetapas");
 
                 // guardamos las etapas en session
                 await _js.SetInSessionStorage(keyEtapas, JsonSerializer.Serialize(etapas));
@@ -61,7 +60,7 @@ namespace WebMedicina.FrontEnd.Service
 
                 // Obtenemos las evoluciones del paciente si no estan en session
                 if(paciente.Evoluciones is null) {
-                    HttpResponseMessage httpResponseMessage = await Http.GetAsync($"lineatemporal/obtenerevolucionpaciente/{idPaciente}");
+                    HttpResponseMessage httpResponseMessage = await _http.GetAsync($"lineatemporal/obtenerevolucionpaciente/{idPaciente}");
 
                     // Obtenemos la evolucion del paciente y lo guardamos en session
                     if (httpResponseMessage.IsSuccessStatusCode) {
@@ -85,7 +84,7 @@ namespace WebMedicina.FrontEnd.Service
             CrearPacienteDto? paciente = null;
 
             // LLamada API para actualizar evolucion
-            HttpResponseMessage respuesta = await Http.PutAsJsonAsync("lineatemporal/actoinsertevolucionpaciente", evoEditada);
+            HttpResponseMessage respuesta = await _http.PutAsJsonAsync("lineatemporal/actoinsertevolucionpaciente", evoEditada);
             SortedList<int, EvolucionLTDto>? evolucionesEditadas = await respuesta.Content.ReadFromJsonAsync<SortedList<int, EvolucionLTDto>>();
 
             // Actualizamos evolucion del paciente en session

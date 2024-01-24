@@ -1,13 +1,6 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
 using WebMedicina.BackEnd.Dal;
 using WebMedicina.BackEnd.Model;
 using WebMedicina.BackEnd.ServicesDependencies;
@@ -18,13 +11,11 @@ namespace WebMedicina.BackEnd.Service
 {
     public class IdentityService : IIdentityService {
         private readonly MedicoDal _medicoDal;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<UserModel> _userManager;
+        private readonly SignInManager<UserModel> _signInManager;
         private readonly AdminDal _adminDal;
 
-        public IdentityService(RoleManager<IdentityRole> roleManager, MedicoDal medicoDal, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, AdminDal adminDal) {
-            _roleManager = roleManager;
+        public IdentityService(MedicoDal medicoDal, UserManager<UserModel> userManager, SignInManager<UserModel> signInManager, AdminDal adminDal) {
             _medicoDal = medicoDal;
             _userManager = userManager;
             _signInManager = signInManager;
@@ -65,7 +56,7 @@ namespace WebMedicina.BackEnd.Service
             return medicosModel;
         }
 
-        public async Task<bool> CrearUser(IdentityUser user, UserRegistroDto model) {
+        public async Task<bool> CrearUser(UserModel user, UserRegistroDto model) {
             var result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded) {
                 // Añadimos el usuario a su rol
@@ -80,7 +71,7 @@ namespace WebMedicina.BackEnd.Service
                 return false;
             }
 
-            var respuesta = await _signInManager.PasswordSignInAsync(userLogin.UserName, userLogin.Password, isPersistent: true, lockoutOnFailure: true);
+            var respuesta = await _signInManager.PasswordSignInAsync(userLogin.UserName, userLogin.Password, isPersistent: false, lockoutOnFailure: true);
             return respuesta.Succeeded;
         }
 
@@ -150,15 +141,21 @@ namespace WebMedicina.BackEnd.Service
         // Actualizamos rol del usuario
         public async Task<bool> ActualizarRol(string userLogin, string nuevoRol) {
             // Obtenemos el usuario y sus roles
-            IdentityUser? usuario = await _adminDal.ObtenerUsuarioIdentity(userLogin);
+            UserModel? usuario = await _adminDal.ObtenerUsuarioIdentity(userLogin);
             IdentityResult rolActualizado = new();
 
             if (usuario is not null) {
                 string? rol = await _adminDal.ObtenerRolUser(usuario);
                 // Eliminamos y volvemos a añadir el nuevo rol
-                if(rol != null) {
-                    rolActualizado = await _userManager.RemoveFromRoleAsync(usuario, rol);
-                    rolActualizado = await _userManager.AddToRoleAsync(usuario, nuevoRol);
+                if(!string.IsNullOrWhiteSpace(rol)) {
+                    Task<IdentityResult[]> tareasCambiarRol = Task.WhenAll(new Task<IdentityResult>[]{
+                         _userManager.RemoveFromRoleAsync(usuario, rol),
+                         _userManager.AddToRoleAsync(usuario, nuevoRol)
+                    });
+
+                    // Validamos si ambas tareas han devuelto un success result
+                    IdentityResult[] rolesActualizados = await tareasCambiarRol;
+                    rolActualizado = (rolesActualizados.All(q => q.Succeeded) ? IdentityResult.Success : IdentityResult.Failed());
                 }
             }
 

@@ -10,10 +10,10 @@ namespace WebMedicina.BackEnd.ServicesDependencies.Mappers {
         public static UserInfoDto ToUserInfoDto(this ClaimsPrincipal user) =>
             new() {
                 IdMedico = int.TryParse(user.FindFirstValue(ClaimTypes.NameIdentifier), out int idMedico) ? idMedico : throw new NoNullAllowedException(),
-                UserLogin = user.FindFirstValue("UserName"),
-                Nombre = user.FindFirstValue(JwtClaimTypes.Name),
+                UserLogin = user.FindFirstValue("UserLogin"),
+                Nombre = user.FindFirstValue(ClaimTypes.Name),
                 Apellidos = user.FindFirstValue(ClaimTypes.Surname),
-                Rol = user.FindFirstValue(JwtClaimTypes.Role)
+                Rol = user.FindFirstValue(ClaimTypes.Role)
             };
     }
 }

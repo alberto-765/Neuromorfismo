@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using System.Collections.Immutable;
-using WebMedicina.FrontEnd.Dto;
 using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.Shared.Dto.LineaTemporal;
+using static WebMedicina.FrontEnd.Dto.EstadosEtapasLT;
 
 namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
     public partial class LineaTemporal {

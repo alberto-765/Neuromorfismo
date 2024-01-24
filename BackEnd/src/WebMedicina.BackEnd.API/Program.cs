@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using System.Text;
 using WebMedicina.BackEnd.API;
 using WebMedicina.BackEnd.Dal;
@@ -40,7 +41,7 @@ builder.Services.AddDbContext<WebmedicinaContext>(options => {
 
 
 // IDENTITY
-builder.Services.AddIdentity<UserModel, IdentityRole>(options => {
+builder.Services.AddIdentity<UserModel, RoleModel>(options => {
 	// no requerir cuenta confirmada
 	options.SignIn.RequireConfirmedAccount = false;
 
@@ -77,13 +78,13 @@ builder.Services.AddAuthentication(x => {
 		options.TokenValidationParameters = new TokenValidationParameters {
 			ValidateIssuer = true,
 			ValidateAudience = true,
-			NameClaimType = JwtClaimTypes.Name,
-			RoleClaimType = JwtClaimTypes.Role,
+			NameClaimType = ClaimTypes.Name,
+			RoleClaimType = ClaimTypes.Role,
 			ValidateLifetime = true,
 			ValidateIssuerSigningKey = true,
 			ValidIssuer = jwtSettings.Issuer,
 			ValidAudience = jwtSettings.Audience,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key))
 		};
 });
 builder.Services.AddAuthorization();
@@ -115,6 +116,7 @@ builder.Services.AddScoped<IAdminsService, AdminsService>(); // Servicios de adm
 builder.Services.AddScoped<IPacientesService, PacientesService>(); // Servicios de pacientes
 builder.Services.AddScoped<ILineaTemporalService, LineaTemporalService>(); // Servicios de linea temporal
 builder.Services.AddScoped<IUserAccountService, UserAccountService>(); // Servicios de cuentas de usuario
+builder.Services.AddScoped<IJWTManagerRepository, JWTManagerRepository>(); // Servicios de jwt tokens
 
 // IOPTIONS PARA CONFIGURACION
 builder.Services.Configure<JWTConfig>(builder.Configuration.GetSection("JWT"))

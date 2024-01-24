@@ -16,7 +16,7 @@
                         <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" id="@((IsDarkMode ? "btnCrearPacienteDark" : "btnCrearPacienteDef"))" StartIcon="@Icons.Material.Outlined.PersonAddAlt" @onclick="MostrarCrearPac">
                             Crear Paciente
                         </MudButton>
-                        <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Success">
+                        <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Success" style="@(IsDarkMode ? "background-color: var(--mud-palette-success-darken); color: #fff;" : "")">
                             <MudImage Src="@(UrlImagenes + "iconoExcel.png")" Alt="Icono Excel" Height="20" Class="mr-4" /> Excel
                         </MudButton>
                     </MudStack>

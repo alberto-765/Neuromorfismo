@@ -41,27 +41,30 @@ namespace WebMedicina.BackEnd.Service {
                 new Claim(ClaimTypes.NameIdentifier, userInfo.IdMedico.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), //IDENTIFICADOR
                 new Claim("UserLogin", userInfo.UserLogin),
-                new Claim(JwtClaimTypes.Name, userInfo.Nombre),
+                new Claim(ClaimTypes.Name, userInfo.Nombre),
                 new Claim(ClaimTypes.Surname, userInfo.Apellidos),
-                new Claim(JwtClaimTypes.Role, userInfo.Rol),
+                new Claim(ClaimTypes.Role, userInfo.Rol),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_iconfiguration.GetSection("JWT")["key"] ?? throw new InvalidOperationException("No se ha encontrado la key para crear el token.")));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             // Tiempo de expiración del token. En nuestro caso lo hacemos de una hora.
-            var expiration = DateTime.UtcNow.AddDays(7);
+            var expiration = DateTime.Now.AddHours(double.TryParse(_jwtConfig.ValidezTokenEnHoras, out double horas) ? horas : 6);
 
             JwtSecurityToken token = new(
-                issuer: null,
-                audience: null,
+                issuer: _jwtConfig.Issuer,
+                audience: _jwtConfig.Audience,
                 claims: claims,
                 expires: expiration,
                 signingCredentials: creds
             );
 
-            // Generamos refresh token
+            // Generamos refresh token y añadimos a BD
             string refreshToken = GenerateRefreshToken();
+            if(!AddRefreshToken(refreshToken, userInfo.IdMedico)) {
+                return null;
+            }
 
             return new Tokens { AccessToken = new JwtSecurityTokenHandler().WriteToken(token), RefreshToken = refreshToken };
         }
@@ -87,8 +90,8 @@ namespace WebMedicina.BackEnd.Service {
             TokenValidationParameters tokenValidationParameters = new()  {
                 ValidateIssuer = true,
                 ValidateAudience = true,
-                NameClaimType = JwtClaimTypes.Name,
-                RoleClaimType = JwtClaimTypes.Role,
+                NameClaimType = ClaimTypes.Name,
+                RoleClaimType = ClaimTypes.Role,
                 ValidateLifetime = false, // no validamos lifeTime 
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = _jwtConfig.Issuer,
@@ -118,17 +121,17 @@ namespace WebMedicina.BackEnd.Service {
         /// <param name="token"></param>
         /// <param name="netUserId"></param>
         /// <returns>Refresh token creado</returns>
-        public bool AddRefreshToken(Tokens token, int idMedico) {
-            UserRefreshTokens refreshToken = new() {
+        public bool AddRefreshToken(string refreshToken, int idMedico) {
+            UserRefreshTokens userRefreshToken = new() {
                 IdMedico = idMedico,
-                RefreshToken = token.RefreshToken,
-                FechaExpiracion = DateTime.UtcNow.AddDays(1)
+                RefreshToken = refreshToken,
+                FechaExpiracion = DateTime.UtcNow.AddDays(double.TryParse(_jwtConfig.ValidezRefreshTokenEnDias, out double dias) ? dias : 6)
             };
 
             // Eliminamos los refreshtokens antes de añadir el nuevo
             _tokensDal.DeleteRefreshTokens(idMedico);
 
-            return _tokensDal.AddRefreshToken(refreshToken);
+            return _tokensDal.AddRefreshToken(userRefreshToken);
         }
 
         /// <summary>
@@ -152,7 +155,7 @@ namespace WebMedicina.BackEnd.Service {
 
             // Eliminamos el refreshToken si ya ha caducado
             if (userRefreshtoken is not null && userRefreshtoken.FechaExpiracion < DateTime.UtcNow) {
-                userRefreshtoken = DeleteRefreshToken(idMedico, refreshToken) ? null : userRefreshtoken;
+                userRefreshtoken = DeleteRefreshTokens(idMedico, refreshToken) ? null : userRefreshtoken;
             }
 
             return userRefreshtoken;

@@ -22,6 +22,7 @@ namespace WebMedicina.Shared.Dto.Usuarios {
         [CustomValidation(typeof(ValidacionesRegistro), "ValidateFechaNacimiento")]
         public DateTime? FechaNac { get; set; } =  ValidacionesRegistro.ObtenerFechaMaxNacimiento();
 
+        [RegularExpression("^[a-z]+$", ErrorMessage = "El nombre de usuario solo puede tener letras y minúsculas")]
         [Required(ErrorMessage = "El usuario para login debe ser generado automáticamente.")]
         public string UserLogin { get; set; } = null!;
 

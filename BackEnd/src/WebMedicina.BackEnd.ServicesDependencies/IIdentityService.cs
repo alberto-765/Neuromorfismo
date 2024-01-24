@@ -7,7 +7,7 @@ namespace WebMedicina.BackEnd.ServicesDependencies {
 
         Task<MedicosModel?> ObtenerUsuarioYRol(int idMedico);
         Task<MedicosModel?> ObtenerUsuarioYRolLogin(string userName); // Obtener info del usuario en el login
-        Task<bool> CrearUser(IdentityUser user, UserRegistroDto model);
+        Task<bool> CrearUser(UserModel user, UserRegistroDto model);
         Task<bool> ComprobarContraseña(UserLoginDto userLogin);
         Task<bool> ComprobarUserName(string userName);
         Task<bool> ActualizarRol(string userLogin, string nuevoRol);

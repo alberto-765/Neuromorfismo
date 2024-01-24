@@ -9,9 +9,9 @@ using WebMedicina.Shared.Dto.Usuarios;
 namespace WebMedicina.BackEnd.Dal {
     public  class AdminDal {
         private readonly WebmedicinaContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<UserModel> _userManager;
 
-        public AdminDal(WebmedicinaContext context, UserManager<IdentityUser> userManager) {
+        public AdminDal(WebmedicinaContext context, UserManager<UserModel> userManager) {
             _context = context;
             _userManager = userManager;
         }
@@ -29,12 +29,12 @@ namespace WebMedicina.BackEnd.Dal {
                 return false;   
             }
         }
-        public async Task<IdentityUser?> ObtenerUsuarioIdentity(string userName) {
+        public async Task<UserModel?> ObtenerUsuarioIdentity(string userName) {
             return await _userManager.FindByNameAsync(userName);
         }
 
         // Obtener todos los roles de un usuario
-        public async Task<string?> ObtenerRolUser(IdentityUser? user) {
+        public async Task<string?> ObtenerRolUser(UserModel? user) {
             IList<string>? roles = null;
 
             if (user is not null) {

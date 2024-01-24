@@ -22,7 +22,7 @@ namespace WebMedicina.FrontEnd.Service {
                 Primary = "#64B5F6",
                 Secondary = "#42A5F5",
                 // Info = "#a4c2dd",
-                // Success = "#2ECC40",
+                Success = "#2ECC40",
                 // Warning = "#dc2d7e",
                 // Error = "#de2000",
                 AppbarBackground = "rgba(26,26,39,0.8)",

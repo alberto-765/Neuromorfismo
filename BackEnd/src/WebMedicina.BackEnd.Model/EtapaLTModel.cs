@@ -19,18 +19,15 @@ namespace WebMedicina.BackEnd.Model {
         [MaxLength(250)]
         public string? Descripcion { get; set; }
 
-        [Required]
-        public int IdMedicoCreador { get; set; }
+        public int? IdMedicoCreador { get; set; } = null;
         [ForeignKey("IdMedicoCreador")]
-        public MedicosModel? MedicoCreador { get; set; }
+        public MedicosModel? MedicoCreador { get; set; } = null;
 
-        [ConcurrencyCheck]
-        [Required]
-        public int IdMedicoUltModif { get; set; }
+        public int? IdMedicoUltModif { get; set; } = null;
 
         [ForeignKey("IdMedicoUltModif")]
-        public MedicosModel? MedicoUltModif { get; set; }
+        public MedicosModel? MedicoUltModif { get; set; } = null;
 
-        public ICollection<EvolucionLTModel> EvolucionEtapa { get; set;} = new List<EvolucionLTModel>();
+        public ICollection<EvolucionLTModel>? EvolucionEtapa { get; set;} = null;
     }
 }

@@ -9,7 +9,7 @@ namespace WebMedicina.BackEnd.ServicesDependencies {
         ClaimsPrincipal GetClaimsFromExpiredToken(string token);
 
         // Refresh Token
-        bool AddRefreshToken(Tokens token, int idMedico);
+        bool AddRefreshToken(string refreshToken, int idMedico);
         bool DeleteRefreshTokens(int idMedico, string refreshToken);
         UserRefreshTokens? ObtenerRefreshToken(int idMedico, string refreshToken);
     }

@@ -1,12 +1,21 @@
-﻿using System.Net.Http.Headers;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.JSInterop;
+using System.Net.Http.Headers;
+using System.Text.Json;
+using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.Shared.Dto.UserAccount;
 
 namespace WebMedicina.FrontEnd.Service {
     public class CreateHttpHandler : DelegatingHandler {
-        private readonly JWTAuthenticationProvider _JWTAuthenticationProvider;
+        private readonly IJSRuntime _js;
+        private readonly string KeyTokenSession; // Clave del localStorage en session
 
-        public CreateHttpHandler(JWTAuthenticationProvider JWTAuthenticationProvider) {
-            _JWTAuthenticationProvider = JWTAuthenticationProvider;
+
+        public CreateHttpHandler(IJSRuntime js, IConfiguration configuration) {
+            _js = js;
+
+            // Obtenemos key token para localStorage
+            KeyTokenSession = configuration["TokenKey"] ?? throw new NullReferenceException();
         }
 
         /// <summary>
@@ -16,7 +25,8 @@ namespace WebMedicina.FrontEnd.Service {
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
-            Tokens? token = await _JWTAuthenticationProvider.ObtenerTokenSession();
+            string tokenSession = await _js.GetFromLocalStorage(KeyTokenSession);
+            Tokens? token = (!string.IsNullOrWhiteSpace(tokenSession) ? JsonSerializer.Deserialize<Tokens>(tokenSession) : null);
 
             // Si el token es valido lo asignamos al header
             if (token is null || string.IsNullOrWhiteSpace(token.AccessToken)) {

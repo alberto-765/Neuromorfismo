@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WebMedicina.BackEnd.Model.Migrations
 {
     /// <inheritdoc />
-    public partial class InicialMigration : Migration
+    public partial class MigracionInicial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,7 +18,7 @@ namespace WebMedicina.BackEnd.Model.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "aspnetroles",
+                name: "AspNetRoles",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "varchar(255)", nullable: false)
@@ -32,12 +32,12 @@ namespace WebMedicina.BackEnd.Model.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PRIMARY", x => x.Id);
+                    table.PrimaryKey("PK_AspNetRoles", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "aspnetusers",
+                name: "AspNetUsers",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "varchar(255)", nullable: false)
@@ -61,13 +61,13 @@ namespace WebMedicina.BackEnd.Model.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     PhoneNumberConfirmed = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     TwoFactorEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    LockoutEnd = table.Column<DateTime>(type: "datetime(6)", maxLength: 6, nullable: true),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
                     LockoutEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int(11)", nullable: false)
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PRIMARY", x => x.Id);
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -123,10 +123,10 @@ namespace WebMedicina.BackEnd.Model.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "aspnetroleclaims",
+                name: "AspNetRoleClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int(11)", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     RoleId = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -137,21 +137,21 @@ namespace WebMedicina.BackEnd.Model.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PRIMARY", x => x.Id);
+                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
                     table.ForeignKey(
                         name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "aspnetroles",
+                        principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "aspnetuserclaims",
+                name: "AspNetUserClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int(11)", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     UserId = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -162,18 +162,18 @@ namespace WebMedicina.BackEnd.Model.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PRIMARY", x => x.Id);
+                    table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
                     table.ForeignKey(
                         name: "FK_AspNetUserClaims_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "aspnetusers",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "aspnetuserlogins",
+                name: "AspNetUserLogins",
                 columns: table => new
                 {
                     LoginProvider = table.Column<string>(type: "varchar(255)", nullable: false)
@@ -187,19 +187,18 @@ namespace WebMedicina.BackEnd.Model.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PRIMARY", x => new { x.LoginProvider, x.ProviderKey })
-                        .Annotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+                    table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
                     table.ForeignKey(
                         name: "FK_AspNetUserLogins_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "aspnetusers",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "aspnetuserroles",
+                name: "AspNetUserRoles",
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "varchar(255)", nullable: false)
@@ -209,25 +208,24 @@ namespace WebMedicina.BackEnd.Model.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PRIMARY", x => new { x.UserId, x.RoleId })
-                        .Annotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
                     table.ForeignKey(
                         name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "aspnetroles",
+                        principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AspNetUserRoles_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "aspnetusers",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "aspnetusertokens",
+                name: "AspNetUserTokens",
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "varchar(255)", nullable: false)
@@ -241,12 +239,11 @@ namespace WebMedicina.BackEnd.Model.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PRIMARY", x => new { x.UserId, x.LoginProvider, x.Name })
-                        .Annotation("MySql:IndexPrefixLength", new[] { 0, 0, 0 });
+                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
                     table.ForeignKey(
                         name: "FK_AspNetUserTokens_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "aspnetusers",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -258,7 +255,7 @@ namespace WebMedicina.BackEnd.Model.Migrations
                 {
                     idMedico = table.Column<int>(type: "int(11)", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    userLogin = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
+                    userLogin = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     nombre = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -278,44 +275,42 @@ namespace WebMedicina.BackEnd.Model.Migrations
                     table.ForeignKey(
                         name: "FK_medicos_aspnetusers",
                         column: x => x.netuserId,
-                        principalTable: "aspnetusers",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "EtapaLTModel",
+                name: "EtapaLT",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Nombre = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Titulo = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Label = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    MedicoCreadorIdMedico = table.Column<int>(type: "int(11)", nullable: false),
-                    MedicoUltModifIdMedico = table.Column<int>(type: "int(11)", nullable: false),
+                    Descripcion = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    IdMedicoCreador = table.Column<int>(type: "int(11)", nullable: true),
+                    IdMedicoUltModif = table.Column<int>(type: "int(11)", nullable: true),
                     FechaCreac = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     FechaUltMod = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EtapaLTModel", x => x.Id);
+                    table.PrimaryKey("PK_EtapaLT", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_EtapaLTModel_Medicos_MedicoCreadorIdMedico",
-                        column: x => x.MedicoCreadorIdMedico,
+                        name: "FK_EtapaLT_Medicos_IdMedicoCreador",
+                        column: x => x.IdMedicoCreador,
                         principalTable: "Medicos",
-                        principalColumn: "idMedico",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "idMedico");
                     table.ForeignKey(
-                        name: "FK_EtapaLTModel_Medicos_MedicoUltModifIdMedico",
-                        column: x => x.MedicoUltModifIdMedico,
+                        name: "FK_EtapaLT_Medicos_IdMedicoUltModif",
+                        column: x => x.IdMedicoUltModif,
                         principalTable: "Medicos",
-                        principalColumn: "idMedico",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "idMedico");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -375,28 +370,22 @@ namespace WebMedicina.BackEnd.Model.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "EvolucionLTModels",
+                name: "UserRefreshToken",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    RefreshTokenId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Confirmado = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    Fecha = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    MedicoUltModifIdMedico = table.Column<int>(type: "int(11)", nullable: false),
-                    EtapasLTId = table.Column<int>(type: "int", nullable: false)
+                    IdMedico = table.Column<int>(type: "int(11)", nullable: false),
+                    RefreshToken = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    FechaExpiracion = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EvolucionLTModels", x => x.Id);
+                    table.PrimaryKey("PK_UserRefreshToken", x => x.RefreshTokenId);
                     table.ForeignKey(
-                        name: "FK_EvolucionLTModels_EtapaLTModel_EtapasLTId",
-                        column: x => x.EtapasLTId,
-                        principalTable: "EtapaLTModel",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_EvolucionLTModels_Medicos_MedicoUltModifIdMedico",
-                        column: x => x.MedicoUltModifIdMedico,
+                        name: "FK_UserRefreshToken_Medicos_IdMedico",
+                        column: x => x.IdMedico,
                         principalTable: "Medicos",
                         principalColumn: "idMedico",
                         onDelete: ReferentialAction.Cascade);
@@ -404,26 +393,35 @@ namespace WebMedicina.BackEnd.Model.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "DatosEvoluEtapasLTModel",
+                name: "EvolucionLT",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    PacienteIdPaciente = table.Column<int>(type: "int(11)", nullable: false),
-                    EtapaLTId = table.Column<int>(type: "int", nullable: false)
+                    Confirmado = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    Fecha = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    IdMedicoUltModif = table.Column<int>(type: "int(11)", nullable: false),
+                    IdEtapa = table.Column<int>(type: "int", nullable: false),
+                    IdPaciente = table.Column<int>(type: "int(11)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DatosEvoluEtapasLTModel", x => x.Id);
+                    table.PrimaryKey("PK_EvolucionLT", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DatosEvoluEtapasLTModel_EtapaLTModel_EtapaLTId",
-                        column: x => x.EtapaLTId,
-                        principalTable: "EtapaLTModel",
+                        name: "FK_EvolucionLT_EtapaLT_IdEtapa",
+                        column: x => x.IdEtapa,
+                        principalTable: "EtapaLT",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_DatosEvoluEtapasLTModel_Pacientes_PacienteIdPaciente",
-                        column: x => x.PacienteIdPaciente,
+                        name: "FK_EvolucionLT_Medicos_IdMedicoUltModif",
+                        column: x => x.IdMedicoUltModif,
+                        principalTable: "Medicos",
+                        principalColumn: "idMedico",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EvolucionLT_Pacientes_IdPaciente",
+                        column: x => x.IdPaciente,
                         principalTable: "Pacientes",
                         principalColumn: "idPaciente",
                         onDelete: ReferentialAction.Cascade);
@@ -459,86 +457,105 @@ namespace WebMedicina.BackEnd.Model.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.InsertData(
-                table: "aspnetroles",
+                table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "1", "b91537ce-92f7-4e81-83dd-395cf3f2cda6", "superAdmin", "SUPERADMIN" },
-                    { "2", "297a498c-937c-47d7-9136-45b969134b16", "admin", "ADMIN" },
-                    { "3", "d72de499-5e02-4e43-81b7-cc7f2f1efa9a", "medico", "MEDICO" }
+                    { "1", "51dcd80f-b5d8-4ed6-b440-2d8e91041e1b", "superAdmin", "SUPERADMIN" },
+                    { "2", "baea1625-824e-4507-aa00-10600451a2c2", "admin", "ADMIN" },
+                    { "3", "74621536-7497-4222-9fc1-8fbe6e1e2b7e", "medico", "MEDICO" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Epilepsias",
+                columns: new[] { "idEpilepsia", "FechaCreac", "FechaUltMod", "nombre" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2024, 1, 23, 0, 0, 0, 0, DateTimeKind.Local), new DateTime(2024, 1, 23, 0, 0, 0, 0, DateTimeKind.Local), "Epilepsia1" },
+                    { 2, new DateTime(2024, 1, 23, 0, 0, 0, 0, DateTimeKind.Local), new DateTime(2024, 1, 23, 0, 0, 0, 0, DateTimeKind.Local), "Epilepsia2" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Mutaciones",
+                columns: new[] { "idMutacion", "FechaCreac", "FechaUltMod", "nombre" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2024, 1, 23, 0, 0, 0, 0, DateTimeKind.Local), new DateTime(2024, 1, 23, 0, 0, 0, 0, DateTimeKind.Local), "Mutacion1" },
+                    { 2, new DateTime(2024, 1, 23, 0, 0, 0, 0, DateTimeKind.Local), new DateTime(2024, 1, 23, 0, 0, 0, 0, DateTimeKind.Local), "Mutacion2" }
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
-                table: "aspnetroleclaims",
+                table: "AspNetRoleClaims",
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
-                table: "aspnetroles",
+                table: "AspNetRoles",
                 column: "NormalizedName",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
-                table: "aspnetuserclaims",
+                table: "AspNetUserClaims",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserLogins_UserId",
-                table: "aspnetuserlogins",
+                table: "AspNetUserLogins",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserRoles_RoleId",
-                table: "aspnetuserroles",
+                table: "AspNetUserRoles",
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
-                table: "aspnetusers",
+                table: "AspNetUsers",
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
-                table: "aspnetusers",
+                table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_DatosEvoluEtapasLTModel_EtapaLTId",
-                table: "DatosEvoluEtapasLTModel",
-                column: "EtapaLTId");
+                name: "IX_EtapaLT_IdMedicoCreador",
+                table: "EtapaLT",
+                column: "IdMedicoCreador");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DatosEvoluEtapasLTModel_PacienteIdPaciente",
-                table: "DatosEvoluEtapasLTModel",
-                column: "PacienteIdPaciente");
+                name: "IX_EtapaLT_IdMedicoUltModif",
+                table: "EtapaLT",
+                column: "IdMedicoUltModif");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EtapaLTModel_MedicoCreadorIdMedico",
-                table: "EtapaLTModel",
-                column: "MedicoCreadorIdMedico");
+                name: "IX_EvolucionLT_IdEtapa",
+                table: "EvolucionLT",
+                column: "IdEtapa");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EtapaLTModel_MedicoUltModifIdMedico",
-                table: "EtapaLTModel",
-                column: "MedicoUltModifIdMedico");
+                name: "IX_EvolucionLT_IdMedicoUltModif",
+                table: "EvolucionLT",
+                column: "IdMedicoUltModif");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EvolucionLTModels_EtapasLTId",
-                table: "EvolucionLTModels",
-                column: "EtapasLTId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_EvolucionLTModels_MedicoUltModifIdMedico",
-                table: "EvolucionLTModels",
-                column: "MedicoUltModifIdMedico");
+                name: "IX_EvolucionLT_IdPaciente",
+                table: "EvolucionLT",
+                column: "IdPaciente");
 
             migrationBuilder.CreateIndex(
                 name: "Índice 2",
                 table: "Medicos",
                 column: "netuserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Medicos_netuserId",
+                table: "Medicos",
+                column: "netuserId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "userLogin",
@@ -575,31 +592,34 @@ namespace WebMedicina.BackEnd.Model.Migrations
                 name: "medicoUltMod",
                 table: "Pacientes",
                 column: "medicoUltMod");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRefreshToken_IdMedico",
+                table: "UserRefreshToken",
+                column: "IdMedico",
+                unique: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "aspnetroleclaims");
+                name: "AspNetRoleClaims");
 
             migrationBuilder.DropTable(
-                name: "aspnetuserclaims");
+                name: "AspNetUserClaims");
 
             migrationBuilder.DropTable(
-                name: "aspnetuserlogins");
+                name: "AspNetUserLogins");
 
             migrationBuilder.DropTable(
-                name: "aspnetuserroles");
+                name: "AspNetUserRoles");
 
             migrationBuilder.DropTable(
-                name: "aspnetusertokens");
+                name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "DatosEvoluEtapasLTModel");
-
-            migrationBuilder.DropTable(
-                name: "EvolucionLTModels");
+                name: "EvolucionLT");
 
             migrationBuilder.DropTable(
                 name: "Farmacos");
@@ -608,10 +628,13 @@ namespace WebMedicina.BackEnd.Model.Migrations
                 name: "medicospacientes");
 
             migrationBuilder.DropTable(
-                name: "aspnetroles");
+                name: "UserRefreshToken");
 
             migrationBuilder.DropTable(
-                name: "EtapaLTModel");
+                name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "EtapaLT");
 
             migrationBuilder.DropTable(
                 name: "Pacientes");
@@ -626,7 +649,7 @@ namespace WebMedicina.BackEnd.Model.Migrations
                 name: "Mutaciones");
 
             migrationBuilder.DropTable(
-                name: "aspnetusers");
+                name: "AspNetUsers");
         }
     }
 }

@@ -10,7 +10,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
 {
     public partial class Pacientes {
         // Dependencias
-        [CascadingParameter] private Task<AuthenticationState>? AuthenticationState { get; set; }
         [CascadingParameter(Name = "modoOscuro")] bool IsDarkMode { get; set; } // Modo oscuro
         [Inject] private IPacientesService _pacientesService { get; set; } = null!;
         [Inject] private IDialogService _dialogoService { get; set; } = null!;

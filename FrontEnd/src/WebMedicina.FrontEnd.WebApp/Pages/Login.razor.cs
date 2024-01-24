@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using System.Data;
 using System.Net.Http.Json;
-
 using WebMedicina.FrontEnd.Service;
 using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.Shared.Dto.UserAccount;

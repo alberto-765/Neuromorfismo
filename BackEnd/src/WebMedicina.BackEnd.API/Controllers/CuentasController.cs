@@ -26,7 +26,7 @@ namespace WebMedicina.BackEnd.API.Controllers
             try {
                 EstadoCrearUsuario estadoCrearUsu = EstadoCrearUsuario.ModeloKO;
 
-                if (ModelState.IsValid && model != null) {
+                if (ModelState.IsValid) {
                     estadoCrearUsu = await _userAccountService.CrearUsuarioYMedico(model);
                 }
 
@@ -87,10 +87,22 @@ namespace WebMedicina.BackEnd.API.Controllers
 
         // Cerrar sesion de un usuario
         [HttpPost("cerrarsesion")]
+        [Authorize]
         public void CerrarSesion([FromBody] Tokens tokens) {
             if (ModelState.IsValid) {
                 _userAccountService.CerrarSesion(tokens, User.ToUserInfoDto());
             }
+        }
+
+        // Refrescar token de acceso
+        [HttpPost("refrescartoken")]
+        [AllowAnonymous]
+        public Tokens? RefrescarToken([FromBody] Tokens? tokens) {
+            if (ModelState.IsValid && tokens is not null) {
+                return _userAccountService.RefreshAccesToken(tokens);
+            }
+
+            return null;
         }
     }
 }

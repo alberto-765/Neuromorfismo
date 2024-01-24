@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Identity;
 using WebMedicina.Shared.Dto.UserAccount;
 using WebMedicina.BackEnd.Model;
 using WebMedicina.BackEnd.ServicesDependencies.Mappers;
-using Duende.IdentityServer.Models;
 
 namespace WebMedicina.BackEnd.Service {
     public class UserAccountService : IUserAccountService  {
@@ -29,7 +28,7 @@ namespace WebMedicina.BackEnd.Service {
             using var transaction = _context.Database.BeginTransaction();
             try {
 
-                var user = new IdentityUser {
+                var user = new UserModel {
                     UserName = model.UserLogin
                 };
 
@@ -43,10 +42,11 @@ namespace WebMedicina.BackEnd.Service {
                     if (_adminService.CrearMedico(model, user.Id)) {
                         await transaction.CommitAsync();
                         _context.SaveChanges();
+                        estadoCreacion = EstadoCrearUsuario.UserYMedicoOK;
+                    } else {
+                        // Revertimos toda la transacción si el usuario no se ha creado correctamente
+                        await transaction.RollbackAsync();
                     }
-                    // Revertimos toda la transacción si el usuario no se ha creado correctamente
-                    await transaction.RollbackAsync();
-                    estadoCreacion = EstadoCrearUsuario.UserYMedicoOK;
                 }
 
                 return estadoCreacion;
@@ -68,7 +68,8 @@ namespace WebMedicina.BackEnd.Service {
             }
 
             // Generamos la info del usuario si se ha obtenido correctamente
-            if (medico is not null) {
+            if (medico is not null && medico.IdMedico > 0 && !string.IsNullOrWhiteSpace(medico.UserLogin) && !string.IsNullOrWhiteSpace(medico.Nombre) && 
+                !string.IsNullOrWhiteSpace(medico.Apellidos) && !string.IsNullOrWhiteSpace(medico.Rol)) {
                 UserInfoDto userInfo = medico.ToUserInfoDto();
                 return _jwtManager.GenerateJWTTokens(userInfo);
             } 
@@ -76,40 +77,40 @@ namespace WebMedicina.BackEnd.Service {
             return null;
         }
 
-        // Rrefresh access token
+        // Rrefrescar access token
         public Tokens? RefreshAccesToken(Tokens tokenExpirado) {
-            Tokens? nuevoToken = null;
+            try {
+                Tokens? nuevoToken = null;
 
-            // Obtenemos la informacion del usuario del access token
-            UserInfoDto userInfo = _jwtManager.GetClaimsFromExpiredToken(tokenExpirado.AccessToken).ToUserInfoDto();
+                // Obtenemos la informacion del usuario del access token
+                UserInfoDto userInfo = _jwtManager.GetClaimsFromExpiredToken(tokenExpirado.AccessToken).ToUserInfoDto();
 
-            // Validamos el id del medico
-            if (userInfo.IdMedico > 0) {
+                // Validamos el id del medico
+                if (userInfo.IdMedico > 0 && userInfo.IdMedico > 0 && !string.IsNullOrWhiteSpace(userInfo.UserLogin) && !string.IsNullOrWhiteSpace(userInfo.Nombre) &&
+                    !string.IsNullOrWhiteSpace(userInfo.Apellidos) && !string.IsNullOrWhiteSpace(userInfo.Rol)) {
 
-                // Obtenemos el refresh token de BD
-                UserRefreshTokens? refreshToken = _jwtManager.ObtenerRefreshToken(userInfo.IdMedico, tokenExpirado.RefreshToken);
+                    // Obtenemos el refresh token de BD
+                    UserRefreshTokens? refreshToken = _jwtManager.ObtenerRefreshToken(userInfo.IdMedico, tokenExpirado.RefreshToken);
 
-                // Validamos que el refresh token de la peticion sea el mismo que el de BD
-                if (refreshToken is not null && refreshToken.RefreshToken == tokenExpirado.RefreshToken) {
+                    // Validamos que el refresh token de la peticion sea el mismo que el de BD
+                    if (refreshToken is not null && refreshToken.RefreshToken == tokenExpirado.RefreshToken) {
 
-                    // Genereamos nuevo token y nuevo refresh token
-                    nuevoToken = _jwtManager.GenerateJWTTokens(userInfo);
-
-                    // Eliminamos antigui refresh token si los datos del usuario son válidos
-                    if (nuevoToken is not null && _jwtManager.DeleteRefreshTokens(userInfo.IdMedico, tokenExpirado.RefreshToken)) {
-                        nuevoToken = _jwtManager.AddRefreshToken(nuevoToken, userInfo.IdMedico) ? nuevoToken : null;  
+                        // Genereamos nuevo token y nuevo refresh token
+                        nuevoToken = _jwtManager.GenerateJWTTokens(userInfo);
                     }
                 }
-            }
 
-            // Si los claims del usuario y el refreshToken eran validos se crea nuevo token y refreshToken
-            return nuevoToken;
+                // Si los claims del usuario y el refreshToken eran validos se crea nuevo token y refreshToken
+                return nuevoToken;
+            } catch (Exception) {
+                return null;
+            }
         }
 
         // Eliminar refreshTokens del usuario
         public void CerrarSesion(Tokens tokens, UserInfoDto userInfo) {
             if (userInfo.IdMedico > 0 && !string.IsNullOrWhiteSpace(tokens.RefreshToken)) {
-                _jwtManager.DeleteRefreshToken(userInfo.IdMedico, tokens.RefreshToken);
+                _jwtManager.DeleteRefreshTokens(userInfo.IdMedico, tokens.RefreshToken);
             }
         }
     }

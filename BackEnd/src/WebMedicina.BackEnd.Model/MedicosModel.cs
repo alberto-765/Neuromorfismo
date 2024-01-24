@@ -6,21 +6,24 @@ public partial class MedicosModel : BaseModel
 {
     public int IdMedico { get; set; }
 
-    public string UserLogin { get; set; } = null!;
+    public string UserLogin { get; set; } = default!;
 
-    public string Nombre { get; set; } = null!;
+    public string Nombre { get; set; } = default!;
 
-    public string Apellidos { get; set; } = null!;
+    public string Apellidos { get; set; } = default!;
 
     public DateTime FechaNac { get; set; }
 
-    public string Sexo { get; set; } = null!;
+    public string Sexo { get; set; } = default!;
 
-    public string NetuserId { get; set; } = null!;
+    public string NetuserId { get; set; } = default!;
+
+    [ForeignKey(nameof(NetuserId))]
+    public UserModel Netuser { get; set; } = default!;
+    
 
     public ICollection<MedicospacienteModel> Medicospacientes { get; set; } = new List<MedicospacienteModel>();
 
-    public UserModel Netuser { get; set; } = null!;
 
     public ICollection<PacientesModel> PacienteMedicoCreadorNavigations { get; set; } = new List<PacientesModel>();
 

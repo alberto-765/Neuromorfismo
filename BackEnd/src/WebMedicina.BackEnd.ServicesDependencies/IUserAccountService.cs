@@ -8,5 +8,6 @@ namespace WebMedicina.BackEnd.ServicesDependencies {
         Task<EstadoCrearUsuario> CrearUsuarioYMedico(UserRegistroDto model);
         Tokens? ObtenerTokenLogin(UserLoginDto userLogin);
         void CerrarSesion(Tokens tokens, UserInfoDto userInfo);
+        Tokens? RefreshAccesToken(Tokens tokenExpirado);
     }
 }
