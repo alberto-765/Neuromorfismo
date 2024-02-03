@@ -1,4 +1,5 @@
-﻿using WebMedicina.BackEnd.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using WebMedicina.BackEnd.Model;
 
 namespace WebMedicina.BackEnd.Dal {
     public class TokensDal {
@@ -32,7 +33,7 @@ namespace WebMedicina.BackEnd.Dal {
         }
 
         public UserRefreshTokens? GetRefreshToken(int idMedico, string refreshToken) {
-            return _context.UserRefreshToken.FirstOrDefault(x => x.IdMedico == idMedico && x.RefreshToken == refreshToken);
+            return _context.UserRefreshToken.AsNoTracking().FirstOrDefault(x => x.IdMedico == idMedico && x.RefreshToken == refreshToken);
         }
     }
 }

@@ -21,7 +21,9 @@ namespace WebMedicina.BackEnd.Dal {
             query = from a in _context.Medicospacientes
                     join b in _context.Medicos on a.IdMedico equals b.IdMedico
                     select b;
-            return await query.Distinct().Select(q => q.ToUserInfoDto()).ToListAsync();
+            return await query.AsNoTracking()
+                .Distinct()
+                .Select(q => q.ToUserInfoDto()).ToListAsync();
         }
 
         /// <summary>
@@ -75,6 +77,7 @@ namespace WebMedicina.BackEnd.Dal {
         /// <returns>Lista de todos los pacientes</returns>
         public List<CrearPacienteDto> GetAllPacientes() {
             return _context.Pacientes
+                .AsNoTracking()
                 .Include(q => q.IdEpilepsiaNavigation)
                 .Include(q => q.IdMutacionNavigation)
                 .Include(q => q.Medicospacientes)
@@ -90,6 +93,7 @@ namespace WebMedicina.BackEnd.Dal {
         /// <returns>Pacientes de un medico</returns>        
         public List<CrearPacienteDto> GetPacientesMed(UserInfoDto userInfo) {
             return _context.Pacientes
+                .AsNoTracking()
                 .Where(q => q.Medicospacientes.Any(medpac => medpac.IdMedPac == userInfo.IdMedico))
                 .Include(q => q.IdEpilepsiaNavigation)
                 .Include(q => q.IdMutacionNavigation)
@@ -97,16 +101,6 @@ namespace WebMedicina.BackEnd.Dal {
                     .ThenInclude(q => q.IdMedicoNavigation)
                 .Select(q => q.ToDto())
                 .ToList();
-        }
-
-        /// <summary>
-        /// Obtener un diccionario con el nombre y el id de cada medico
-        /// </summary>
-        /// <param name="idMedicos"></param>
-        /// <returns>Diccionario IdMedico-Nombre</returns>
-        public Dictionary<int, string> ObtenerNombresMed(HashSet<int> idMedicos) {
-            Dictionary<int, string> listaNombresMed = _context.Medicos.Where(q => idMedicos.Contains(q.IdMedico)).ToDictionary(medico => medico.IdMedico, medico => medico.Nombre);
-            return listaNombresMed;
         }
 
         public async Task<bool> ValidarPermisosEdicYElim(int idMedico, int idPaciente) {
@@ -120,12 +114,21 @@ namespace WebMedicina.BackEnd.Dal {
         /// <returns>InfoPacienteDto de un paciente</returns>
         public async Task<CrearPacienteDto?> GetUnPaciente(int idPaciente) {
             PacientesModel? paciente =  await _context.Pacientes
+                .AsNoTracking()
                 .Include(q => q.IdEpilepsiaNavigation)
                 .Include(q => q.IdMutacionNavigation)
                 .Include(q => q.Medicospacientes)
                     .ThenInclude(q => q.IdMedicoNavigation)
                 .SingleOrDefaultAsync(q => q.IdPaciente == idPaciente);
             return paciente?.ToDto();
+        }
+
+        public string? GetNumHistoria(int idPaciente) {
+            return _context.Pacientes
+                .AsNoTracking()
+                .Where(p => p.IdPaciente == idPaciente)
+                .Select(p => p.NumHistoria)
+                .FirstOrDefault();
         }
     }
 }

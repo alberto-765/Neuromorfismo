@@ -5,7 +5,7 @@ using WebMedicina.Shared.Dto.Tipos;
 
 namespace WebMedicina.BackEnd.API.Controllers
 {
-    [Route("api/administracion")]
+    [Route("api/[controller]")]
     [ApiController]
     [Authorize(Roles = "superAdmin, admin")]
     public class AdministracionController : ControllerBase {

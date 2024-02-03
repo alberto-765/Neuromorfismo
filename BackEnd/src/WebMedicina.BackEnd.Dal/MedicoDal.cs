@@ -1,4 +1,5 @@
-﻿using WebMedicina.BackEnd.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using WebMedicina.BackEnd.Model;
 
 namespace WebMedicina.BackEnd.Dal {
     public class MedicoDal {
@@ -11,12 +12,12 @@ namespace WebMedicina.BackEnd.Dal {
 
         // Obtenemos los datos de un medico filtrando por id
         public MedicosModel? ObtenerInfoUser(int idMedico) {
-            return _context.Medicos.Find(idMedico);
+            return _context.Medicos.AsNoTracking().Find(idMedico);
         }
         
         // Obtenemos los datos de un medico filtrando por username
         public MedicosModel ObtenerInfoUserLogin(string userName) {
-            var medico =  _context.Medicos.First(q => q.UserLogin == userName);
+            var medico =  _context.Medicos.AsNoTracking().First(q => q.UserLogin == userName);
             return medico;
         }
     }

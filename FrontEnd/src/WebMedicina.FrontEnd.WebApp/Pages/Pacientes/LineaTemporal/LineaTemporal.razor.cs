@@ -8,16 +8,17 @@ using static WebMedicina.FrontEnd.Dto.EstadosEtapasLT;
 namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
     public partial class LineaTemporal {
         // Injecciones
-        [Inject] private IConfiguration _configuration { get; set; } = default!;
         [Inject] private ISnackbar _snackbar { get; set; } = default!;
-        [Inject] private IComun _comun { get; set; } = default!;
         [Inject] private ILineaTemporalService _lineaTemporalService { get; set; } = default!;
+        [Inject] private IDocumentacionService _documentacionService { get; set; } = null!;
+
 
         // Parametros
         [Parameter] public ImmutableSortedDictionary<int, EtapaLTDto> EtapasLineaTemporal { get; set; } = default!;
         [Parameter] public SortedList<int, EvolucionLTDto> Evoluciones { get; set; } = default!;
         [Parameter] public EventCallback<SortedList<int, EvolucionLTDto>> EvolucionesChanged { get; set; }
         [Parameter] public int IdPaciente { get; set; }
+        [Parameter] public string IdContenedor { get; set; } = default!;
 
         // Ultima etapa de la evolucion del paciente
         private int UltimaEtapaPaciente { get; set; }
@@ -71,6 +72,15 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
                 LLamadaEditarEvoDto evoEditada = new(nuevaEvolucion, UltimaEtapaPaciente, IdPaciente);
                 Evoluciones = await _lineaTemporalService.ActEvoPac(evoEditada);
                 StateHasChanged();
+
+                // Realizamos envio del correo 
+                Console.Write("LLega a enviar corrreo");
+                if (Evoluciones.Any()) {
+                    _ = _documentacionService.EnviarEmailEvoActu(Evoluciones.Last().Value, IdPaciente, IdContenedor);
+                }
+
+                Console.Write("Sale de enviar corrreo");
+
             } catch (Exception) {
                 _snackbar.Add("No ha sido posible actualizar la etapa de la evolución del paciente", Severity.Error);
             }

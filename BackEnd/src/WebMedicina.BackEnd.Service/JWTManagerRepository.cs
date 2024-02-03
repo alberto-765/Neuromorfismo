@@ -66,7 +66,7 @@ namespace WebMedicina.BackEnd.Service {
                 return null;
             }
 
-            return new Tokens { AccessToken = new JwtSecurityTokenHandler().WriteToken(token), RefreshToken = refreshToken };
+            return new Tokens (new JwtSecurityTokenHandler().WriteToken(token), refreshToken);
         }
 
         // Generar refresh token
@@ -153,9 +153,10 @@ namespace WebMedicina.BackEnd.Service {
         public UserRefreshTokens? ObtenerRefreshToken(int idMedico, string refreshToken) {
             UserRefreshTokens? userRefreshtoken = _tokensDal.GetRefreshToken(idMedico, refreshToken);
 
-            // Eliminamos el refreshToken si ya ha caducado
+            // Eliminamos el refreshToken si ya ha caducado y devolvemos null
             if (userRefreshtoken is not null && userRefreshtoken.FechaExpiracion < DateTime.UtcNow) {
-                userRefreshtoken = DeleteRefreshTokens(idMedico, refreshToken) ? null : userRefreshtoken;
+                DeleteRefreshTokens(idMedico, refreshToken);
+                userRefreshtoken = null;
             }
 
             return userRefreshtoken;

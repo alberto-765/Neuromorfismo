@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
 using WebMedicina.BackEnd.Dto;
 using WebMedicina.BackEnd.ServicesDependencies;
 using WebMedicina.BackEnd.ServicesDependencies.Mappers;
@@ -8,7 +9,7 @@ using WebMedicina.Shared.Dto.Usuarios;
 
 namespace WebMedicina.BackEnd.API.Controllers
 {
-    [Route("/api/cuentas")]
+    [Route("api/[controller]")]
     [ApiController]
     [Authorize(Roles = "superAdmin, admin")]
     public class CuentasController : ControllerBase {
@@ -94,15 +95,29 @@ namespace WebMedicina.BackEnd.API.Controllers
             }
         }
 
-        // Refrescar token de acceso
-        [HttpPost("refrescartoken")]
+        // Validar token de autenticacion y refrescarlo si está caducado
+        [HttpPost("autenticarportoken")]
         [AllowAnonymous]
-        public Tokens? RefrescarToken([FromBody] Tokens? tokens) {
-            if (ModelState.IsValid && tokens is not null) {
-                return _userAccountService.RefreshAccesToken(tokens);
-            }
+        public AutenticarPorTokenDto? AutenticarPorToken ([FromBody] Tokens? tokens) {
+            AutenticarPorTokenDto? respuesta = null;
 
-            return null;
+            // Validamos si el token está caducado
+            if (tokens is not null && !string.IsNullOrWhiteSpace(tokens.AccessToken) && !string.IsNullOrWhiteSpace(tokens.RefreshToken)) {
+
+                JwtSecurityToken jsonToken = new JwtSecurityTokenHandler().ReadJwtToken(tokens.AccessToken);
+
+                // Si el token está caducado lo refrescamos
+                if (jsonToken.ValidTo < DateTime.Now) {
+
+                    // Se devolverá null si el token no ha podido ser autenticado
+                    tokens = _userAccountService.RefreshAccesToken(tokens);
+                    respuesta = new(true, tokens);
+                } else {
+                    respuesta = new(false, tokens);
+                }
+            } 
+
+            return respuesta;
         }
     }
 }

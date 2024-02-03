@@ -13,7 +13,8 @@ namespace WebMedicina.BackEnd.Dal {
 
         // Get EPILEPSIAS
         public List<EpilepsiasDto> GetEpilepsias() {
-            List<EpilepsiasDto> listaEpilepsias = _context.Epilepsias.Select(q => q.ToDto()).ToList();
+            List<EpilepsiasDto> listaEpilepsias = _context.Epilepsias.AsNoTracking()
+                                                    .Select(q => q.ToDto()).ToList();
             if (listaEpilepsias.Count > 0) {
                 for (int i = 0; i < listaEpilepsias.Count; i++) {
                     listaEpilepsias[i].Indice = i+1;

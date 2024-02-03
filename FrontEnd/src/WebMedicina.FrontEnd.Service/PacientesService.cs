@@ -1,5 +1,6 @@
 ﻿using Microsoft.JSInterop;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics.Metrics;
 using System.Net.Http.Json;
 using System.Security.Claims;
@@ -67,8 +68,11 @@ namespace WebMedicina.FrontEnd.Service
             return await Http.DeleteAsync($"pacientes/eliminarpaciente/{idPaciente}"); 
         }
 
-        // Obtener pacientes de la api y realizar filtrado
-        public async Task<List<CrearPacienteDto>?> ObtenerPacientes() { 
+        /// <summary>
+        /// Obtener pacientes de la api y realizar filtrado
+        /// </summary>
+        /// <returns>True si se ha obtenido la lista correctamente</returns>
+        public async Task<ImmutableList<CrearPacienteDto>?> ObtenerPacientes() { 
             HttpResponseMessage respuesta = await Http.GetAsync("pacientes/obtenerpacientes");
             List<CrearPacienteDto>? pacientes = null;
 
@@ -79,13 +83,13 @@ namespace WebMedicina.FrontEnd.Service
 
             // Guardamos pacientes en session
             await GuardarPacientesSession(pacientes);
-            return pacientes; 
+            return pacientes?.ToImmutableList();
         }
 
         // Filtramos los pacientes con los filtros seleccionados
-        public async Task<List<CrearPacienteDto>?> FiltrarPacientes(FiltroPacienteDto? filtrsPacientes) { 
+        public async Task<ImmutableList<CrearPacienteDto>?> FiltrarPacientes(FiltroPacienteDto? filtrsPacientes = null) {
             // Comprobamos si existe algun campo por el que filtrar
-            List<CrearPacienteDto>? listaPacientes = JsonSerializer.Deserialize<List<CrearPacienteDto>?>(await js.GetFromSessionStorage(clavePacientesSession));
+            ImmutableList<CrearPacienteDto>? listaPacientes = JsonSerializer.Deserialize<ImmutableList<CrearPacienteDto>?>(await js.GetFromSessionStorage(clavePacientesSession));
             if (filtrsPacientes is not null && listaPacientes is not null) {
                 // Obtenemos el listado de pacientes
                 listaPacientes = (from q in listaPacientes where (string.IsNullOrWhiteSpace(filtrsPacientes.Sexo) || q.Sexo == filtrsPacientes.Sexo) &&
@@ -93,15 +97,15 @@ namespace WebMedicina.FrontEnd.Service
                                     (q.MedicosPacientes is not null && q.MedicosPacientes.ContainsKey(filtrsPacientes.Medico.IdMedico))) &&
                                     (!filtrsPacientes.TipoEpilepsias.Any() || filtrsPacientes.TipoEpilepsias.Any(t => t.IdEpilepsia == q.Epilepsia?.IdEpilepsia)) &&
                                     (!filtrsPacientes.TipoMutacion.Any() || filtrsPacientes.TipoMutacion.Any(t => t.IdMutacion == q.Mutacion?.IdMutacion))
-                                    select q).ToList();
+                                    select q).ToImmutableList();
             }
             return listaPacientes; 
         }
 
         // Filtramos los pacientes para "Mis Pacientes" en caso de ser "SuperAdmin o Admin"
-        public List<CrearPacienteDto>? FiltrarMisPacientes(List<CrearPacienteDto>? listaPacientes, ClaimsPrincipal? user) { 
+        public ImmutableList<CrearPacienteDto> FiltrarMisPacientes(ImmutableList<CrearPacienteDto> listaPacientes, ClaimsPrincipal? user) { 
             // Devolvemos la lista porque en los medicos ya tienen filtrados solamente sus pacientes
-            if (user == null || user.IsInRole("medico") || listaPacientes == null || listaPacientes.Any() == false) {
+            if (user is null || user.IsInRole("medico")) {
                 return listaPacientes;
             }
 
@@ -110,32 +114,32 @@ namespace WebMedicina.FrontEnd.Service
                 return listaPacientes;
             }
 
-            return listaPacientes.Where(q => q.MedicosPacientes != null && q.MedicosPacientes.ContainsKey(idMedico)).ToList(); 
+            return listaPacientes.Where(q => q.MedicosPacientes != null && q.MedicosPacientes.ContainsKey(idMedico)).ToImmutableList(); 
         }
 
+
         // Añadir un nuevo paciente creado a la lista de todos los pacientes
-        public async Task<List<CrearPacienteDto>?> AnadirPacienteALista(int idPaciente) { 
+        public async Task<bool> AnadirPacienteALista(int idPaciente) { 
             // Obtenemos el nuevo paciente creado
             CrearPacienteDto? nuevoPaciente = await Http.GetFromJsonAsync<CrearPacienteDto?>($"pacientes/obtenerpaciente/{idPaciente}");
 
             // Si el paciente es null creamos una lista vacia
-            if (nuevoPaciente is null) {
-                return new();
+            if (nuevoPaciente is not null) {   
+                List<CrearPacienteDto> listaPacientes = await ObtenerListaPacienteSession();
+
+                // Si el paciente no es null lo insertamos a la lista
+                listaPacientes.Add(nuevoPaciente); 
+
+                // Guardamos listado de pacientes
+                await GuardarPacientesSession(listaPacientes);
+                return true;
             }
 
-            List<CrearPacienteDto> listaPacientes = await ObtenerListaPacienteSession();
-
-            // Si el paciente no es null lo insertamos a la lista
-            listaPacientes?.Add(nuevoPaciente); 
-
-            // Guardamos listado de pacientes
-            await GuardarPacientesSession(listaPacientes);
-
-            return listaPacientes; 
+            return false;
         }
 
         // Eliminar un paciente de la lista
-        public async Task<List<CrearPacienteDto>?> EliminarPacienteLista(int idPaciente) { 
+        public async Task<bool> EliminarPacienteLista(int idPaciente) { 
             // Si el paciente no es null lo insertamos a la lista
             List<CrearPacienteDto> listaPacientes = await ObtenerListaPacienteSession();
 
@@ -145,12 +149,13 @@ namespace WebMedicina.FrontEnd.Service
                 if(indice >= 0) {
                     listaPacientes.RemoveAt(indice);
                 }
-            } 
 
-            // Guardamos listado de pacientes
-            await GuardarPacientesSession(listaPacientes);
+                // Guardamos listado de pacientes actualizado
+                await GuardarPacientesSession(listaPacientes);
+                return true;
+            }
 
-            return listaPacientes; 
+            return false;
         }
 
         // Obtener lista de pacientes de session

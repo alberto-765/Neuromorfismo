@@ -1,4 +1,3 @@
-using IdentityModel;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -117,14 +116,28 @@ builder.Services.AddScoped<IPacientesService, PacientesService>(); // Servicios 
 builder.Services.AddScoped<ILineaTemporalService, LineaTemporalService>(); // Servicios de linea temporal
 builder.Services.AddScoped<IUserAccountService, UserAccountService>(); // Servicios de cuentas de usuario
 builder.Services.AddScoped<IJWTManagerRepository, JWTManagerRepository>(); // Servicios de jwt tokens
+builder.Services.AddSingleton<IDocumentacionService, DocumentacionService>(); // Servicios excel 
+builder.Services.AddSingleton<IEmailService, EmailService>(); // Servicios envio de correo
 
-// IOPTIONS PARA CONFIGURACION
+
+// IOPTIONS JWT
 builder.Services.Configure<JWTConfig>(builder.Configuration.GetSection("JWT"))
 	.PostConfigure<JWTConfig>(config => {
+
 		if(string.IsNullOrWhiteSpace(config.Key) || string.IsNullOrWhiteSpace(config.Issuer) || string.IsNullOrWhiteSpace(config.Audience) || !double.TryParse(config.ValidezRefreshTokenEnDias, out double dias) || dias == 0 || !double.TryParse(config.ValidezTokenEnHoras, out double horas) || horas == 0) {
 			throw new Exception();
 		}
 });
+
+
+// IOPTIONS EMAIL
+builder.Services.Configure<EmailConfig>(builder.Configuration.GetSection("Email")).
+	PostConfigure<EmailConfig>(config => { 
+		if (string.IsNullOrWhiteSpace(config.Usuario) || string.IsNullOrWhiteSpace(config.Contrasena) || string.IsNullOrWhiteSpace(config.Host) || config.Puerto == 0) {
+            throw new Exception();
+        }
+	}
+);
 
 var app = builder.Build();
 

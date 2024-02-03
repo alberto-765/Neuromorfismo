@@ -77,7 +77,11 @@ namespace WebMedicina.BackEnd.Service {
             return null;
         }
 
-        // Rrefrescar access token
+        /// <summary>
+        /// Refrescar acces token
+        /// </summary>
+        /// <param name="tokenExpirado"></param>
+        /// <returns>Devuelve null si el refreshToken o los datos del usuario no es valido</returns>
         public Tokens? RefreshAccesToken(Tokens tokenExpirado) {
             try {
                 Tokens? nuevoToken = null;
@@ -86,7 +90,7 @@ namespace WebMedicina.BackEnd.Service {
                 UserInfoDto userInfo = _jwtManager.GetClaimsFromExpiredToken(tokenExpirado.AccessToken).ToUserInfoDto();
 
                 // Validamos el id del medico
-                if (userInfo.IdMedico > 0 && userInfo.IdMedico > 0 && !string.IsNullOrWhiteSpace(userInfo.UserLogin) && !string.IsNullOrWhiteSpace(userInfo.Nombre) &&
+                if (userInfo.IdMedico > 0 && !string.IsNullOrWhiteSpace(userInfo.UserLogin) && !string.IsNullOrWhiteSpace(userInfo.Nombre) &&
                     !string.IsNullOrWhiteSpace(userInfo.Apellidos) && !string.IsNullOrWhiteSpace(userInfo.Rol)) {
 
                     // Obtenemos el refresh token de BD
@@ -109,6 +113,15 @@ namespace WebMedicina.BackEnd.Service {
 
         // Eliminar refreshTokens del usuario
         public void CerrarSesion(Tokens tokens, UserInfoDto userInfo) {
+            if (userInfo.IdMedico > 0 && !string.IsNullOrWhiteSpace(tokens.RefreshToken)) {
+                _jwtManager.DeleteRefreshTokens(userInfo.IdMedico, tokens.RefreshToken);
+            }
+        }
+
+        // Eliminar refreshTokens del usuario
+        public void CerrarSesion(Tokens tokens) {
+            UserInfoDto userInfo = _jwtManager.GetClaimsFromExpiredToken(tokens.RefreshToken).ToUserInfoDto();
+
             if (userInfo.IdMedico > 0 && !string.IsNullOrWhiteSpace(tokens.RefreshToken)) {
                 _jwtManager.DeleteRefreshTokens(userInfo.IdMedico, tokens.RefreshToken);
             }

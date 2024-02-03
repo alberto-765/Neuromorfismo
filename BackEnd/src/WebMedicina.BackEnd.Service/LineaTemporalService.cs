@@ -35,8 +35,7 @@ namespace WebMedicina.BackEnd.Service
             if (Comun.ObtenerIdUsuario(User, out int idMedico) && idMedico > 0) {
                 // Obtenemos la evolucion y comprobamos si hay que insertala o actualizarla
                 EvolucionLTModel? nuevaEvolucion = await _lineaTemporalDal.GetEvolucion(evoEditada.Evolucion.Id, evoEditada.IdPaciente);
-                bool accionOk = false;
-
+                bool accionOk;
 
                 // Si no existe la insertamos
                 if(nuevaEvolucion is null) {
@@ -52,7 +51,7 @@ namespace WebMedicina.BackEnd.Service
 
                     // Actualizamos campos de la nueva evolucion
                     nuevaEvolucion.IdMedicoUltModif = idMedico;
-                    nuevaEvolucion.Fecha = DateTime.Today;
+                    nuevaEvolucion.Fecha = DateTime.Now;
                     nuevaEvolucion.Confirmado = evoEditada.Evolucion.Confirmado;
 
                     accionOk = await _lineaTemporalDal.ActualizarEvolucion(nuevaEvolucion);

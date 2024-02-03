@@ -12,7 +12,7 @@ namespace WebMedicina.BackEnd.Dal {
         }
         //  Get FARMACOS
         public List<FarmacosDto> GetFarmacos() {
-            return _context.Farmacos.Select(q => q.ToDto()).ToList();
+            return _context.Farmacos.AsNoTracking().Select(q => q.ToDto()).ToList();
         }
 
         //  Create FARMACOS

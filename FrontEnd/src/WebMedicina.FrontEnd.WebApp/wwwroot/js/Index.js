@@ -1,4 +1,9 @@
-﻿// Bloquear el scroll de un elemento
+﻿// IMPORTS
+import "html2canvas.min.js";
+
+
+
+// Bloquear el scroll de un elemento
 function bloquearScroll(claseElemento, ejes) {
     let elemento = document.querySelector(claseElemento);
 
@@ -38,19 +43,6 @@ function desbloquearScroll(claseElemento, ejes) {
     }
 }
 
-// Simular envio de un formulario via js
-function EnviarForm(identificador) {
-    try {
-        let form = document.querySelector(identificador)
-
-        // Validamos que es un formulario
-        if (form.tagName == "FORM") {
-            form.submit();
-        }
-    } catch (e) {
-        throw e;
-    }
-}
 
 // Hacer scroll hacia un elemento
 function ScrollHaciaElemento(idElemento, poxY) {
@@ -74,4 +66,32 @@ function ScrollBottom() {
         top: document.body.scrollHeight,
         behavior: "smooth"
     });
+}
+
+function DescargarExcel(filename, bytesBase64) {
+    // Cremos link para simular descarga del excel
+    let link = document.createElement('a');
+
+    // Nombre del archivo
+    link.download = filename;
+
+    // Cargamos el tipo de archivo y los bytes
+    link.href = window.URL.createObjectURL(new Blob([bytesBase64], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
+    document.body.appendChild(link); 
+
+    link.click();
+    document.body.removeChild(link);
+}
+
+// Convertir html en una imagen con html2canvas
+async function GenerarImagenDeHtml(id) {
+    const contenedor = document.getElementById(id);
+    const base64;
+
+    // Generamos base64 de la imagen
+    await html2canvas(contenedor).then(canvas => {
+        base64 = canvas.toDataURL("image/png")
+    }); 
+
+    return base64;
 }

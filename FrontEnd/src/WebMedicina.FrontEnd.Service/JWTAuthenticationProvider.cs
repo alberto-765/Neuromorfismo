@@ -31,33 +31,36 @@ namespace WebMedicina.FrontEnd.Service {
             }
         }
 
-        public async override Task<AuthenticationState> GetAuthenticationStateAsync() {
+        public override async Task<AuthenticationState> GetAuthenticationStateAsync() {
             try {         
                 // Revisamos si tenemos un token en localstorage para autentical al usuario
                 string tokenSession = await js.GetFromLocalStorage(KeyTokenSession);
                 Tokens? token = (!string.IsNullOrWhiteSpace(tokenSession) ? JsonSerializer.Deserialize<Tokens>(tokenSession) : null);
 
-                if (token is null || string.IsNullOrWhiteSpace(token.AccessToken) || string.IsNullOrWhiteSpace(token.RefreshToken)) {
-                    return Anonimo;
-                } else {
-                    JwtSecurityToken jsonToken = handler.ReadJwtToken(token.AccessToken);
+                if (token is not null && !string.IsNullOrWhiteSpace(token.AccessToken) && !string.IsNullOrWhiteSpace(token.RefreshToken)) {
+                    // Llamamos a la API para autenticar al usuario
+                    HttpResponseMessage respuesta = await _httpClient.PostAsJsonAsync("cuentas/autenticarportoken", token);
 
-                    // Validamos la expiracion del token
-                    if (jsonToken.ValidTo < DateTime.Now) {
-                        // Intentamos refrescar el token
-                        var respuesta = await _httpClient.PostAsJsonAsync("cuentas/refrescartoken", token);
-                        token = await respuesta.Content.ReadFromJsonAsync<Tokens?>();            
-                    }
+                    if (respuesta.IsSuccessStatusCode) {
+                        AutenticarPorTokenDto? autenticarPorToken = await respuesta.Content.ReadFromJsonAsync<AutenticarPorTokenDto>();
 
-                    if (token is not null && !string.IsNullOrWhiteSpace(token.AccessToken)) {
-                        return ConstruirAuthenticationState(token.AccessToken);
-                    } else {
-                        await Logout();
-                        return Anonimo;
+                        if (autenticarPorToken is not null && autenticarPorToken.Tokens is not null) {
+
+                            // Actuaizamos el token de session si es necesario
+                            if (autenticarPorToken.ActualizarSession) {
+                                await js.SetInLocalStorage(KeyTokenSession, JsonSerializer.Serialize(autenticarPorToken.Tokens));
+                            }
+
+                            // Construimos autenticacion con nuevo acces token
+                            return ConstruirAuthenticationState(autenticarPorToken.Tokens.AccessToken);
+                        }
                     }
                 }
-            } catch (Exception ex) {
-                Console.WriteLine(ex.ToString());
+
+                // Limpiamos token si no es valido o no se ha autenticado al usuario
+                await js.RemoveItemlocalStorage(KeyTokenSession);
+                return Anonimo;
+            } catch (Exception) {
                 return Anonimo;
             }
         }
@@ -77,11 +80,13 @@ namespace WebMedicina.FrontEnd.Service {
             NotifyAuthenticationStateChanged(Task.FromResult(authState));
         }
 
-        // Eliminamos token y colocamos el perfil del usuario como anonimo
+        // El usuario a pedido cerrar sesión
         public async Task Logout () {
-            // Llamamos a API para cerrar sesion
-            Tokens? tokens =  JsonSerializer.Deserialize<Tokens>(await js.GetFromLocalStorage(KeyTokenSession));
+            // Obtenemos los tokens de sesion
+            string tokenSession = await js.GetFromLocalStorage(KeyTokenSession);
+            Tokens? tokens = (!string.IsNullOrWhiteSpace(tokenSession) ? JsonSerializer.Deserialize<Tokens>(tokenSession) : null);
 
+            // Si los tokens están en session cerramos sesión
             if (tokens is not null) { 
                 await _httpClient.PostAsJsonAsync("cuentas/cerrarsesion", tokens);
             }

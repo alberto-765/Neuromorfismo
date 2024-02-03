@@ -5,6 +5,9 @@ using MudBlazor;
 using WebMedicina.Shared.Dto.Tipos;
 using WebMedicina.Shared.Dto.Pacientes;
 using WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal;
+using System.Collections.Immutable;
+using WebMedicina.FrontEnd.Dto;
+using System.Runtime.CompilerServices;
 
 namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
 {
@@ -16,28 +19,28 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
         [Inject] private ISnackbar _snackbar { get; set; } = null!;
         [Inject] private IConfiguration _configuracion { get; set; } = null!;
         [Inject] private IComun _comun { get; set; } = null!;
+        [Inject] private IDocumentacionService _documentacionService { get; set; } = null!;
 
 
 
         //  FILTROS
         public bool FiltrosAbierto { get; set; } = false;
+        public FiltrosPaciente RefFiltrosPac { get; set; } = new();
 
+        // Lista pacientes mostrados y nombre de la pagina mostrada (todos o mis pacientes)
+        public ExcelPacientesDto ExcelPacientes { get;  set; } = new();
 
         // Listado de objetos
-        public List<CrearPacienteDto>? ListaPacientes { get; set; } = null;
+        public ImmutableList<CrearPacienteDto>? PacientesFiltrados { get; set; }
         private IEnumerable<EpilepsiasDto>? ListaEpilepsias { get; set; } = null;
         private IEnumerable<MutacionesDto>? ListaMutaciones { get; set; } = null;
 
 
         // Pop up crear paciente
         DialogOptions OpcionesDialogo { get; set; } = new DialogOptions{ FullWidth=true, CloseButton=true, DisableBackdropClick=true, Position=DialogPosition.Center, CloseOnEscapeKey=true};
-
-        // Url imagenes server PARA LOS ICONOS
-        private string? UrlImagenes { get; set; }
-
-
-        // LINEA TEMPORAL
-        private ContenedorLineaTemp _contenedorLineaTempRef { get; set; } = null!;
+        
+        private string? UrlImagenes { get; set; } // Url imagenes server PARA LOS ICONOS
+        private ContenedorLineaTemp _contenedorLineaTempRef { get; set; } = null!;  // LINEA TEMPORAL
 
 
         protected override async Task OnInitializedAsync() {
@@ -55,10 +58,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
 
                 await ObtenerListas();
                 await ObtenerPacientes();
-            } catch (Exception) {
-                // Creamos lista de pacientes vacia para no mostrar cargando en la tabla de pacientes
-                ListaPacientes = new List<CrearPacienteDto>();
-                throw;
+            } catch (Exception) { 
             }
         }
 
@@ -88,9 +88,15 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
             var dialog = _dialogoService.Show<CrearPaciente>("Nuevo Paciente", parametros ,OpcionesDialogo);
             var result = await dialog.Result;
 
-            // Validamos que el dialogo haya devuelto el nuevo paciente creado y actualizamos la lista
+            // Validamos que el dialogo haya devuelto el nuevo paciente creado
             if (result.Canceled == false && result.Data is int idPaciente && idPaciente > 0) {
-                ListaPacientes = await _pacientesService.AnadirPacienteALista(idPaciente);
+
+                // Validamos si el nuevo paciente ha sido añadido a la lista
+                if(await _pacientesService.AnadirPacienteALista(idPaciente)) {
+
+                    // Volvemos a filtrar la lista
+                    await RefFiltrosPac.ObtenerPacientesFiltrados();
+                }
             } 
         }
 
@@ -101,16 +107,18 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
         private async Task ObtenerPacientes() {
             try {
                 // Obtenemos el listado de pacientes
-                ListaPacientes = await _pacientesService.ObtenerPacientes();
+                PacientesFiltrados = await _pacientesService.ObtenerPacientes();
 
-                // Validamos si la lista de pacientes no es null
-                if (ListaPacientes == null) {
-                    ListaPacientes = new List<CrearPacienteDto>();
-                    _snackbar.Add("No se han encontrado pacientes para mostrar.", Severity.Normal);
+
+                // Mostramos error si no ha podido obtenerse la lista
+                if (PacientesFiltrados is null) {
+                    PacientesFiltrados = ImmutableList<CrearPacienteDto>.Empty;
+                    _snackbar.Clear();
+                    _snackbar.Add("No se han encontrado pacientes para mostrar.", Severity.Info);
                 }
             } catch (Exception) {
+                PacientesFiltrados = ImmutableList<CrearPacienteDto>.Empty;
                 _snackbar.Add("No ha sido posible obtener los pacientes. Contacte con un administrador", Severity.Error);
-                throw;
             }
         }
 
@@ -119,8 +127,37 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
         /// </summary>
         /// <param name="idPaciente"></param>
         /// <returns></returns>
-        public async Task EliminarPacienteLista(int idPaciente) { 
-            ListaPacientes = await _pacientesService.EliminarPacienteLista(idPaciente); 
+        public async Task EliminarPacienteLista(int idPaciente) {
+
+            // Eliminamos el paciente de la lista
+            if (await _pacientesService.EliminarPacienteLista(idPaciente)) {
+
+                // Volvemos a filtrar la lista
+                await RefFiltrosPac.ObtenerPacientesFiltrados();
+            }
+        }
+
+
+        /// <summary>
+        /// Descargar excel de pacientes
+        /// </summary> 
+        public async Task DescargarExcel() {
+            try {
+                // Validamos que haya al menos un paciente para generar el excel
+                if (ExcelPacientes.Pacientes.Any()) {
+                    if (!await _documentacionService.DescargarExcelPacientes(ExcelPacientes)) {
+                        throw new Exception();
+                    }
+                } else {
+                    _snackbar.Clear();
+                    _snackbar.Add("Debe disponer de al menos un paciente en el listado para generar el excel", Severity.Info, config => { config.ShowCloseIcon = true; });
+                }
+
+
+            } catch (Exception) {
+                _snackbar.Clear();
+                _snackbar.Add("Error al descargar excel. Contacte con un administrador", Severity.Error);
+            }
         }
     }
 }

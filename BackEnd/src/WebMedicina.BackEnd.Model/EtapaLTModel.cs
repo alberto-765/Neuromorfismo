@@ -28,6 +28,6 @@ namespace WebMedicina.BackEnd.Model {
         [ForeignKey("IdMedicoUltModif")]
         public MedicosModel? MedicoUltModif { get; set; } = null;
 
-        public ICollection<EvolucionLTModel>? EvolucionEtapa { get; set;} = null;
+        public ICollection<EvolucionLTModel>? EvolucionesEtapa { get; set;} = null;
     }
 }

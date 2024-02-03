@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using System.Collections.Immutable;
 using System.Net.Http.Json;
 using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.Shared.Dto.Pacientes;
@@ -15,7 +16,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
 
 
         // Parametros
-        [Parameter] public List<CrearPacienteDto>? ListaPacientes { get; set; }
+        [Parameter] public ImmutableList<CrearPacienteDto>? ListaPacientes { get; set; }
         [Parameter] public EventCallback<int> EliminarPacienteList { get; set; } // Evento callback para eliminar paciente
         [CascadingParameter(Name = "ListaEpilepsias")] public IEnumerable<EpilepsiasDto>? ListaEpilepsias { get; set; } = null;
         [CascadingParameter(Name = "ListaMutaciones")] public IEnumerable<MutacionesDto>? ListaMutaciones { get; set; } = null;

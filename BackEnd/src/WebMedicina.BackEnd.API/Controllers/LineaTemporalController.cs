@@ -6,7 +6,7 @@ using WebMedicina.Shared.Dto.LineaTemporal;
 
 namespace WebMedicina.BackEnd.API.Controllers
 {
-    [Route("api/lineatemporal")]
+    [Route("api/[controller]")]
     [ApiController]
     [Authorize]
     public class LineaTemporalController : ControllerBase {

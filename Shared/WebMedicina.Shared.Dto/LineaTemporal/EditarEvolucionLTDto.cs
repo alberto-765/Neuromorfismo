@@ -14,7 +14,7 @@ namespace WebMedicina.Shared.Dto.LineaTemporal
         public bool Confirmado { get; set; }
 
         // Propiedad readonly
-        public DateTime Fecha { get; init; } = DateTime.Today;
+        public DateTime Fecha { get; init; } = DateTime.Now;
 
         public int IdMedicoUltModif { get; set; }
 

@@ -16,17 +16,17 @@ namespace WebMedicina.BackEnd.Dal
 
         // Obtener diccionario ordenado de las etapas, si no hay devolvemos uno vacio
         public ImmutableSortedDictionary<int, EtapaLTDto> GetEtapas() {
-            return _context.EtapaLTModel.ToImmutableSortedDictionary(q => q.Id, q=> q.ToDto()) ;
+            return _context.EtapaLTModel.AsNoTracking().ToImmutableSortedDictionary(q => q.Id, q=> q.ToDto()) ;
         }
 
         // Obtener las evoluciones de un paciente
         public async Task<List<EvolucionLTDto>> GetEvoluciones(int idPaciente) {
-            return await (from q in _context.EvolucionLTModels where q.IdPaciente == idPaciente select q.ToDto()).ToListAsync();
+            return await (from q in _context.EvolucionLTModels where q.IdPaciente == idPaciente select q.ToDto()).AsNoTracking().ToListAsync();
         }
 
         // Obtener una evolucion de un paciente
         public async Task<EvolucionLTModel?> GetEvolucion(int idEvolucion, int idPaciente) {
-            return await _context.EvolucionLTModels.SingleOrDefaultAsync(q => q.Id == idEvolucion && q.IdPaciente == idPaciente);
+            return await _context.EvolucionLTModels.AsNoTracking().SingleOrDefaultAsync(q => q.Id == idEvolucion && q.IdPaciente == idPaciente);
         }
 
         // Obtener la evolucion de un paciente
@@ -40,6 +40,11 @@ namespace WebMedicina.BackEnd.Dal
         public async Task<bool> InsertarEvolucion(EvolucionLTModel evolucion) {
             await _context.AddAsync(evolucion);
             return await _context.SaveChangesAsync() > 0;
+        }
+
+
+        public EtapaLTModel? GetEtapa(int idEtapa) {
+            return _context.EtapaLTModel.Find(idEtapa);
         }
     }
 }

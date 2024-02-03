@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using System.Collections.Immutable;
 using WebMedicina.FrontEnd.Service;
 using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.Shared.Dto.Pacientes;
@@ -18,8 +19,8 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
         [Parameter] public EventCallback<bool> FiltroAbiertoChanged { get; set; }
 
         // Lista de pacientes bindeada bidireccinalmente
-        [Parameter] public List<CrearPacienteDto>? ListaPaciente { get; set; }
-        [Parameter] public EventCallback<List<CrearPacienteDto>?> ListaPacienteChanged { get; set; }
+        [Parameter] public ImmutableList<CrearPacienteDto>? PacientesFiltrados { get; set; }
+        [Parameter] public EventCallback<ImmutableList<CrearPacienteDto>?> PacientesFiltradosChanged { get; set; }
 
         // Listas no bindeadas 
         [CascadingParameter(Name = "ListaEpilepsias")] public IEnumerable<EpilepsiasDto>? ListaEpilepsias { get; set; } = null;
@@ -33,13 +34,16 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
 
 
         // Filtrar Pacientes 
-        private async Task ObtenerPacientesFiltrados() { 
+        public async Task ObtenerPacientesFiltrados() {
             // Actualizamos la lista de pacientes
-            ListaPaciente = await _pacientesService.FiltrarPacientes(FiltrosPacientes);
-            await ListaPacienteChanged.InvokeAsync(ListaPaciente);
+            PacientesFiltrados = await _pacientesService.FiltrarPacientes(FiltrosPacientes);
+            await PacientesFiltradosChanged.InvokeAsync(PacientesFiltrados);
 
-            // Cerramos drawe y bindeamos parametros
-            await CerrarDrawer(); 
+            // Validamos que el drawer esté abierto y lo cerramos 
+            if (FiltroAbierto) {
+                FiltroAbierto = false;
+                await AbrirCerrarDrawer();
+            }
         }
 
         // Buscador para autocomplete de medicos
@@ -62,13 +66,17 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
         /// <returns></returns>
         private async Task ResetearFiltrado() { 
             FiltrosPacientes = new();
-            ListaPaciente = await _pacientesService.FiltrarPacientes(null);
-            await ListaPacienteChanged.InvokeAsync(ListaPaciente); 
+            PacientesFiltrados = await _pacientesService.FiltrarPacientes();
+            await PacientesFiltradosChanged.InvokeAsync(PacientesFiltrados); 
         }
 
         private Func<EpilepsiasDto, string> ConvertirEpi = tipo => tipo.Nombre;
         private Func<MutacionesDto, string> ConvertirMut = tipo => tipo.Nombre;
 
+        /// <summary>
+        /// Bloquear/desbloquear scroll al abrir/cerrar el drawer
+        /// </summary>
+        /// <returns></returns>
         private async Task AbrirCerrarDrawer() { 
             if (FiltroAbierto) {
                 await _comun.BloquearScroll("#app");
@@ -76,12 +84,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
                 await _comun.DesbloquearScroll("#app");
             }
             await FiltroAbiertoChanged.InvokeAsync(FiltroAbierto); 
-        }
-
-        // Cerrar drawer 
-        private async Task CerrarDrawer() { 
-            FiltroAbierto = false;
-            await AbrirCerrarDrawer(); 
         }
     }
 }

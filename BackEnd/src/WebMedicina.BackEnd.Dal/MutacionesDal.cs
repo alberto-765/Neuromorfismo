@@ -15,7 +15,7 @@ namespace WebMedicina.BackEnd.Dal {
 
         //  Get MUTACION
         public List<MutacionesDto> GetMutaciones() {
-            List<MutacionesDto> listaMutaciones = _context.Mutaciones.Select(q => q.ToDto()).ToList();
+            List<MutacionesDto> listaMutaciones = _context.Mutaciones.AsNoTracking().Select(q => q.ToDto()).ToList();
             if(listaMutaciones.Count > 0) {
                 for (int i = 0; i < listaMutaciones.Count; i++){
                     listaMutaciones[i].Indice = i+1;

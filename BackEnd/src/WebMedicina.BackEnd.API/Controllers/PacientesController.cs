@@ -8,7 +8,7 @@ using WebMedicina.Shared.Dto.Usuarios;
 
 namespace WebMedicina.BackEnd.API.Controllers
 {
-    [Route("api/pacientes")]
+    [Route("api/[controller]")]
     [ApiController]
     [Authorize]
     public class PacientesController : Controller {

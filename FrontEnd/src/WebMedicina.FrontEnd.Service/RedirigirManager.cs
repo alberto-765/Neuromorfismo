@@ -7,7 +7,7 @@ namespace WebMedicina.FrontEnd.Service {
     public class RedirigirManager : IRedirigirManager {
         private readonly NavigationManager navigationManager;
         private readonly IJSRuntime js;
-        private const string enlaceSeguimientoKey  = "segEnl"; // clave del enlace de seguimiento sessionStorage
+        private const string enlaceSeguimientoKey  = "SeguimientoPagina"; // clave del enlace de seguimiento sessionStorage
         public RedirigirManager(NavigationManager navigationManager, IJSRuntime js) {
             this.navigationManager = navigationManager;
             this.js = js;

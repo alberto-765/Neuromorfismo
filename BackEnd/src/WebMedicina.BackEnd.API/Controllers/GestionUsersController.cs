@@ -8,7 +8,7 @@ using WebMedicina.Shared.Dto.Usuarios;
 
 namespace WebMedicina.BackEnd.API.Controllers
 {
-    [Route("/api/gestionusers")]
+    [Route("api/[controller]")]
     [ApiController]
     [Authorize(Roles = "superAdmin, admin")]
     public class GestionUsersController : Controller {

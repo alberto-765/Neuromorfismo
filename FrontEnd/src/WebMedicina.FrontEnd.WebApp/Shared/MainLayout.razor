@@ -11,28 +11,28 @@
 
 <CascadingValue Name="modoOscuro" Value="@_isDarkMode">
     <MudLayout Class="d-flex">
-        <MudAppBar Class="mud-elevation-25">
-            <MudHidden Breakpoint="Breakpoint.SmAndDown">
-                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Dark" Edge="Edge.Start" OnClick="@ToggleDrawer" />
-            </MudHidden>
-            <MudHidden Breakpoint="Breakpoint.MdAndUp">
-                <a href="">
-                    <img id="iconoNavBar" src="icono.png" alt="Icono" />
-                </a>
-            </MudHidden>
-            <MudSpacer />
-
-            @* Boton Modo Oscuro*@
-            <MudToggleIconButton @bind-Toggled="@IsDarkMode" Icon="@Icons.Material.Outlined.DarkMode" Title="Cambiar a modo oscuro"
-                                    ToggledIcon="@Icons.Material.Outlined.LightMode" ToggledTitle="Cambiar a modo claro" />
-
-            @* Perfil  *@
-            <Perfil />
-        </MudAppBar>
-
-        @* Drawer solo para autenticados *@
-         <AuthorizeView>
+        <AuthorizeView>
             <Authorized>
+                <MudAppBar Class="mud-elevation-25">
+                            <MudHidden Breakpoint="Breakpoint.SmAndDown">
+                                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Dark" Edge="Edge.Start" OnClick="@ToggleDrawer" />
+                            </MudHidden>
+                            <MudHidden Breakpoint="Breakpoint.MdAndUp">
+                                <a href="">
+                                    <img id="iconoNavBar" src="icono.png" alt="Icono" />
+                                </a>
+                            </MudHidden>
+                    <MudSpacer />
+
+                    @* Boton Modo Oscuro*@
+                    <MudToggleIconButton @bind-Toggled="@_isDarkMode" Icon="@Icons.Material.Outlined.DarkMode" Title="Cambiar a modo oscuro"
+                                            ToggledIcon="@Icons.Material.Outlined.LightMode" ToggledTitle="Cambiar a modo claro" />
+
+                    @* Perfil  *@
+                    <Perfil />
+                </MudAppBar>
+
+            @* Drawer solo para autenticados *@
                 <MudDrawer @bind-Open="@open" ClipMode="clipMode" Elevation="1" Breakpoint="@Breakpoint.Md" Variant="@DrawerVariant.Responsive" PreserveOpenState="true">
                         <NavMenu />
                 </MudDrawer>
@@ -43,51 +43,41 @@
                  </MudMainContent>
             </Authorized>
             <NotAuthorized>
-                    <MudMainContent id="loginContainer">
-                        <MudContainer Fixed="true" Class="d-flex flex-column">
-                            @Body
-                        </MudContainer>
-                    </MudMainContent>
+                <MudMainContent id="loginContainer">
+                    <MudContainer Fixed="true" Class="d-flex flex-column">
+                        @Body
+                    </MudContainer>
+                </MudMainContent>
             </NotAuthorized>
+            <Authorizing>
+                <MudMainContent>
+                    <MudContainer Fixed="true" Class="d-flex flex-column">
+                        @Body
+                    </MudContainer>
+                </MudMainContent>
+            </Authorizing>
         </AuthorizeView>
     </MudLayout>
 </CascadingValue>
 @code {
     // Control del drawer pricnipal
-    bool open { get; set; } = true;
+    private bool open { get; set; } = true;
     private bool primerClick = true;
     private DrawerClipMode clipMode = DrawerClipMode.Always;
 
     // Control de modo oscuro
     private MudThemeProvider _mudThemeProvider = null!;
-    private bool _isDarkMode = false;
-    private bool IsDarkMode { 
-        get => _isDarkMode; 
-        set{
-            _isDarkMode = value;
-            js.SetInLocalStorage(CLAVE, JsonSerializer.Serialize(_isDarkMode));
-        }
-    }
-
-    private const string CLAVE = "KoAuNLWIWUEfVdUtDYsT"; // modo oscuro en sessionStorage
+    private bool _isDarkMode { get; set; } = false;
 
     protected override async Task OnAfterRenderAsync(bool firstRender) {
-        try {
-            if (firstRender) {
-                var modoOscuro = await js.GetFromLocalStorage(CLAVE);
-                bool boolModo = false;
-                if(modoOscuro is not null) {
-                    boolModo = JsonSerializer.Deserialize<bool>(modoOscuro);
-                }
-                if (modoOscuro is null) {
-                    _isDarkMode = await _mudThemeProvider.GetSystemPreference();
-                }else {
-                    _isDarkMode = boolModo;
-                }
-            }
-        } catch (Exception) {
-            throw;
+        await base.OnAfterRenderAsync(firstRender);
+
+
+        // Modo oscuro del sistema
+        if (firstRender) {
+            _isDarkMode = await _mudThemeProvider.GetSystemPreference();
         }
+
     }
 
     void ToggleDrawer() {

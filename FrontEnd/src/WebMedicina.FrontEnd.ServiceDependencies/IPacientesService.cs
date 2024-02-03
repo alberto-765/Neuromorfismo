@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Collections.Immutable;
+using System.Security.Claims;
 using WebMedicina.Shared.Dto.Pacientes;
 using WebMedicina.Shared.Dto.Tipos;
 using WebMedicina.Shared.Dto.Usuarios;
@@ -11,11 +12,11 @@ namespace WebMedicina.FrontEnd.ServiceDependencies {
         Task<HttpResponseMessage> CrearPaciente(CrearPacienteDto nuevoPaciente);
         Task<HttpResponseMessage> EditarPaciente(CrearPacienteDto nuevoPaciente);
         Task<HttpResponseMessage> EliminarPaciente(int idPaciente);
-        Task<List<CrearPacienteDto>?> ObtenerPacientes();
-        Task<List<CrearPacienteDto>?> FiltrarPacientes(FiltroPacienteDto? filtrsPacientes);
-        List<CrearPacienteDto>? FiltrarMisPacientes(List<CrearPacienteDto>? listaPacientes, ClaimsPrincipal? user);
-        Task<List<CrearPacienteDto>?> AnadirPacienteALista(int idPaciente);
-        Task<List<CrearPacienteDto>?> EliminarPacienteLista(int idPaciente);
+        Task<ImmutableList<CrearPacienteDto>?> ObtenerPacientes();
+        Task<ImmutableList<CrearPacienteDto>?> FiltrarPacientes(FiltroPacienteDto? filtrsPacientes = null);
+        ImmutableList<CrearPacienteDto> FiltrarMisPacientes(ImmutableList<CrearPacienteDto> listaPacientes, ClaimsPrincipal? user);
+        Task<bool> AnadirPacienteALista(int idPaciente);
+        Task<bool> EliminarPacienteLista(int idPaciente);
         void ReiniciarCopiaPaciente(ref CrearPacienteDto nuevoPaciente, CrearPacienteDto copiaPaciente);
         Task<List<CrearPacienteDto>> ObtenerListaPacienteSession();
         Task<CrearPacienteDto?> ObtenerPacienteSession(int idPaciente);

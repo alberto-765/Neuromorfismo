@@ -22,15 +22,16 @@ builder.Services.AddHttpClient("HttpAPI", client => {
 
 //DEPENDENCIAS
 builder.Services.AddSingleton<IConfigurationBuilder>(builder.Configuration); // para la configuracion
-builder.Services.AddScoped<ICrearHttpClient, CrearHttpClient>(); // para crear Httpclient
 builder.Services.AddSingleton<EstilosBase>(); // Base de estilos mudblazor
+builder.Services.AddScoped<ICrearHttpClient, CrearHttpClient>(); // para crear Httpclient
+builder.Services.AddScoped<CreateHttpHandler>(); // Service para asingar a cada httpclient creado con httclientfactory el header con permisos
 builder.Services.AddScoped<IRedirigirManager, RedirigirManager>(); // Redirigir 
 builder.Services.AddScoped<IAdminsService, AdminsService>(); // Service de admins
 builder.Services.AddScoped<IPerfilService, PerfilService>(); // Service para control del perfil
 builder.Services.AddScoped<IPacientesService, PacientesService>(); // Service para pacientes
 builder.Services.AddScoped<IComun, Comun>(); // Service para funciones comunes y reutilizables
 builder.Services.AddScoped<ILineaTemporalService, LineaTemporalService>(); // Service para linea temporal
-builder.Services.AddScoped<CreateHttpHandler>(); // Service para asingar a cada httpclient creado con httclientfactory el header con permisos
+builder.Services.AddScoped<IDocumentacionService, DocumentacionService>();
 
 
 // Configuracion imagenes
