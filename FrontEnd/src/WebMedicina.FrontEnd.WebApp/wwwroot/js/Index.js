@@ -1,8 +1,4 @@
-﻿// IMPORTS
-import "html2canvas.min.js";
-
-
-
+﻿
 // Bloquear el scroll de un elemento
 function bloquearScroll(claseElemento, ejes) {
     let elemento = document.querySelector(claseElemento);
@@ -86,12 +82,14 @@ function DescargarExcel(filename, bytesBase64) {
 // Convertir html en una imagen con html2canvas
 async function GenerarImagenDeHtml(id) {
     const contenedor = document.getElementById(id);
-    const base64;
+    let base64 = "";
 
     // Generamos base64 de la imagen
-    await html2canvas(contenedor).then(canvas => {
-        base64 = canvas.toDataURL("image/png")
-    }); 
+    if (contenedor != null) {
+        await html2canvas(contenedor).then(canvas => {
+            base64 = canvas.toDataURL("image/png")
+        }); 
+    }
 
     return base64;
 }

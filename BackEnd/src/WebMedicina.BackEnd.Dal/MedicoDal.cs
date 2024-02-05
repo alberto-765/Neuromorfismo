@@ -12,7 +12,7 @@ namespace WebMedicina.BackEnd.Dal {
 
         // Obtenemos los datos de un medico filtrando por id
         public MedicosModel? ObtenerInfoUser(int idMedico) {
-            return _context.Medicos.AsNoTracking().Find(idMedico);
+            return _context.Medicos.Find(idMedico);
         }
         
         // Obtenemos los datos de un medico filtrando por username

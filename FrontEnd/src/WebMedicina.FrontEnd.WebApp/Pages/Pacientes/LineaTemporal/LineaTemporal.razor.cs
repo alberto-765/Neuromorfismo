@@ -76,13 +76,14 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
                 // Realizamos envio del correo 
                 Console.Write("LLega a enviar corrreo");
                 if (Evoluciones.Any()) {
-                    _ = _documentacionService.EnviarEmailEvoActu(Evoluciones.Last().Value, IdPaciente, IdContenedor);
+                    await _documentacionService.EnviarEmailEvoActu(Evoluciones.Last().Value, IdPaciente, IdContenedor);
                 }
 
                 Console.Write("Sale de enviar corrreo");
 
-            } catch (Exception) {
+            } catch (Exception ex) {
                 _snackbar.Add("No ha sido posible actualizar la etapa de la evolución del paciente", Severity.Error);
+                Console.Write(ex.ToString());
             }
         }
     }

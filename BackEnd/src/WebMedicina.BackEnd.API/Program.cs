@@ -116,8 +116,8 @@ builder.Services.AddScoped<IPacientesService, PacientesService>(); // Servicios 
 builder.Services.AddScoped<ILineaTemporalService, LineaTemporalService>(); // Servicios de linea temporal
 builder.Services.AddScoped<IUserAccountService, UserAccountService>(); // Servicios de cuentas de usuario
 builder.Services.AddScoped<IJWTManagerRepository, JWTManagerRepository>(); // Servicios de jwt tokens
-builder.Services.AddSingleton<IDocumentacionService, DocumentacionService>(); // Servicios excel 
-builder.Services.AddSingleton<IEmailService, EmailService>(); // Servicios envio de correo
+builder.Services.AddScoped<IDocumentacionService, DocumentacionService>(); // Servicios excel 
+builder.Services.AddScoped<IEmailService, EmailService>(); // Servicios envio de correo
 
 
 // IOPTIONS JWT

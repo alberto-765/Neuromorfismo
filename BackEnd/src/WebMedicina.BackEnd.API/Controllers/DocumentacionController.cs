@@ -64,7 +64,7 @@ namespace WebMedicina.BackEnd.API.Controllers {
 
             // Realizamos envio de email sin esperar una respuesta
             if(!string.IsNullOrWhiteSpace(asunto) && !string.IsNullOrWhiteSpace(cuerpo)) {
-                _emailService.Send(asunto, cuerpo, new MemoryStream(Convert.FromBase64String(datosEmail.ImgBase64));
+                _emailService.Send(asunto, cuerpo, new MemoryStream(Convert.FromBase64String(datosEmail.ImgBase64)));
             }
         }
     }
