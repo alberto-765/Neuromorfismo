@@ -11,8 +11,8 @@ using WebMedicina.BackEnd.Model;
 namespace WebMedicina.BackEnd.Model.Migrations
 {
     [DbContext(typeof(WebmedicinaContext))]
-    [Migration("20240123224536_TriggersIniciales")]
-    partial class TriggersIniciales
+    [Migration("20240207014822_Cambio_nombres_tablas_etapas_y_evoluciones")]
+    partial class Cambio_nombres_tablas_etapas_y_evoluciones
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -155,24 +155,24 @@ namespace WebMedicina.BackEnd.Model.Migrations
                         new
                         {
                             IdEpilepsia = 1,
-                            FechaCreac = new DateTime(2024, 1, 23, 0, 0, 0, 0, DateTimeKind.Local),
-                            FechaUltMod = new DateTime(2024, 1, 23, 0, 0, 0, 0, DateTimeKind.Local),
+                            FechaCreac = new DateTime(2024, 2, 7, 0, 0, 0, 0, DateTimeKind.Local),
+                            FechaUltMod = new DateTime(2024, 2, 7, 0, 0, 0, 0, DateTimeKind.Local),
                             Nombre = "Epilepsia1"
                         },
                         new
                         {
                             IdEpilepsia = 2,
-                            FechaCreac = new DateTime(2024, 1, 23, 0, 0, 0, 0, DateTimeKind.Local),
-                            FechaUltMod = new DateTime(2024, 1, 23, 0, 0, 0, 0, DateTimeKind.Local),
+                            FechaCreac = new DateTime(2024, 2, 7, 0, 0, 0, 0, DateTimeKind.Local),
+                            FechaUltMod = new DateTime(2024, 2, 7, 0, 0, 0, 0, DateTimeKind.Local),
                             Nombre = "Epilepsia2"
                         });
                 });
 
             modelBuilder.Entity("WebMedicina.BackEnd.Model.EtapaLTModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<short>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("smallint");
 
                     b.Property<string>("Descripcion")
                         .HasMaxLength(250)
@@ -207,7 +207,45 @@ namespace WebMedicina.BackEnd.Model.Migrations
 
                     b.HasIndex("IdMedicoUltModif");
 
-                    b.ToTable("EtapaLT");
+                    b.ToTable("Etapas");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = (short)1,
+                            Descripcion = "",
+                            FechaCreac = new DateTime(2024, 2, 7, 0, 0, 0, 0, DateTimeKind.Local),
+                            FechaUltMod = new DateTime(2024, 2, 7, 0, 0, 0, 0, DateTimeKind.Local),
+                            Label = "¿Ha dado su consentimiento el paciente?",
+                            Titulo = "Consentimiento Informado"
+                        },
+                        new
+                        {
+                            Id = (short)2,
+                            Descripcion = "Descripcion",
+                            FechaCreac = new DateTime(2024, 2, 7, 0, 0, 0, 0, DateTimeKind.Local),
+                            FechaUltMod = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Label = "¿Ha dado su consentimiento el paciente?",
+                            Titulo = "Paciente Acude a Extracción Analítica"
+                        },
+                        new
+                        {
+                            Id = (short)3,
+                            Descripcion = "",
+                            FechaCreac = new DateTime(2024, 2, 7, 0, 0, 0, 0, DateTimeKind.Local),
+                            FechaUltMod = new DateTime(2024, 2, 7, 0, 0, 0, 0, DateTimeKind.Local),
+                            Label = "¿Ha dado su consentimiento el paciente?",
+                            Titulo = "Muestra de Genética"
+                        },
+                        new
+                        {
+                            Id = (short)999,
+                            Descripcion = "",
+                            FechaCreac = new DateTime(2024, 2, 7, 0, 0, 0, 0, DateTimeKind.Local),
+                            FechaUltMod = new DateTime(2024, 2, 7, 0, 0, 0, 0, DateTimeKind.Local),
+                            Label = "",
+                            Titulo = "Fin de la evolución del paciente"
+                        });
                 });
 
             modelBuilder.Entity("WebMedicina.BackEnd.Model.EvolucionLTModel", b =>
@@ -222,8 +260,8 @@ namespace WebMedicina.BackEnd.Model.Migrations
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("IdEtapa")
-                        .HasColumnType("int");
+                    b.Property<short>("IdEtapa")
+                        .HasColumnType("smallint");
 
                     b.Property<int>("IdMedicoUltModif")
                         .HasColumnType("int(11)");
@@ -239,7 +277,7 @@ namespace WebMedicina.BackEnd.Model.Migrations
 
                     b.HasIndex("IdPaciente");
 
-                    b.ToTable("EvolucionLT");
+                    b.ToTable("Evoluciones");
                 });
 
             modelBuilder.Entity("WebMedicina.BackEnd.Model.FarmacosModel", b =>
@@ -393,15 +431,15 @@ namespace WebMedicina.BackEnd.Model.Migrations
                         new
                         {
                             IdMutacion = 1,
-                            FechaCreac = new DateTime(2024, 1, 23, 0, 0, 0, 0, DateTimeKind.Local),
-                            FechaUltMod = new DateTime(2024, 1, 23, 0, 0, 0, 0, DateTimeKind.Local),
+                            FechaCreac = new DateTime(2024, 2, 7, 0, 0, 0, 0, DateTimeKind.Local),
+                            FechaUltMod = new DateTime(2024, 2, 7, 0, 0, 0, 0, DateTimeKind.Local),
                             Nombre = "Mutacion1"
                         },
                         new
                         {
                             IdMutacion = 2,
-                            FechaCreac = new DateTime(2024, 1, 23, 0, 0, 0, 0, DateTimeKind.Local),
-                            FechaUltMod = new DateTime(2024, 1, 23, 0, 0, 0, 0, DateTimeKind.Local),
+                            FechaCreac = new DateTime(2024, 2, 7, 0, 0, 0, 0, DateTimeKind.Local),
+                            FechaUltMod = new DateTime(2024, 2, 7, 0, 0, 0, 0, DateTimeKind.Local),
                             Nombre = "Mutacion2"
                         });
                 });
@@ -535,21 +573,21 @@ namespace WebMedicina.BackEnd.Model.Migrations
                         new
                         {
                             Id = "1",
-                            ConcurrencyStamp = "5b407351-1f59-4b4b-ad88-11e319d389f8",
+                            ConcurrencyStamp = "9627a373-923f-4b5b-81d9-6d9ea33d59b9",
                             Name = "superAdmin",
                             NormalizedName = "SUPERADMIN"
                         },
                         new
                         {
                             Id = "2",
-                            ConcurrencyStamp = "bf9a1d23-5ff1-430b-b6e6-421bbc27610c",
+                            ConcurrencyStamp = "1cba0e1c-f112-4247-992d-77af7576782c",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "3",
-                            ConcurrencyStamp = "62197bf2-744e-4cc7-9617-70f1b873c6cd",
+                            ConcurrencyStamp = "7d9b9182-c87f-4d6e-b453-949175c9253c",
                             Name = "medico",
                             NormalizedName = "MEDICO"
                         });
@@ -712,7 +750,7 @@ namespace WebMedicina.BackEnd.Model.Migrations
             modelBuilder.Entity("WebMedicina.BackEnd.Model.EvolucionLTModel", b =>
                 {
                     b.HasOne("WebMedicina.BackEnd.Model.EtapaLTModel", "Etapa")
-                        .WithMany("EvolucionEtapa")
+                        .WithMany("EvolucionesEtapa")
                         .HasForeignKey("IdEtapa")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -739,7 +777,7 @@ namespace WebMedicina.BackEnd.Model.Migrations
             modelBuilder.Entity("WebMedicina.BackEnd.Model.MedicosModel", b =>
                 {
                     b.HasOne("WebMedicina.BackEnd.Model.UserModel", "Netuser")
-                        .WithOne("Medicos")
+                        .WithOne("Medico")
                         .HasForeignKey("WebMedicina.BackEnd.Model.MedicosModel", "NetuserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
@@ -822,7 +860,7 @@ namespace WebMedicina.BackEnd.Model.Migrations
 
             modelBuilder.Entity("WebMedicina.BackEnd.Model.EtapaLTModel", b =>
                 {
-                    b.Navigation("EvolucionEtapa");
+                    b.Navigation("EvolucionesEtapa");
                 });
 
             modelBuilder.Entity("WebMedicina.BackEnd.Model.MedicosModel", b =>
@@ -856,7 +894,7 @@ namespace WebMedicina.BackEnd.Model.Migrations
 
             modelBuilder.Entity("WebMedicina.BackEnd.Model.UserModel", b =>
                 {
-                    b.Navigation("Medicos")
+                    b.Navigation("Medico")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

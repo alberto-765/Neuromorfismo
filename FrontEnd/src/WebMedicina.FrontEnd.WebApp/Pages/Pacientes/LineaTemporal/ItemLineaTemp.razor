@@ -6,8 +6,12 @@
         <ItemContent>
             @* Si el paciente no tiene etapas solo pintamos la tarjeta de la primera Etapa, el resto desactivadas *@
             @switch (EstadoEtapa) {
-                case EstadoEtapa.Pasada:
-                    if (EvolucionPintar?.Confirmado == false) {
+                case EstadoEtapa.Pasada when EvolucionPintar is not null:
+                    if (EvolucionPintar.Confirmado) {
+                        ColorAlert = Color.Success;
+                        SeverityAlert = Severity.Success;
+                        TextoAlert = "Sí";
+                    } else {
                         ColorAlert = Color.Warning;
                         SeverityAlert = Severity.Warning;
                         TextoAlert = "No";
@@ -18,7 +22,7 @@
                         @Etapa.Value.Titulo
 
                         @if (EvolucionPintar is not null && EvolucionPintar.Fecha != DateTime.MinValue) {
-                            <MudChip Color="ColorAlert" Disabled="true" Icon="@Icons.Material.Filled.CalendarMonth" Class="ml-3">@EvolucionPintar.Fecha.ToShortDateString()</MudChip>
+                            <MudChip Color="ColorAlert" Disabled="true" Icon="@Icons.Material.Filled.CalendarMonth" Class="ml-3">@EvolucionPintar.Fecha.ToString("dd/MM/yyyy")</MudChip>
                         }
 
                     </MudText>
@@ -29,40 +33,6 @@
                         <MudText Class="claseColorTexto" Typo="Typo.body2"><b>@TextoAlert</b></MudText>
                     </MudAlert>
                 break;
-                case EstadoEtapa.Presente:
-                <MudCard Elevation="25" Class="lt__evoEditar__tarjeta">
-                        <MudCardHeader Class="py-3">
-                            <CardHeaderContent>
-                                <MudText Color="@colorTitulo" Class="@claseColorTexto" Typo="Typo.h5">@Etapa.Value.Titulo</MudText>
-                            </CardHeaderContent>
-                        </MudCardHeader>
-                        <MudCardContent Class="py-0">
-                            <!-- Otros campos del formulario -->
-                            <MudText Typo="Typo.body2" Color="@colorTitulo" Class="@($"{claseColorTexto} mb-1")">
-                                @Etapa.Value.Label
-                                @if (!string.IsNullOrWhiteSpace(Etapa.Value.Descripcion)){
-                                    <Tooltip Contenido="new MarkupString(Etapa.Value.Descripcion)" Posicion="Placement.Bottom" SizeIcono="Size.Small"  />
-                                }
-                            </MudText>
-
-                            <MudChipSet @bind-SelectedChip="ChipSetSeleccionado" Mandatory="true" Filter="true" >
-                                <MudChip Value="true" Color="Color.Success" Default="true">Sí</MudChip>
-                                <MudChip Value="false" Color="Color.Error">No</MudChip>
-                            </MudChipSet>
-                        </MudCardContent>
-                        <MudCardActions Class="d-flex px-5 pb-5" >
-                            <MudSpacer />
-                            <MudButton Size="Size.Small" Variant="Variant.Filled" Color="Color.Primary" Disabled="@Enviando" Class="pa" OnClick="@(async () => await EventoFormulario())">
-                                @if (Enviando) {
-                                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"  />        
-                                    <MudText Class="ms-2"> Enviando...</MudText>                                
-                                } else {
-                                    <MudText> Enviar</MudText>                                
-                                }
-                            </MudButton>
-                        </MudCardActions>
-                    </MudCard>
-                break;
                 case EstadoEtapa.Futura:
                 case EstadoEtapa.FinEtapas:
                     <MudText Color="@colorTitulo" Typo="Typo.h5" GutterBottom="true" Class="@claseColorTexto">@Etapa.Value.Titulo</MudText>
@@ -70,6 +40,42 @@
                     @if (EstadoEtapa is EstadoEtapa.Futura) {
                         <MudText Typo="Typo.body2" Class="@claseColorTexto">Pendiente</MudText>
                     }
+                break;
+
+                // Presente o no informada
+                default:
+                <MudCard Elevation="25" Class="lt__evoEditar__tarjeta">
+                    <MudCardHeader Class="py-3">
+                        <CardHeaderContent>
+                            <MudText Color="@colorTitulo" Class="@claseColorTexto" Typo="Typo.h5">@Etapa.Value.Titulo</MudText>
+                        </CardHeaderContent>
+                    </MudCardHeader>
+                    <MudCardContent Class="py-0">
+                        <!-- Otros campos del formulario -->
+                        <MudText Typo="Typo.body2" Color="@colorTitulo" Class="@($"{claseColorTexto} mb-1")">
+                            @Etapa.Value.Label
+                            @if (!string.IsNullOrWhiteSpace(Etapa.Value.Descripcion)) {
+                                <Tooltip Contenido="new MarkupString(Etapa.Value.Descripcion)" Posicion="Placement.Bottom" SizeIcono="Size.Small" />
+                            }
+                        </MudText>
+
+                        <MudChipSet @bind-SelectedChip="ChipSetSeleccionado" Mandatory="true" Filter="true">
+                            <MudChip Value="true" Color="Color.Success" Default="true">Sí</MudChip>
+                            <MudChip Value="false" Color="Color.Error">No</MudChip>
+                        </MudChipSet>
+                    </MudCardContent>
+                    <MudCardActions Class="d-flex px-5 pb-5">
+                        <MudSpacer />
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" Color="Color.Primary" Disabled="@Enviando" Class="pa" OnClick="@(async () => await EventoFormulario())">
+                            @if (Enviando) {
+                                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                                <MudText Class="ms-2"> Enviando...</MudText>
+                            } else {
+                                <MudText> Enviar</MudText>
+                            }
+                        </MudButton>
+                    </MudCardActions>
+                </MudCard>
                 break;
             }
         </ItemContent>
@@ -80,8 +86,9 @@
 
 @code {
     [Parameter] public EventCallback<EditarEvolucionLTDto> ActualizarEvolucionPaciente { get; set; }
+    [Parameter] public EventCallback EnviarEmail { get; set; }
     [Parameter] public EstadoEtapa EstadoEtapa { get; set; }
-    [Parameter] public KeyValuePair<int, EtapaLTDto> Etapa { get; set; } 
+    [Parameter] public KeyValuePair<short, EtapaLTDto> Etapa { get; set; } 
     [Parameter] public EvolucionLTDto? EvolucionPintar { get; set; } = null;
 
     private string claseColorTexto { get; set; } = string.Empty;
@@ -90,12 +97,12 @@
     private Size TamanoBolaItem { get; set; } = Size.Small;
 
     // Propiedades para cuando es etapa pasada
-    private Color ColorAlert { get; set; } = Color.Success;
-    private Severity SeverityAlert { get; set; } = Severity.Success;
-    private string TextoAlert { get; set; } = "Sí";
+    private Color ColorAlert { get; set; } 
+    private Severity SeverityAlert { get; set; }
+    private string TextoAlert { get; set; } = string.Empty;
 
     // Actualizar evolucion
-    private EditarEvolucionLTDto EvolucionEditar = new();
+    private EditarEvolucionLTDto EvolucionEditar = default!;
     private MudChip? _chipSetSeleccionado;
 
     private MudChip? ChipSetSeleccionado {
@@ -116,7 +123,7 @@
 
         // Asignamos estilos para los textos
         switch (EstadoEtapa) {
-            case EstadoEtapa.Pasada:
+            case EstadoEtapa.Pasada when EvolucionPintar is not null:
             colorTitulo = Color.Default;
             colorBolaItem = Color.Primary;
             TamanoBolaItem = Size.Small;
@@ -136,7 +143,7 @@
             claseColorTexto = string.Empty;
             TamanoBolaItem = Size.Medium;
             // Asignamos dto para editar evolucion
-            EvolucionEditar = EvolucionPintar?.ToEditDto() ?? new();
+            EvolucionEditar = EvolucionPintar?.ToEditDto() ?? new(Etapa.Key, Convert.ToBoolean(ChipSetSeleccionado?.Value));
             break;
         }
     }
@@ -146,5 +153,9 @@
         Enviando = true;
         await ActualizarEvolucionPaciente.InvokeAsync(EvolucionEditar);
         Enviando = false;
+        StateHasChanged();
+
+        // Realizamos envio del email sin esperar respuesta
+        _= EnviarEmail.InvokeAsync();
     }
 }

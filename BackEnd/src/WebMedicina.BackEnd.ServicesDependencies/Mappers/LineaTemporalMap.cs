@@ -29,7 +29,7 @@ namespace WebMedicina.BackEnd.ServicesDependencies.Mappers
              Confirmado = dto.Confirmado,
              Fecha = dto.Fecha,
              IdMedicoUltModif = dto.IdMedicoUltModif,
-             IdEtapa = dto.Id
+             IdEtapa = dto.IdEtapa
          };
 
         // EvolucionLTDto to EvolucionLTModel
@@ -39,7 +39,7 @@ namespace WebMedicina.BackEnd.ServicesDependencies.Mappers
              Confirmado = dto.Confirmado,
              Fecha = dto.Fecha,
              IdMedicoUltModif = dto.IdMedicoUltModif,
-             IdEtapa = dto.Id
+             IdEtapa = dto.IdEtapa
          };
 
     }

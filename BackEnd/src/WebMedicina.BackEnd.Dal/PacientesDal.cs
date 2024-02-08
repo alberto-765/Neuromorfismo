@@ -3,6 +3,7 @@ using WebMedicina.BackEnd.Model;
 using WebMedicina.Shared.Dto.Pacientes;
 using WebMedicina.Shared.Dto.Usuarios;
 using WebMedicina.BackEnd.ServicesDependencies.Mappers;
+using DocumentFormat.OpenXml.Bibliography;
 
 namespace WebMedicina.BackEnd.Dal {
     public class PacientesDal {
@@ -53,7 +54,10 @@ namespace WebMedicina.BackEnd.Dal {
         /// <param name="nuevoPaciente"></param>
         /// <returns>Bool con paciente editado o no</returns>
         public async Task<bool> EditarPaciente(PacientesModel nuevoPaciente) {
-            _context.Update(nuevoPaciente);
+            PacientesModel? paciente = await _context.Pacientes.FindAsync(nuevoPaciente.IdPaciente);
+            if (paciente is not null && !nuevoPaciente.Equals(paciente)) {
+                _context.Entry(paciente).CurrentValues.SetValues(nuevoPaciente);
+            }
             return await _context.SaveChangesAsync() > 0;
         }
 

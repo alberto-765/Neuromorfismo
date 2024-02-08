@@ -4,6 +4,13 @@ using System.ComponentModel.DataAnnotations;
 namespace WebMedicina.Shared.Dto.LineaTemporal
 {
     public class EditarEvolucionLTDto {
+
+        public EditarEvolucionLTDto(short idEtapa, bool confirmado = true)
+        {
+            Confirmado = confirmado;
+            IdEtapa = idEtapa;
+        }
+
         [Required]
         public int Id { get; init; }
 
@@ -19,7 +26,7 @@ namespace WebMedicina.Shared.Dto.LineaTemporal
         public int IdMedicoUltModif { get; set; }
 
         [Required]
-        public int IdEtapa { get; init; }
+        public short IdEtapa { get; init; }
 
     }
 }

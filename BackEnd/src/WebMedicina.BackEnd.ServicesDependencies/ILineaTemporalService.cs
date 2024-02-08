@@ -6,8 +6,8 @@ using WebMedicina.Shared.Dto.LineaTemporal;
 namespace WebMedicina.BackEnd.ServicesDependencies
 {
     public interface ILineaTemporalService {
-        ImmutableSortedDictionary<int, EtapaLTDto> GetEtapas();
-        Task<SortedList<int, EvolucionLTDto>> ObtenerEvolucion(int idPaciente);
-        Task<SortedList<int, EvolucionLTDto>> ActOInsertEvolucion(LLamadaEditarEvoDto evoEditada, ClaimsPrincipal User);
+        ImmutableSortedDictionary<short, EtapaLTDto> GetEtapas();
+        Task<SortedList<short, EvolucionLTDto>> ObtenerEvoluciones(int idPaciente);
+        Task<SortedList<short, EvolucionLTDto>> ActOInsertEvolucion(LLamadaEditarEvoDto evoEditada, ClaimsPrincipal User);
     }
 }

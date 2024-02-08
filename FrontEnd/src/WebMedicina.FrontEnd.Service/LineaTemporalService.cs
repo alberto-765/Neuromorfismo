@@ -21,19 +21,19 @@ namespace WebMedicina.FrontEnd.Service
         }
 
         // Obtener etapas disponibles para la linea temporal
-        public async Task<ImmutableSortedDictionary<int, EtapaLTDto>?> ObtenerEtapas() {
+        public async Task<ImmutableSortedDictionary<short, EtapaLTDto>?> ObtenerEtapas() {
             // Primero validamos si las etapas ya está en sessioStorage
-            ImmutableSortedDictionary<int, EtapaLTDto>? etapas = null;
+            ImmutableSortedDictionary<short, EtapaLTDto>? etapas = null;
             string jsonEtapas = await _js.GetFromSessionStorage(keyEtapas);
 
             // Si estapas es null significa que es la primera vez que se obtiene
             if (string.IsNullOrWhiteSpace(jsonEtapas)) {
-                etapas = await _http.GetFromJsonAsync<ImmutableSortedDictionary<int, EtapaLTDto>>("lineatemporal/obtenertodasetapas");
+                etapas = await _http.GetFromJsonAsync<ImmutableSortedDictionary<short, EtapaLTDto>>("lineatemporal/obtenertodasetapas");
 
                 // guardamos las etapas en session
                 await _js.SetInSessionStorage(keyEtapas, JsonSerializer.Serialize(etapas));
             } else {
-                etapas = JsonSerializer.Deserialize<ImmutableSortedDictionary<int, EtapaLTDto>>(jsonEtapas);
+                etapas = JsonSerializer.Deserialize<ImmutableSortedDictionary<short, EtapaLTDto>>(jsonEtapas);
             }
 
             return etapas;
@@ -44,7 +44,7 @@ namespace WebMedicina.FrontEnd.Service
         /// </summary>
         /// <param name="idPaciente"></param>
         /// <returns>Datos linea temporal del paciente requerido</returns>
-        public async Task<SortedList<int, EvolucionLTDto>> ObtenerEvolucionPaciente(int idPaciente) {
+        public async Task<SortedList<short, EvolucionLTDto>> ObtenerEvolucionPaciente(int idPaciente) {
          
             // Obtenemos todos los pacientes de session
             List<CrearPacienteDto> pacientes = await _pacienteService.ObtenerListaPacienteSession();
@@ -64,7 +64,7 @@ namespace WebMedicina.FrontEnd.Service
 
                     // Obtenemos la evolucion del paciente y lo guardamos en session
                     if (httpResponseMessage.IsSuccessStatusCode) {
-                        paciente.Evoluciones = await httpResponseMessage.Content.ReadFromJsonAsync<SortedList<int, EvolucionLTDto>>();
+                        paciente.Evoluciones = await httpResponseMessage.Content.ReadFromJsonAsync<SortedList<short, EvolucionLTDto>>();
 
                         await _pacienteService.GuardarPacientesSession(pacientes);
                     } 
@@ -80,12 +80,12 @@ namespace WebMedicina.FrontEnd.Service
         /// </summary>
         /// <param name="idPaciente"></param>
         /// <returns>Datos linea temporal del paciente requerido</returns>
-        public async Task<SortedList<int, EvolucionLTDto>> ActEvoPac(LLamadaEditarEvoDto evoEditada) {
+        public async Task<SortedList<short, EvolucionLTDto>> ActEvoPac(LLamadaEditarEvoDto evoEditada) {
             CrearPacienteDto? paciente = null;
 
             // LLamada API para actualizar evolucion
             HttpResponseMessage respuesta = await _http.PutAsJsonAsync("lineatemporal/actoinsertevolucionpaciente", evoEditada);
-            SortedList<int, EvolucionLTDto>? evolucionesEditadas = await respuesta.Content.ReadFromJsonAsync<SortedList<int, EvolucionLTDto>>();
+            SortedList<short, EvolucionLTDto>? evolucionesEditadas = await respuesta.Content.ReadFromJsonAsync<SortedList<short, EvolucionLTDto>>();
 
             // Actualizamos evolucion del paciente en session
             if (evolucionesEditadas is not null && evolucionesEditadas.Any()) {

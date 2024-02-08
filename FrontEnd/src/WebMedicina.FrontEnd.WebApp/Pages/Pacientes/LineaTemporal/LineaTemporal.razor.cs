@@ -14,9 +14,9 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
 
 
         // Parametros
-        [Parameter] public ImmutableSortedDictionary<int, EtapaLTDto> EtapasLineaTemporal { get; set; } = default!;
-        [Parameter] public SortedList<int, EvolucionLTDto> Evoluciones { get; set; } = default!;
-        [Parameter] public EventCallback<SortedList<int, EvolucionLTDto>> EvolucionesChanged { get; set; }
+        [Parameter] public ImmutableSortedDictionary<short, EtapaLTDto> EtapasLineaTemporal { get; set; } = default!;
+        [Parameter] public SortedList<short, EvolucionLTDto> Evoluciones { get; set; } = default!;
+        [Parameter] public EventCallback<SortedList<short, EvolucionLTDto>> EvolucionesChanged { get; set; }
         [Parameter] public int IdPaciente { get; set; }
         [Parameter] public string IdContenedor { get; set; } = default!;
 
@@ -45,7 +45,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
         }
 
         // Calcular estado de una etapa
-        private EstadoEtapa CalcularEstadoEtapa(KeyValuePair<int, EtapaLTDto> etapa) {
+        private EstadoEtapa CalcularEstadoEtapa(KeyValuePair<short, EtapaLTDto> etapa) {
             EstadoEtapa estadoEtapa = EstadoEtapa.Pasada;
 
             if (etapa.Key == EtapaFinEvolutivo && UltimaEtapaPaciente == EtapaFinEvolutivo) {
@@ -69,22 +69,27 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
         /// <param name="nuevaEvolucion"></param>
         public async Task ActualizarEvolucionPaciente(EditarEvolucionLTDto nuevaEvolucion) {
             try {
-                LLamadaEditarEvoDto evoEditada = new(nuevaEvolucion, UltimaEtapaPaciente, IdPaciente);
+                LLamadaEditarEvoDto evoEditada = new(nuevaEvolucion, IdPaciente);
                 Evoluciones = await _lineaTemporalService.ActEvoPac(evoEditada);
                 StateHasChanged();
 
-                // Realizamos envio del correo 
-                Console.Write("LLega a enviar corrreo");
-                if (Evoluciones.Any()) {
-                    await _documentacionService.EnviarEmailEvoActu(Evoluciones.Last().Value, IdPaciente, IdContenedor);
-                }
-
-                Console.Write("Sale de enviar corrreo");
-
-            } catch (Exception ex) {
+            } catch (Exception) {
                 _snackbar.Add("No ha sido posible actualizar la etapa de la evolución del paciente", Severity.Error);
-                Console.Write(ex.ToString());
             }
+
+          
         }
+
+        /// <summary>
+        /// Enviar email con la actualizacion de la evolucion
+        /// </summary>
+        /// <returns></returns>
+        public Task EnviarEmail() {
+            if (Evoluciones.Any()) {
+                _ = _documentacionService.EnviarEmailEvoActu(Evoluciones.Last().Value, IdPaciente, IdContenedor);
+            }
+            return Task.CompletedTask; 
+        }
+
     }
 }

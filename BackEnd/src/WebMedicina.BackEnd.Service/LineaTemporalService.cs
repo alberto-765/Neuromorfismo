@@ -20,7 +20,7 @@ namespace WebMedicina.BackEnd.Service
         /// Obtener todas las etapas existentes
         /// </summary>
         /// <returns>ImmutableSortedDictionary de todas las etapas</returns>
-        public ImmutableSortedDictionary<int, EtapaLTDto> GetEtapas() {
+        public ImmutableSortedDictionary<short, EtapaLTDto> GetEtapas() {
             return _lineaTemporalDal.GetEtapas();   
 		}
 
@@ -31,7 +31,7 @@ namespace WebMedicina.BackEnd.Service
         /// <param name="request"></param>
         /// <param name="User"></param>
         /// <returns></returns>
-        public async Task<SortedList<int, EvolucionLTDto>> ActOInsertEvolucion(LLamadaEditarEvoDto evoEditada, ClaimsPrincipal User) {
+        public async Task<SortedList<short, EvolucionLTDto>> ActOInsertEvolucion(LLamadaEditarEvoDto evoEditada, ClaimsPrincipal User) {
             if (Comun.ObtenerIdUsuario(User, out int idMedico) && idMedico > 0) {
                 // Obtenemos la evolucion y comprobamos si hay que insertala o actualizarla
                 EvolucionLTModel? nuevaEvolucion = await _lineaTemporalDal.GetEvolucion(evoEditada.Evolucion.Id, evoEditada.IdPaciente);
@@ -43,7 +43,7 @@ namespace WebMedicina.BackEnd.Service
                     // Mapeamos la nueva evolucion
                     nuevaEvolucion = evoEditada.Evolucion.ToModel();
                     nuevaEvolucion.IdPaciente = evoEditada.IdPaciente;
-                    nuevaEvolucion.IdEtapa = evoEditada.UltimaEtapaPaciente;
+                    nuevaEvolucion.IdEtapa = evoEditada.Evolucion.IdEtapa;
                     nuevaEvolucion.IdMedicoUltModif = idMedico;
 
                     accionOk = await _lineaTemporalDal.InsertarEvolucion(nuevaEvolucion);
@@ -59,11 +59,11 @@ namespace WebMedicina.BackEnd.Service
 
                 // Si se ha actualizado o insertado devolvemos nuevo listado de evoluciones del paciente
                 if(accionOk) {
-                    return await ObtenerEvolucion(evoEditada.IdPaciente);
+                    return await ObtenerEvoluciones(evoEditada.IdPaciente);
                 }
             }
 
-            return new SortedList<int, EvolucionLTDto>();
+            return new SortedList<short, EvolucionLTDto>();
         }
 
         /// <summary>
@@ -71,11 +71,11 @@ namespace WebMedicina.BackEnd.Service
         /// </summary>
         /// <param name="idPaciente"></param>
         /// <returns>ShortedList evoluciones del paciente</returns>
-        public async Task<SortedList<int, EvolucionLTDto>> ObtenerEvolucion(int idPaciente) {
+        public async Task<SortedList<short, EvolucionLTDto>> ObtenerEvoluciones(int idPaciente) {
             List<EvolucionLTDto> evoluciones = await _lineaTemporalDal.GetEvoluciones(idPaciente);
 
             // convertimos la lista en una shortedlist
-            SortedList<int, EvolucionLTDto> evolucionesOrdenadas = new();
+            SortedList<short, EvolucionLTDto> evolucionesOrdenadas = new();
             foreach (EvolucionLTDto evo in evoluciones) {
                 evolucionesOrdenadas.Add(evo.IdEtapa, evo);
             }

@@ -14,7 +14,7 @@ namespace WebMedicina.BackEnd.API.Controllers
     public class GestionUsersController : Controller {
         private readonly IAdminsService _adminService;
         private readonly IIdentityService _identityService;
-        WebmedicinaContext _context;
+        private readonly WebmedicinaContext _context;
 
 
         public GestionUsersController(IAdminsService adminsService, IIdentityService identity, WebmedicinaContext context) {
@@ -39,44 +39,42 @@ namespace WebMedicina.BackEnd.API.Controllers
 
         [HttpPut("actualizarusuario")]
         public async Task<IActionResult> ActualizarUsuario([FromBody] LLamadaUploadUser usuarioEditado) {
-            using (var transactionContext = _context.Database.BeginTransaction()) {
+            using var transactionContext = _context.Database.BeginTransaction();
+            try {
+                // Validamos que el usuario es valido 
+                if (usuarioEditado is not null && ModelState.IsValid) {
 
-                try {
-                    // Validamos que el usuario es valido 
-                    if (usuarioEditado is not null && ModelState.IsValid) {
+                    // Validamos los campos del nuevo usuario
+                    List<ValidationResult> errores = new();
+                    Validator.TryValidateObject(usuarioEditado.usuario, new ValidationContext(usuarioEditado.usuario), errores, true);
 
-                        // Validamos los campos del nuevo usuario
-                        List<ValidationResult> errores = new();
-                        Validator.TryValidateObject(usuarioEditado.usuario, new ValidationContext(usuarioEditado.usuario), errores, true);
+                    if (!errores.Any()) {
+                        // Si el usuario se ha actualizado correctamente, cambiamos el rol si es necesario
+                        if (await _adminService.ActualizarMedico(usuarioEditado.usuario)) {
 
-                        if(!errores.Any()) {
-                            // Si el usuario se ha actualizado correctamente, cambiamos el rol si es necesario
-                            if (await _adminService.ActualizarMedico(usuarioEditado.usuario)){
+                            if (usuarioEditado.rolModificado) {
 
-                                if (usuarioEditado.rolModificado) {
-
-                                    // Actualizamos el rol del usuario
-                                    if(await _identityService.ActualizarRol(usuarioEditado.usuario.UserLogin, usuarioEditado.usuario.Rol)) {
-                                        await transactionContext.CommitAsync();
-                                        return Ok("Médico editado correctamente");
-                                    }
-                                } else {
-                                        await transactionContext.CommitAsync();
-                                        return Ok("Médico editado correctamente");
+                                // Actualizamos el rol del usuario
+                                if (await _identityService.ActualizarRol(usuarioEditado.usuario.UserLogin, usuarioEditado.usuario.Rol)) {
+                                    await transactionContext.CommitAsync();
+                                    return Ok("Médico editado correctamente");
                                 }
-                            } 
-
-                            await transactionContext.RollbackAsync();
-                            return BadRequest("Error al editar el médico");
+                            } else {
+                                await transactionContext.CommitAsync();
+                                return Ok("Médico editado correctamente");
+                            }
                         }
-                    } 
 
-                    await transactionContext.RollbackAsync();
-                    return BadRequest("Alguno de los campos del usuario no es válido");
-                } catch (Exception) {
-                    await transactionContext.RollbackAsync();
-                    return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
+                        await transactionContext.RollbackAsync();
+                        return BadRequest("Error al editar el médico");
+                    }
                 }
+
+                await transactionContext.RollbackAsync();
+                return BadRequest("Alguno de los campos del usuario no es válido");
+            } catch (Exception) {
+                await transactionContext.RollbackAsync();
+                return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
         }
     }

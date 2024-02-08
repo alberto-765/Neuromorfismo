@@ -8,7 +8,7 @@
     @{
         <MudTimeline TimelinePosition="TimelinePosition.Start">
             @* Se debe usar bucle for porque debemos saber el indice de cada etapa *@
-            @foreach (KeyValuePair<int, EtapaLTDto> etapa in EtapasLineaTemporal) {
+            @foreach (KeyValuePair<short, EtapaLTDto> etapa in EtapasLineaTemporal) {
 
                 if (Evoluciones.TryGetValue(etapa.Key, out evolucionPintar) == false) {
                     evolucionPintar = null;
@@ -17,7 +17,7 @@
                 @* Obtenemos estado de la etapa *@
                 estadoEtapa = CalcularEstadoEtapa(etapa);
 
-                <ItemLineaTemp EstadoEtapa="estadoEtapa" Etapa="etapa" EvolucionPintar="evolucionPintar" ActualizarEvolucionPaciente="ActualizarEvolucionPaciente" />
+                <ItemLineaTemp EstadoEtapa="estadoEtapa" Etapa="etapa" EvolucionPintar="evolucionPintar" ActualizarEvolucionPaciente="ActualizarEvolucionPaciente" EnviarEmail="EnviarEmail" />
 
             }
         </MudTimeline>

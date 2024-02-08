@@ -12,9 +12,11 @@
             <MudText Typo="Typo.h4" Class="pt-10 pl-10">Evolución Paciente @Paciente.NumHistoria</MudText>
 
             @if (LineaTemporalExpandedProp && EtapasLineaTemporal is not null && EtapasLineaTemporal.Any()) {
-                <LineaTemporal EtapasLineaTemporal="EtapasLineaTemporal" @bind-Evoluciones="Evoluciones" IdPaciente="Paciente.IdPaciente" IdContenedor="IdContenedorLT" />
+                <LineaTemporal EtapasLineaTemporal="EtapasLineaTemporal" @bind-Evoluciones="Evoluciones" IdPaciente="Paciente.IdPaciente" IdContenedor="@IdContenedorLT" />
             } else {
-                <Error NombreImagen="Error2" mensajeError="Evolucion del paciente no encontrada." />
+                <div class="pt-10 pl-10">
+                    <Error NombreImagen="Error2" mensajeError="Evolucion del paciente no encontrada." />
+                </div>
             }
         </MudPaper>
     </MudContainer>

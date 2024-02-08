@@ -11,7 +11,7 @@ namespace WebMedicina.BackEnd.API
         {
             // Bindeamos uno a uno los valores del config a los de nuestra clase de configuracion
             DbConnectionSettings dbConfig = new();
-            config.Bind(key: "database", dbConfig);
+            config.Bind("database", dbConfig);
 
             // Asignamos los valroes de la configuracion
             StringBuilder sb = new();
@@ -20,9 +20,9 @@ namespace WebMedicina.BackEnd.API
             sb.Append($"DataBase={dbConfig.DataBase};");
             sb.Append($"User={dbConfig.User};");
             sb.Append($"Password={dbConfig.Password};");
-            //sb.Append($"SSL Mode={dbConfig.SslMode};");
-            //sb.Append($"CertificateFile={dbConfig.CertificateFile};");
-            //sb.Append($"CertificatePassword={dbConfig.CertificatePassword};");
+            sb.Append($"SSL Mode={dbConfig.SslMode};");
+            sb.Append($"CertificateFile={dbConfig.CertificateFile};");
+            sb.Append($"CertificatePassword={dbConfig.CertificatePassword};");
             sb.Append($"AllowUserVariables={dbConfig.AllowUserVariables};");
 
             // devolvemos el string builder

@@ -33,10 +33,9 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
         protected override void OnInitialized() { 
             // Configuracion default snackbar
             _snackbar.Configuration.PreventDuplicates = true;
-            _snackbar.Configuration.ShowTransitionDuration = 400;
-            _snackbar.Configuration.HideTransitionDuration = 400;
             _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopLeft;
             _snackbar.Configuration.ClearAfterNavigation = true; 
+            _snackbar.Configuration.ShowCloseIcon = true;
         }
 
         // Boton crear

@@ -26,6 +26,6 @@ namespace WebMedicina.Shared.Dto.Pacientes {
         // Medicos que tienen permisos sobre el paciente
         public Dictionary<int, string>? MedicosPacientes { get; set; }
 
-        public SortedList<int, EvolucionLTDto>? Evoluciones { get; set; }
+        public SortedList<short, EvolucionLTDto>? Evoluciones { get; set; }
     }
 }

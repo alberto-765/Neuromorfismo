@@ -87,7 +87,7 @@ async function GenerarImagenDeHtml(id) {
     // Generamos base64 de la imagen
     if (contenedor != null) {
         await html2canvas(contenedor).then(canvas => {
-            base64 = canvas.toDataURL("image/png")
+            base64 = canvas.toDataURL()
         }); 
     }
 

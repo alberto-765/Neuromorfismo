@@ -3,11 +3,9 @@
 namespace WebMedicina.Shared.Mapers {
     public static class LineaTemporalMap {
         public static EditarEvolucionLTDto ToEditDto(this EvolucionLTDto evolucion) =>
-            new() {
+            new(evolucion.IdEtapa, evolucion.Confirmado) {
                 Id = evolucion.Id,
-                Confirmado = evolucion.Confirmado,
                 Fecha = evolucion.Fecha,
-                IdEtapa = evolucion.IdEtapa,
                 IdMedicoUltModif = evolucion.IdMedicoUltModif
             };
 

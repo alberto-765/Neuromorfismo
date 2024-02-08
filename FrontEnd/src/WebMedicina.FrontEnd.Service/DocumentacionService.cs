@@ -1,8 +1,11 @@
 ﻿using Microsoft.JSInterop;
 using System.Net.Http.Json;
+using System.Text.Json.Serialization;
+using System.Text;
 using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.Shared.Dto.LineaTemporal;
-using WebMedicina.Shared.Dto.Pacientes; 
+using WebMedicina.Shared.Dto.Pacientes;
+using System.Text.Json;
 
 namespace WebMedicina.FrontEnd.Service {
     public class DocumentacionService : IDocumentacionService {
@@ -41,9 +44,10 @@ namespace WebMedicina.FrontEnd.Service {
         /// </summary>
         /// <param name="datosEmail"></param>
         public async Task EnviarEmailEvoActu(EvolucionLTDto evolucion, int idPaciente, string idContenedor) {
+            
             // Obtenemos base64 de la imagen
             string imgBase64 = await _js.InvokeAsync<string>("GenerarImagenDeHtml", idContenedor);
-            await _httpClient.PostAsJsonAsync("documentacion/cargarexcel", new EmailEditarEvoDto(evolucion, idPaciente, imgBase64));
+            await _httpClient.PostAsJsonAsync("documentacion/enviaremail", new EmailEditarEvoDto(evolucion, idPaciente, imgBase64));
         }
     }
 }

@@ -18,32 +18,32 @@ namespace WebMedicina.BackEnd.API.Controllers
         }
 
         [HttpGet("obtenertodasetapas")]
-        public ImmutableSortedDictionary<int, EtapaLTDto> ObtenerEtapas() {
+        public ImmutableSortedDictionary<short, EtapaLTDto> ObtenerEtapas() {
             try {
                 return _lineaTemporalService.GetEtapas();
             } catch (Exception) {
-                return ImmutableSortedDictionary<int, EtapaLTDto>.Empty;
+                return ImmutableSortedDictionary<short, EtapaLTDto>.Empty;
             }
         }
 
         [HttpGet("obtenerevolucionpaciente/{idpaciente}")]
-        public async Task<ActionResult<SortedList<int, EvolucionLTDto>>> ObtenerEvolucion(int idPaciente) {
+        public async Task<ActionResult<SortedList<short, EvolucionLTDto>>> ObtenerEvolucion(int idPaciente) {
             try {
-                return Ok(await _lineaTemporalService.ObtenerEvolucion(idPaciente));
+                return Ok(await _lineaTemporalService.ObtenerEvoluciones(idPaciente));
             } catch (Exception) {
                 return BadRequest();
             }
         }
 
         [HttpPut("actoinsertevolucionpaciente")]
-        public async Task<SortedList<int, EvolucionLTDto>> ActOInsertEvolucionPaciente([FromBody] LLamadaEditarEvoDto evoEditada) {
+        public async Task<SortedList<short, EvolucionLTDto>> ActOInsertEvolucionPaciente([FromBody] LLamadaEditarEvoDto evoEditada) {
             try {
                 if (!ModelState.IsValid) {
-                    return new SortedList<int, EvolucionLTDto>();
+                    return new SortedList<short, EvolucionLTDto>();
                 }
                 return await _lineaTemporalService.ActOInsertEvolucion(evoEditada, User);
             } catch (Exception) {
-                return new SortedList<int, EvolucionLTDto>();
+                return new SortedList<short, EvolucionLTDto>();
             }
         }
     }   

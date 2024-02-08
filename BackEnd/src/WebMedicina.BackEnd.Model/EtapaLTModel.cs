@@ -3,10 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebMedicina.BackEnd.Model {
 
-    [Table("EtapaLT")]
+    [Table("Etapas")]
     public class EtapaLTModel : BaseModel {
         [Key]
-        public int Id { get; set; }
+        public short Id { get; set; }
         
         [MaxLength(50)]
         [Required]

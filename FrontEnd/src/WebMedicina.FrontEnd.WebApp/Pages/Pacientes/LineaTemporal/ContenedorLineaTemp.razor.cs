@@ -29,8 +29,8 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
         } 
 
         // Listas etapas y evolucion paciente
-        private SortedList<int, EvolucionLTDto> Evoluciones = new(); // Evoluciones del paciente
-        private ImmutableSortedDictionary<int, EtapaLTDto>? EtapasLineaTemporal { get; set; } // Etapas para la linea temporal
+        private SortedList<short, EvolucionLTDto> Evoluciones = new(); // Evoluciones del paciente
+        private ImmutableSortedDictionary<short, EtapaLTDto>? EtapasLineaTemporal { get; set; } // Etapas para la linea temporal
 
         // Idpaciente del que se muestran las evoluciones
         private CrearPacienteDto Paciente { get; set; } = new();

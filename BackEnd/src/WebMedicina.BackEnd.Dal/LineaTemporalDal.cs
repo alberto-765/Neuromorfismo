@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Immutable;
-using System.Security.Cryptography;
 using WebMedicina.BackEnd.Model;
 using WebMedicina.BackEnd.ServicesDependencies.Mappers;
 using WebMedicina.Shared.Dto.LineaTemporal;
@@ -15,7 +14,7 @@ namespace WebMedicina.BackEnd.Dal
         }
 
         // Obtener diccionario ordenado de las etapas, si no hay devolvemos uno vacio
-        public ImmutableSortedDictionary<int, EtapaLTDto> GetEtapas() {
+        public ImmutableSortedDictionary<short, EtapaLTDto> GetEtapas() {
             return _context.EtapaLTModel.AsNoTracking().ToImmutableSortedDictionary(q => q.Id, q=> q.ToDto()) ;
         }
 
@@ -43,7 +42,7 @@ namespace WebMedicina.BackEnd.Dal
         }
 
 
-        public EtapaLTModel? GetEtapa(int idEtapa) {
+        public EtapaLTModel? GetEtapa(short idEtapa) {
             return _context.EtapaLTModel.Find(idEtapa);
         }
     }

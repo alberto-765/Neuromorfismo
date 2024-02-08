@@ -14,7 +14,8 @@ public class WebmedicinaContext : IdentityDbContext<UserModel, RoleModel, string
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-        string connectionString = "Server=127.0.0.1;Port=3306;Database=webmedicina;User=root;Password=12345;AllowUserVariables=True;";
+        string connectionString = "Server=127.0.0.1;Port=3306;DataBase=webmedicina;User=userWebMedicina;Password=WebMedicina;SSL Mode=Required;"+
+                                "CertificateFile=F:\\Program Files\\MariaDB 11.3\\data\\ssl\\client.pfx;CertificatePassword=12345;AllowUserVariables=True;";
         optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
     }
 
@@ -44,8 +45,6 @@ public class WebmedicinaContext : IdentityDbContext<UserModel, RoleModel, string
         modelBuilder.ApplyConfiguration(new EpilepsiasSeed());
         modelBuilder.ApplyConfiguration(new MutacionSeed());
         modelBuilder.ApplyConfiguration(new EtapasLTSeed());
-        //modelBuilder.ApplyConfiguration(new MedicosSeed());
-        //modelBuilder.ApplyConfiguration(new NetUserSeed());
 
 
 

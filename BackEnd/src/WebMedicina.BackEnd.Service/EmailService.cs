@@ -16,26 +16,36 @@ public class EmailService : IEmailService {
     /// Enviamos mensaje de correo
     /// </summary> 
     public void Send(string asunto, string mensaje, MemoryStream imagen) {
-
-        // Generamos mensaje del correo
+         // Generamos mensaje del correo
         MailMessage mail = new() {
             From = new(_config.Usuario),
             Subject = asunto,
-            Body = mensaje,
             IsBodyHtml = true
         };
+
+        // Creamos vista con el body de correo
+        AlternateView vistaBody = AlternateView.CreateAlternateViewFromString(mensaje, null, "text/html");
+
+        // Insertamos la captura de la evolucion a la vista
+        LinkedResource imagenLinkeada = new(imagen, "image/png") { 
+            ContentId = "capturaEvo",
+        };
+        imagenLinkeada.ContentType.Name = "Captura avance paciente";
+        vistaBody.LinkedResources.Add(imagenLinkeada);
+        mail.AlternateViews.Add(vistaBody);
+
+
 
         // Mapeamos los destinatarios
         foreach (string correo in _config.Destinatarios) {
             mail.To.Add(new(correo));
         }
 
-        // Adjuntamos imagen de progreso del paciente
-        mail.Attachments.Add(new Attachment(imagen, "image/png"));
-
         // Conectamos con el servidor de email
         SmtpClient smtp = new(_config.Host, _config.Puerto) {
-            Credentials = new NetworkCredential(_config.Usuario, _config.Contrasena)
+            Credentials = new NetworkCredential(_config.Usuario, _config.Contrasena),
+            EnableSsl = _config.Ssl,
+            UseDefaultCredentials = _config.DefaultCredencials
         };
 
         smtp.SendAsync(mail, null);

@@ -13,6 +13,10 @@ using WebMedicina.BackEnd.Service;
 using WebMedicina.BackEnd.ServicesDependencies;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Es entorno de desarrollo
+bool isDevelopment = builder.Environment.IsDevelopment();
+
 string urlClientApp = builder.Configuration.GetSection("ClientApp")["BaseUrl"] ?? throw new InvalidOperationException("No se ha encontrado la url la client app");
 
 // JWT SETTINGS
@@ -36,6 +40,12 @@ string connectionString = DBSettings.DBConnectionString(builder.Configuration);
 
 builder.Services.AddDbContext<WebmedicinaContext>(options => {
 	options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+
+	// ¡¡¡¡¡ NO SUBIR A PRODUCCION !!!!!
+	if (builder.Environment.IsDevelopment()) {
+		options.EnableDetailedErrors(); 
+		options.EnableSensitiveDataLogging();
+	}
 });
 
 
@@ -43,7 +53,6 @@ builder.Services.AddDbContext<WebmedicinaContext>(options => {
 builder.Services.AddIdentity<UserModel, RoleModel>(options => {
 	// no requerir cuenta confirmada
 	options.SignIn.RequireConfirmedAccount = false;
-
 
 	// Bloqueo settings
 	options.Lockout.MaxFailedAccessAttempts = 5; // 5 intentos fallidos para bloqueo 
@@ -91,11 +100,15 @@ builder.Services.AddAuthorization();
 
 // Activamos CORS para permitir llamadas a la api desde otras url
 builder.Services.AddCors(option => {
-	option.AddPolicy("MyPolitica", app => {
-		app.WithOrigins(urlClientApp)
-		.AllowAnyHeader() 
-		.AllowAnyMethod();
-	});
+	option.AddDefaultPolicy(
+		policy => 
+		{
+			policy.WithOrigins(urlClientApp)
+			.AllowCredentials()
+			.AllowAnyHeader()
+			.AllowAnyMethod();
+        }
+    );
 });
 
 
@@ -123,11 +136,11 @@ builder.Services.AddScoped<IEmailService, EmailService>(); // Servicios envio de
 // IOPTIONS JWT
 builder.Services.Configure<JWTConfig>(builder.Configuration.GetSection("JWT"))
 	.PostConfigure<JWTConfig>(config => {
-
 		if(string.IsNullOrWhiteSpace(config.Key) || string.IsNullOrWhiteSpace(config.Issuer) || string.IsNullOrWhiteSpace(config.Audience) || !double.TryParse(config.ValidezRefreshTokenEnDias, out double dias) || dias == 0 || !double.TryParse(config.ValidezTokenEnHoras, out double horas) || horas == 0) {
 			throw new Exception();
 		}
-});
+	}
+);
 
 
 // IOPTIONS EMAIL
@@ -141,6 +154,13 @@ builder.Services.Configure<EmailConfig>(builder.Configuration.GetSection("Email"
 
 var app = builder.Build();
 
+// Migraciones entity framework
+using (var scope = app.Services.CreateScope()) {
+	WebmedicinaContext context = scope.ServiceProvider.GetRequiredService<WebmedicinaContext>();
+	context.Database.Migrate();
+}
+
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment()) {
     app.UseDeveloperExceptionPage();
@@ -153,7 +173,7 @@ app.UseHttpsRedirection();
 app.MapControllers();
 
 // Usamos nuestra politica para cors
-app.UseCors("MyPolitica");
+app.UseCors();
 
 // Usamos autentificacion y autorizacion
 app.UseAuthentication();
@@ -165,5 +185,7 @@ app.UseStaticFiles(new StaticFileOptions {
         Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Imagenes")),
     RequestPath = "/img", // La URL desde la que se servirán las imágenes
 });
+
+
 
 app.Run();

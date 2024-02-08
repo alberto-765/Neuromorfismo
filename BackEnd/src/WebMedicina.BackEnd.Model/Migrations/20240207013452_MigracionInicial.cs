@@ -285,7 +285,7 @@ namespace WebMedicina.BackEnd.Model.Migrations
                 name: "EtapaLT",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<short>(type: "smallint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Titulo = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -401,7 +401,7 @@ namespace WebMedicina.BackEnd.Model.Migrations
                     Confirmado = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     Fecha = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     IdMedicoUltModif = table.Column<int>(type: "int(11)", nullable: false),
-                    IdEtapa = table.Column<int>(type: "int", nullable: false),
+                    IdEtapa = table.Column<short>(type: "smallint", nullable: false),
                     IdPaciente = table.Column<int>(type: "int(11)", nullable: false)
                 },
                 constraints: table =>
@@ -461,9 +461,9 @@ namespace WebMedicina.BackEnd.Model.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "1", "51dcd80f-b5d8-4ed6-b440-2d8e91041e1b", "superAdmin", "SUPERADMIN" },
-                    { "2", "baea1625-824e-4507-aa00-10600451a2c2", "admin", "ADMIN" },
-                    { "3", "74621536-7497-4222-9fc1-8fbe6e1e2b7e", "medico", "MEDICO" }
+                    { "1", "c3d6f9d0-6b39-4891-a028-3fbca1fc2935", "superAdmin", "SUPERADMIN" },
+                    { "2", "039bff38-1e69-45e4-ab33-422038715adc", "admin", "ADMIN" },
+                    { "3", "e1ea2feb-c24b-48d7-82f5-6d9f5e6ea5d6", "medico", "MEDICO" }
                 });
 
             migrationBuilder.InsertData(
@@ -471,8 +471,19 @@ namespace WebMedicina.BackEnd.Model.Migrations
                 columns: new[] { "idEpilepsia", "FechaCreac", "FechaUltMod", "nombre" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 1, 23, 0, 0, 0, 0, DateTimeKind.Local), new DateTime(2024, 1, 23, 0, 0, 0, 0, DateTimeKind.Local), "Epilepsia1" },
-                    { 2, new DateTime(2024, 1, 23, 0, 0, 0, 0, DateTimeKind.Local), new DateTime(2024, 1, 23, 0, 0, 0, 0, DateTimeKind.Local), "Epilepsia2" }
+                    { 1, new DateTime(2024, 2, 7, 0, 0, 0, 0, DateTimeKind.Local), new DateTime(2024, 2, 7, 0, 0, 0, 0, DateTimeKind.Local), "Epilepsia1" },
+                    { 2, new DateTime(2024, 2, 7, 0, 0, 0, 0, DateTimeKind.Local), new DateTime(2024, 2, 7, 0, 0, 0, 0, DateTimeKind.Local), "Epilepsia2" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "EtapaLT",
+                columns: new[] { "Id", "Descripcion", "FechaCreac", "FechaUltMod", "IdMedicoCreador", "IdMedicoUltModif", "Label", "Titulo" },
+                values: new object[,]
+                {
+                    { (short)1, "", new DateTime(2024, 2, 7, 0, 0, 0, 0, DateTimeKind.Local), new DateTime(2024, 2, 7, 0, 0, 0, 0, DateTimeKind.Local), null, null, "¿Ha dado su consentimiento el paciente?", "Consentimiento Informado" },
+                    { (short)2, "Descripcion", new DateTime(2024, 2, 7, 0, 0, 0, 0, DateTimeKind.Local), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "¿Ha dado su consentimiento el paciente?", "Paciente Acude a Extracción Analítica" },
+                    { (short)3, "", new DateTime(2024, 2, 7, 0, 0, 0, 0, DateTimeKind.Local), new DateTime(2024, 2, 7, 0, 0, 0, 0, DateTimeKind.Local), null, null, "¿Ha dado su consentimiento el paciente?", "Muestra de Genética" },
+                    { (short)999, "", new DateTime(2024, 2, 7, 0, 0, 0, 0, DateTimeKind.Local), new DateTime(2024, 2, 7, 0, 0, 0, 0, DateTimeKind.Local), null, null, "", "Fin de la evolución del paciente" }
                 });
 
             migrationBuilder.InsertData(
@@ -480,8 +491,8 @@ namespace WebMedicina.BackEnd.Model.Migrations
                 columns: new[] { "idMutacion", "FechaCreac", "FechaUltMod", "nombre" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 1, 23, 0, 0, 0, 0, DateTimeKind.Local), new DateTime(2024, 1, 23, 0, 0, 0, 0, DateTimeKind.Local), "Mutacion1" },
-                    { 2, new DateTime(2024, 1, 23, 0, 0, 0, 0, DateTimeKind.Local), new DateTime(2024, 1, 23, 0, 0, 0, 0, DateTimeKind.Local), "Mutacion2" }
+                    { 1, new DateTime(2024, 2, 7, 0, 0, 0, 0, DateTimeKind.Local), new DateTime(2024, 2, 7, 0, 0, 0, 0, DateTimeKind.Local), "Mutacion1" },
+                    { 2, new DateTime(2024, 2, 7, 0, 0, 0, 0, DateTimeKind.Local), new DateTime(2024, 2, 7, 0, 0, 0, 0, DateTimeKind.Local), "Mutacion2" }
                 });
 
             migrationBuilder.CreateIndex(

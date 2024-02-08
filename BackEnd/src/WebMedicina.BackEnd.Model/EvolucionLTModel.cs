@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebMedicina.BackEnd.Model {
 
-    [Table("EvolucionLT")]
+    [Table("Evoluciones")]
     public class EvolucionLTModel {
         [Key]
         public int Id { get; set; }
@@ -23,7 +23,7 @@ namespace WebMedicina.BackEnd.Model {
         public MedicosModel? MedicoUltModif { get; set; }
 
         [Required]
-        public int IdEtapa { get; set; } = default!;
+        public short IdEtapa { get; set; } = default!;
         [ForeignKey("IdEtapa")]
         public EtapaLTModel? Etapa { get; set; }
 

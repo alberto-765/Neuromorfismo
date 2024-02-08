@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using WebMedicina.BackEnd.ServicesDependencies;
+using WebMedicina.BackEnd.ServicesDependencies.Mappers;
 using WebMedicina.Shared.Dto.LineaTemporal;
 using WebMedicina.Shared.Dto.Pacientes;
 
 namespace WebMedicina.BackEnd.API.Controllers {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class DocumentacionController : ControllerBase {
         private readonly IDocumentacionService _documentacionService;
         private readonly IEmailService _emailService;
@@ -58,14 +61,21 @@ namespace WebMedicina.BackEnd.API.Controllers {
         }
 
         [HttpPost("enviaremail")]
-        public void EnviarEmail([FromBody] EmailEditarEvoDto datosEmail) {
-            // Obtenemos el asunto y el cuerpo del correo 
-            var(asunto, cuerpo) = _documentacionService.GenerarCorreo(datosEmail);
+        public ActionResult EnviarEmail([FromBody] EmailEditarEvoDto datosEmail) {
+            // Validamos que el base64 sea de una imagen
+            string[] headerYBase64 = datosEmail.ImgBase64.Split(",");
 
-            // Realizamos envio de email sin esperar una respuesta
-            if(!string.IsNullOrWhiteSpace(asunto) && !string.IsNullOrWhiteSpace(cuerpo)) {
-                _emailService.Send(asunto, cuerpo, new MemoryStream(Convert.FromBase64String(datosEmail.ImgBase64)));
+            if (headerYBase64.Any() && headerYBase64[0].Contains("image/png", StringComparison.OrdinalIgnoreCase)) {
+                // Obtenemos el asunto y el cuerpo del correo 
+                var(asunto, cuerpo) = _documentacionService.GenerarCorreo(datosEmail, User.ToUserInfoDto());
+
+                // Realizamos envio de email sin esperar una respuesta
+                if(!string.IsNullOrWhiteSpace(asunto) && !string.IsNullOrWhiteSpace(cuerpo)) {
+                    _emailService.Send(asunto, cuerpo, new MemoryStream(Convert.FromBase64String(headerYBase64[1])));
+                }
             }
+
+            return NoContent();
         }
     }
 }

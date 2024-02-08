@@ -1,9 +1,11 @@
 ﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Spreadsheet;
 using WebMedicina.BackEnd.Dal;
 using WebMedicina.BackEnd.Model;
 using WebMedicina.BackEnd.ServicesDependencies;
 using WebMedicina.Shared.Dto.LineaTemporal;
 using WebMedicina.Shared.Dto.Pacientes;
+using WebMedicina.Shared.Dto.Usuarios;
 
 namespace WebMedicina.BackEnd.Service {
     public class DocumentacionService : IDocumentacionService {
@@ -57,7 +59,7 @@ namespace WebMedicina.BackEnd.Service {
         /// </summary>
         /// <param name="datosEmail"></param>
         /// <returns>Tupla con asunto y mensaje</returns>
-        public (string, string) GenerarCorreo(EmailEditarEvoDto datosEmail) {
+        public (string, string) GenerarCorreo(EmailEditarEvoDto datosEmail, UserInfoDto userInfo) {
             // Obtenemos el numero de historia del paciente
             string? numHistoria = _pacientesDal.GetNumHistoria(datosEmail.IdPaciente);
             string asunto = string.Empty;
@@ -66,12 +68,14 @@ namespace WebMedicina.BackEnd.Service {
             EtapaLTModel? etapa = _lineaTemporalDal.GetEtapa(datosEmail.Evolucion.IdEtapa);
             if (!string.IsNullOrWhiteSpace(numHistoria) && etapa is not null) {
                 asunto = $"Actualización en la evolución del paciente {numHistoria}";
-                mensaje = $@"
-                    <h6>{etapa.Titulo}</h6>
-                    <p>{etapa.Label}</p>
-                    <b>{(datosEmail.Evolucion.Confirmado ? "Sí" : "No")}</b>
-                    <div>Fecha actualización: <i>{datosEmail.Evolucion.Fecha.ToString("g")}</i></div>
-                ";
+                mensaje = $@"<html>
+                    <body>
+                    <h2>{etapa.Titulo}.</h2>
+                    <p>{etapa.Label}: <b>{(datosEmail.Evolucion.Confirmado ? "Sí" : "No")}.</b></p>
+                    <p>Actualización registrada el {datosEmail.Evolucion.Fecha:D} a las {datosEmail.Evolucion.Fecha:t} por {userInfo.Nombre} {userInfo.Apellidos}.</p>
+                    <img src='cid:capturaEvo' width='100%'/>
+                    </body></html>
+                    ";
             }
 
             return (asunto, mensaje);
