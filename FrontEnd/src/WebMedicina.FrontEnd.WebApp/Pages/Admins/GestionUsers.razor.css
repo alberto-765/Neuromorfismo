@@ -45,7 +45,9 @@
 
 /*Estilo tabla en pc*/
 @media (min-width: 1280px) {
-    :: deep #tablaGestionUsers .mud-input-control > .mud-input-control-input-container > div.mud-input.mud-input-text {
+
+    /* Quitar margin top inputs text*/
+    ::deep #tablaGestionUsers .mud-input-control > .mud-input-control-input-container > div.mud-input.mud-input-text {
         margin-top: 0;
     }
     ::deep #tablaGestionUsers .mud-input-control{
@@ -63,9 +65,13 @@
     ::deep .mud-sm-table .mud-table-cell:not(.sinMargin):before {
         margin-top: 10px;
     }
+
+    /* Quitar margin top a los inputs */
     ::deep #tablaGestionUsers .mud-input-control:not(.sinMargin) > .mud-input-control-input-container > div.mud-input.mud-input-text {
         margin-top: 0;
     }
+
+    /* Reestablece margin top titulo table */
     ::deep #tablaGestionUsers .mud-table-smalldevices-sortselect .mud-input-control > .mud-input-control-input-container > div.mud-input.mud-input-text {
         margin-top: 16px;
     }

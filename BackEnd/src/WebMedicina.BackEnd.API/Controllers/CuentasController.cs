@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Duende.IdentityServer.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using WebMedicina.BackEnd.Dto;
@@ -119,5 +120,9 @@ namespace WebMedicina.BackEnd.API.Controllers
 
             return respuesta;
         }
+
+        //[HttpPatch("cambiarPassword")]
+        //[Authorize]
+        //public ActionResult<bool> CambiarContrasena()
     }
 }

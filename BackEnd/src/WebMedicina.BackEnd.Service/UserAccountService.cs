@@ -1,24 +1,26 @@
 ﻿using WebMedicina.BackEnd.Dto;
 using WebMedicina.BackEnd.ServicesDependencies;
 using WebMedicina.Shared.Dto.Usuarios;
-using Microsoft.AspNetCore.Identity;
 using WebMedicina.Shared.Dto.UserAccount;
 using WebMedicina.BackEnd.Model;
 using WebMedicina.BackEnd.ServicesDependencies.Mappers;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebMedicina.BackEnd.Service {
     public class UserAccountService : IUserAccountService  {
         private readonly IAdminsService _adminService;
         private readonly IIdentityService _identityService;
         private readonly IJWTManagerRepository _jwtManager;
+        private readonly UserManager<UserModel> _userManager;
         private readonly WebmedicinaContext _context;
 
-
-        public UserAccountService(IIdentityService identityService, WebmedicinaContext context, IAdminsService adminService, IJWTManagerRepository jwtManager) {
+        public UserAccountService(IIdentityService identityService, WebmedicinaContext context, IAdminsService adminService, IJWTManagerRepository jwtManager,
+            UserManager<UserModel> userManager) {
             _adminService = adminService;
             _identityService = identityService;
             _context = context;
             _jwtManager = jwtManager;
+            _userManager = userManager;
         }
 
 
@@ -56,7 +58,11 @@ namespace WebMedicina.BackEnd.Service {
             }
         }
 
-        // Validar contraseña login usuario y devolver nuevo token
+        /// <summary>
+        /// Validar contraseña login usuario y devolver nuevo token
+        /// </summary>
+        /// <param name="userLogin"></param>
+        /// <returns></returns>
         public Tokens? ObtenerTokenLogin(UserLoginDto userLogin) {
            
             // Obtenemos los datos del medico y su rol
@@ -70,8 +76,7 @@ namespace WebMedicina.BackEnd.Service {
             // Generamos la info del usuario si se ha obtenido correctamente
             if (medico is not null && medico.IdMedico > 0 && !string.IsNullOrWhiteSpace(medico.UserLogin) && !string.IsNullOrWhiteSpace(medico.Nombre) && 
                 !string.IsNullOrWhiteSpace(medico.Apellidos) && !string.IsNullOrWhiteSpace(medico.Rol)) {
-                UserInfoDto userInfo = medico.ToUserInfoDto();
-                return _jwtManager.GenerateJWTTokens(userInfo);
+                return _jwtManager.GenerateJWTTokens(medico.ToUserInfoDto());
             } 
 
             return null;
@@ -111,14 +116,21 @@ namespace WebMedicina.BackEnd.Service {
             }
         }
 
-        // Eliminar refreshTokens del usuario
+        /// <summary>
+        /// Eliminar refreshTokens del usuario
+        /// </summary>
+        /// <param name="tokens"></param>
+        /// <param name="userInfo"></param>
         public void CerrarSesion(Tokens tokens, UserInfoDto userInfo) {
             if (userInfo.IdMedico > 0 && !string.IsNullOrWhiteSpace(tokens.RefreshToken)) {
                 _jwtManager.DeleteRefreshTokens(userInfo.IdMedico, tokens.RefreshToken);
             }
         }
 
-        // Eliminar refreshTokens del usuario
+        /// <summary>
+        /// Eliminar refreshTokens del usuario
+        /// </summary>
+        /// <param name="tokens"></param>
         public void CerrarSesion(Tokens tokens) {
             UserInfoDto userInfo = _jwtManager.GetClaimsFromExpiredToken(tokens.RefreshToken).ToUserInfoDto();
 
@@ -126,5 +138,13 @@ namespace WebMedicina.BackEnd.Service {
                 _jwtManager.DeleteRefreshTokens(userInfo.IdMedico, tokens.RefreshToken);
             }
         }
+
+        /// <summary>
+        /// Reestablecer contraseña 
+        /// </summary>
+        /// <returns></returns>
+        //public bool ReestablecerPassword() {
+        //    _userManager.CheckPasswordAsync()
+        //}
     }
 }

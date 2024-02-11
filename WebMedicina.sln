@@ -45,7 +45,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebMedicina.FrontEnd.Dto", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebMedicina.BackEnd.Dto", "BackEnd\src\WebMedicina.BackEnd.Dto\WebMedicina.BackEnd.Dto\WebMedicina.BackEnd.Dto.csproj", "{33A85834-5541-4B78-9707-20CC33974BC7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebMedicina.Shared.Mapers", "Shared\WebMedicina.Shared.ServiceDependencies\WebMedicina.Shared.Mapers.csproj", "{F5C72B72-9539-443E-AA48-33DABCDE4C9F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebMedicina.Shared.Mapers", "Shared\WebMedicina.Shared.ServiceDependencies\WebMedicina.Shared.Mapers.csproj", "{F5C72B72-9539-443E-AA48-33DABCDE4C9F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

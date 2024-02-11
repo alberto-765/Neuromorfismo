@@ -1,14 +1,15 @@
-﻿<div style="padding: 10px 0;">
-    <MudDatePicker @ref="_picker" Editable="true" AutoClose="@autoCLose" Label="@label" PickerVariant="@variante" DateFormat="dd/MM/yyyy" MaxDate="@FechaMaxima" MinDate="@FechaMinima" Placeholder="@placeHolder" HelperText="@helperText" 
-                   @bind-Date="Fecha" For="@(() => Fecha)" PickerOpened="async () => await _comun.BloquearScroll(IdDialogo)" PickerClosed="async () => await _comun.DesbloquearScroll(IdDialogo)">
-        <PickerActions>
-            <MudButton Class="mr-auto align-self-start" OnClick="@(() => {_picker.Clear(); _picker.Close();})">Limpiar</MudButton>
-            <MudButton OnClick="@(() => _picker.Close(false))">Cancelar</MudButton>
-            <MudButton Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
-        </PickerActions>
-    </MudDatePicker>
-</div>
+﻿<MudDatePicker style="padding: 10px 0;"  @ref="_picker" Editable="true" AutoClose="@autoCLose" Label="@label" PickerVariant="@variante" DateFormat="dd/MM/yyyy"
+                MaxDate="@FechaMaxima" MinDate="@FechaMinima" Placeholder="@placeHolder" HelperText="@helperText" Class="@ClassDialogo"
+                @bind-Date="Fecha" For="@(() => Fecha)" PickerOpened="async () => await _comun.BloquearScroll(IdDialogo)" 
+                PickerClosed="async () => await _comun.DesbloquearScroll(IdDialogo)" IconSize="IconSize">
+    <PickerActions>
+        <MudButton Class="mr-auto align-self-start" OnClick="@(() => {_picker.Clear(); _picker.Close();})">Limpiar</MudButton>
+        <MudButton OnClick="@(() => _picker.Close(false))">Cancelar</MudButton>
+        <MudButton Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
+    </PickerActions>
+</MudDatePicker>
 @code{
+    // PARAMETROS
     [Parameter] public string label { get; set; } = string.Empty; // Texto para label
     [Parameter] public string helperText { get; set; } = string.Empty; // Texto de ayuda
     [Parameter] public string placeHolder { get; set; } = string.Empty; // PlaceHolder
@@ -19,7 +20,10 @@
     [Parameter] public DateTime? FechaMaxima { get; set; } = null; // Fecha maxima
     [Parameter] public PickerVariant variante { get; set; } = PickerVariant.Dialog; // Tipo de datepicker
     [Parameter] public string IdDialogo { get; set; } = string.Empty; // ID dialogo para bloquear/desbloquear scroll
-    
+    [Parameter] public string ClassDialogo { get; set; } = string.Empty; // Clase dialogo
+    [Parameter] public Size IconSize { get; set; } = Size.Small;
+
+    // DEPENDENCIAS
     [Inject] private IComun _comun { get; set; } = null!;
 
     private MudDatePicker _picker { get; set; } = new();

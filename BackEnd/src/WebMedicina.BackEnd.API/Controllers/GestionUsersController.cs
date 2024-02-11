@@ -38,7 +38,7 @@ namespace WebMedicina.BackEnd.API.Controllers
         }
 
         [HttpPut("actualizarusuario")]
-        public async Task<IActionResult> ActualizarUsuario([FromBody] LLamadaUploadUser usuarioEditado) {
+        public async Task<IActionResult> ActualizarUsuario([FromBody] LLamadaUploadUserDto usuarioEditado) {
             using var transactionContext = _context.Database.BeginTransaction();
             try {
                 // Validamos que el usuario es valido 

@@ -1,4 +1,7 @@
-﻿html, body {
+﻿/* --------------  VARIABLES ---------------- */
+/*Colores fondos de los spinners */
+/* -------------- FIN VARIABLES ---------------- */
+html, body {
   min-height: 100vh;
 }
 
@@ -15,6 +18,16 @@
   margin-left: 10px;
 }
 
+/* Mixin spinner before */
+/* Mixin spinner after */
+/* Imagen del spinner */
+.imgSpinner, #cargaInicio img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 #container_loading-progress {
   display: flex;
   width: 100vw;
@@ -29,65 +42,26 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
-
-#cargaInicio > img {
+#cargaInicio img {
   width: 4rem;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
-
-#cargaInicio > #spinner {
-  width: 100px !important;
-  height: 100px !important;
-}
-
-#cargaInicio > #spinner::after {
-  background: white !important;
-}
-
-#iconoOverLayCarga {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-#iconoOverLayCarga > img {
-  width: 2.5rem;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-#textoOverlayCarga {
-  position: relative;
-  margin-top: 6.2rem;
-  font-size: 1rem;
-}
-
-/*SPINNER*/
-#spinner {
-  width: 60px;
-  height: 60px;
+#cargaInicio #spinner {
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
 }
 
-#spinner::after, #spinner::before {
-  content: "";
-  position: absolute;
-  border-radius: inherit;
-}
-
+/*SPINNER*/
 #spinner::after {
   width: 90%;
   height: 90%;
-  background: #909090;
+  background: #ffffff;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  content: "";
+  position: absolute;
+  border-radius: inherit;
 }
 
 #spinner::before {
@@ -95,6 +69,43 @@
   width: 100%;
   height: 100%;
   background: linear-gradient(0deg, #61b8fc 0%, #2c75ff 100%);
+  content: "";
+  position: absolute;
+  border-radius: inherit;
+}
+
+#iconoOverLayCarga {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /*Creamos los diferentes fondos de los spinners*/
+}
+#iconoOverLayCarga img {
+  width: 2.5rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+#iconoOverLayCarga #textoOverlayCarga {
+  position: relative;
+  margin-top: 6.2rem;
+  font-size: 1rem;
+}
+#iconoOverLayCarga #spinner {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+}
+#iconoOverLayCarga .spinner1::after {
+  background: #292a2f !important;
+}
+#iconoOverLayCarga .spinner2::after {
+  background: #373740 !important;
+}
+#iconoOverLayCarga .spinner3::after {
+  background: #909090 !important;
 }
 
 @keyframes spin {
@@ -102,24 +113,4 @@
     transform: rotate(360deg);
   }
 }
-/* Spinner para dark mode y fondo oscuro*/
-.spinner1::after {
-  background: #292a2f !important;
-}
-
-/* Spinner para dark mode y fondo claro*/
-.spinner2::after {
-  background: #373740 !important;
-}
-
-/* Spinner para black mode y fondo oscuro*/
-.spinner3::after {
-  background: #909090 !important;
-}
-
-/* Spinner para black mode y fondo claro*/
-.spinner4::after {
-  background: #ffffff !important;
-}
-
 /*SPINNER*/

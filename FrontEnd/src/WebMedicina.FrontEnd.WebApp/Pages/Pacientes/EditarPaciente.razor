@@ -15,7 +15,8 @@
                 <NumHistoria @bind-Paciente="@nuevoPaciente" T="CrearPacienteDto" @bind-PacienteValido="PacienteValido" />
 
                 @* Fecha Nacimiento *@
-                <Picker label="Fecha de Nacimiento" @bind-Fecha="nuevoPaciente.FechaNac" FechaMaxima="ValidacionesRegistro.ObtenerFechaMaxNacimiento()" variante="PickerVariant.Dialog" />
+                <Picker label="Fecha de Nacimiento" @bind-Fecha="nuevoPaciente.FechaNac" FechaMaxima="ValidacionesRegistro.ObtenerFechaMaxNacimiento()" variante="PickerVariant.Dialog"
+                        helperText="Mayor de 18 años" />
 
                 @* Genero *@
                 <Genero @bind-Paciente="@nuevoPaciente" IdDialogo="@IdDialogo" T="CrearPacienteDto" />

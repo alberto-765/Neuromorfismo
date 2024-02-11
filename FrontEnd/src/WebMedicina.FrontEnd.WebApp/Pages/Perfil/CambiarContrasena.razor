@@ -1,0 +1,18 @@
+﻿@attribute [Authorize]
+
+<PageTitle>Cambiar Contraseña</PageTitle>
+@page "/perfil/cambiarpassword"
+
+<MudContainer MaxWidth="MaxWidth.ExtraSmall">
+    <EditForm Model="modelo" OnValidSubmit="Enviar" class="d-flex flex-column gap-5">
+
+        <MudTextField @bind-Value="modelo.NewPassword" For="() => modelo.NewPassword" Variant="Variant.Filled" Adornment="Adornment.End" AdornmentIcon="@IconoInput"
+                      AdornmentAriaLabel="Ver Contraseña" OnAdornmentClick="@(() => ContraMostrada = !ContraMostrada)" InputType="InputType" Clearable=true OnlyValidateIfDirty=true AutoFocus=true
+                      Label="Nueva Contraseña"/>
+        <MudTextField @bind-Value="modelo.ConfirmNewPassword" For="() => modelo.ConfirmNewPassword" Variant="Variant.Filled" Adornment="Adornment.End" AdornmentIcon="@IconoInput"
+                      AdornmentAriaLabel="Ver Contraseña" OnAdornmentClick="@(() => ContraMostrada = !ContraMostrada)" InputType="InputType" Clearable=true OnlyValidateIfDirty=true
+                      Label="Confirmación Nueva Contraseña" />
+
+       <BtnEnviar Enviando=true />
+    </EditForm>
+</MudContainer>
