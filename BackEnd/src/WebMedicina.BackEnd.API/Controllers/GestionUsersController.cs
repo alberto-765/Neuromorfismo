@@ -41,9 +41,6 @@ namespace WebMedicina.BackEnd.API.Controllers
         public async Task<IActionResult> ActualizarUsuario([FromBody] LLamadaUploadUserDto usuarioEditado) {
             using var transactionContext = _context.Database.BeginTransaction();
             try {
-                // Validamos que el usuario es valido 
-                if (usuarioEditado is not null && ModelState.IsValid) {
-
                     // Validamos los campos del nuevo usuario
                     List<ValidationResult> errores = new();
                     Validator.TryValidateObject(usuarioEditado.usuario, new ValidationContext(usuarioEditado.usuario), errores, true);
@@ -68,9 +65,7 @@ namespace WebMedicina.BackEnd.API.Controllers
                         await transactionContext.RollbackAsync();
                         return BadRequest("Error al editar el médico");
                     }
-                }
 
-                await transactionContext.RollbackAsync();
                 return BadRequest("Alguno de los campos del usuario no es válido");
             } catch (Exception) {
                 await transactionContext.RollbackAsync();

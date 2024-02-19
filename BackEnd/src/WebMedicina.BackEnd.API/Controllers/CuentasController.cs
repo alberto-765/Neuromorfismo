@@ -121,8 +121,10 @@ namespace WebMedicina.BackEnd.API.Controllers
             return respuesta;
         }
 
-        //[HttpPatch("cambiarPassword")]
-        //[Authorize]
-        //public ActionResult<bool> CambiarContrasena()
+        [HttpPatch("cambiarpassword")]
+        [Authorize]
+        public async Task<ActionResult<CodigosErrorChangePass[]>> CambiarContrasena([FromBody] ChangePasswordDto contrasenas) {
+            return Ok(await _userAccountService.CambiarContrasena(contrasenas, User.ToUserInfoDto()));
+        }
     }
 }

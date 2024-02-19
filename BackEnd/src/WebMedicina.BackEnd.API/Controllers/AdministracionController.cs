@@ -38,11 +38,7 @@ namespace WebMedicina.BackEnd.API.Controllers
         [HttpPost("crearepilepsia")]
         public async Task<ActionResult<bool>> CrearEpilepsia([FromBody] string nombre) {
             try {
-                if(ModelState.IsValid) {
-                    return Ok(await _adminsService.CrearNuevaEpilepsia(nombre));
-                }
-
-                return BadRequest("Nombre inválido");
+                return Ok(await _adminsService.CrearNuevaEpilepsia(nombre));
             } catch (Exception) {
                 return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
@@ -67,18 +63,14 @@ namespace WebMedicina.BackEnd.API.Controllers
         [HttpPut("updateepilepsia")]
         public async Task<ActionResult<bool>> UpdateEpilepsia([FromBody] EpilepsiasDto epilepsia) {
             try {
-                if (ModelState.IsValid) {
-                    (bool validacionEntry, bool filasModif) = await _adminsService.ActualizarEpilepsia(epilepsia);
+                (bool validacionEntry, bool filasModif) = await _adminsService.ActualizarEpilepsia(epilepsia);
 
-                    // Validamos si la epilepsia ha sido modificada por el cliente
-                    if (validacionEntry) {
-                        return Ok(filasModif);
-                    } else {
-                        return NoContent();
-                    }
+                // Validamos si la epilepsia ha sido modificada por el cliente
+                if (validacionEntry) {
+                    return Ok(filasModif);
+                } else {
+                    return NoContent();
                 }
-
-                return BadRequest("Epilepsia no válida");
             } catch (Exception) {
                 return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
@@ -106,11 +98,7 @@ namespace WebMedicina.BackEnd.API.Controllers
         [HttpPost("crearmutacion")]
         public async Task<ActionResult<bool>> CrearMutacion([FromBody] string nombre) {
             try {
-                if (ModelState.IsValid) {
                     return Ok(await _adminsService.CrearNuevaMutacion(nombre));
-                }
-
-                return BadRequest("Nombre inválido");
             } catch (Exception) {
                 return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
@@ -135,7 +123,6 @@ namespace WebMedicina.BackEnd.API.Controllers
         [HttpPut("updatemutacion")]
         public async Task<ActionResult<bool>> UpdateMutacion([FromBody] MutacionesDto mutacion) {
             try {
-                if (ModelState.IsValid) {
                     (bool validacionEntry, bool filasModif) = await _adminsService.ActualizarMutacion(mutacion);
 
                     // Validamos si la epilepsia ha sido modificada por el cliente
@@ -144,9 +131,6 @@ namespace WebMedicina.BackEnd.API.Controllers
                     } else {
                         return NoContent();
                     }
-                }
-
-                return BadRequest("Epilepsia no válida");
             } catch (Exception) {
                 return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
@@ -174,11 +158,7 @@ namespace WebMedicina.BackEnd.API.Controllers
         [HttpPost("crearfarmaco")]
         public async Task<ActionResult<bool>> CrearFarmaco([FromBody] string nombre) {
             try {
-                if (ModelState.IsValid) {
                     return Ok(await _adminsService.CrearNuevoFarmaco(nombre));
-                }
-
-                return BadRequest("Nombre inválido");
             } catch (Exception) {
                 return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
@@ -203,7 +183,6 @@ namespace WebMedicina.BackEnd.API.Controllers
         [HttpPut("updatefarmaco")]
         public async Task<ActionResult<bool>> UpdateFarmaco([FromBody] FarmacosDto farmaco) {
             try {
-                if (ModelState.IsValid) {
                     (bool validacionEntry, bool filasModif) = await _adminsService.ActualizarFarmaco(farmaco);
 
                     // Validamos si la epilepsia ha sido modificada por el cliente
@@ -212,9 +191,6 @@ namespace WebMedicina.BackEnd.API.Controllers
                     } else {
                         return NoContent();
                     }
-                }
-
-                return BadRequest("Fármaco no válido");
             } catch (Exception) {
                 return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }

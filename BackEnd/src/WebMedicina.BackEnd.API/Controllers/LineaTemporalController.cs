@@ -38,9 +38,6 @@ namespace WebMedicina.BackEnd.API.Controllers
         [HttpPut("actoinsertevolucionpaciente")]
         public async Task<SortedList<short, EvolucionLTDto>> ActOInsertEvolucionPaciente([FromBody] LLamadaEditarEvoDto evoEditada) {
             try {
-                if (!ModelState.IsValid) {
-                    return new SortedList<short, EvolucionLTDto>();
-                }
                 return await _lineaTemporalService.ActOInsertEvolucion(evoEditada, User);
             } catch (Exception) {
                 return new SortedList<short, EvolucionLTDto>();

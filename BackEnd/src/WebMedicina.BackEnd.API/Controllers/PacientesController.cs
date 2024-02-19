@@ -45,8 +45,6 @@ namespace WebMedicina.BackEnd.API.Controllers
         [HttpPost("crearpaciente")]
         public async Task<ActionResult<int>> CrearPaciente([FromBody] CrearPacienteDto nuevoPaciente) {
             try {
-                if(ModelState.IsValid) {
-
                     // Validamos que el numero de historia sea valido
                     if (_pacientesService.ValidarNumHistoria(nuevoPaciente.NumHistoria) == false) {
 
@@ -59,9 +57,6 @@ namespace WebMedicina.BackEnd.API.Controllers
                     } else {
                         return BadRequest($"El Número de Historia \"{nuevoPaciente.NumHistoria}\" ya está en uso.");
                     }
-                } else {
-                    return BadRequest("Los datos del nuevo cliente no son correctos."); 
-                }
             } catch (Exception) {
                 return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
@@ -71,8 +66,6 @@ namespace WebMedicina.BackEnd.API.Controllers
         [HttpPut("editarpaciente")]
         public async Task<ActionResult<bool>> EditarPaciente([FromBody] CrearPacienteDto nuevoPaciente) {
             try {
-                if (ModelState.IsValid) {
-
                     // Validar que el usuario tiene permisos
                     if (await _pacientesService.ValidarPermisosEdicYElim(User, nuevoPaciente.IdPaciente) && Comun.ObtenerIdUsuario(User, out int idMedico) && idMedico > 0) {
 
@@ -81,9 +74,6 @@ namespace WebMedicina.BackEnd.API.Controllers
                     }  else {
                         return BadRequest($"No posee permisos para editar el paciente {nuevoPaciente.NumHistoria}.");
                     }
-                } else {
-                    return BadRequest("Los datos para cliente no son correctos.");
-                }
             } catch (Exception) {
                 return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
