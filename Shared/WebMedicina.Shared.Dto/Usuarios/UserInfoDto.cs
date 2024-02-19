@@ -1,7 +1,7 @@
 ﻿namespace WebMedicina.Shared.Dto.Usuarios { 
     public record UserInfoDto {
         public int IdMedico { get; init; }
-        public string? UserLogin { get; init; }
+        public string UserLogin { get; init; } = default!;
         public string? Nombre { get; init; } 
         public string? Apellidos { get; init; } 
         public DateTime FechaNac { get; init; } 

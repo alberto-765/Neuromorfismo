@@ -31,8 +31,8 @@ namespace WebMedicina.Shared.Dto.Usuarios {
 
 
         [Required(ErrorMessage = "La contraseña es obligatoria")]
-        // Que haya 1 letra minuscula, 1 mayuscula, 1 digito y 6 caracteres o más
-        [RegularExpression(@"^(?=.*\d)(?=.*[!@#$%^&*()_+])(?=.*[A-Z])(?=.*[a-z])\S{8,16}$", ErrorMessage = "La contraseña debe tener al entre 8 y 16 caracteres, al menos un dígito, al menos una minúscula, al menos una mayúscula y al menos un caracter especial")]
+        // Que haya 1 letra minuscula, 1 mayuscula, 1 digito y minimo 8 caracteres
+        [RegularExpression(@"^(?=.*\d)(?=.*[!@#$%^&*()_+])(?=.*[A-Z])(?=.*[a-z])\S{8, 16}$", ErrorMessage = "La contraseña debe tener al entre 8 y 16 caracteres, al menos un dígito, al menos una minúscula, al menos una mayúscula y al menos un caracter especial")]
         public string Password { get; set; } = null!;
 
         [Required(ErrorMessage = "Debes seleccionar un rol para el nuevo usuario")]
