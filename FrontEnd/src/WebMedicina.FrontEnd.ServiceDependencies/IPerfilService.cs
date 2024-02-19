@@ -5,6 +5,6 @@ namespace WebMedicina.FrontEnd.ServiceDependencies {
     public interface IPerfilService {
 
         public Task CerrarSesion();
-        public Task<bool> CambiarContrasena(ChangePasswordDto changePass);
+        public Task<CodigosErrorChangePass[]> CambiarContrasena(ChangePasswordDto changePass);
     }
 }

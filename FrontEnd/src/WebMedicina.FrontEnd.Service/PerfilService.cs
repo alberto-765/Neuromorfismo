@@ -1,30 +1,35 @@
 ﻿using Microsoft.JSInterop;
+using System.Net.Http.Json;
 using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.Shared.Dto.UserAccount;
 
 namespace WebMedicina.FrontEnd.Service {
     public class PerfilService : IPerfilService {
-        private readonly IRedirigirManager redirigirManager;
-        private JWTAuthenticationProvider _jwtAuthenticationProvider;
+        private readonly IRedirigirManager _redirigirManager;
+        private readonly JWTAuthenticationProvider _jwtAuthenticationProvider;
+        private readonly HttpClient _httpClient;
 
 
-        public PerfilService(JWTAuthenticationProvider jwtAuthenticationProvider, IRedirigirManager redirigirManager) { 
+        public PerfilService(JWTAuthenticationProvider jwtAuthenticationProvider, IRedirigirManager redirigirManager, ICrearHttpClient crearHttpClient) { 
             _jwtAuthenticationProvider = jwtAuthenticationProvider;
-            this.redirigirManager = redirigirManager;
+            _redirigirManager = redirigirManager;
+            _httpClient = crearHttpClient.CrearHttpApi();
 		}
 
         /// <summary>
-        /// Cambiar contraseña
+        /// Realizar cambio de contraseña dle usuario
         /// </summary>
         /// <param name="changePass"></param>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public async Task<bool> CambiarContrasena(ChangePasswordDto changePass) {
-            //bool contraseña = false;
+        public async Task<CodigosErrorChangePass[]> CambiarContrasena(ChangePasswordDto changePass) {
+            CodigosErrorChangePass[]? contrasenaCambiada = null;
+            HttpResponseMessage respuesta = await _httpClient.PatchAsJsonAsync("cuentas/cambiarpassword", changePass);
 
-            //// Realizamos la llamada 
-            //HttpResponseMessage resouesta
-            return await Task.FromResult(true);
+            if (respuesta.IsSuccessStatusCode) {
+                contrasenaCambiada = await respuesta.Content.ReadFromJsonAsync<CodigosErrorChangePass[]>();
+            }
+
+            return contrasenaCambiada ?? Array.Empty<CodigosErrorChangePass>();
         }
 
         /// <summary>
@@ -36,7 +41,7 @@ namespace WebMedicina.FrontEnd.Service {
             await _jwtAuthenticationProvider.Logout();
 
             // Redirigimos al login
-            await redirigirManager.RedirigirLogin();
+            await _redirigirManager.RedirigirLogin();
         }
     }
 }
