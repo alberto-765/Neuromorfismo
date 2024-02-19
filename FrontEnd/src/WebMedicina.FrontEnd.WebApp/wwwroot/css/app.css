@@ -88,11 +88,6 @@ html, body {
   left: 50%;
   transform: translate(-50%, -50%);
 }
-#iconoOverLayCarga #textoOverlayCarga {
-  position: relative;
-  margin-top: 6.2rem;
-  font-size: 1rem;
-}
 #iconoOverLayCarga #spinner {
   width: 60px;
   height: 60px;
@@ -106,6 +101,12 @@ html, body {
 }
 #iconoOverLayCarga .spinner3::after {
   background: #909090 !important;
+}
+
+#textoOverlayCarga {
+  position: relative;
+  margin-top: 6.2rem;
+  font-size: 1rem;
 }
 
 @keyframes spin {

@@ -3,16 +3,40 @@
 <PageTitle>Cambiar Contraseña</PageTitle>
 @page "/perfil/cambiarpassword"
 
-<MudContainer MaxWidth="MaxWidth.ExtraSmall">
+<MudContainer MaxWidth="MaxWidth.ExtraSmall" Class="mt-sm-16">
     <EditForm Model="modelo" OnValidSubmit="Enviar" class="d-flex flex-column gap-5">
+        <DataAnnotationsValidator />
 
-        <MudTextField @bind-Value="modelo.NewPassword" For="() => modelo.NewPassword" Variant="Variant.Filled" Adornment="Adornment.End" AdornmentIcon="@IconoInput"
-                      AdornmentAriaLabel="Ver Contraseña" OnAdornmentClick="@(() => ContraMostrada = !ContraMostrada)" InputType="InputType" Clearable=true OnlyValidateIfDirty=true AutoFocus=true
+        @* Contraseña actual *@
+        <MudTextField @bind-Value="modelo.OldPassword" For="() => modelo.OldPassword" Variant="Variant.Filled" Adornment="Adornment.End" AdornmentIcon="@IconoInputOldPass"
+                      AdornmentAriaLabel="Ver Contraseña" OnAdornmentClick="@(() => MostrarOldPass= !MostrarOldPass)" InputType="InputTypeOldPass" Clearable=true OnlyValidateIfDirty=true AutoFocus=true
+                      Label="Contraseña Actual" />
+
+        @* Contraseña nueva *@
+        <MudTextField @bind-Value="modelo.NewPassword" For="() => modelo.NewPassword" Variant="Variant.Filled" Adornment="Adornment.End" AdornmentIcon="@IconoInputNewPass"
+                      AdornmentAriaLabel="Ver Contraseña" OnAdornmentClick="@(() => MostrarNewPass = !MostrarNewPass)" InputType="InputTypeNewPass" Clearable=true OnlyValidateIfDirty=true 
                       Label="Nueva Contraseña"/>
-        <MudTextField @bind-Value="modelo.ConfirmNewPassword" For="() => modelo.ConfirmNewPassword" Variant="Variant.Filled" Adornment="Adornment.End" AdornmentIcon="@IconoInput"
-                      AdornmentAriaLabel="Ver Contraseña" OnAdornmentClick="@(() => ContraMostrada = !ContraMostrada)" InputType="InputType" Clearable=true OnlyValidateIfDirty=true
+
+        @* Confirmacion contraseña nueva *@
+        <MudTextField @bind-Value="modelo.ConfirmNewPassword" For="() => modelo.ConfirmNewPassword" Variant="Variant.Filled" Adornment="Adornment.End" AdornmentIcon="@IconoInputNewPass"
+                      AdornmentAriaLabel="Ver Contraseña" OnAdornmentClick="@(() => MostrarNewPass = !MostrarNewPass)" InputType="InputTypeNewPass" Clearable=true OnlyValidateIfDirty=true
                       Label="Confirmación Nueva Contraseña" />
 
-       <BtnEnviar Enviando=true />
+        <MudPaper Class="@("mt-3 pa-3 " + (string.IsNullOrWhiteSpace(MensajesError.ToString()) ? "d-none" : "d-block"))" Elevation="0" Style="@($"color: {Colors.Red.Lighten1}")">
+            <ul class="contenedorErrores">
+                @MensajesError
+            </ul>
+        </MudPaper>
+
+        <div class="mt-9 mud-typography-align-center">
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Disabled="Enviando" EndIcon="@Icons.Material.Filled.Send" Color="Color.Primary" Size="Size.Medium" title="Hola">
+                @if (Enviando) {
+                    <MudProgressCircular Class="mr-1" Size="Size.Small" Indeterminate="true" />
+                    <MudText Class="ms-2">Enviando...</MudText>
+                } else {
+                    <MudText>Enviar</MudText>
+                }
+            </MudButton>
+        </div>
     </EditForm>
 </MudContainer>

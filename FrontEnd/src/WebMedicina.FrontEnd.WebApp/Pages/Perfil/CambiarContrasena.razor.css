@@ -1,2 +1,4 @@
-﻿body {
+﻿.contenedorErrores {
+    list-style-type: disc;
+    padding: 0 7%;
 }

@@ -9,10 +9,10 @@
         <CascadingValue Name="ListaEpilepsias" Value="ListaEpilepsias" IsFixed="true">
 
             @* Tab con las subpantallas*@
-            <MudStack Spacing="8" Class="mt-5 gap-md-0" >
-                <MudStack Spacing="0" Row="true">
+            <MudStack Class="gap-8 gap-md-0">
+                <MudStack Spacing="0" Class="flex-row align-start justify-space-between">
                     @* Boton crear pacientes *@
-                    <MudStack Row="true" AlignItems="AlignItems.Center">
+                    <MudStack Row="true" AlignItems="AlignItems.Center" >
                         <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" id="@((IsDarkMode ? "btnCrearPacienteDark" : "btnCrearPacienteDef"))" StartIcon="@Icons.Material.Outlined.PersonAddAlt" @onclick="MostrarCrearPac">
                             Crear Paciente
                         </MudButton>
@@ -21,8 +21,6 @@
                             <MudImage Src="@(UrlImagenes + "iconoExcel.png")" Alt="Icono Excel" Height="20" Class="mr-4" /> Excel
                         </MudButton>
                     </MudStack>
-
-                    <MudSpacer />
 
                     @* Boton bloquear filtros *@
                     <div id="btnFiltros">

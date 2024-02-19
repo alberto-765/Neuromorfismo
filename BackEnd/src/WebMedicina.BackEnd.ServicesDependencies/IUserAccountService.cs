@@ -12,6 +12,10 @@ namespace WebMedicina.BackEnd.ServicesDependencies {
         void CerrarSesion(Tokens tokens, UserInfoDto userInfo);
         void CerrarSesion(Tokens tokens);
 
+        // Token de autentencicacion
         Tokens? RefreshAccesToken(Tokens tokenExpirado);
+
+        // Contraseña
+        Task<CodigosErrorChangePass[]> CambiarContrasena(ChangePasswordDto contrasenas, UserInfoDto user);
     }
 }

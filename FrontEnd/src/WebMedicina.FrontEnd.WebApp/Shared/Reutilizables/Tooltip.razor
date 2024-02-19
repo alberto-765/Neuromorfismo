@@ -28,15 +28,4 @@
     // Posicion 
     [Parameter] public Placement Posicion { get; set; } = Placement.Top;
 
-    // Modo Oscuro 
-    [CascadingParameter(Name = "modoOscuro")] bool IsDarkMode { get; set; }
-
-    protected override void OnInitialized() {
-        base.OnInitialized();
-
-        if (IsDarkMode) {
-            ColorTooltip = Color.Primary;
-        }
-    }
-
 }
