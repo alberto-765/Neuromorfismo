@@ -1,10 +1,9 @@
-﻿using System.Runtime.CompilerServices;
-using WebMedicina.BackEnd.Model;
+﻿using WebMedicina.BackEnd.Model;
 using WebMedicina.Shared.Dto.LineaTemporal;
 
 namespace WebMedicina.BackEnd.ServicesDependencies.Mappers
 {
-    public static class LineaTemporalMap {
+    public static class LineaTempMapers {
         // EtapaLTModel to EtapaLTDto
         public static EtapaLTDto ToDto(this EtapaLTModel modelo) =>
             new (modelo.Id, modelo.Titulo, modelo.Label, modelo.Descripcion, modelo.IdMedicoCreador, modelo.IdMedicoUltModif);

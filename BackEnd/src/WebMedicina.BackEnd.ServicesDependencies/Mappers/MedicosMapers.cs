@@ -3,7 +3,7 @@ using WebMedicina.BackEnd.Model;
 using WebMedicina.Shared.Dto.Usuarios;
 
 namespace WebMedicina.BackEnd.ServicesDependencies.Mappers {
-    public static class MedicosMap {
+    public static class MedicosMapers {
         // UserRegistroDto To Model
         public static MedicosModel ToModel(this UserRegistroDto user) =>
             new() {
@@ -80,7 +80,7 @@ namespace WebMedicina.BackEnd.ServicesDependencies.Mappers {
                 FechaCreac = user.FechaCreac,
                 FechaUltMod = user.FechaUltMod,
                 FechaNac = user.FechaUltMod,
-                UserLogin = user.UserLogin ?? string.Empty,
+                UserLogin = user.UserLogin,
                 Rol = user.Rol ?? string.Empty,
                 Sexo = user.Sexo ?? string.Empty,
             };

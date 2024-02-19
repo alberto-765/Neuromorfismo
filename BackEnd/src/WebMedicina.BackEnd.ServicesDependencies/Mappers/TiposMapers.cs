@@ -2,7 +2,7 @@
 using WebMedicina.Shared.Dto.Tipos;
 
 namespace WebMedicina.BackEnd.ServicesDependencies.Mappers {
-    public static class MapersTipos {
+    public static class TiposMapers {
         // MutacionesModel to MutacionesDto
         public static MutacionesDto ToDto(this MutacionesModel modelo) =>
             new() {

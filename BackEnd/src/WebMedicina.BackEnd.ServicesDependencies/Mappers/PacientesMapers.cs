@@ -3,7 +3,7 @@ using WebMedicina.Shared.Dto.Pacientes;
 
 namespace WebMedicina.BackEnd.ServicesDependencies.Mappers
 {
-    public static class MapersPacientes
+    public static class PacientesMapers
     {
         // CrearPacienteDto a PacienteModel
         public static PacientesModel ToModel(this CrearPacienteDto model) =>
