@@ -6,31 +6,36 @@
 <PageTitle>Fármacos</PageTitle>
 <MudContainer Class="px-0 d-flex flex-column gap-sm-8 gap-3" MaxWidth="MaxWidth.Medium">
 
-    <div class="mt-4 mt-sm-8 d-flex justify-space-between align-center">
+    <div class="d-flex justify-space-between align-center">
         <h1>Gestión Fármacos</h1>
-        <MudButton Color="Color.Success" OnClick="crearFarmaco" id="btnCrear" Variant="Variant.Filled" Size="Size.Small" StartIcon="@Icons.Material.Outlined.AddCircleOutline">Crear</MudButton>
+        <MudButton Color="Color.Success" OnClick="crearFarmaco" id="btnCrear" Variant="Variant.Filled" Size="Size.Small" StartIcon="@Icons.Material.Outlined.AddCircleOutline" Disabled="mostrarCargandoTabla">Crear</MudButton>
     </div>
     @if (mostrarTabla) {
         <MudStack Class="mx-sm-16 mt-sm-4">
-            <div class="@((FarmacosTabla!= null && FarmacosTabla.Any() ? "" : "d-none"))">
-                <MudTable T="FarmacosDto" Items="@FarmacosTabla" Hover="true" Breakpoint="Breakpoint.Xs" @ref="tabla" RowClassFunc="@SelectedRowClassFunc" Elevation="3"
-                          Class="pa-4" OnRowClick="RowClickEvent" Loading="mostrarCargandoTabla" LoadingProgressColor="Color.Info">
-                    <HeaderContent>
-                        <MudTh>#</MudTh>
-                        <MudTh>Nombre</MudTh>
-                        <MudTh>Fecha Creación</MudTh>
-                        <MudTh>Fecha Última Modificación</MudTh>
-                    </HeaderContent>
+            <MudTable T="FarmacosDto" Items="@FarmacosTabla" Hover="true" Breakpoint="Breakpoint.Xs" @ref="tabla" RowClassFunc="@SelectedRowClassFunc" Elevation="3"
+                        Class="pa-4" OnRowClick="RowClickEvent" Loading="mostrarCargandoTabla" LoadingProgressColor="Color.Info" row>
+                <HeaderContent>
+                    <MudTh>#</MudTh>
+                    <MudTh>Nombre</MudTh>
+                    <MudTh>Fecha Creación</MudTh>
+                    <MudTh>Fecha Última Modificación</MudTh>
+                </HeaderContent>
 
-                    <RowTemplate>
-                        <MudTd DataLabel="#" Class="cursor-pointer">@context.Indice</MudTd>
-                        <MudTd DataLabel="Nombre" Class="cursor-pointer">@context.Nombre</MudTd>
-                        <MudTd DataLabel="Fecha Creación" Class="cursor-pointer">@context.FechaCreac.ToShortDateString()</MudTd>
-                        <MudTd DataLabel="Fecha Última Modificación" Class="cursor-pointer">@context.FechaUltMod.ToShortDateString()</MudTd>
-                    </RowTemplate>
-                </MudTable>
-            </div>
+                <RowTemplate>
+                    <MudTd DataLabel="#" Class="cursor-pointer">@context.Indice</MudTd>
+                    <MudTd DataLabel="Nombre" Class="cursor-pointer">@context.Nombre</MudTd>
+                    <MudTd DataLabel="Fecha Creación" Class="cursor-pointer">@context.FechaCreac.ToShortDateString()</MudTd>
+                    <MudTd DataLabel="Fecha Última Modificación" Class="cursor-pointer">@context.FechaUltMod.ToShortDateString()</MudTd>
+                </RowTemplate>
 
+
+                <PagerContent>
+                    <MudTablePager InfoFormat="@("{first_item}-{last_item} de {all_items}")" RowsPerPageString="Filas por página:" PageSizeOptions="new int[] { 5, 10, 15, 20 }" />
+                </PagerContent>
+                <LoadingContent>
+                    <MudText>Cargando...</MudText>
+                </LoadingContent>
+            </MudTable>
 
             <MudPaper Class="@($"pa-4 {(!mostrarFarmaco ? "d-none" : "")}")" Elevation="3">
                 <EditForm Model="farmacoSeleccionado" OnValidSubmit="EditarMutacion">
@@ -49,6 +54,4 @@
     } else {
         <Error  NombreImagen="Error1" mensajeError="No se han encontrado <b>tipos de fármacos</b>" />
     }
-
-    <OverlayCargando mostrarOverlay=mostrarCargandoInicial />
 </MudContainer>

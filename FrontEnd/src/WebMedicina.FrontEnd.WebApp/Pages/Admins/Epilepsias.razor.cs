@@ -20,14 +20,15 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
         [Inject] private ISnackbar _snackbar { get; set; } = null!;
         [Inject] ICrearHttpClient _crearHttpClient { get; set; } = null!;
 
-        private MudTable<EpilepsiasDto> tabla = null!;
+        private MudTable<EpilepsiasDto> tabla = new();
         private HttpClient Http { get; set; } = null!;
         private bool mostrarTabla { get; set; } = true; // mostrar o no la tabla de epilepsias
         private bool mostrarEpilepsia { get; set; } = false; // mostrar o no la formulario para editar epilepsia
         private bool mostrarCargandoTabla { get; set; } = true; // mostrar cargando en la tabla
-        private bool mostrarCargandoInicial { get; set; } = true; // mostrar cargando inicial mientras se obtienen datos
         private EpilepsiasDto epilepsiaSeleccionada { get; set; } = new();
-        private IEnumerable<EpilepsiasDto> EpilepsiasTabla { get; set; } = null!;
+
+        // Inicializamos la lista de epilepsias con un array con una epilepsia vacia
+        private IEnumerable<EpilepsiasDto> EpilepsiasTabla { get; set; } = Enumerable.Empty<EpilepsiasDto>();
 
 
         protected override async Task OnInitializedAsync() {
@@ -42,10 +43,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                 _snackbar.Configuration.ShowTransitionDuration = 300;
                 _snackbar.Configuration.HideTransitionDuration = 300;
                 _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopLeft;
-
-                mostrarCargandoInicial = false;
             } catch (Exception) {
-                mostrarCargandoInicial = false;
                 mostrarTabla = false;
                 throw;
             }
@@ -87,20 +85,24 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
 
         // Recarga los elementos de la tabla y controla la barra de cargando
         private async Task RecargarElementos() { 
+            // Mostramos la tabla y el loading
             mostrarCargandoTabla = true;
+            mostrarTabla = true;
+
+            // Obtenemos las epilepsias
             EpilepsiasTabla = await ObtenerEpilepsias();
 
             // Reseteamos la epilepsia seleccionada
             epilepsiaSeleccionada = new();
             mostrarEpilepsia = false;
 
-            if (EpilepsiasTabla != null && EpilepsiasTabla.Any()) {
-                mostrarCargandoTabla = false;
-                mostrarTabla = true;
-            }else {
-                mostrarCargandoTabla = false;
+            // Ocultamos la tabla si no contiene elementos
+            if (EpilepsiasTabla is null || !EpilepsiasTabla.Any()) {
                 mostrarTabla = false;
-            } 
+            }
+
+            // Desactivamos el cargando tabla
+            mostrarCargandoTabla = false;
         }
 
         // Se abre Dialogo para crear una epilepsia

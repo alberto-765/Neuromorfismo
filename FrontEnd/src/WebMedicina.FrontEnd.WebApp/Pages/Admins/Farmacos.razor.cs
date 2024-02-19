@@ -20,10 +20,8 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
         private bool mostrarTabla { get; set; } = true; // mostrar o no la tabla de farmacos
         private bool mostrarFarmaco { get; set; } = false; // mostrar o no la formulario para editar Mutacion
         private bool mostrarCargandoTabla { get; set; } = true; // mostrar cargando en la tabla
-        private bool mostrarCargandoInicial { get; set; } = true; // mostrar cargando inicial mientras se obtienen datos
         private FarmacosDto farmacoSeleccionado { get; set; } = new();
-        private IEnumerable<FarmacosDto> FarmacosTabla { get; set; } = null!;
-
+        private IEnumerable<FarmacosDto> FarmacosTabla { get; set; } = Enumerable.Empty<FarmacosDto>();
 
         protected override async Task OnInitializedAsync() {
             try {
@@ -37,10 +35,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                 _snackbar.Configuration.ShowTransitionDuration = 300;
                 _snackbar.Configuration.HideTransitionDuration = 300;
                 _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopLeft;
-
-                mostrarCargandoInicial = false;
             } catch (Exception) {
-                mostrarCargandoTabla = false;
                 mostrarTabla = false;
                 throw;
             }
@@ -81,21 +76,25 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
         }
 
         // Recarga los elementos de la tabla y controla la barra de cargando
-        private async Task RecargarElementos() { 
+        private async Task RecargarElementos() {
+            // Mostramos la tabla y el loading
             mostrarCargandoTabla = true;
+            mostrarTabla = true;
+
+            // Obtenemos las epilepsias
             FarmacosTabla = await ObtenerFarmacos();
 
-            // Reseteamos el farmaco seleccionado
+            // Reseteamos la epilepsia seleccionada
             farmacoSeleccionado = new();
             mostrarFarmaco = false;
 
-            if (FarmacosTabla != null && FarmacosTabla.Any()) {
-                mostrarCargandoTabla = false;
-                mostrarTabla = true;
-            } else {
-                mostrarCargandoTabla = false;
+            // Ocultamos la tabla si no contiene elementos
+            if (FarmacosTabla is null || !FarmacosTabla.Any()) {
                 mostrarTabla = false;
-            } 
+            }
+
+            // Desactivamos el cargando tabla
+            mostrarCargandoTabla = false;
         }
 
         // Se abre Dialogo para crear una farmaco

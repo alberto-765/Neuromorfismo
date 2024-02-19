@@ -40,7 +40,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
         private int totalItems; // ((UserUploadDto) item)s totales obtenidos
         private string searchString = string.Empty; // texto por el que se está buscando
         private UserUploadDto copiaSeguridadUsuario { get; set; } = null!; // copia de seguridad de un elemento editado
-        private MudDatePicker _picker { get; set; } = new();
 
         protected override async Task OnInitializedAsync() { 
             Http = _crearHttpClient.CrearHttpApi();

@@ -20,9 +20,8 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
         private bool mostrarTabla { get; set; } = true; // mostrar o no la tabla de mutaciones
         private bool mostrarMutacion { get; set; } = false; // mostrar o no la formulario para editar mutacion
         private bool mostrarCargandoTabla { get; set; } = true; // mostrar cargando en la tabla
-        private bool mostrarCargandoInicial { get; set; } = true; // mostrar cargando inicial mientras se obtienen datos
         private MutacionesDto mutacionSeleccionada { get; set; } = new();
-        private IEnumerable<MutacionesDto> MutacionesTabla { get; set; } = null!;
+        private IEnumerable<MutacionesDto> MutacionesTabla { get; set; } = Enumerable.Empty<MutacionesDto>();
 
 
         protected override async Task OnInitializedAsync() {
@@ -37,14 +36,12 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                 _snackbar.Configuration.ShowTransitionDuration = 300;
                 _snackbar.Configuration.HideTransitionDuration = 300;
                 _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopLeft;
-
-                mostrarCargandoInicial = false;
             } catch (Exception) {
-                mostrarCargandoInicial = false;
                 mostrarTabla = false;
                 throw;
             }
         }
+
 
         // Asignamos clase para la fila seleccionada
         private string SelectedRowClassFunc(MutacionesDto elemento, int row) {
@@ -81,21 +78,25 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
         }
 
         // Recarga los elementos de la tabla y controla la barra de cargando
-        private async Task RecargarElementos() { 
+        private async Task RecargarElementos() {
+            // Mostramos la tabla y el loading
             mostrarCargandoTabla = true;
+            mostrarTabla = true;
+
+            // Obtenemos las epilepsias
             MutacionesTabla = await ObtenerMutaciones();
 
-            // Reseteamos la mutacion seleccionada
+            // Reseteamos la epilepsia seleccionada
             mutacionSeleccionada = new();
             mostrarMutacion = false;
 
-            if (MutacionesTabla != null && MutacionesTabla.Any()) {
-                mostrarCargandoTabla = false;
-                mostrarTabla = true;
-            } else {
-                mostrarCargandoTabla = false;
+            // Ocultamos la tabla si no contiene elementos
+            if (MutacionesTabla is null || !MutacionesTabla.Any()) {
                 mostrarTabla = false;
-            } 
+            }
+
+            // Desactivamos el cargando tabla
+            mostrarCargandoTabla = false;
         }
 
         // Se abre Dialogo para crear una mutacion
@@ -136,7 +137,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                     _snackbar.Add(mensajeSnackBar, tipoSnackBar);
                 }
             } catch (Exception) {
-                mostrarCargandoInicial = false;
                 mostrarTabla = false;
                 throw;
             }
@@ -173,7 +173,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                     _snackbar.Add(mensajeSnackBar, tipoSnackBar);
                 }
             } catch (Exception) {
-                mostrarCargandoInicial = false;
                 mostrarTabla = false;
                 throw;
             }
@@ -215,7 +214,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                     _snackbar.Add(mensajeSnackBar, tipoSnackBar);
                 }
             } catch (Exception) {
-                mostrarCargandoInicial = false;
                 mostrarTabla = false;
                 throw;
             }

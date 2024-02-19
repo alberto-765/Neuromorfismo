@@ -4,7 +4,7 @@
 @page "/crearUsuario"
 <PageTitle>Alta Médico</PageTitle>
 
-<MudContainer MaxWidth="MaxWidth.Small" Class="d-flex flex-grow-1 align-center my-10">
+<MudContainer MaxWidth="MaxWidth.Small" Class="d-flex flex-grow-1 align-center">
     <MudPaper Elevation="3" Class="rounded-lg pa-7 flex-1">
         <h1 class="mb-5">Alta Nuevo Usuario</h1>
         <EditForm Model="@userRegistro" OnValidSubmit="Crear" Class="flex-grow-1">
@@ -38,7 +38,7 @@
             </div>
 
 
-            <div Class="mt-9 mud-typography-align-center" Typo="Typo.h6">
+            <div class="mt-9 mud-typography-align-center">
                 <MudButton ButtonType="ButtonType.Submit" Disabled="@cargando" Size="Size.Large" Variant="Variant.Filled" Color="Color.Primary" >
                     @if (cargando) {
                         <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
