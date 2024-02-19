@@ -15,6 +15,3 @@
     background-color: var(--mud-palette-action-default-hover);
 }
 
-/* Animacion Contenedor */
-::deep #contenedor-lineaTemporal {
-}
