@@ -140,11 +140,29 @@ namespace WebMedicina.BackEnd.Service {
         }
 
         /// <summary>
-        /// Reestablecer contraseña 
+        /// Reestablecer contraseña del usuario teniendo la contraseña actual y la nueva
         /// </summary>
         /// <returns></returns>
-        //public bool ReestablecerPassword() {
-        //    _userManager.CheckPasswordAsync()
-        //}
+        public async Task<CodigosErrorChangePass[]> CambiarContrasena(ChangePasswordDto contrasenas, UserInfoDto userinfo) {
+            // Si la respuesta es null devolvemos mensaje de error predeterminado
+            List<CodigosErrorChangePass> responseMensage = new();
+
+            // Obtenemos el usuario
+            UserModel? usuario = await _userManager.FindByNameAsync(userinfo.UserLogin);
+
+            if(usuario is not null) {
+                IdentityResult? respuesta = await _userManager.ChangePasswordAsync(usuario, contrasenas.OldPassword, contrasenas.ConfirmNewPassword);
+
+                if(respuesta is null || respuesta.Succeeded) {
+                    responseMensage = new();
+                } else {
+                    responseMensage = respuesta.GetResponseMensage();
+                }
+            }
+
+
+            // Devolvemos los tipos de error o un array vacio si esta OK
+            return responseMensage.ToArray();
+        }
     }
 }

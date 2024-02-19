@@ -85,7 +85,6 @@ namespace WebMedicina.BackEnd.Service {
         /// <returns>ClaimsPrincipal del token</returns>
         /// <exception cref="SecurityTokenException"></exception>
         public ClaimsPrincipal GetClaimsFromExpiredToken(string token) {
-
             // Definimos las validaciones del token
             TokenValidationParameters tokenValidationParameters = new()  {
                 ValidateIssuer = true,
@@ -104,10 +103,9 @@ namespace WebMedicina.BackEnd.Service {
             ClaimsPrincipal claimsUsuario = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
 
             // Si el token es valido devolverá un SecurityToken
-            JwtSecurityToken? jwtSecurityToken = securityToken as JwtSecurityToken;
 
             // Validamos si el algoritmo del token es HmacSha256
-            if (jwtSecurityToken is null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase)) {
+            if (securityToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase)) {
                 throw new SecurityTokenException("Invalid token");
             }
 
