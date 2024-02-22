@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
 using WebMedicina.FrontEnd.ServiceDependencies;
+using WebMedicina.Shared.Dto.UserAccount;
 using WebMedicina.Shared.Dto.Usuarios;
 
 namespace WebMedicina.FrontEnd.Service
@@ -112,6 +113,11 @@ namespace WebMedicina.FrontEnd.Service
             }
 
             return false;
+        }
+
+
+        public async Task ResetearContrasena(RestartPasswordDto restartPass) {
+
         }
     }
 }

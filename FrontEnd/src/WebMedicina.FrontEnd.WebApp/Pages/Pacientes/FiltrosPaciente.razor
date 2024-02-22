@@ -19,18 +19,7 @@
             <div class="d-flex flex-column flex-1 justify-space-between">
                 <div>
                     @* Filtrado por medico *@
-                    <AuthorizeView Roles="admin, superAdmin" Context="context__FiltradoMedico">
-                        <Authorized>
-                            <MudAutocomplete T="UserInfoDto" Label="Médicos" @bind-Value="@FiltrosPacientes.Medico" For="@(() => FiltrosPacientes.Medico)" SearchFunc="@BuscarMedPac" ResetValueOnEmptyText="true" CoerceValue="true" 
-                                ShowProgressIndicator="true" Clearable="true" ToStringFunc="@(q => q == null ? null : $"{q.UserLogin} - {q.Nombre} {q.Apellidos}")">
-                                <NoItemsTemplate>
-                                    <MudText Align="Align.Center" Class="px-4 py-1">
-                                        No se han encontrado médicos
-                                    </MudText>
-                                </NoItemsTemplate>
-                            </MudAutocomplete>
-                        </Authorized>
-                    </AuthorizeView>
+                    <AutocompeteMedicos @bind-Medico="FiltrosPacientes.Medico"/>
 
                     @* Genero *@
                     <Genero @bind-Paciente="FiltrosPacientes" T="FiltroPacienteDto" Label="Género" IdDialogo="#app"/>

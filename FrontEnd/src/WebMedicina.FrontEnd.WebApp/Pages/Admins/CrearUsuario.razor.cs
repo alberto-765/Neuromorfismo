@@ -48,10 +48,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
             // Crear contexto del editform
             formContext = new(userRegistro); 
         }
-        private void Crear2() {
-            Console.WriteLine("");
-        }
-            private async Task Crear() {
+        private async Task Crear() {
             try {
                 cargando = true;
                 HttpResponseMessage respuesta = await Http.PostAsJsonAsync("cuentas/crear", userRegistro);

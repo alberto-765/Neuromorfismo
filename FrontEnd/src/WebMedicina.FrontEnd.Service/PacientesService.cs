@@ -21,9 +21,20 @@ namespace WebMedicina.FrontEnd.Service
             this.js = js;
         }
 
-        // Obtener todos los médicos que tienen pacientes a su cargo
-        public async Task<IEnumerable<UserInfoDto>> ObtenerAllMed() { 
-            IEnumerable<UserInfoDto>? medicos = await Http.GetFromJsonAsync<IEnumerable<UserInfoDto>>("pacientes/getmedicospacientes");
+        /// <summary>
+        /// Obtener todos los médicos que tienen pacientes a su cargo
+        /// </summary>
+        /// <param name="medicos"></param>
+        /// <param name="busqueda"></param>
+        /// <returns>Lista de medicos que cumplan la busqueda</returns>
+        public async Task<IEnumerable<UserInfoDto>> ObtenerAllMed(IEnumerable<UserInfoDto>? medicos, string? busqueda) {
+            // Si la lista es null se obtiene por primera vez de BD
+            medicos ??= await Http.GetFromJsonAsync<IEnumerable<UserInfoDto>>("pacientes/getmedicospacientes");
+
+            // Si hay medicos en la lista se realiza la busqueda
+            if (!string.IsNullOrWhiteSpace(busqueda) && medicos != null && medicos.Any()) {
+                return medicos.Where(q => ($"{q.UserLogin} {q.Nombre} {q.Apellidos}").Contains(busqueda, StringComparison.OrdinalIgnoreCase));
+            }
 
             // Asignamos una lista vacia si el valor devuelto de la llamada es null
             medicos ??= Enumerable.Empty<UserInfoDto>();

@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Components;
-using WebMedicina.FrontEnd.Service;
-using WebMedicina.FrontEnd.ServiceDependencies;
+﻿using Microsoft.AspNetCore.Components; 
 using WebMedicina.Shared.Dto.Pacientes;
 
 namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.CompFormCrearPac

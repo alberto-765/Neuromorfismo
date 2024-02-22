@@ -7,7 +7,7 @@
 <MudContainer MaxWidth="MaxWidth.Small" Class="d-flex flex-grow-1 align-center">
     <MudPaper Elevation="3" Class="rounded-lg pa-7 flex-1">
         <h1 class="mb-5">Alta Nuevo Usuario</h1>
-        <EditForm Model="@userRegistro" OnValidSubmit="Crear" OnInvalidSubmit="Crear2" class="flex-grow-1">
+        <EditForm Model="@userRegistro" OnValidSubmit="Crear" class="flex-grow-1">
             <DataAnnotationsValidator />
                  
             <MudTextField Class="mb-3" @bind-Value="userRegistro.Nombre" For="@(() => userRegistro.Nombre)" OnlyValidateIfDirty="true" Clearable="true" Label="Nombre*" Variant="Variant.Text" OnKeyUp="ValidarUserName" Immediate="true"/>

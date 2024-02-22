@@ -1,0 +1,35 @@
+﻿@using WebMedicina.Shared.Dto.Usuarios;
+@attribute [Authorize(Roles = "superAdmin, Admin")]
+
+<MudAutocomplete T="UserInfoDto" Label="Médicos" Value="Medico" ValueChanged="MedicoChanged" SearchFunc="@BuscarMedPac" ResetValueOnEmptyText="true" CoerceValue="true"
+                 ShowProgressIndicator="true" Clearable="true" ToStringFunc="@(q => q == null ? null : $"{q.UserLogin} - {q.Nombre} {q.Apellidos}")">
+    <NoItemsTemplate>
+        <MudText Align="Align.Center" Class="px-4 py-1">
+            No se han encontrado médicos
+        </MudText>
+    </NoItemsTemplate>
+</MudAutocomplete>
+
+
+@code{
+    // PARAMETROS
+    [Parameter] public UserInfoDto? Medico { get; set; }
+    [Parameter] public EventCallback<UserInfoDto?> MedicoChanged { get; set; }
+
+    // DEPENDENCIAS
+    [Inject] private IPacientesService _pacientesService { get; set; } = null!;
+
+    // PROPIEDADES
+    // Lista de medicos para filtrar
+    private IEnumerable<UserInfoDto>? ListaMedicos { get; set; } = null;
+
+
+
+    /// <summary>
+    /// Buscador para autocomplete de medicos
+    /// </summary>
+    /// <param name="busqueda"></param>
+    /// <returns></returns>
+    private async Task<IEnumerable<UserInfoDto>> BuscarMedPac(string? busqueda) => ListaMedicos = await _pacientesService.ObtenerAllMed(ListaMedicos, busqueda);
+
+}
