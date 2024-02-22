@@ -12,14 +12,6 @@
                         noRedirigido = false;
                     }
                 </NotAuthorized>
-                <Authorizing>
-                    <div id="container_loading-progress">
-                        <div id="cargaInicio">
-                            <div id="spinner"></div>
-                            <img src="icono.png" alt="Icono" />
-                        </div>
-                    </div>
-                </Authorizing>
             </AuthorizeRouteView>
         </Found>
         <NotFound>
@@ -33,5 +25,6 @@
 @code{
     [Inject] private IRedirigirManager redirigirManager { get; set; } = null!;
     private bool noRedirigido { get; set; } = true;
+
 
 }

@@ -74,7 +74,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
 
             // Llamamos a la api para obtener de BBDD los usuarios con los filtros
             HttpResponseMessage responseMessage = await Http.PostAsJsonAsync("gestionusers/obtenerusuariosfiltrados", camposFiltrado);
-            List<UserUploadDto>? list = new ();
+            List<UserUploadDto>? list;
             if(responseMessage.IsSuccessStatusCode) {
                 if (responseMessage.StatusCode != HttpStatusCode.NoContent) {
                     list = await responseMessage.Content.ReadFromJsonAsync<List<UserUploadDto>>();

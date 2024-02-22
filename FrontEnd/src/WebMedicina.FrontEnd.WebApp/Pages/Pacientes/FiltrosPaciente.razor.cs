@@ -49,7 +49,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
         // Buscador para autocomplete de medicos
         private async Task<IEnumerable<UserInfoDto>> BuscarMedPac(string? busqueda) { 
             // Si la lista es null se obtiene por primera vez de BD
-            ListaMedicos ??= await _pacientesService.ObtenerAllMed();
+            ance ??= await _pacientesService.ObtenerAllMed();
 
             // Si hay medicos en la lista se realiza la busqueda
             if (!string.IsNullOrWhiteSpace(busqueda) && ListaMedicos != null && ListaMedicos.Any()) {

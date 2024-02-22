@@ -79,7 +79,6 @@ html, body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  /*Creamos los diferentes fondos de los spinners*/
 }
 #iconoOverLayCarga img {
   width: 2.5rem;
@@ -93,13 +92,17 @@ html, body {
   height: 60px;
   border-radius: 50%;
 }
-#iconoOverLayCarga .spinner1::after {
+
+/*Creamos los diferentes fondos de los spinners*/
+.spinner1::after {
   background: #292a2f !important;
 }
-#iconoOverLayCarga .spinner2::after {
+
+.spinner2::after {
   background: #373740 !important;
 }
-#iconoOverLayCarga .spinner3::after {
+
+.spinner3::after {
   background: #909090 !important;
 }
 

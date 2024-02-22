@@ -25,7 +25,7 @@
                     <MudSpacer />
 
                     @* Boton Modo Oscuro*@
-                    <MudToggleIconButton @bind-Toggled="@_isDarkMode" Icon="@Icons.Material.Outlined.DarkMode" Title="Cambiar a modo oscuro"
+                    <MudToggleIconButton @bind-Toggled="@IsDarkMode" Icon="@Icons.Material.Outlined.DarkMode" Title="Cambiar a modo oscuro"
                                             ToggledIcon="@Icons.Material.Outlined.LightMode" ToggledTitle="Cambiar a modo claro" />
 
                     @* Perfil  *@
@@ -50,30 +50,54 @@
                 </MudMainContent>
             </NotAuthorized>
             <Authorizing>
-                @Body
+                <div id="container_loading-progress">
+                    <div id="cargaInicio">
+                        <div id="spinner" class="@(IsDarkMode ? "spinner2" : "")" ></div>
+                        <img src="icono.png" alt="Icono" />
+                    </div>
+                </div>
             </Authorizing>
         </AuthorizeView>
     </MudLayout>
 </CascadingValue>
 @code {
+    // Depedencias
+    [Inject] private IConfiguration configuration { get; set; } = null!;
+
+
     // Control del drawer pricnipal
     private bool open { get; set; } = true;
     private bool primerClick = true;
     private DrawerClipMode clipMode = DrawerClipMode.Always;
 
     // Control de modo oscuro
-    private MudThemeProvider _mudThemeProvider = null!;
-    private bool _isDarkMode { get; set; } = false;
-
-    protected override async Task OnAfterRenderAsync(bool firstRender) {
-        await base.OnAfterRenderAsync(firstRender);
-
-
-        // Modo oscuro del sistema
-        if (firstRender) {
-            _isDarkMode = await _mudThemeProvider.GetSystemPreference();
+    private MudThemeProvider _mudThemeProvider = new();
+    private bool _isDarkMode = false;
+    private bool IsDarkMode {
+        get => _isDarkMode;
+        set {
+            _isDarkMode = value;
+            js.SetInLocalStorage(DarkModeKey, JsonSerializer.Serialize(_isDarkMode));
         }
+    }
+    private string DarkModeKey { get; set; } = string.Empty; // modo oscuro en sessionStorage
 
+    protected override async Task OnInitializedAsync() {
+        await base.OnInitializedAsync();
+
+        DarkModeKey = configuration.GetSection("DarkModeKey").Value ?? "darkmode";
+
+        var modoOscuro = await js.GetFromLocalStorage(DarkModeKey);
+        bool boolModo = false;
+        if (modoOscuro is not null) {
+            boolModo = JsonSerializer.Deserialize<bool>(modoOscuro);
+        }
+        if (modoOscuro is null) {
+            _isDarkMode = await _mudThemeProvider.GetSystemPreference();
+            await js.SetInLocalStorage(DarkModeKey, JsonSerializer.Serialize(_isDarkMode));
+        } else {
+            _isDarkMode = boolModo;
+        }
     }
 
     void ToggleDrawer() {

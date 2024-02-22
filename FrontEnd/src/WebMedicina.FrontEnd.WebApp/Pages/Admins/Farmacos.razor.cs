@@ -102,7 +102,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
             try {
                 // Creamos el dialogo pasandole el tipo de formulario que debe crear
                 var dialogo = await DialogService.ShowAsync<DialogoCrear>("Crear Farmaco");
-                var resultado = await dialogo.Result;
+                DialogResult resultado = await dialogo.Result;
 
                 // Validamos que se haya creado y los campos esté correctos
                 if (resultado.Canceled == false && resultado.Data != null) {
@@ -183,7 +183,9 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
         //Editar farmaco
         private async Task EditarMutacion(EditContext context) {
             try {
+                // Validamos que el item haya sido modificado
                 if (context.IsModified()) {
+
                     FarmacosDto far = (FarmacosDto)context.Model;
                     Severity tipoSnackBar = Severity.Success; // Tipo de snackbar para mensaje
                     string mensajeSnackBar = "Fármaco editada exitosamente";

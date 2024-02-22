@@ -15,8 +15,8 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
     {
         // Dependecias
         [Inject] private ISnackbar _snackbar { get; set; } = null!;
-        [Inject] ICrearHttpClient _crearHttpClient { get; set; } = null!;
-        [Inject] IAdminsService _adminsService { get; set; } = null!;
+        [Inject] private ICrearHttpClient _crearHttpClient { get; set; } = null!;
+        [Inject] private IAdminsService _adminsService { get; set; } = null!;
 
         // Parametros
         [CascadingParameter] private Task<AuthenticationState>? authenticationState { get; set; }
@@ -31,9 +31,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
         private EditContext formContext = null!;
 
         protected override async Task OnInitializedAsync() {
-            // Creamos contraseña aleatoria
-            Task<string> taskCrearContra = _adminsService.GenerarContraseñaAleatoria();
-
+            
             // Obtenemos los datos del usuario
             if (authenticationState is not null) {
                 var authState = await authenticationState;
@@ -49,11 +47,11 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
 
             // Crear contexto del editform
             formContext = new(userRegistro); 
-
-            userRegistro.Password = await taskCrearContra; 
         }
-
-        private async Task Crear() {
+        private void Crear2() {
+            Console.WriteLine("");
+        }
+            private async Task Crear() {
             try {
                 cargando = true;
                 HttpResponseMessage respuesta = await Http.PostAsJsonAsync("cuentas/crear", userRegistro);
@@ -102,7 +100,9 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                     _snackbar.Add(@"<div>No ha sido posible generar el nombre de inicio de sesión</div>
                                     <div>Inténtelo de nuevo o contacte con un administrador.</div>", Severity.Error, config => { config.VisibleStateDuration = 5 * 1000;});
                 }
-            } 
+            } else {
+                userRegistro.UserLogin = string.Empty;
+            }
         }
 
         // Reiniciar objeto de nuevo usuario y boton de crear

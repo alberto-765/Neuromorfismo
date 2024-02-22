@@ -1,16 +1,16 @@
 ﻿@attribute [Authorize]
 
 <div>
-<MudNavMenu id="navMenu" Class="pt-3 pt-md-5" Bordered="true"  Color="@(_isDarkMode ? Color.Primary : Color.Dark)">
+<MudNavMenu id="navMenu" Class="pt-3 pt-md-5" Bordered="true"  Color="@(_isDarkMode ? Color.Primary : Color.Dark)" Rounded="true">
     <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Store">Estadísticas</MudNavLink>
     <AuthorizeView Roles="admin, superAdmin">
         <Authorized>
             <MudNavGroup Title="Administación" Icon="@Icons.Material.Outlined.Settings" Expanded="true">
-                    <MudNavLink Href="/crearUsuario" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.PersonAddAlt1">Alta Médico</MudNavLink>
-                    <MudNavLink Href="/gestionUsers" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.FilterAlt">Gestión Médicos</MudNavLink>
-                    <MudNavLink Href="/epilepsias" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.Psychology">Epilepsias</MudNavLink>
-                    <MudNavLink Href="/mutaciones" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Coronavirus">Mutaciones</MudNavLink>
-                    @* <MudNavLink Href="/farmacos" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Vaccines">Fármacos</MudNavLink> *@
+                    <MudNavLink Href="/crearUsuario" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.PersonAddAlt1">Alta Médico</MudNavLink>
+                    <MudNavLink Href="/gestionUsers" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.FilterAlt">Gestión Médicos</MudNavLink>
+                    <MudNavLink Href="/epilepsias" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Psychology">Epilepsias</MudNavLink>
+                    <MudNavLink Href="/mutaciones" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Coronavirus">Mutaciones</MudNavLink>
+                    <MudNavLink Href="/passrestart" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.RestartAlt" Class="navLink--centrarIcono">Restablecimiento Contraseña</MudNavLink>
             </MudNavGroup> 
         </Authorized>
     </AuthorizeView>

@@ -104,7 +104,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
             try { 
                 // Creamos el dialogo pasandole el tipo de formulario que debe crear
                 var dialogo = await DialogService.ShowAsync<DialogoCrear>("Crear Mutación");
-                var resultado = await dialogo.Result;
+                DialogResult resultado = await dialogo.Result;
 
                 // Validamos que se haya creado y los campos esté correctos
                 if (resultado.Canceled == false && resultado.Data != null) {
@@ -181,8 +181,10 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
 
         //Editar mutacion
         private async Task EditarMutacion(EditContext context) {
-            try { 
+            try {
+                // Validamos que el item haya sido modificado
                 if (context.IsModified()) {
+
                     MutacionesDto mut = (MutacionesDto)context.Model;
                     Severity tipoSnackBar = Severity.Success; // Tipo de snackbar para mensaje
                     string mensajeSnackBar = "Mutacion editada exitosamente";

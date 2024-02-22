@@ -18,8 +18,6 @@ namespace WebMedicina.FrontEnd.Service
         }
 
         public Task<string> GenerarContraseñaAleatoria() {
-            Console.Write("Entra a generar contraseña");
-
             // Generamos constantes para la contraseña
             const string letrasMin = "abcdefghijklmnopqrstuvwxyz";
             const string letrasMay = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";

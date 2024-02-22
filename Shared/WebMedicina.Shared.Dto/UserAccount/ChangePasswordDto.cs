@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WebMedicina.Shared.Dto.UserAccount;
 public class ChangePasswordDto : IValidatableObject {
+
     [Required(ErrorMessage = "Debe especificar la contraseña actual de su cuenta.")]
     public string OldPassword { get; set; } = default!;
 
@@ -35,10 +36,7 @@ public enum CodigosErrorChangePass {
     [Description("La contraseña actual insertada es incorrecta.")]
     ContraIncorrecta,
 
-    [Description("La confirmacion de la nueva contraseña es incorrecta.")]
-    ConfirmacionIncorrecta,
-
-    // Formato
+    // Formato de la nueva contraseña incorrecto
     FaltaMayuscula,
     FaltaCaractEspecial,
     FaltaNumero,

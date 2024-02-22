@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using WebMedicina.Shared.Service;
 
 namespace WebMedicina.Shared.Dto.Usuarios {
@@ -15,7 +14,7 @@ namespace WebMedicina.Shared.Dto.Usuarios {
         [MaxLength(50, ErrorMessage = "Los apellidos pueden contener máximo 50 caracteres")]
         [RegularExpression(ValidacionesRegistro.PatronApellidos, ErrorMessage = "Debe ingresar los dos apellidos del usuario y contener mínimo 2 caracteres cada uno. " +
             "La primera letra debe ser mayúscula.")]
-        [MinLength(4, ErrorMessage = "El nombre debe tener mínimo 3 caracteres")]
+        [MinLength(4, ErrorMessage = "Los apellidos deben tener mínimo 4 caracteres")]
         public string Apellidos { get; set; } = null!;
 
         [Required(ErrorMessage = "La fecha de nacimiento es obligatoria")]
@@ -31,8 +30,6 @@ namespace WebMedicina.Shared.Dto.Usuarios {
 
 
         [Required(ErrorMessage = "La contraseña es obligatoria")]
-        // Que haya 1 letra minuscula, 1 mayuscula, 1 digito y minimo 8 caracteres
-        [RegularExpression(@"^(?=.*\d)(?=.*[!@#$%^&*()_+])(?=.*[A-Z])(?=.*[a-z])\S{8, 16}$", ErrorMessage = "La contraseña debe tener al entre 8 y 16 caracteres, al menos un dígito, al menos una minúscula, al menos una mayúscula y al menos un caracter especial")]
         public string Password { get; set; } = null!;
 
         [Required(ErrorMessage = "Debes seleccionar un rol para el nuevo usuario")]

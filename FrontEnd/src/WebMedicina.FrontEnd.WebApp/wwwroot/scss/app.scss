@@ -114,11 +114,12 @@ html, body {
         height: 60px;
         border-radius: 50%;
     }
-    /*Creamos los diferentes fondos de los spinners*/
-    @for $i from 1 through 3 {
-        .spinner#{$i}::after{
-            background: nth($coloresSpinner, $i) !important;
-        }
+}
+
+/*Creamos los diferentes fondos de los spinners*/
+@for $i from 1 through 3 {
+    .spinner#{$i}::after {
+        background: nth($coloresSpinner, $i) !important;
     }
 }
 
@@ -134,5 +135,5 @@ html, body {
         transform: rotate(360deg);
     }
 }
-    /*SPINNER*/
+/*SPINNER*/
 
