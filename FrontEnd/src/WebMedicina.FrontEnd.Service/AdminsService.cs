@@ -1,21 +1,26 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System.ComponentModel.DataAnnotations;
+using System.Net.Http.Json;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
 using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.Shared.Dto.UserAccount;
 using WebMedicina.Shared.Dto.Usuarios;
+using WebMedicina.Shared.Dto.Pacientes;
 
 namespace WebMedicina.FrontEnd.Service
 {
-    public class AdminsService :IAdminsService  {
-
+    public class AdminsService : IAdminsService {
+        // DEPENDENCIAS
         private IJSRuntime js { get; set; }
+        private readonly HttpClient _httpClient;
 
-        public AdminsService(IJSRuntime js) { 
-             this.js = js;
+        public AdminsService(IJSRuntime js, ICrearHttpClient crearHttpClient) {
+            _httpClient = crearHttpClient.CrearHttpApi();
+            this.js = js;
         }
 
         public Task<string> GenerarContraseñaAleatoria() {
@@ -58,16 +63,16 @@ namespace WebMedicina.FrontEnd.Service
 
             switch (role) {
                 case "superAdmin":
-                    tooltipInfoUser = new MarkupString($"<div style='text-align: left;'> Usted tiene permisos de Super Admin. <br />" +
-                        $"Puede <b>crear, editar y eliminar</b> usuarios de tipo: <br/>" +
-                        $"<ul style='padding-left: 15px;'><li>- Administradores.</li><li>- Médicos.</li></ul></div>");
-                    mostrarTooltip = true;
+                tooltipInfoUser = new MarkupString($"<div style='text-align: left;'> Usted tiene permisos de Super Admin. <br />" +
+                    $"Puede <b>crear, editar y eliminar</b> usuarios de tipo: <br/>" +
+                    $"<ul style='padding-left: 15px;'><li>- Administradores.</li><li>- Médicos.</li></ul></div>");
+                mostrarTooltip = true;
                 break;
                 case "admin":
-                    tooltipInfoUser = new MarkupString($"<div style='text-align: left;'> Usted tiene permisos de Administrador. <br />" +
-                        $"Puede <b>crear, editar y eliminar</b> usuarios de tipo: <br/>" +
-                        $"<ul style='padding-left: 15px;'><li>- Médicos.</li></ul></div>");
-                    mostrarTooltip = true;
+                tooltipInfoUser = new MarkupString($"<div style='text-align: left;'> Usted tiene permisos de Administrador. <br />" +
+                    $"Puede <b>crear, editar y eliminar</b> usuarios de tipo: <br/>" +
+                    $"<ul style='padding-left: 15px;'><li>- Médicos.</li></ul></div>");
+                mostrarTooltip = true;
                 break;
                 default:
                 mostrarTooltip = false;
@@ -115,9 +120,26 @@ namespace WebMedicina.FrontEnd.Service
             return false;
         }
 
+        /// <summary>
+        /// Obtener todos los medicos filtrando por rango del usuario
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<UserUploadDto>> ObtenerAllMedicos(FiltradoTablaDefaultDto? camposFiltrado = null) {
+            // Llamamos a la api para obtener de BBDD los usuarios con los filtros
+            HttpResponseMessage responseMessage = await _httpClient.PostAsJsonAsync("gestionusers/obtenerusuariosfiltrados", camposFiltrado?? new());
+            List<UserUploadDto>? list = null;
+            if (responseMessage.IsSuccessStatusCode) {
+                if (responseMessage.StatusCode != HttpStatusCode.NoContent) {
+                    list = await responseMessage.Content.ReadFromJsonAsync<List<UserUploadDto>>();
+                } 
+            }
 
-        public async Task ResetearContrasena(RestartPasswordDto restartPass) {
-
+            return list ?? new();
         }
+
+
+        //public async Task ResetearContrasena(RestartPasswordDto restartPass) {
+            
+        //}
     }
 }

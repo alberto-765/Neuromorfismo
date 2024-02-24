@@ -29,6 +29,8 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
         // Filtros seleccionados
         private FiltroPacienteDto FiltrosPacientes { get; set; } = new();
 
+        // Lista de medicos para filtrar
+        private IEnumerable<UserInfoDto>? ListaMedicos { get; set; } = null;
 
         // Filtrar Pacientes 
         public async Task ObtenerPacientesFiltrados() {
@@ -68,5 +70,19 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
             }
             await FiltroAbiertoChanged.InvokeAsync(FiltroAbierto); 
         }
+
+        // Buscador para autocomplete de medicos
+        private async Task<IEnumerable<UserInfoDto>> BuscarMedPac(string? busqueda) {
+            // Si la lista es null se obtiene por primera vez de BD
+            ListaMedicos ??= await _pacientesService.ObtenerMedicosConPac(ListaMedicos, busqueda);
+
+            // Si hay medicos en la lista se realiza la busqueda
+            if (!string.IsNullOrWhiteSpace(busqueda) && ListaMedicos != null && ListaMedicos.Any()) {
+                return ListaMedicos.Where(q => ($"{q.UserLogin} {q.Nombre} {q.Apellidos}").Contains(busqueda, StringComparison.OrdinalIgnoreCase));
+            }
+
+            return ListaMedicos ?? Enumerable.Empty<UserInfoDto>();
+        }
+
     }
 }

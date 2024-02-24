@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
+using System.Security.Claims; 
+using WebMedicina.Shared.Dto.Pacientes;
+using WebMedicina.Shared.Dto.Usuarios;
 
 namespace WebMedicina.FrontEnd.ServiceDependencies {
     public interface IAdminsService {
@@ -15,6 +11,6 @@ namespace WebMedicina.FrontEnd.ServiceDependencies {
         Dictionary<string, string> CrearDiccionarioFiltros();
         string ValidarNuevoNombre(string nombre); // Validar nombre mutacion, farmaco y epilepsia
         bool ValidarNomYApellUser(string nombre, string apellidos);
-
+        Task<List<UserUploadDto>> ObtenerAllMedicos(FiltradoTablaDefaultDto? camposFiltrado = null);
     }
 }

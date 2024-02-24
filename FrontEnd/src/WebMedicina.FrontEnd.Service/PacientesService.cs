@@ -27,7 +27,7 @@ namespace WebMedicina.FrontEnd.Service
         /// <param name="medicos"></param>
         /// <param name="busqueda"></param>
         /// <returns>Lista de medicos que cumplan la busqueda</returns>
-        public async Task<IEnumerable<UserInfoDto>> ObtenerAllMed(IEnumerable<UserInfoDto>? medicos, string? busqueda) {
+        public async Task<IEnumerable<UserInfoDto>> ObtenerMedicosConPac(IEnumerable<UserInfoDto>? medicos, string? busqueda) {
             // Si la lista es null se obtiene por primera vez de BD
             medicos ??= await Http.GetFromJsonAsync<IEnumerable<UserInfoDto>>("pacientes/getmedicospacientes");
 

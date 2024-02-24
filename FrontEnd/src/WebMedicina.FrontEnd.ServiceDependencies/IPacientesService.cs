@@ -6,7 +6,7 @@ using WebMedicina.Shared.Dto.Usuarios;
 
 namespace WebMedicina.FrontEnd.ServiceDependencies {
     public interface IPacientesService {
-        Task<IEnumerable<UserInfoDto>> ObtenerAllMed(IEnumerable<UserInfoDto>? medicos, string? busqueda);
+        Task<IEnumerable<UserInfoDto>> ObtenerMedicosConPac(IEnumerable<UserInfoDto>? medicos, string? busqueda);
         Task<(List<FarmacosDto>? ListaFarmacos, List<EpilepsiasDto>? ListaEpilepsias, List<MutacionesDto>? ListaMutaciones)> ObtenerListas();
         Task<bool> ValidarNumHistoria(string numHistoria);
         Task<HttpResponseMessage> CrearPaciente(CrearPacienteDto nuevoPaciente);

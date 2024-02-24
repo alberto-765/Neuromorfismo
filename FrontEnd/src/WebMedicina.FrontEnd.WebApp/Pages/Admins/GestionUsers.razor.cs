@@ -18,11 +18,8 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
     public partial class GestionUsers {
         // DEPENDENCIAS
         [Inject] private IAdminsService _adminsService { get; set; } = null!;
-        [Inject] private IRedirigirManager redirigirManager { get; set; } = null!;
-        [CascadingParameter(Name = "modoOscuro")] private bool _isDarkMode { get; set; } // Modo oscuro
         [Inject] private ICrearHttpClient _crearHttpClient { get; set; } = null!;
         [Inject] private ISnackbar _snackbar { get; set; } = null!;     
-        [Inject] private IJSRuntime js { get; set; } = null!;
         [Inject] private IDialogService DialogService { get; set; } = null!;
         [Inject] private IComun _comun { get; set; } = null!;
 
@@ -72,26 +69,18 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                 SortLabel = state.SortLabel
             };
 
-            // Llamamos a la api para obtener de BBDD los usuarios con los filtros
-            HttpResponseMessage responseMessage = await Http.PostAsJsonAsync("gestionusers/obtenerusuariosfiltrados", camposFiltrado);
-            List<UserUploadDto>? list;
-            if(responseMessage.IsSuccessStatusCode) {
-                if (responseMessage.StatusCode != HttpStatusCode.NoContent) {
-                    list = await responseMessage.Content.ReadFromJsonAsync<List<UserUploadDto>>();
 
-                    // Comprobamos que la lista no sea nula
-                    if (list is not null && list.Any()) {
-                        totalItems = list.Count;
-                        pagedData = list;
-                    } else {
-                        totalItems = 0;
-                        pagedData = Enumerable.Empty<UserUploadDto>();
-                    }
-                } else {
-                    totalItems = 0;
-                    pagedData = Enumerable.Empty<UserUploadDto>();
-                }
-            } 
+            // Llamamos a la api para obtener de BBDD los usuarios con los filtros
+            List<UserUploadDto>? list = await _adminsService.ObtenerAllMedicos(camposFiltrado);
+
+            // Comprobamos que la lista no sea nula
+            if (list is not null && list.Any()) {
+                totalItems = list.Count;
+                pagedData = list;
+            } else {
+                totalItems = 0;
+                pagedData = Enumerable.Empty<UserUploadDto>();
+            }
 
             // Saltamos los ((UserUploadDto) item)s de la paginación y obtenemos el maximo que se puede mostrar
             return new TableData<UserUploadDto>() { TotalItems = totalItems, Items = pagedData }; 
