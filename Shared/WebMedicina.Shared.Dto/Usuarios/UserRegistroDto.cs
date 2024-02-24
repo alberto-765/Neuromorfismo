@@ -22,14 +22,15 @@ namespace WebMedicina.Shared.Dto.Usuarios {
         public DateTime? FechaNac { get; set; } =  ValidacionesRegistro.ObtenerFechaMaxNacimiento();
 
         [RegularExpression("^[a-z]+$", ErrorMessage = "El nombre de usuario solo puede tener letras y minúsculas")]
-        [Required(ErrorMessage = "El usuario para login debe ser generado automáticamente.")]
+        [Required(ErrorMessage = "El usuario para login debe ser generado automáticamente")]
         public string UserLogin { get; set; } = null!;
 
         public DateTime FechaCreac { get; init; } = DateTime.Today;
         public DateTime FechaUltMod { get; init; } = DateTime.Today;
 
 
-        [Required(ErrorMessage = "La contraseña es obligatoria")]
+        [RegularExpression(ValidacionesRegistro.PatronPassword, ErrorMessage = "La contraseña debe tener al entre 8 y 16 caracteres, al menos un número, al menos una minúscula, al menos una mayúscula y al menos un caracter especial")]
+        [Required(ErrorMessage = "Debe especificar la nueva contraseña")]
         public string Password { get; set; } = null!;
 
         [Required(ErrorMessage = "Debes seleccionar un rol para el nuevo usuario")]

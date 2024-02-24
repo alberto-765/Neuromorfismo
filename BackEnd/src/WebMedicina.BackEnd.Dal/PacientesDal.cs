@@ -3,7 +3,6 @@ using WebMedicina.BackEnd.Model;
 using WebMedicina.Shared.Dto.Pacientes;
 using WebMedicina.Shared.Dto.Usuarios;
 using WebMedicina.BackEnd.ServicesDependencies.Mappers;
-using DocumentFormat.OpenXml.Bibliography;
 
 namespace WebMedicina.BackEnd.Dal {
     public class PacientesDal {

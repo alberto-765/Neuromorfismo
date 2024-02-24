@@ -5,7 +5,7 @@ using WebMedicina.Shared.Service;
 namespace WebMedicina.Shared.Dto.Usuarios {
 
     public class UserUploadDto {
-        public Guid IdMedico { get; init; }
+        public int IdMedico { get; init; }
 
         public string UserLogin { get; init; } = null!;
 

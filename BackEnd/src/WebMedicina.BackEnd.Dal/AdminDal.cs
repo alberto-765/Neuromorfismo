@@ -43,16 +43,26 @@ namespace WebMedicina.BackEnd.Dal {
 
             return roles?.FirstOrDefault()?.ToString();
         }
+
+        /// <summary>
+        /// Obtener todos los medicos filtrados para la pantalla de gestion de usuarios
+        /// </summary>
+        /// <param name="camposFiltrado"></param>
+        /// <param name="admin"></param>
+        /// <returns></returns>
         public async Task<List<UserUploadDto>> ObtenerMedicos(FiltradoTablaDefaultDto camposFiltrado, UserInfoDto admin) {
             List<UserUploadDto> listaMedicos = new();
             int indice = 1;
 
 
-            IQueryable<MedicosModel> query = _context.Medicos.Where(m => m.IdMedico != admin.IdMedico &&
-            (string.IsNullOrWhiteSpace(camposFiltrado.SearchString) ||
-                ($"{m.Nombre} {m.Apellidos} {m.UserLogin ?? string.Empty} {m.Sexo} {m.FechaNac}")
-                    .Contains(camposFiltrado.SearchString, StringComparison.OrdinalIgnoreCase)));
-
+            IQueryable<MedicosModel> query = _context.Medicos.Where(m => m.IdMedico != admin.IdMedico);
+                
+                
+            // Realizamos filtrado si se ha pasado alguna propiedad
+            if (!string.IsNullOrWhiteSpace(camposFiltrado.SearchString)) {
+                query = query.Where(m => ($"{m.Nombre} {m.Apellidos} {m.UserLogin ?? string.Empty} {m.Sexo} {m.FechaNac}")
+                    .Contains(camposFiltrado.SearchString, StringComparison.OrdinalIgnoreCase));
+            }
 
 
             // ----------------- Creamos expresion lambda para el ordenamiento --------------
@@ -87,12 +97,16 @@ namespace WebMedicina.BackEnd.Dal {
                 } else {
                     query = query.OrderByDescending(lambda);
                 }
-            } 
-         
+            }
+
             // ----------------- Creamos expresion lambda para el ordenamiento --------------
 
             // Filtramos la cantiadad de usuarios a obtener
-            query = query.Skip(camposFiltrado.Page * camposFiltrado.PageSize).Take(camposFiltrado.PageSize);
+            if (camposFiltrado.PageSize > 0) {
+                query = query.Skip(camposFiltrado.Page * camposFiltrado.PageSize).Take(camposFiltrado.PageSize);
+            }
+
+
 
             // Obtenemos los medicos
             listaMedicos = query.Select(q => q.ToDto()).ToList();
