@@ -13,8 +13,11 @@ public class EmailService : IEmailService {
     }
 
     /// <summary>
-    /// Enviamos mensaje de correo
-    /// </summary> 
+    ///  Enviamos mensaje de correo
+    /// </summary>
+    /// <param name="asunto"></param>
+    /// <param name="mensaje"></param>
+    /// <param name="imagen"></param>
     public void Send(string asunto, string mensaje, MemoryStream imagen) {
          // Generamos mensaje del correo
         MailMessage mail = new() {

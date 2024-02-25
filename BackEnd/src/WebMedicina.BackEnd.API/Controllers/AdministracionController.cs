@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using WebMedicina.BackEnd.ServicesDependencies;
 using WebMedicina.Shared.Dto.Tipos;
+using WebMedicina.Shared.Dto.UserAccount;
 
 namespace WebMedicina.BackEnd.API.Controllers
 {
@@ -195,6 +196,5 @@ namespace WebMedicina.BackEnd.API.Controllers
                 return StatusCode(500, "Error interno del servidor. Inténtelo de nuevo o conteacte con un administrador.");
             }
         }
-
     }
 }

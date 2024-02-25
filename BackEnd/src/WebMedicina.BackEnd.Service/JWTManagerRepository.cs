@@ -116,8 +116,8 @@ namespace WebMedicina.BackEnd.Service {
         /// <summary>
         ///  Añadir nuevo refresh token para un usuario, y eliminar los antigüos
         /// </summary>
-        /// <param name="token"></param>
-        /// <param name="netUserId"></param>
+        /// <param name="refreshToken"></param>
+        /// <param name="idMedico"></param>
         /// <returns>Refresh token creado</returns>
         public bool AddRefreshToken(string refreshToken, int idMedico) {
             UserRefreshTokens userRefreshToken = new() {
@@ -135,7 +135,7 @@ namespace WebMedicina.BackEnd.Service {
         /// <summary>
         /// Eliminar refresh tokende un usuario
         /// </summary>
-        /// <param name="netUserId"></param>
+        /// <param name="idMedico"></param>
         /// <param name="refreshToken"></param>
         /// <returns>Refresh token eliminado</returns>
         public bool DeleteRefreshTokens(int idMedico, string refreshToken) {
@@ -145,7 +145,7 @@ namespace WebMedicina.BackEnd.Service {
         /// <summary>
         /// Obtener el refresh token de un usuario y eliminar si está caducado
         /// </summary>
-        /// <param name="netUserId"></param>
+        /// <param name="idMedico"></param>
         /// <param name="refreshToken"></param>
         /// <returns>Refresh token de un usuario</returns>
         public UserRefreshTokens? ObtenerRefreshToken(int idMedico, string refreshToken) {

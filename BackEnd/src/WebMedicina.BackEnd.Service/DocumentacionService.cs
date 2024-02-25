@@ -58,6 +58,7 @@ namespace WebMedicina.BackEnd.Service {
         /// Generamos asunto y mensaje del correo
         /// </summary>
         /// <param name="datosEmail"></param>
+        /// <param name="userInfo"></param>
         /// <returns>Tupla con asunto y mensaje</returns>
         public (string, string) GenerarCorreo(EmailEditarEvoDto datosEmail, UserInfoDto userInfo) {
             // Obtenemos el numero de historia del paciente

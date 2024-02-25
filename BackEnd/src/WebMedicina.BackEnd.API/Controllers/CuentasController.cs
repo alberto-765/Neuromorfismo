@@ -126,5 +126,16 @@ namespace WebMedicina.BackEnd.API.Controllers
         public async Task<ActionResult<CodigosErrorChangePass[]>> CambiarContrasena([FromBody] ChangePasswordDto contrasenas) {
             return Ok(await _userAccountService.CambiarContrasena(contrasenas, User.ToUserInfoDto()));
         }
+
+
+        /// <summary>
+        /// Permite reestablecer la contraseña con el user y la nueva password
+        /// </summary>
+        /// <param name="resetPass"></param>
+        /// <returns></returns>
+        [HttpPatch("restartpass")]
+        public async Task<ActionResult<bool>> ReestablacerPass([FromBody] RestartPasswordDto resetPass) {
+           return Ok(await _identityService.RestablecerPassword(resetPass));
+        }
     }
 }

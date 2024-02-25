@@ -5,6 +5,7 @@ using WebMedicina.BackEnd.Dal;
 using WebMedicina.BackEnd.Model;
 using WebMedicina.BackEnd.ServicesDependencies;
 using WebMedicina.BackEnd.ServicesDependencies.ExtensionMethods;
+using WebMedicina.Shared.Dto.UserAccount;
 using WebMedicina.Shared.Dto.Usuarios;
 
 namespace WebMedicina.BackEnd.Service
@@ -22,6 +23,11 @@ namespace WebMedicina.BackEnd.Service
             _adminDal = adminDal;
         }
 
+        /// <summary>
+        /// Obtener info del usuario en el login
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns></returns>
         public async Task<MedicosModel?> ObtenerUsuarioYRolLogin(string userName) {
             MedicosModel? medicosModel = _medicoDal.ObtenerInfoUserLogin(userName);
 
@@ -39,23 +45,12 @@ namespace WebMedicina.BackEnd.Service
             return medicosModel;
         }
 
-        public async Task<MedicosModel?> ObtenerUsuarioYRol(int idMedico) {
-            MedicosModel? medicosModel = _medicoDal.ObtenerInfoUser(idMedico);
-
-            // Obtenemos el rol si se ha obtenido correctamente la info del usuario
-            if (medicosModel != null && !string.IsNullOrEmpty(medicosModel.UserLogin)) {
-                var rol = await ObtenerRol(medicosModel.UserLogin);
-
-                if(string.IsNullOrEmpty(rol)) {
-                    medicosModel.Rol = "medico";
-                } else {
-                    medicosModel.Rol = rol;
-                }
-            }
-
-            return medicosModel;
-        }
-
+        /// <summary>
+        /// Crear nuevo usuario solo administradores
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task<bool> CrearUser(UserModel user, UserRegistroDto model) {
             var result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded) {
@@ -66,6 +61,11 @@ namespace WebMedicina.BackEnd.Service
             return false;
         }
 
+        /// <summary>
+        /// Autenticar contraseña login usuario
+        /// </summary>
+        /// <param name="userLogin"></param>
+        /// <returns></returns>
         public async Task<bool> ComprobarContraseña(UserLoginDto userLogin) {
             if (string.IsNullOrWhiteSpace(userLogin.UserName) || string.IsNullOrWhiteSpace(userLogin.Password)) {
                 return false;
@@ -75,14 +75,22 @@ namespace WebMedicina.BackEnd.Service
             return respuesta.Succeeded;
         }
 
-        // Obtener Rol del usuario
-        public async Task<string?> ObtenerRol(string userName) {
+        /// <summary>
+        /// Obtener Rol del usuario
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns></returns>
+        private async Task<string?> ObtenerRol(string userName) {
             return await _adminDal.ObtenerRolUser(await _adminDal.ObtenerUsuarioIdentity(userName));
         }
 
-        // LLamamos a BBDD y devolvemos si existe o no el userName
+        /// <summary>
+        /// LLamamos a BBDD y devolvemos si existe o no el userName
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns></returns>
         public async Task<bool> ComprobarUserName(string userName) {
-            return await _userManager.FindByNameAsync(userName) != null;
+            return await _userManager.FindByNameAsync(userName) is not null;
         }
 
         /// <summary>
@@ -138,7 +146,12 @@ namespace WebMedicina.BackEnd.Service
             return (userNameInValido, userNameGenerado);
         }
 
-        // Actualizamos rol del usuario
+        /// <summary>
+        /// Actualizamos rol del usuario
+        /// </summary>
+        /// <param name="userLogin"></param>
+        /// <param name="nuevoRol"></param>
+        /// <returns></returns>
         public async Task<bool> ActualizarRol(string userLogin, string nuevoRol) {
             // Obtenemos el usuario y sus roles
             UserModel? usuario = await _adminDal.ObtenerUsuarioIdentity(userLogin);
@@ -162,7 +175,12 @@ namespace WebMedicina.BackEnd.Service
             return rolActualizado.Succeeded;
         }
 
-        // Validamos si el nombre y apellidos del nuevo usuario son validos 
+        /// <summary>
+        /// Validamos si el nombre y apellidos del nuevo usuario son validos 
+        /// </summary>
+        /// <param name="nombre"></param>
+        /// <param name="apellidos"></param>
+        /// <returns></returns>
         public bool ValidarNomYApellUser(string nombre, string apellidos) {
             if (!string.IsNullOrEmpty(nombre) && !string.IsNullOrEmpty(apellidos)) {
                 UserRegistroDto usuarioRegistro = new() {
@@ -179,6 +197,36 @@ namespace WebMedicina.BackEnd.Service
             }
 
             return false;
+        }
+
+
+        /// <summary>
+        /// Realiza el reestablecimiento de la contraseña por parte de un administrador
+        /// </summary>
+        /// <param name="userLogin"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public async Task<bool> RestablecerPassword(RestartPasswordDto resetPass) {
+            bool resetSuccess = false;
+
+            // Validamos los datos del user
+            if (resetPass.Medico is not null && !string.IsNullOrWhiteSpace(resetPass.Medico.UserLogin)) {
+
+                // Obtenemos el usuario
+                UserModel? user = await _userManager.FindByNameAsync(resetPass.Medico.UserLogin);
+
+                if(user is not null) {
+
+                    // Generamos token para restablecer la contraseña
+                    string token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                    // Reseteamos la contraseña
+                    IdentityResult result = await _userManager.ResetPasswordAsync(user, token, resetPass.Password);
+                    resetSuccess = result.Succeeded;
+                }
+            }
+
+            return resetSuccess;
         }
     }
 }
