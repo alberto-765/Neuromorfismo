@@ -25,6 +25,10 @@
 
     }
 
+    protected override void OnAfterRender(bool firstRender) {
+        base.OnAfterRender(firstRender);
+    }
+
     // Validar ontraseña
     private IEnumerable<string> ValidarContrasena(string pw) {
         if (!Regex.IsMatch(pw, @"^(?=.*\d)(?=.*[!@#$%^&*()_+])(?=.*[A-Z])(?=.*[a-z])\S{8,16}$")) {

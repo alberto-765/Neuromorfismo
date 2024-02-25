@@ -10,17 +10,18 @@ using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.Shared.Dto.UserAccount;
 using WebMedicina.Shared.Dto.Usuarios;
 using WebMedicina.Shared.Dto.Pacientes;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace WebMedicina.FrontEnd.Service
 {
     public class AdminsService : IAdminsService {
         // DEPENDENCIAS
-        private IJSRuntime js { get; set; }
+        private IJSRuntime _js { get; set; }
         private readonly HttpClient _httpClient;
 
         public AdminsService(IJSRuntime js, ICrearHttpClient crearHttpClient) {
             _httpClient = crearHttpClient.CrearHttpApi();
-            this.js = js;
+            _js = js;
         }
 
         public Task<string> GenerarContraseñaAleatoria() {
@@ -126,7 +127,7 @@ namespace WebMedicina.FrontEnd.Service
         /// <returns></returns>
         public async Task<List<UserUploadDto>> ObtenerAllMedicos(FiltradoTablaDefaultDto? camposFiltrado = null) {
             // Llamamos a la api para obtener de BBDD los usuarios con los filtros
-            HttpResponseMessage responseMessage = await _httpClient.PostAsJsonAsync("gestionusers/obtenerusuariosfiltrados", camposFiltrado?? new());
+            HttpResponseMessage responseMessage = await _httpClient.PostAsJsonAsync("gestionusers/obtenerusuariosfiltrados", camposFiltrado ?? new());
             List<UserUploadDto>? list = null;
             if (responseMessage.IsSuccessStatusCode) {
                 if (responseMessage.StatusCode != HttpStatusCode.NoContent) {
@@ -137,9 +138,25 @@ namespace WebMedicina.FrontEnd.Service
             return list ?? new();
         }
 
+        /// <summary>
+        ///  CUlo
+        /// </summary>
+        /// <param name="restartPass"></param>
+        /// <returns></returns>
+        public async Task<bool> ResetearContrasena(RestartPasswordDto restartPass) {
+            bool respuestaOk = false;
+            HttpResponseMessage respuesta = await _httpClient.PatchAsJsonAsync("cuentas/restartpass", restartPass);
 
-        //public async Task ResetearContrasena(RestartPasswordDto restartPass) {
-            
-        //}
+            if (respuesta.IsSuccessStatusCode) {
+                respuestaOk = await respuesta.Content.ReadFromJsonAsync<bool>();
+
+                // Copiamos en el portapeles la contraseña
+                if (respuestaOk) { 
+                    await _js.InvokeVoidAsync("navigator.clipboard.writeText", restartPass.Password);
+                }
+            }
+
+            return respuestaOk;
+        }
     }
 }
