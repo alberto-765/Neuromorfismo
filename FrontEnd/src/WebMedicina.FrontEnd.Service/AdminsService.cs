@@ -10,7 +10,6 @@ using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.Shared.Dto.UserAccount;
 using WebMedicina.Shared.Dto.Usuarios;
 using WebMedicina.Shared.Dto.Pacientes;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace WebMedicina.FrontEnd.Service
 {
@@ -81,15 +80,6 @@ namespace WebMedicina.FrontEnd.Service
             }
         }
 
-        public Dictionary<string, string> CrearDiccionarioFiltros() {
-            return new Dictionary<string, string> {
-                { "busqueda" , "" },
-                {"campoOrdenar" , "" },
-                {"direccionOrdenar", ""} ,
-                {"rol" , "" }
-            };
-        }
-
         public string ValidarNuevoNombre(string nombre) {
             if (!string.IsNullOrWhiteSpace(nombre)) {
                 string patron = "[!@#$%^&*(),.?\":{}|<>]";
@@ -102,7 +92,12 @@ namespace WebMedicina.FrontEnd.Service
             return string.Empty;
         }
 
-        // Validamos si el nombre y apellidos del nuevo usuario son validos 
+        /// <summary>
+        /// Validamos si el nombre y apellidos del nuevo usuario son validos 
+        /// </summary>
+        /// <param name="nombre"></param>
+        /// <param name="apellidos"></param>
+        /// <returns>True si nombre y apellidos cumplen sus data anotations</returns>
         public bool ValidarNomYApellUser(string nombre, string apellidos) {
             if (!string.IsNullOrEmpty(nombre) && !string.IsNullOrEmpty(apellidos)) {
                 UserRegistroDto usuarioRegistro = new() {
@@ -139,7 +134,7 @@ namespace WebMedicina.FrontEnd.Service
         }
 
         /// <summary>
-        ///  CUlo
+        /// Resetea contraseña del usuario seleccionado
         /// </summary>
         /// <param name="restartPass"></param>
         /// <returns></returns>

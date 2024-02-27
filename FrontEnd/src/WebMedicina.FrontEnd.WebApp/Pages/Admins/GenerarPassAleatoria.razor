@@ -1,38 +1,37 @@
 ﻿@using System.Text.RegularExpressions;
+
 <div class="d-flex align-end">
-    <MudTextField Value="Contrasena" ValueChanged="ContrasenaChanged" Label="@Label" Variant="@Variante" ReadOnly Validation="new Func<string, IEnumerable<string>>(ValidarContrasena)" />
+    <MudTextField @bind-Value="_contrasena" Label="@Label" Variant="@Variante" ReadOnly="true" Error="@(!string.IsNullOrWhiteSpace(ErrorPassText))" ErrorText="@ErrorPassText" />
     <MudTooltip Text="La contraseña debe ser compartida con el nuevo usuario">
         <MudIconButton Icon="@Icons.Material.Outlined.Info" />
     </MudTooltip>
 </div>
 
 
- @code {
+@code {
     [Parameter] public string Label { get; set; } = "Contraseña*";
     [Parameter] public Variant Variante { get; set; } = Variant.Text;
-    [Parameter] public string Contrasena { get; set; } = default!;
+    [Parameter] public string Contrasena { get; set; } = null!;
     [Parameter] public EventCallback<string> ContrasenaChanged { get; set; }
+    [Parameter] public string ErrorPassText { get; set; } = string.Empty; // mensaje de error
 
     // Dependencias
     [Inject] private IAdminsService _adminsService { get; set; } = null!;
 
+    // Variables
+    private string _contrasena {
+        get => Contrasena;
+        set {
+            if (value == Contrasena) return;
+            Contrasena = value;
+            ContrasenaChanged.InvokeAsync(Contrasena);
+        }
+    }
 
     protected override async Task OnInitializedAsync() {
         await base.OnInitializedAsync();
 
         // Creamos contraseña aleatoria de forma asincrona
-        Contrasena = await _adminsService.GenerarContraseñaAleatoria();
-
-    }
-
-    protected override void OnAfterRender(bool firstRender) {
-        base.OnAfterRender(firstRender);
-    }
-
-    // Validar ontraseña
-    private IEnumerable<string> ValidarContrasena(string pw) {
-        if (!Regex.IsMatch(pw, @"^(?=.*\d)(?=.*[!@#$%^&*()_+])(?=.*[A-Z])(?=.*[a-z])\S{8,16}$")) {
-            yield return "La contraseña debe tener al entre 8 y 16 caracteres, al menos un dígito, al menos una minúscula, al menos una mayúscula y al menos un caracter especial";
-        }
+        _contrasena = await _adminsService.GenerarContraseñaAleatoria();
     }
 }

@@ -28,7 +28,8 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
         // CAMPOS EDITFORM
         private bool cargando { get; set; } = false;
         private UserRegistroDto userRegistro = new();
-        private EditContext formContext = null!;
+        string? ErrorPassText { get; set; }
+
 
         protected override async Task OnInitializedAsync() {
             
@@ -44,30 +45,31 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
             _snackbar.Configuration.PreventDuplicates = true;
             _snackbar.Configuration.ShowTransitionDuration = 300;
             _snackbar.Configuration.HideTransitionDuration = 300;
-
-            // Crear contexto del editform
-            formContext = new(userRegistro); 
         }
-        private async Task Crear() {
+        private async Task Crear(EditContext editContext) {
             try {
-                cargando = true;
-                HttpResponseMessage respuesta = await Http.PostAsJsonAsync("cuentas/crear", userRegistro);
-                if (respuesta.IsSuccessStatusCode)
-                {
-                    _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopStart;
-                    _snackbar.Add(await respuesta.Content.ReadAsStringAsync(), Severity.Success, config => {
-                        config.ShowCloseIcon = false;
-                        config.VisibleStateDuration = 5000;
-                    });
+                if (editContext.Validate()) {
+                    cargando = true;
+                    HttpResponseMessage respuesta = await Http.PostAsJsonAsync("cuentas/crear", userRegistro);
+                    if (respuesta.IsSuccessStatusCode)
+                    {
+                        _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopStart;
+                        _snackbar.Add(await respuesta.Content.ReadAsStringAsync(), Severity.Success, config => {
+                            config.ShowCloseIcon = false;
+                            config.VisibleStateDuration = 5000;
+                        });
 
-                    ReiniciarDatos();
+                        ReiniciarDatos();
+                    } else {
+                        cargando = false;
+                        _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopStart;
+                        _snackbar.Add(await respuesta.Content.ReadAsStringAsync(), Severity.Error, config => {
+                            config.ShowCloseIcon = false;
+                            config.VisibleStateDuration = 3000;
+                        });
+                    }
                 } else {
-                    cargando = false;
-                    _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopStart;
-                    _snackbar.Add(await respuesta.Content.ReadAsStringAsync(), Severity.Error, config => {
-                        config.ShowCloseIcon = false;
-                        config.VisibleStateDuration = 3000;
-                    });
+                    ErrorPassText = editContext.GetValidationMessages(() => userRegistro.Password).FirstOrDefault();
                 }
             } catch (Exception) {
                 ReiniciarDatos();

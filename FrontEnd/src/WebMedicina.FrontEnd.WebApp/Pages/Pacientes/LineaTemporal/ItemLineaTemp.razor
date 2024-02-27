@@ -66,12 +66,12 @@
                     </MudCardContent>
                     <MudCardActions Class="d-flex px-5 pb-5">
                         <MudSpacer />
-                        <MudButton Size="Size.Small" Variant="Variant.Filled" Color="Color.Primary" Disabled="@Enviando" Class="pa" OnClick="@(async () => await EventoFormulario())">
+                        <MudButton Size="Size.Small" Variant="Variant.Filled" Color="Color.Primary" Disabled="@Enviando" OnClick="@(async () => await EventoFormulario())">
                             @if (Enviando) {
                                 <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                                <MudText Class="ms-2"> Enviando...</MudText>
+                                <MudText Class="ms-2">Enviando...</MudText>
                             } else {
-                                <MudText> Enviar</MudText>
+                                <MudText>Enviar</MudText>
                             }
                         </MudButton>
                     </MudCardActions>
