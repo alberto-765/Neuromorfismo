@@ -13,42 +13,35 @@ namespace WebMedicina.FrontEnd.Service {
             this.js = js;
         }
 
-        // Redirigimos al login si no se esta ya en el
-        public async Task RedirigirLogin() { 
-            string urlActual = navigationManager.Uri;
-            string baseUri = navigationManager.BaseUri;
-            if (urlActual.Replace(baseUri, "") != "login") {
-                await RedirigirDefault("login");
-            } 
-        }
-
-        // Obtenemos la url de segumiento y redirigimos a esta misma
+        // Obtenemos la url de segumiento y redirigimos 
         public async Task RedirigirPagAnt() { 
             string segEnl = await js.GetFromSessionStorage(enlaceSeguimientoKey);
-
-            if (!string.IsNullOrWhiteSpace(segEnl)) {
-                await RedirigirDefault(segEnl);
-            } else {
-                await RedirigirDefault();
-            } 
+            await RedirigirDefault(segEnl);
         }
 
-        public async Task RedirigirDefault (string enlace = "/") {  
-            // Acutalizamos el enlace de seguimiento
-            await ActualizarSeguimientoEnlace();
-            navigationManager.NavigateTo(enlace); 
-        }
-
-        // Actualizar variable de url seguimiento de session
-        public async Task ActualizarSeguimientoEnlace() {
+        public async Task RedirigirDefault (string enlace) {
             string urlActual = navigationManager.Uri;
             string baseUri = navigationManager.BaseUri;
 
             // Quitamos de la url actual la base url
             string paginaActual = urlActual.Replace(baseUri, "");
 
-            // Guardamos en sessino la nueva url de seguimiento
-            await js.SetInSessionStorage(enlaceSeguimientoKey, paginaActual);
+            // Comprobamos la nueva ruta a la que se va a redirigir
+            if (string.IsNullOrWhiteSpace(enlace)) {
+                enlace = "/";
+            }
+
+            // Comprobamos la ruta actual
+            if (string.IsNullOrWhiteSpace(paginaActual)) {
+                paginaActual = "/";
+            }
+
+
+            // Comprobamos que no se está ya en la url a la que se quiere redirigir
+            if (!paginaActual.Equals(enlace, StringComparison.InvariantCultureIgnoreCase)) {
+                await js.SetInSessionStorage(enlaceSeguimientoKey, paginaActual);
+                navigationManager.NavigateTo(enlace); 
+            }
         }
     }
 }

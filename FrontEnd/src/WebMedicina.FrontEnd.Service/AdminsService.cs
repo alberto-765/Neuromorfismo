@@ -147,7 +147,7 @@ namespace WebMedicina.FrontEnd.Service
 
                 // Copiamos en el portapeles la contraseña
                 if (respuestaOk) { 
-                    await _js.InvokeVoidAsync("navigator.clipboard.writeText", restartPass.Password);
+                    await _js.InvokeVoidAsync("CopyToClipboard", restartPass.Password);
                 }
             }
 

@@ -41,7 +41,7 @@ namespace WebMedicina.FrontEnd.Service {
             await _jwtAuthenticationProvider.Logout();
 
             // Redirigimos al login
-            await _redirigirManager.RedirigirLogin();
+            await _redirigirManager.RedirigirDefault("login");
         }
     }
 }

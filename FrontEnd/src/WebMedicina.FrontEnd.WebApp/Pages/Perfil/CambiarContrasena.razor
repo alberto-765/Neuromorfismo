@@ -29,7 +29,7 @@
         </MudPaper>
 
         <div class="mt-9 mud-typography-align-center">
-            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Disabled="Enviando" EndIcon="@Icons.Material.Filled.Send" Color="Color.Primary" Size="Size.Medium" title="Hola">
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Disabled="Enviando" EndIcon="@(!Enviando ? Icons.Material.Filled.Send : "")" Color="Color.Primary" Size="Size.Medium" >
                 @if (Enviando) {
                     <MudProgressCircular Class="mr-1" Size="Size.Small" Indeterminate="true" />
                     <MudText Class="ms-2">Enviando...</MudText>
