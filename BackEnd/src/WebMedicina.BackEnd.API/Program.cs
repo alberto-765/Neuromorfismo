@@ -131,6 +131,7 @@ builder.Services.AddScoped<IUserAccountService, UserAccountService>(); // Servic
 builder.Services.AddScoped<IJWTManagerRepository, JWTManagerRepository>(); // Servicios de jwt tokens
 builder.Services.AddScoped<IDocumentacionService, DocumentacionService>(); // Servicios excel 
 builder.Services.AddScoped<IEmailService, EmailService>(); // Servicios envio de correo
+builder.Services.AddScoped<IEstadisticasService, EstadisticasService>(); // Servicios obtener gráficas de estadísticas
 
 
 // IOPTIONS JWT
