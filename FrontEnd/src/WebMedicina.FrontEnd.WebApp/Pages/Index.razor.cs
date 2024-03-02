@@ -1,5 +1,10 @@
-﻿namespace WebMedicina.FrontEnd.WebApp.Pages;
+﻿using Microsoft.AspNetCore.Components;
+using WebMedicina.FrontEnd.ServiceDependencies;
+
+namespace WebMedicina.FrontEnd.WebApp.Pages;
 public partial class Index {
+    //DEPENDENCIAS
+    [Inject] private IEstadisticasService _estadisticasService { get; set; } = null!;
 
 
     /// <summary>
@@ -7,6 +12,6 @@ public partial class Index {
     /// </summary>
     /// <returns></returns>
     protected override async Task OnInitializedAsync() {
-        await _redirigirManager.RedirigirDefault();
+        await _estadisticasService.ObtenerEstadisitcas();
     }
 }

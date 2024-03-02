@@ -19,7 +19,7 @@ namespace WebMedicina.FrontEnd.Service {
             await RedirigirDefault(segEnl);
         }
 
-        public async Task RedirigirDefault (string enlace) {
+        public async Task RedirigirDefault (string enlace = "/") {
             string urlActual = navigationManager.Uri;
             string baseUri = navigationManager.BaseUri;
 

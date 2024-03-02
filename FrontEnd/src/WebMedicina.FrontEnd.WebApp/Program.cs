@@ -31,8 +31,8 @@ builder.Services.AddScoped<IPerfilService, PerfilService>(); // Service para con
 builder.Services.AddScoped<IPacientesService, PacientesService>(); // Service para pacientes
 builder.Services.AddScoped<IComun, Comun>(); // Service para funciones comunes y reutilizables
 builder.Services.AddScoped<ILineaTemporalService, LineaTemporalService>(); // Service para linea temporal
-builder.Services.AddScoped<IDocumentacionService, DocumentacionService>();
-
+builder.Services.AddScoped<IDocumentacionService, DocumentacionService>(); // Service para descarga del excel e envio del email al avanzar en evolucion
+builder.Services.AddScoped<IEstadisticasService, EstadisticasService>(); // Service para las estadisticas del inicio de la app
 
 // Configuracion imagenes
 builder.Services.Configure<ImagenesServerDto>(options => builder.Configuration.GetSection("ImagenesServer").Bind(options));
