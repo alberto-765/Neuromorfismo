@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using WebMedicina.BackEnd.ServicesDependencies;
 using WebMedicina.Shared.Dto.Tipos;
-using WebMedicina.Shared.Dto.UserAccount;
 
 namespace WebMedicina.BackEnd.API.Controllers
 {
