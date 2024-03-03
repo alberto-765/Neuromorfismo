@@ -146,12 +146,22 @@ namespace WebMedicina.FrontEnd.Service
                 respuestaOk = await respuesta.Content.ReadFromJsonAsync<bool>();
 
                 // Copiamos en el portapeles la contraseña
-                if (respuestaOk) { 
-                    await _js.InvokeVoidAsync("CopyToClipboard", restartPass.Password);
+                if (respuestaOk) {
+                    await CopiarEnPortapapeles(restartPass.Password);
                 }
             }
 
             return respuestaOk;
+        }
+
+
+        /// <summary>
+        /// Copiar texto en el portapapeles via js
+        /// </summary>
+        /// <param name="texto"></param>
+        /// <returns></returns>
+        public async Task CopiarEnPortapapeles(string texto) {
+            await _js.InvokeVoidAsync("navigator.clipboard.writeText", texto);
         }
     }
 }

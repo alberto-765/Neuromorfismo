@@ -2,10 +2,8 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
-using System.ComponentModel.DataAnnotations;
 using System.Net.Http.Json;
 using System.Security.Claims;
-using WebMedicina.FrontEnd.Service;
 using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.Shared.Dto.Usuarios;
 
@@ -59,7 +57,10 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Admins
                             config.VisibleStateDuration = 5000;
                         });
 
+                        // Copiamos en el portapapeles la contrasñea
+                        await _adminsService.CopiarEnPortapapeles(userRegistro.Password);
                         ReiniciarDatos();
+
                     } else {
                         cargando = false;
                         _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopStart;

@@ -93,20 +93,3 @@ async function GenerarImagenDeHtml(id) {
 
     return base64;
 }
-
-// Copiar en el portapeles
-async function CopyToClipboard(text) {
-    // Creamos elemento invisible
-    let link = document.createElement("a")
-    link.setAttribute("class", "d-none");
-
-    // Al hacer click se copiará al portapeles el texto
-    link.addEventListener("click",  async () => {
-        await navigator.clipboard.writeText(text);
-    });
-
-    // Añadimos el elemento, simulamos click y lo borramos
-    document.body.append(link);
-    link.click();
-    link.remove();
-}

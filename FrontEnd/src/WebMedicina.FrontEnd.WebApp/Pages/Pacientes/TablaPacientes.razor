@@ -97,7 +97,7 @@
                    <MudGrid Justify="Justify.FlexStart" id="gridDecipcionPaciente" Class="gap-y-6" Spacing="0">
                        @* Fecha Nacimiento *@
                        <MudItem xs="12" md="6" >
-                            <MudText>Fecha Nacimiento: @context.Item.FechaNac?.ToShortDateString()</MudText>
+                            <MudText>Fecha Nacimiento: @context.Item.FechaNac?.ToString("dd/MM/yyyy")</MudText>
                        </MudItem>
 
                         @* Genero *@
@@ -113,12 +113,12 @@
                     
                         @* Fecha Diagnostico *@
                         <MudItem xs="12" md="6">
-                            <MudText>Fecha Diagnóstico: @context.Item.FechaDiagnostico?.ToShortDateString()</MudText>
+                            <MudText>Fecha Diagnóstico: @context.Item.FechaDiagnostico?.ToString("dd/MM/yyyy")</MudText>
                         </MudItem>
                     
                         @* Fecha Fractalidad *@
                         <MudItem xs="12" md="5">
-                            <MudText>Fecha Fractalidad: @context.Item.FechaFractalidad?.ToShortDateString()</MudText>
+                            <MudText>Fecha Fractalidad: @context.Item.FechaFractalidad?.ToString("dd/MM/yyyy")</MudText>
                         </MudItem>
 
                         @* Talla *@
@@ -160,13 +160,13 @@
                     <MudText Typo="Typo.subtitle2">Creado por
                         <MudChip Variant="Variant.Text" Color="Color.Dark">@(string.IsNullOrEmpty(context.Item.NombreMedicoCreador) ? "-" : $"{context.Item.NombreMedicoCreador}")</MudChip>
                         el
-                        <MudChip Variant="Variant.Text" Color="Color.Dark">@(context.Item.FechaCreac == DateTime.MinValue ? "-" : $"{context.Item.FechaCreac.ToShortDateString()}")</MudChip>
+                        <MudChip Variant="Variant.Text" Color="Color.Dark">@(context.Item.FechaCreac == DateTime.MinValue ? "-" : $"{context.Item.FechaCreac.ToString("dd/MM/yyyy")}")</MudChip>
                     </MudText>
                     <MudText Typo="Typo.subtitle2">
                         Modificado por última vez por
                             <MudChip Variant="Variant.Text" Color="Color.Dark">@(string.IsNullOrEmpty(context.Item.NombreMedicoUltMod) ? "-" : $"{context.Item.NombreMedicoUltMod}")</MudChip>
                         el
-                        <MudChip Variant="Variant.Text" Color="Color.Dark">@(context.Item.FechaUltMod == DateTime.MinValue ? "-" : $"{context.Item.FechaUltMod.ToShortDateString()}")</MudChip>
+                        <MudChip Variant="Variant.Text" Color="Color.Dark">@(context.Item.FechaUltMod == DateTime.MinValue ? "-" : $"{context.Item.FechaUltMod.ToString("dd/MM/yyyy")}")</MudChip>
                     </MudText>
                 </MudCardActions>
             </MudCard>

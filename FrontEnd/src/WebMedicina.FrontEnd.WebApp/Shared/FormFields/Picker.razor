@@ -1,4 +1,4 @@
-﻿<MudDatePicker style="padding: 10px 0;"  @ref="_picker" Editable="true" AutoClose="@autoCLose" Label="@label" PickerVariant="@variante" DateFormat="dd/MM/yyyy"
+﻿<MudDatePicker style="@EstiloPicker" @ref="_picker" Editable="true" AutoClose="@autoCLose" Label="@label" PickerVariant="@variante" DateFormat="dd/MM/yyyy"
                 MaxDate="@FechaMaxima" MinDate="@FechaMinima" Placeholder="@placeHolder" HelperText="@helperText" Class="@ClassDialogo"
                 @bind-Date="Fecha" For="@(() => Fecha)" PickerOpened="async () => await _comun.BloquearScroll(IdDialogo)" 
                 PickerClosed="async () => await _comun.DesbloquearScroll(IdDialogo)" IconSize="IconSize">
@@ -22,6 +22,7 @@
     [Parameter] public string IdDialogo { get; set; } = string.Empty; // ID dialogo para bloquear/desbloquear scroll
     [Parameter] public string ClassDialogo { get; set; } = string.Empty; // Clase dialogo
     [Parameter] public Size IconSize { get; set; } = Size.Small;
+    [Parameter] public string EstiloPicker { get; set; } = "padding: 10px 0;";
 
     // DEPENDENCIAS
     [Inject] private IComun _comun { get; set; } = null!;

@@ -1,15 +1,13 @@
 ﻿using System.Collections.Immutable;
 
 namespace WebMedicina.Shared.Dto.Estadisticas {
-    // Gráfica de pacientes totales
-    public record TotalPacientesDto(DateOnly Fecha, uint Total);
-
-    // Gráfica de evoluciones en las etapas
-    public record TotalEtapaDto(string Etapa, uint Total);
 
     public class EstadisticasDto {
+        // Gráfica de pacientes totales
         public ImmutableSortedDictionary<DateOnly, uint> TotalPacientes { get; set; } = ImmutableSortedDictionary<DateOnly, uint>.Empty;
-        public <TotalEtapaDto> TotalEtapas { get; set; } = ImmutableList<TotalEtapaDto>.Empty;
+
+        // Gráfica resumen evoluciones en las etapas
+        public ImmutableDictionary<string, uint> TotalEtapas { get; set; } = ImmutableDictionary<string, uint>.Empty;
 
     }
 }

@@ -47,5 +47,13 @@ namespace WebMedicina.FrontEnd.ServiceDependencies {
         /// <param name="restartPass"></param>
         /// <returns></returns>
         Task<bool> ResetearContrasena(RestartPasswordDto restartPass);
+
+
+        /// <summary>
+        /// Copiar texto en el portapapeles via js
+        /// </summary>
+        /// <param name="texto"></param>
+        /// <returns></returns>
+        Task CopiarEnPortapapeles(string texto);
     }
 }

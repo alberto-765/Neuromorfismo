@@ -4,11 +4,14 @@
 ::deep .filaGenero {
     width: 10%;
 }
+::deep .filaNombre {
+    width: 10%;
+}
 ::deep .filaApellidos {
     width: 20%;
 }
-::deep .filaNumHist {
-    width: 20%;
+::deep .filaFechaNac {
+    width: 17%;
 }    
 ::deep .filaRol{
     width: 9%;
@@ -43,6 +46,11 @@
     font-size: .875rem;
 }
 
+/* Picker fecha */
+::deep .pickerFecha{
+    padding-top: 10px !important;
+}
+
 /*Estilo tabla en pc*/
 @media (min-width: 1280px) {
 
@@ -58,6 +66,11 @@
     .celda_espacio {
         width: 18px;
     }
+
+    /* Colocación celda fecha nac */
+    ::deep .filaFechaNac {
+        margin-left: 4rem;
+    }    
 }
 
 /*Estilo tabla en movil*/

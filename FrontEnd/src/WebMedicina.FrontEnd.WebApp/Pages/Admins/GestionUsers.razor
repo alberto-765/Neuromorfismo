@@ -27,9 +27,9 @@
             <HeaderContent>
                 <MudTh Class="tituloTabla filaId"><MudTableSortLabel SortLabel="IdMedico" T="UserUploadDto">#</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortLabel="UserLogin" T="UserUploadDto">User Login</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="Nombre" T="UserUploadDto">Nombre</MudTableSortLabel></MudTh>
+                <MudTh Class="filaNombre"><MudTableSortLabel SortLabel="Nombre" T="UserUploadDto">Nombre</MudTableSortLabel></MudTh>
                 <MudTh Class="filaApellidos"><MudTableSortLabel SortLabel="Apellidos" T="UserUploadDto">Apellidos</MudTableSortLabel></MudTh>
-                <MudTh Class="tituloTabla"><MudTableSortLabel SortLabel="FechaNac" T="UserUploadDto">Fecha Nacimiento</MudTableSortLabel></MudTh>
+                <MudTh Class=""><MudTableSortLabel SortLabel="FechaNac" T="UserUploadDto">Fecha Nacimiento</MudTableSortLabel></MudTh>
                 <MudTh Class="tituloTabla filaGenero"><MudTableSortLabel SortLabel="Sexo" T="UserUploadDto">Género</MudTableSortLabel></MudTh>
                 <MudTh Class="tituloTabla filaRol">Rol</MudTh>
                 <MudTh Class="tituloTabla"><MudTableSortLabel SortLabel="FechaCreac" T="UserUploadDto">Fecha Creación</MudTableSortLabel></MudTh>
@@ -40,7 +40,7 @@
                 <MudTd DataLabel="User Login" Class="inputField">@context.UserLogin</MudTd>
                 <MudTd DataLabel="Nombre" Class="inputField">@context.Nombre</MudTd>
                 <MudTd DataLabel="Apellidos" Class="inputField">@context.Apellidos</MudTd>
-                <MudTd DataLabel="Fecha Nacimiento" Class="inputField">@context.FechaNac?.ToShortDateString()</MudTd>
+                <MudTd DataLabel="Fecha Nacimiento" Class="">@context.FechaNac?.ToString("dd/MM/yyyy")</MudTd>
                 <MudTd DataLabel="Género" Class="inputField">
                     @if(context.Sexo == "M") {
                         <div class="celda-espaciada">
@@ -54,7 +54,7 @@
                         </div>
                     }
                 </MudTd>
-                <MudTd DataLabel="Rol" Class="inputField">
+                <MudTd DataLabel="Rol" Class="inputField tituloTabla">
                     @switch (context.Rol) {
                         case "superAdmin":
                             <text>Super Admin</text>
@@ -72,13 +72,13 @@
                 </MudTd>
                 <MudTd DataLabel="Fecha Creación" Class="inputField">
                     <div class="celda">
-                        <div class="celda_principal">@context.FechaCreac.ToShortDateString()</div>
+                        <div class="celda_principal">@context.FechaCreac.ToString("dd/MM/yyyy")</div>
                         <div class="celda_espacio"></div>
                     </div>
                 </MudTd>
                 <MudTd DataLabel="Fecha Última Modificación" Class="inputField">
                     <div class="celda">
-                        <div class="celda_principal">@context.FechaUltMod.ToShortDateString()</div>
+                        <div class="celda_principal">@context.FechaUltMod.ToString("dd/MM/yyyy")</div>
                         <div class="celda_espacio"></div>
                      </div>
                 </MudTd>
@@ -92,10 +92,10 @@
                 <MudTd>
                     <MudTextField @bind-Value="@context.Apellidos" For="@(() => context.Apellidos)" OnlyValidateIfDirty="true" Clearable="true" Variant="Variant.Text" Class="inputField"/>
                 </MudTd>
-                <MudTd>
+                <MudTd Class="filaFechaNac">
                     @* Fecha Nacimiento *@
                     <Picker label="Fecha de Nacimiento" @bind-Fecha="context.FechaNac" FechaMaxima="ValidacionesRegistro.ObtenerFechaMaxNacimiento()" variante="PickerVariant.Dialog"
-                            autoCLose=true helperText="Mayor de 18 años" ClassDialogo="inputField mt-2" />
+                            autoCLose=true helperText="Mayor de 18 años" ClassDialogo="inputField mt-2" EstiloPicker="padding-top: 10px;"/>
                 </MudTd>
                 <MudTd>
                     <MudSelect T="string" @bind-Value="@context.Sexo" For="@(() => context.Sexo)" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Variant="Variant.Text" Class="inputField">
@@ -114,13 +114,13 @@
                 </MudTd>
                 <MudTd Class="justify-start">
                     <div class="celda">
-                        <div class="celda_principal">@context.FechaCreac</div>
+                        <div class="celda_principal">@context.FechaCreac.ToString("dd/MM/yyyy")</div>
                         <div class="celda_espacio"></div>
                     </div>
                 </MudTd>
                 <MudTd Class="justify-start">
                     <div class="celda">
-                        <div class="celda_principal">@context.FechaUltMod</div>
+                        <div class="celda_principal">@context.FechaUltMod.ToString("dd/MM/yyyy")</div>
                         <div class="celda_espacio"></div>
                     </div>
                 </MudTd>
