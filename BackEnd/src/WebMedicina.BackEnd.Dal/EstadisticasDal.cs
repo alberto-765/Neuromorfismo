@@ -1,4 +1,7 @@
-﻿using WebMedicina.BackEnd.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Immutable;
+using System.Diagnostics;
+using WebMedicina.BackEnd.Model;
 
 namespace WebMedicina.BackEnd.Dal {
     public class EstadisticasDal {
@@ -9,12 +12,32 @@ namespace WebMedicina.BackEnd.Dal {
             _context = context;
         }
 
-
-        public async Task<Dictionary<string, uint>> GetTotalPaciente() {
-            var hola = _context.Pacientes.GroupBy(q => q.FechaCreac);
-            await Task.Delay(1000);
-            return new();
-
+        /// <summary>
+        /// Get diccionario con fecha-cantidad
+        /// </summary>
+        /// <returns></returns>
+        public ImmutableSortedDictionary<DateOnly, uint> GetTotalPaciente() {
+            return _context.Pacientes.AsNoTracking()
+                .GroupBy(q => q.FechaCreac).Select(q => new { Fecha = DateOnly.FromDateTime(q.Key), Cantidad = (uint)q.Count()})
+                .ToImmutableSortedDictionary(q => q.Fecha, q=> q.Cantidad);
         }
+
+        /// <summary>
+        /// Obtenemos el numero de pacientes que tiene cada etapa
+        /// </summary>
+        /// <returns></returns>
+        public ImmutableDictionary<string, uint> GetTotalEtapas() {
+
+            // Agrupamos por paciente, obtenemos la etapa mas alta y agrupamos por etapa, y por ultimo creamos diccionario con el nombre de la etapa
+            // y la cantidad
+            return _context.EvolucionLT.AsNoTracking()
+                .GroupBy(q => q.IdPaciente).Select(q => q.Max(e => e.IdEtapa))
+                .GroupBy(q => q).Select(q => new {
+                    _context.EtapaLT.Single(e => e.Id == q.Key).Titulo,
+                    Cantidad = (uint)q.Count()
+                })
+                .ToImmutableDictionary(q => q.Titulo, q => q.Cantidad);
+        }
+
     }
 }

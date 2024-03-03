@@ -31,9 +31,9 @@ public class WebmedicinaContext : IdentityDbContext<UserModel, RoleModel, string
 
     public virtual DbSet<PacientesModel> Pacientes { get; set; }
 
-    public virtual DbSet<EvolucionLTModel> EvolucionLTModels { get; set; }
+    public virtual DbSet<EvolucionLTModel> EvolucionLT { get; set; }
 
-    public virtual DbSet<EtapaLTModel> EtapaLTModel { get; set; }
+    public virtual DbSet<EtapaLTModel> EtapaLT { get; set; }
 
     public virtual DbSet<UserRefreshTokens> UserRefreshToken { get; set; }
 

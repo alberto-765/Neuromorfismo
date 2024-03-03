@@ -121,6 +121,7 @@ builder.Services.AddScoped<FarmacosDal>(); // Dal de farmacos
 builder.Services.AddScoped<MutacionesDal>(); // Dal de mutaciones
 builder.Services.AddScoped<LineaTemporalDal>(); // Dal de mutaciones
 builder.Services.AddScoped<TokensDal>(); // Dal de tokens, registro y login
+builder.Services.AddScoped<EstadisticasDal>(); // Dal de gráficas para estadísticas
 
 // SERVICES
 builder.Services.AddScoped<IIdentityService, IdentityService>(); // Servicios que trabajan con identity
