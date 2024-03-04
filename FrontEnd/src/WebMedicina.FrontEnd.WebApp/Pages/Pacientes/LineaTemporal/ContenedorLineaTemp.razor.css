@@ -1,11 +1,11 @@
 ﻿/*Contenedor linea temporal expandido */
 ::deep .contenedor-lineaTemporal-expandido {
-    display: block;
     min-height: 50vh;
 }
-::deep .contenedor-lineaTemporal-hidden {
-   display: none;
+::deep #contenedor-lineaTemporal{
+    display: none;
 }
+
 /* Boton cerrar linea temporal */
 ::deep #contenedor-lineaTemporal .lt__scrollTop {
     position: absolute !important;

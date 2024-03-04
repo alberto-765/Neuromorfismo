@@ -41,17 +41,13 @@ function desbloquearScroll(claseElemento, ejes) {
 
 
 // Hacer scroll hacia un elemento
-function ScrollHaciaElemento(idElemento, poxY) {
-    try {
-        let elemento = document.getElementById(idElemento);
-        elemento.scrollIntoView({
-            behavior: "smooth",
-            block: poxY,
-            inline: "nearest"
-        })
-    } catch (e) {
-        throw e;
-    }
+function ScrollHaciaElemento(selectorElemento, poxY) {
+    let elemento = document.querySelector(selectorElemento);
+    elemento.scrollIntoView({
+        behavior: "smooth",
+        block: poxY,
+        inline: "nearest"
+    })
 }
 
 
@@ -96,44 +92,68 @@ async function GenerarImagenDeHtml(id) {
 
 
 // Animacion FadeIn
-function FadeIn(selectorElemento) {
-    let op = 0;
-
+function FadeIn(selectorElemento, duracion) {
     let elemento = document.querySelector(selectorElemento);
     if (elemento != null) {
-        elemento.style.opacity = op;
-        elemento.style.display = "block"
+        elemento.style.opacity = 0;
+        elemento.style.display = "block";
 
-        // Realizamos un setinterval para disminuir la opcidad
-        let intervalo = setInterval(() => {
-            if (op > 1) {
-                clearInterval(intervalo);
+        let tiempoInicial = performance.now();
+
+        // La animación se realiza midiendo el momento de comienzo y de finalización
+        function fade() {
+            let tiempoTranscurrido = performance.now() - tiempoInicial;
+
+            // Calculamos la opacidad con el tiempo transcurrido y el deseado
+            let opacidad = (tiempoTranscurrido / duracion);
+
+            // Si la opacidad llega a 1 paramos la animacion
+            if (opacidad >= 1) {
+                elemento.style.opacity = 1;
+                return;
             }
 
-            op += 0.1
-            elemento.style.opacity = op;
-        }, 75);
+            elemento.style.opacity = opacidad;
+
+            // Continuamos con la animacion
+            requestAnimationFrame(fade);
+        }
+
+        fade();
+        return true;
     }
 }
 
 // Animacion FadeOut
-function FadeOut(selectorElemento) {
-    let op = 1;
-
+function FadeOut(selectorElemento, duracion) {
     let elemento = document.querySelector(selectorElemento);
     if (elemento != null) {
-        elemento.style.opacity = op;
-        elemento.style.display = "block"
+        elemento.style.opacity = 1;
 
-        // Realizamos un setinterval para disminuir la opcidad
-        let intervalo = setInterval(() => {
-            if (op < 0) {
+        let tiempoInicial = performance.now();
+
+        // La animación se realiza midiendo el momento de comienzo y de finalización
+        function fade() {
+            let tiempoTranscurrido = performance.now() - tiempoInicial;
+
+            // Calculamos la opacidad con el tiempo transcurrido y el deseado
+            let opacidad = 1-(tiempoTranscurrido / duracion);
+
+            // Si la opacidad llega a 1 paramos la animacion
+            if (opacidad <= 0) {
+                elemento.style.opacity = 0;
                 elemento.style.display = "none";
-                clearInterval(intervalo);
+                return;
             }
 
-            op -= 0.1
-            elemento.style.opacity = op;
-        }, 75);
+            elemento.style.opacity = opacidad;
+
+            // Continuamos con la animacion
+            requestAnimationFrame(fade);
+        }
+
+        fade();
+        return true;
     }
 }
+

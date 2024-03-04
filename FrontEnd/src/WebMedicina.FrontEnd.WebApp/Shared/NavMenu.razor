@@ -1,7 +1,7 @@
 ﻿@attribute [Authorize]
 
 <div>
-<MudNavMenu id="navMenu" Class="pt-3 pt-md-5" Bordered="true"  Color="@(_isDarkMode ? Color.Primary : Color.Dark)" Rounded="true">
+<MudNavMenu id="navMenu" Class="pt-3 pt-md-5" Color="@(_isDarkMode ? Color.Primary : Color.Dark)" Bordered="true">
     <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Store">Estadísticas</MudNavLink>
     <AuthorizeView Roles="admin, superAdmin">
         <Authorized>
