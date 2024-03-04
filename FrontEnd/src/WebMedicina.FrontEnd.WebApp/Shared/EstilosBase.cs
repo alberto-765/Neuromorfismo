@@ -15,7 +15,7 @@ namespace WebMedicina.FrontEnd.Service {
                 DrawerBackground = "#64B5F6",
                 AppbarText = "#424242",
                 DrawerText = "#424242",
-                DrawerIcon = "#424242"
+                DrawerIcon = "#424242",
             },
             PaletteDark = new PaletteDark {
 

@@ -5,7 +5,6 @@ using System.Threading;
 using WebMedicina.FrontEnd.ServiceDependencies;
 using WebMedicina.Shared.Dto.LineaTemporal;
 using WebMedicina.Shared.Dto.Pacientes;
-using static MudBlazor.Colors;
 
 namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
     public partial class ContenedorLineaTemp {
@@ -18,26 +17,17 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
         private string SelectorScroll { get; set; } = string.Empty; // Id fila del paciente en la tabla
         private string IdContenedorLT { get; set; } = "contenedor-lineaTemporal";
         private string ClaseContenedor { get; set; } = string.Empty;
+        private string OcultarLT { get; set; } = string.Empty;
 
         // Mostrar u ocultar contenedor
-        private bool _lineaTemporalExpanded = false;
-            // Animacion Fade-In o Fade-Out
-        async Task OcultarMostrarLT (bool value){
-            if(value) {
-                ClaseContenedor = string.Concat(IdContenedorLT, "-expandido");
-                await _comun.FadeIn($"#{IdContenedorLT}");
-                _lineaTemporalExpanded = true;
-            } else {
-                await _comun.FadeOut($"#{IdContenedorLT}");
-                ClaseContenedor = string.Empty;
-
-
-                await Task.Delay(500).ContinueWith(t => {
-                    _lineaTemporalExpanded = false;
-                });
+        private bool LineaTemporalExpanded = false;
+        private bool LineaTemporalExpandedProp { 
+            get => LineaTemporalExpanded;
+            set {
+                LineaTemporalExpanded = value;
+                ClaseContenedor = string.Concat(IdContenedorLT, (LineaTemporalExpanded ? "-expandido" : "-hidden"));
             }
-            StateHasChanged();
-        }
+        } 
 
         // Listas etapas y evolucion paciente
         private SortedList<short, EvolucionLTDto> Evoluciones = new(); // Evoluciones del paciente
@@ -47,6 +37,9 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
         private CrearPacienteDto Paciente { get; set; } = new();
 
         protected override async Task OnInitializedAsync() {
+            // Clase contenedor ocultada por default
+            ClaseContenedor = IdContenedorLT + "-hidden";
+
             // Configuracion default snackbar
             _snackbar.Configuration.PreventDuplicates = true;
             _snackbar.Configuration.ShowTransitionDuration = 300;
@@ -68,32 +61,38 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
         }
 
         // Cerramos cuadro linea temporal y resetear datos
-        private async Task CerrarLineaTemporal() { 
-            await OcultarMostrarLT(false);
+        private void CerrarLineaTemporal() { 
             // Reseteamos datos
+            LineaTemporalExpandedProp = false;
             Evoluciones = new();
-            await _comun.ScrollHaciaElemento(SelectorScroll);
             SelectorScroll = string.Empty;
-
         }
 
         // Obtenemos evolucion del paciente, abrimos contenedor linea temporal y hacemos scroll al contenedor
         public async Task MostrarLineaTemp(CrearPacienteDto paciente) {
             try {
+                // Ocultamos contenedor 
+                OcultarLT = "d-none";
+
                 // Realizamos la tarea de evolución del paciente
                 Task<SortedList<short, EvolucionLTDto>> GetEvo = _lineaTemporalService.ObtenerEvolucionPaciente(paciente.IdPaciente);
 
                 // Mostramos linea temporal y configuramos el selector para el scroll top
+                LineaTemporalExpandedProp = true;
                 SelectorScroll = $"#Paciente{paciente.NumHistoria}";
                 Paciente = paciente;
 
                 // Obtenemos evoluciones
                 Evoluciones = await GetEvo;
 
-                await OcultarMostrarLT(true);
+                // Animacion Fade In
+                await _comun.FadeIn($"#{IdContenedorLT}");
+                OcultarLT = string.Empty;
+                StateHasChanged();
+
                 await _comun.ScrollBottom();
             } catch (Exception) {
-                await CerrarLineaTemporal();
+                Evoluciones = new();
                 _snackbar.Add("No ha sido posible cargar la linea temporal", Severity.Error);
             } 
         }

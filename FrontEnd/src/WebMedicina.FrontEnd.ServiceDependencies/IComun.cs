@@ -37,17 +37,17 @@ namespace WebMedicina.FrontEnd.ServiceDependencies {
         /// <summary>
         /// Hacer scroll a una posicion de un elemento por el id
         /// </summary>
-        /// <param name="selectorElemento"></param>
+        /// <param name="idElemento"></param>
         /// <param name="posY"></param>
         /// <returns></returns>
-        Task ScrollHaciaElemento(string selectorElemento, string posY = "center");
+        Task ScrollHaciaElemento(string idElemento, string posY = "center");
 
         /// <summary>
         /// Hacer scroll al bottom de la pantalla
         /// </summary>
         /// <returns></returns>
         Task ScrollBottom();
-        Task FadeIn(string selectorElemento, ushort duracion = 500);
-        Task FadeOut(string selectorElemento, ushort duracion = 500);
+        Task FadeIn(string selectorElemento);
+        Task FadeOut(string selectorElemento);
     }
 }
