@@ -5,21 +5,21 @@
 
 <div class="pa-10">
     @* Mapeamos linea temporal y evolucion del paciente *@
-    @{
-        <MudTimeline TimelinePosition="TimelinePosition.Start">
-            @* Se debe usar bucle for porque debemos saber el indice de cada etapa *@
-            @foreach (KeyValuePair<short, EtapaLTDto> etapa in EtapasLineaTemporal) {
+    <MudTimeline TimelinePosition="TimelinePosition.Start">
 
-                if (Evoluciones.TryGetValue(etapa.Key, out evolucionPintar) == false) {
-                    evolucionPintar = null;
-                }
+        @* Mapeamos las etapas *@
+        @foreach (KeyValuePair<short, EtapaLTDto> etapa in EtapasLineaTemporal) {
 
-                @* Obtenemos estado de la etapa *@
-                estadoEtapa = CalcularEstadoEtapa(etapa);
-
-                <ItemLineaTemp EstadoEtapa="estadoEtapa" Etapa="etapa" EvolucionPintar="evolucionPintar" ActualizarEvolucionPaciente="ActualizarEvolucionPaciente" EnviarEmail="EnviarEmail" />
-
+            // Intentamos obtener la evolución correspondiente a la etapa mapeada
+            if (Evoluciones.TryGetValue(etapa.Key, out evolucionPintar) == false) {
+                evolucionPintar = null;
             }
-        </MudTimeline>
-    }
+
+            @* Obtenemos estado de la etapa *@
+            estadoEtapa = CalcularEstadoEtapa(etapa);
+
+            <ItemLineaTemp EstadoEtapa="estadoEtapa" Etapa="etapa" EvolucionPintar="evolucionPintar" ActualizarEvolucionPaciente="ActualizarEvolucionPaciente" EnviarEmail="EnviarEmail" />
+
+        }
+    </MudTimeline>
 </div>

@@ -17,6 +17,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
         private string SelectorScroll { get; set; } = string.Empty; // Id fila del paciente en la tabla
         private string IdContenedorLT { get; set; } = "contenedor-lineaTemporal";
         private string ClaseContenedor { get; set; } = string.Empty;
+        private string OcultarLT { get; set; } = string.Empty;
 
         // Mostrar u ocultar contenedor
         private bool LineaTemporalExpanded = false;
@@ -61,31 +62,39 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
 
         // Cerramos cuadro linea temporal y resetear datos
         private void CerrarLineaTemporal() { 
-                // Reseteamos datos
-                LineaTemporalExpandedProp = false;
-                Evoluciones = new();
-                SelectorScroll = string.Empty;
+            // Reseteamos datos
+            LineaTemporalExpandedProp = false;
+            Evoluciones = new();
+            SelectorScroll = string.Empty;
         }
 
         // Obtenemos evolucion del paciente, abrimos contenedor linea temporal y hacemos scroll al contenedor
         public async Task MostrarLineaTemp(CrearPacienteDto paciente) {
             try {
+                // Ocultamos contenedor 
+                OcultarLT = "d-none";
+
+                // Realizamos la tarea de evolución del paciente
+                Task<SortedList<short, EvolucionLTDto>> GetEvo = _lineaTemporalService.ObtenerEvolucionPaciente(paciente.IdPaciente);
+
                 // Mostramos linea temporal y configuramos el selector para el scroll top
                 LineaTemporalExpandedProp = true;
                 SelectorScroll = $"#Paciente{paciente.NumHistoria}";
                 Paciente = paciente;
-                Evoluciones = await _lineaTemporalService.ObtenerEvolucionPaciente(Paciente.IdPaciente);
 
+                // Obtenemos evoluciones
+                Evoluciones = await GetEvo;
 
-                // Obtenemos evolucion del paciente
-                await _comun.ScrollBottom();
+                // Animacion Fade In
+                await _comun.FadeIn($"#{IdContenedorLT}");
+                OcultarLT = string.Empty;
                 StateHasChanged();
-            } catch (Exception ex) {
-                Console.WriteLine(ex);
+
+                await _comun.ScrollBottom();
+            } catch (Exception) {
                 Evoluciones = new();
                 _snackbar.Add("No ha sido posible cargar la linea temporal", Severity.Error);
-            }
+            } 
         }
-
     }
 }

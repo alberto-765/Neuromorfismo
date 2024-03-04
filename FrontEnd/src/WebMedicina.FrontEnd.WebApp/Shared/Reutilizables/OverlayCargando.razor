@@ -1,6 +1,6 @@
 ﻿@* Overlay de carga  *@
-@if(_isDarkMode != null){
-    <MudOverlay @bind-Visible="mostrarOverlay" DarkBackground="modoOscoruo" Absolute="absoluto">
+@if(_isDarkMode is not null){
+    <MudOverlay @bind-Visible="mostrarOverlay" DarkBackground="modoOscoruo" Absolute="absoluto" Style="@(modoOscoruo ? "" : "background: white;")">
         <div id="iconoOverLayCarga">
             <div id="spinner" class="@fondoSpinner"></div>
             <img src="icono.png" alt="Icono" />

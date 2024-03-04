@@ -93,3 +93,47 @@ async function GenerarImagenDeHtml(id) {
 
     return base64;
 }
+
+
+// Animacion FadeIn
+function FadeIn(selectorElemento) {
+    let op = 0;
+
+    let elemento = document.querySelector(selectorElemento);
+    if (elemento != null) {
+        elemento.style.opacity = op;
+        elemento.style.display = "block"
+
+        // Realizamos un setinterval para disminuir la opcidad
+        let intervalo = setInterval(() => {
+            if (op > 1) {
+                clearInterval(intervalo);
+            }
+
+            op += 0.1
+            elemento.style.opacity = op;
+        }, 75);
+    }
+}
+
+// Animacion FadeOut
+function FadeOut(selectorElemento) {
+    let op = 1;
+
+    let elemento = document.querySelector(selectorElemento);
+    if (elemento != null) {
+        elemento.style.opacity = op;
+        elemento.style.display = "block"
+
+        // Realizamos un setinterval para disminuir la opcidad
+        let intervalo = setInterval(() => {
+            if (op < 0) {
+                elemento.style.display = "none";
+                clearInterval(intervalo);
+            }
+
+            op -= 0.1
+            elemento.style.opacity = op;
+        }, 75);
+    }
+}

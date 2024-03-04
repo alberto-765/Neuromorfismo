@@ -85,5 +85,17 @@ namespace WebMedicina.FrontEnd.Service {
         public async Task ScrollBottom() {
             await _js.InvokeVoidAsync("ScrollBottom");
         }
+
+        public async Task FadeIn(string selectorElemento) {
+            if (!string.IsNullOrWhiteSpace(selectorElemento)) {
+                await _js.InvokeVoidAsync("FadeIn", selectorElemento);
+            }
+        }
+
+        public async Task FadeOut(string selectorElemento) {
+            if (!string.IsNullOrWhiteSpace(selectorElemento)) {
+                await _js.InvokeVoidAsync("FadeOut", selectorElemento);
+            }
+        }
     }
 }

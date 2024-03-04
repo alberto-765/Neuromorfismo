@@ -32,7 +32,6 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
             EtapaFinEvolutivo = EtapasLineaTemporal.Keys.LastOrDefault();
         }
 
-        // Creamos linea temporal
         protected override void OnAfterRender(bool firstRender) {
             try {
                 int ultEvoPac = Evoluciones.Keys.LastOrDefault();
@@ -44,10 +43,15 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
             }
         }
 
-        // Calcular estado de una etapa
+        /// <summary>
+        /// Calcular estado de una etapa correspondiente a la evolucion del paciente
+        /// </summary>
+        /// <param name="etapa"></param>
+        /// <returns></returns>
         private EstadoEtapa CalcularEstadoEtapa(KeyValuePair<short, EtapaLTDto> etapa) {
             EstadoEtapa estadoEtapa = EstadoEtapa.Pasada;
 
+            // Comprobamos si es la última etapa disponible y la última del paciente
             if (etapa.Key == EtapaFinEvolutivo && UltimaEtapaPaciente == EtapaFinEvolutivo) {
                 estadoEtapa = EstadoEtapa.FinEtapas;
 
@@ -86,7 +90,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal {
         /// <returns></returns>
         public Task EnviarEmail() {
             if (Evoluciones.Any()) {
-                _ = _documentacionService.EnviarEmailEvoActu(Evoluciones.Last().Value, IdPaciente, IdContenedor);
+                _ =_documentacionService.EnviarEmailEvoActu(Evoluciones.Last().Value, IdPaciente, IdContenedor);
             }
             return Task.CompletedTask; 
         }

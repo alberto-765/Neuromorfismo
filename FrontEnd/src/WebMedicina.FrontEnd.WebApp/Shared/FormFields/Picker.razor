@@ -22,7 +22,7 @@
     [Parameter] public string IdDialogo { get; set; } = string.Empty; // ID dialogo para bloquear/desbloquear scroll
     [Parameter] public string ClassDialogo { get; set; } = string.Empty; // Clase dialogo
     [Parameter] public Size IconSize { get; set; } = Size.Small;
-    [Parameter] public string EstiloPicker { get; set; } = "padding: 10px 0;";
+    [Parameter] public string EstiloPicker { get; set; } = string.Empty;
 
     // DEPENDENCIAS
     [Inject] private IComun _comun { get; set; } = null!;

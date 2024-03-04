@@ -1,16 +1,17 @@
 ﻿<div>
     <MudContainer MaxWidth="MaxWidth.Large" Class="mt-5 mb-15">
-        <MudPaper Elevation="25" Class="@($"rounded relative {ClaseContenedor}")" id="@IdContenedorLT">
+        <MudPaper Elevation="25" Class="@($"rounded relative {ClaseContenedor} {OcultarLT}")" id="@IdContenedorLT">
             <MudScrollToTop Selector="@SelectorScroll" 
                 OnClick="@(() => CerrarLineaTemporal())"
                 Visible="true" 
                 TopOffset="-99999" 
-                VisibleCssClass="lt__scrollTop" >
+                VisibleCssClass="lt__scrollTop">
                 <MudIconButton Icon="@Icons.Material.Outlined.Close" Color="Color.Default" />
             </MudScrollToTop>
 
             <MudText Typo="Typo.h4" Class="pt-10 pl-10">Evolución Paciente @Paciente.NumHistoria</MudText>
 
+               
             @if (LineaTemporalExpandedProp && EtapasLineaTemporal is not null && EtapasLineaTemporal.Any()) {
                 <LineaTemporal EtapasLineaTemporal="EtapasLineaTemporal" @bind-Evoluciones="Evoluciones" IdPaciente="Paciente.IdPaciente" IdContenedor="@IdContenedorLT" />
             } else {
