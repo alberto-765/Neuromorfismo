@@ -73,8 +73,8 @@ namespace WebMedicina.FrontEnd.Service {
         /// <param name="idElemento"></param>
         /// <param name="posY"></param>
         /// <returns></returns>
-        public async Task ScrollHaciaElemento(string idElemento, string posY = "center") {
-            await _js.InvokeVoidAsync("ScrollHaciaElemento", idElemento, posY);   
+        public async Task ScrollHaciaElemento(string selectorElemento, string posY = "center") {
+            await _js.InvokeVoidAsync("ScrollHaciaElemento", selectorElemento, posY);   
         }
 
 
@@ -86,15 +86,15 @@ namespace WebMedicina.FrontEnd.Service {
             await _js.InvokeVoidAsync("ScrollBottom");
         }
 
-        public async Task FadeIn(string selectorElemento) {
+        public async Task FadeIn(string selectorElemento, ushort duracion = 500) {
             if (!string.IsNullOrWhiteSpace(selectorElemento)) {
-                await _js.InvokeVoidAsync("FadeIn", selectorElemento);
+                await _js.InvokeAsync<bool>("FadeIn", selectorElemento, duracion);
             }
         }
 
-        public async Task FadeOut(string selectorElemento) {
+        public async Task FadeOut(string selectorElemento, ushort duracion = 500) {
             if (!string.IsNullOrWhiteSpace(selectorElemento)) {
-                await _js.InvokeVoidAsync("FadeOut", selectorElemento);
+                await _js.InvokeAsync<bool>("FadeOut", selectorElemento, duracion);
             }
         }
     }
