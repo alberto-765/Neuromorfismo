@@ -16,7 +16,18 @@ namespace WebMedicina.FrontEnd.Service {
         /// </summary>
         /// <returns></returns>
         public async Task<EstadisticasDto> ObtenerEstadisitcas() {
-            return await _http.GetFromJsonAsync<EstadisticasDto>("estadisticas") ?? new();
+            try {
+                HttpResponseMessage respuesta = await _http.GetAsync("estadisticas");
+                EstadisticasDto? estadisticas = null;
+
+                if (respuesta.IsSuccessStatusCode) {
+                    estadisticas = await respuesta.Content.ReadFromJsonAsync<EstadisticasDto>();
+                }
+
+                return estadisticas ?? new();
+            } catch(Exception) {
+                return new();
+            }
         }
     }
 }

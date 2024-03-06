@@ -1,0 +1,11 @@
+﻿/* Contenedor skeleton */
+.skeleton--contenedor{
+    height: 100%;
+    justify-content: center;
+}
+
+.skeleton__labels--contenedor {
+    height: 1rem;
+    justify-content: space-evenly;
+    gap: 1rem;
+}

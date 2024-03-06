@@ -138,5 +138,9 @@ html, body {
 /*SPINNER*/
 
 
-/* SCROLLBAR */
-::webkit-
+/*Clases flex basics*/
+@for $i from 1 through 10 {
+    .flex-basics-#{$i * 10} {
+        flex-basis: $i * 10%;
+    }
+}
