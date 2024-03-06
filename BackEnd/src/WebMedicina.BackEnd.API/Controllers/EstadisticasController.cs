@@ -22,15 +22,17 @@ namespace WebMedicina.BackEnd.API.Controllers {
         /// <returns></returns>
         [HttpGet]
         public EstadisticasDto GetEstadisticas() {
+            var totales = _estadisticasService.ObtenerTotales();
+
             EstadisticasDto estadisticas = new() {
 
-                // Obtenemos datos gráfica de total de pacientes
-                TotalPacientes = _estadisticasService.ObtenerTotalPacientes(),
+                // Obtenemos datos gráfica de total de pacientes y medicos
+                TotalPacientes = totales.TotalPacientes,
+                TotalMedicos = totales.TotalMedicos,
 
                 // Obtenemos datos gráfica resumen evoluciones etapa
                 TotalEtapas = _estadisticasService.ObtenerResumenEtapas()
             };
-
 
             // Devolvemos objeto con las estadisticas
             return estadisticas;

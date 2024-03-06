@@ -6,8 +6,8 @@ namespace WebMedicina.BackEnd.ServicesDependencies {
         /// <summary>
         /// Obtener diccionario con fechas de creación y número de pacientes creados en esa fecha
         /// </summary>
-        /// <returns>ImmutableSortedDictionary<DateOnly, uint></returns>
-        ImmutableSortedDictionary<DateOnly, uint> ObtenerTotalPacientes();
+        /// <returns>TotalPacientes y TotalMedicos</returns>
+        (ImmutableSortedDictionary<DateOnly, uint> TotalPacientes, ImmutableSortedDictionary<DateOnly, uint> TotalMedicos) ObtenerTotales();
 
         /// <summary>
         /// Obtener diccionario con las etapas y la cantidad de pacientes en dicha etapa

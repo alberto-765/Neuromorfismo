@@ -22,9 +22,10 @@ public class EstadisticasService : IEstadisticasService {
     /// <summary>
     /// Obtener diccionario con fechas de creación y número de pacientes creados en esa fecha
     /// </summary>
-    /// <returns>ImmutableSortedDictionary<DateOnly, uint></returns>
-    public ImmutableSortedDictionary<DateOnly, uint> ObtenerTotalPacientes() {
-        return _estadisticasDal.GetTotalPaciente();
+    /// <returns>TotalPacientes y TotalMedicos</returns>
+    public (ImmutableSortedDictionary<DateOnly, uint> TotalPacientes, ImmutableSortedDictionary<DateOnly, uint> TotalMedicos) ObtenerTotales() {
+        
+        return (_estadisticasDal.GetTotalPacientes(), _estadisticasDal.GetTotalMedicos());
     }
 }
 

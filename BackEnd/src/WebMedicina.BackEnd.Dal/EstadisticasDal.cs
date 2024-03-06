@@ -16,10 +16,20 @@ namespace WebMedicina.BackEnd.Dal {
         /// Get diccionario con fecha-cantidad
         /// </summary>
         /// <returns></returns>
-        public ImmutableSortedDictionary<DateOnly, uint> GetTotalPaciente() {
+        public ImmutableSortedDictionary<DateOnly, uint> GetTotalPacientes() {
             return _context.Pacientes.AsNoTracking()
                 .GroupBy(q => q.FechaCreac).Select(q => new { Fecha = DateOnly.FromDateTime(q.Key), Cantidad = (uint)q.Count()})
                 .ToImmutableSortedDictionary(q => q.Fecha, q=> q.Cantidad);
+        }
+
+        /// <summary>
+        /// Get diccionario con fecha-cantidad
+        /// </summary>
+        /// <returns></returns>
+        public ImmutableSortedDictionary<DateOnly, uint> GetTotalMedicos() {
+            return _context.Medicos.AsNoTracking()
+                .GroupBy(q => q.FechaCreac).Select(q => new { Fecha = DateOnly.FromDateTime(q.Key), Cantidad = (uint)q.Count() })
+                .ToImmutableSortedDictionary(q => q.Fecha, q => q.Cantidad);
         }
 
         /// <summary>
