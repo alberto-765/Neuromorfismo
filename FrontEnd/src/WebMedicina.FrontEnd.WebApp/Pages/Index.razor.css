@@ -1,11 +1,45 @@
-﻿/* Contenedor skeleton */
-.skeleton--contenedor{
-    height: 100%;
-    justify-content: center;
+﻿/* MudPaper skeleton */
+::deep .skeleton {
+    flex-basis: 45%;
+    min-height: 50vh;
 }
 
+/* Contenedor skeleton */
+.skeleton--contenedor {
+    height: 100%;
+    justify-content: space-between;
+}
+
+/* Contenedor labels skeleton */
 .skeleton__labels--contenedor {
     height: 1rem;
     justify-content: space-evenly;
     gap: 1rem;
+}
+.skeleton__labels--contenedor > * {
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+    gap: 4px;
+    max-width: 30%;
+}
+
+/* Grafica donut evoluciones*/
+::deep .skeleton__donutChar {
+    height: 100%;
+    aspect-ratio: 1/1;
+}
+
+
+/* Tamaño movil vertical y horizontal */
+@media (width < 960px) {
+    /* MudPaper skeleton */
+    ::deep .skeleton {
+        flex-basis: 100%;
+    }
+
+    /* Grafica donut evoluciones*/
+    ::deep .skeleton__donutChar {
+        width: 80%;
+    }
 }

@@ -14,10 +14,10 @@
         <AuthorizeView>
             <Authorized>
                 <MudAppBar Class="mud-elevation-25">
-                    <MudHidden Breakpoint="Breakpoint.SmAndDown">
+                    <MudHidden Breakpoint="Breakpoint.SmAndUp">
                         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Dark" Edge="Edge.Start" OnClick="@ToggleDrawer" />
                     </MudHidden>
-                    <MudHidden Breakpoint="Breakpoint.MdAndUp">
+                    <MudHidden Breakpoint="Breakpoint.MdAndDown">
                         <a href="">
                             <img id="iconoNavBar" src="icono.png" alt="Icono" />
                         </a>
@@ -40,7 +40,7 @@
                     <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Class="d-flex flex-column relative py-10">
                         @Body
                     </MudContainer>
-                 </MudMainContent>
+                </MudMainContent>
             </Authorized>
             <NotAuthorized>
                 <MudMainContent id="loginContainer">

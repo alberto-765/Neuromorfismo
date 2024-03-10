@@ -1,6 +1,7 @@
 ﻿.cienHeight {
   min-height: 100vh;
   width: calc(100% - var(--mud-drawer-width-left));
+  max-width: 100vw;
   height: 100%;
   display: flex;
 }

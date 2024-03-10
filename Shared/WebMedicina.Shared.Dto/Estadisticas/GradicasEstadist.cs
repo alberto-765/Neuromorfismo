@@ -5,12 +5,12 @@ namespace WebMedicina.Shared.Dto.Estadisticas {
     public class EstadisticasDto {
         // Gráfica de pacientes totales
         public string[] LabelsXGrafTotales { get; set; } = new string[NumLabels]; // Meses o años que aparecen en la grafica
-        public uint[] TotalPacientes { get; set; } = new uint[NumLabels];
-        public uint[] TotalMedicos { get; set; } = new uint[NumLabels];
+        public double[] TotalPacientes { get; set; } = new double[NumLabels];
+        public double[] TotalMedicos { get; set; } = new double[NumLabels];
 
 
         // Gráfica resumen evoluciones en las etapas -> Etapa - Nº Pac con Etapa
-        public ImmutableDictionary<string, uint> TotalEtapas { get; set; } = ImmutableDictionary<string, uint>.Empty;
+        public ImmutableDictionary<string, double> TotalEtapas { get; set; } = ImmutableDictionary<string, double>.Empty;
 
 
         // Número de labels de la grafica total

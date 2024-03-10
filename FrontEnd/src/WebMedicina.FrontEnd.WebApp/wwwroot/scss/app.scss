@@ -17,7 +17,6 @@ html, body {
 #blazor-error-ui :first-child {
     display: flex;
     align-items: center;
-    /*background: var(    )*/
     & .reload {
         margin-left: 10px;
     }
@@ -140,7 +139,11 @@ html, body {
 
 /*Clases flex basics*/
 @for $i from 1 through 10 {
-    .flex-basics-#{$i * 10} {
-        flex-basis: $i * 10%;
+    $indice : $i * 10;
+    .flex-basics-#{$indice} {
+        flex-basis: $indice%;
+    }
+    .w-#{$indice} {
+        width: $indice%;
     }
 }

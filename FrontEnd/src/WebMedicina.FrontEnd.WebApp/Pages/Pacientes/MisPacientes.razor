@@ -1,6 +1,6 @@
 ﻿@attribute [Authorize]
 
-<MudContainer MaxWidth="MaxWidth.Large" Class="mb-10">
+<div class="mb-10">
     @if (MostrarOverlay) {
         <MudPaper Elevation="25" Height="30rem" Width="100%" Class="relative">
             <OverlayCargando mostrarOverlay="true" absoluto="true" modoOscoruo="false" textoOverlayCarga="Cargando Pacientes..." />
@@ -8,4 +8,4 @@
     } else {
         <TablaPacientes ListaPacientes="ExcelPacientes.Pacientes" EliminarPacienteList="EliminarPaciente" MostrarLineaTemp="MostrarLineaTemp" />
     }
-</MudContainer>
+</div>

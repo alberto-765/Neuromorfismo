@@ -3,84 +3,62 @@
 <PageTitle>Estadísticas</PageTitle>
 
 
-<MudContainer MaxWidth="MaxWidth.Large" Class="d-flex flex-column gap-y-13 flex-basics-100">
+<div class="d-flex flex-column gap-6 gap-md-13 px-md-5">
     <h1>Estadísticas</h1>
-    @* Si las estadísticas son null es porque no han sido obtenidas *@
 
-    <div class="d-flex justify-space-evenly flex-basics-70">
-            <MudPaper Elevation="25" Width="45%" Class="pa-4">
-                <div class="d-flex flex-column gap-3 skeleton--contenedor">
-                    @if (estadisticas is null) {
-                        <MudSkeleton Width="50%" Height="2rem" Class="flex-shrink-0" />
-                        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="80%" Width="100%" />
+    <div class="d-flex justify-space-evenly flex-wrap gap-13 gap-md-0">
+        <MudPaper Elevation="25" Class="pa-4 skeleton">
+            <div class="d-flex flex-column gap-3 skeleton--contenedor">
+                @if (Estadisticas is null) {
+                    <MudSkeleton Animation="Animation.Pulse" Width="50%" Height="2rem" Class="flex-shrink-0"/>
+                    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="75%" Width="100%" />
 
-                        <div class="d-flex skeleton__labels--contenedor">
-                            <div class="d-flex gap-1 align-center flex-grow-1">
-                                <MudSkeleton SkeletonType="SkeletonType.Circle" Height=".75rem" Width=".75rem" Class="flex-shrink-0" />
-                                <MudSkeleton Class="flex-grow-1" />
-                            </div>
-                            <div class="d-flex gap-1 align-center flex-grow-1">
-                                <MudSkeleton SkeletonType="SkeletonType.Circle" Height=".75rem" Width=".75rem" Class="flex-shrink-0" />
-                                <MudSkeleton Class="flex-grow-1" />
-                            </div>
+                    <div class="d-flex skeleton__labels--contenedor">
+                        <div>
+                            <MudSkeleton SkeletonType="SkeletonType.Circle" Height=".75rem" Width=".75rem" Class="flex-shrink-0" />
+                            <MudSkeleton Class="flex-grow-1" />
                         </div>
-                    } else {
-                        <MudText>Pacientes/médicos totales</MudText>
-                    <div>
-                        <MudChart ChartType="ChartType.Line" ChartSeries="@Series" @bind-SelectedIndex="Index" XAxisLabels="@XAxisLabels" Width="100%" Height="350px" ChartOptions="@Options" />
-                        <MudGrid>
-                            <MudItem xs="6">
-                                <MudText Typo="Typo.body1" Class="py-3">Selected: @(Index < 0 ? "None" : Series[Index].Name)</MudText>
-                                </MudItem>
-                                <MudItem xs="6">
-                                    <MudSlider @bind-Value="Options.LineStrokeWidth" Min="1" Max="10" Color="Color.Info">Line Width: @Options.LineStrokeWidth.ToString()</MudSlider>
-                                </MudItem>
-                            </MudGrid>
+                        <div>
+                            <MudSkeleton SkeletonType="SkeletonType.Circle" Height=".75rem" Width=".75rem" Class="flex-shrink-0" />
+                            <MudSkeleton Class="flex-grow-1" />
                         </div>
+                    </div>
+                } else {
+                    <MudText Typo="Typo.h6" >Pacientes/médicos totales</MudText>
+                    <MudChart ChartType="ChartType.Line" ChartSeries="DatosTotales.ToList()" XAxisLabels="Estadisticas?.LabelsXGrafTotales" Height="100%" Width="100%" ChartOptions="OptionsTotal"/>
+                }
+            </div>
+        </MudPaper>
+        <MudPaper Elevation="25" Class="pa-4 skeleton">
+            <div class="d-flex flex-column gap-7 skeleton--contenedor">
+                @if (Estadisticas is null) {
+                    <MudSkeleton Width="50%" Height="2rem" Class="flex-shrink-0" />
 
-                    }
-                </div>
-            </MudPaper>
-            <MudPaper Elevation="25" Width="45%" Class="pa-4">
-                <div class="d-flex flex-column gap-7 skeleton--contenedor">
-                    @if (estadisticas is null) {
-                        <MudSkeleton Width="50%" Height="2rem" Class="flex-shrink-0" />
-                        <MudSkeleton SkeletonType="SkeletonType.Circle" Height="80%" Width="75%" Class="align-self-center" />
+                    <div class="d-flex flex-grow-1 justify-center align-center">
+                        <MudSkeleton SkeletonType="SkeletonType.Circle" Class="skeleton__donutChar" />
+                    </div>
 
-                        <div class="d-flex skeleton__labels--contenedor">
-                            <div class="d-flex gap-1 align-center flex-grow-1">
-                                <MudSkeleton SkeletonType="SkeletonType.Circle" Height=".75rem" Width=".75rem" Class="flex-shrink-0" />
-                                <MudSkeleton Class="flex-grow-1" />
-                            </div>
-                            <div class="d-flex gap-1 align-center flex-grow-1">
-                                <MudSkeleton SkeletonType="SkeletonType.Circle" Height=".75rem" Width=".75rem" Class="flex-shrink-0" />
-                                <MudSkeleton Class="flex-grow-1" />
-                            </div>
-                            <div class="d-flex gap-1 align-center flex-grow-1">
-                                <MudSkeleton SkeletonType="SkeletonType.Circle" Height=".75rem" Width=".75rem" Class="flex-shrink-0" />
-                                <MudSkeleton Class="flex-grow-1" />
-                            </div>
+                    <div class="d-flex skeleton__labels--contenedor">
+                        <div>
+                            <MudSkeleton SkeletonType="SkeletonType.Circle" Height=".75rem" Width=".75rem" Class="flex-shrink-0" />
+                            <MudSkeleton Class="flex-grow-1" />
                         </div>
-                    } else {
+                        <div>
+                            <MudSkeleton SkeletonType="SkeletonType.Circle" Height=".75rem" Width=".75rem" Class="flex-shrink-0" />
+                            <MudSkeleton Class="flex-grow-1" />
+                        </div>
+                        <div>
+                            <MudSkeleton SkeletonType="SkeletonType.Circle" Height=".75rem" Width=".75rem" Class="flex-shrink-0" />
+                            <MudSkeleton Class="flex-grow-1" />
+                        </div>
+                    </div>
+                } else {
                 
-                    }
-                </div>
+                }
+            </div>
         </MudPaper>
     </div>
-</MudContainer>
-
-@code {
-    private int Index = -1; //default value cannot be 0 -> first selectedindex is 0.
-    public ChartOptions Options = new ChartOptions();
-
-    public List<ChartSeries> Series = new List<ChartSeries>()
-        {
-                new ChartSeries() { Name = "Fossil", Data = new double[] { 79, 72, 69, 62, 62, 55, 65, 70 } },
-                new ChartSeries() { Name = "Renewable", Data = new double[] { 10, 41, 35, 51, 49, 62, 69, 91, 148 } },
-                };
-    public string[] XAxisLabels = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep" };
- }
-
+</div>
 
 
 
