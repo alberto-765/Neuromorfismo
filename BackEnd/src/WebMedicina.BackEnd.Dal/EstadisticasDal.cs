@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using WebMedicina.BackEnd.Model;
 
 namespace WebMedicina.BackEnd.Dal {
@@ -36,7 +35,7 @@ namespace WebMedicina.BackEnd.Dal {
         /// Obtenemos el numero de pacientes que tiene cada etapa
         /// </summary>
         /// <returns></returns>
-        public ImmutableDictionary<string, uint> GetTotalEtapas() {
+        public ImmutableDictionary<string, double> GetTotalEtapas() {
 
             // Agrupamos por paciente, obtenemos la etapa mas alta y agrupamos por etapa, y por ultimo creamos diccionario con el nombre de la etapa
             // y la cantidad
@@ -44,7 +43,7 @@ namespace WebMedicina.BackEnd.Dal {
                 .GroupBy(q => q.IdPaciente).Select(q => q.Max(e => e.IdEtapa))
                 .GroupBy(q => q).Select(q => new {
                     _context.EtapaLT.Single(e => e.Id == q.Key).Titulo,
-                    Cantidad = (uint)q.Count()
+                    Cantidad = (double)q.Count()
                 })
                 .ToImmutableDictionary(q => q.Titulo, q => q.Cantidad);
         }
