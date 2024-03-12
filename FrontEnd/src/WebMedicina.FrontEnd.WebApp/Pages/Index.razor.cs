@@ -28,7 +28,6 @@ public partial class Index {
     /// <returns></returns>
     protected override async Task OnInitializedAsync() {
         await base.OnInitializedAsync();
-        await Task.Delay(10000);
         Estadisticas = await _estadisticasService.ObtenerEstadisitcas();
         CargarDatosTotales();
     }

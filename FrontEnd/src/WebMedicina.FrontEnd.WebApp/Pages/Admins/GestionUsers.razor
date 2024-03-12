@@ -13,7 +13,7 @@
     }
 </h1>
 
-<MudContainer MaxWidth="MaxWidth.Large" Class="mt-5 mb-10 mt-xl-16 px-0">
+<div class="mt-5 mb-10 px-0">
     <div>
         <MudTable ServerData="@(new Func<TableState, Task<TableData<UserUploadDto>>>(ServerReload))" Hover="true" @ref="table" CanCancelEdit="true" IsEditRowSwitchingBlocked="false" ApplyButtonPosition="TableApplyButtonPosition.End"
                     EditTrigger="TableEditTrigger.RowClick" SortLabel="Ordenar por" CommitEditTooltip="Editar usuario" CancelEditTooltip="Cancelar edición" 
@@ -136,6 +136,6 @@
             </PagerContent>
         </MudTable>
     </div>
-</MudContainer>
+</div>
 
 

@@ -7,7 +7,6 @@
 /* Contenedor skeleton */
 .skeleton--contenedor {
     height: 100%;
-    justify-content: space-between;
 }
 
 /* Contenedor labels skeleton */
@@ -30,11 +29,19 @@
     aspect-ratio: 1/1;
 }
 
+/* Donut Char Etapas */
+.skeleton__labels__donutChar {
+    flex-grow: 1;
+}
+
+.skeleton__labels__donutChar > .mud-chart-donut {
+    margin: 0 auto;
+}
 
 /* Tamaño movil vertical y horizontal */
 @media (width < 960px) {
     /* MudPaper skeleton */
-    ::deep .skeleton {
+    :: deep .skeleton {
         flex-basis: 100%;
     }
 

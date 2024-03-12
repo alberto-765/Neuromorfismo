@@ -12,3 +12,22 @@
 ::deep #gridDecipcionPaciente {
     margin: 0 .9rem;
 }
+
+/* Toolbar tabla pacientes */
+::deep .tablaPaciente > .mud-toolbar {
+    gap: 1rem;
+    justify-content: space-between;
+    padding: 0 3rem;
+}
+::deep .tablaPaciente__searcher {
+    max-width: 15rem;
+}
+
+
+/* Tamaño movil vertical y horizontal */
+@media (width < 960px) {
+    /* Toolbar tabla pacientes */
+    ::deep .tablaPaciente > .mud-toolbar {
+        padding: 0 1rem;
+    }
+}

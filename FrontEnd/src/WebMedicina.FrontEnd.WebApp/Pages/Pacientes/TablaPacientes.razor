@@ -5,11 +5,11 @@
 <div>
     <MudDataGrid T="CrearPacienteDto" Items="@ListaPacientes"
                  EditTrigger="DataGridEditTrigger.Manual" Elevation="25" SortMode="SortMode.Single" Hover="true" Breakpoint="Breakpoint.Sm"
-                 QuickFilter="Search">
+                 QuickFilter="Search" Class="tablaPaciente">
         <ToolBarContent>
-            <MudText Typo="Typo.h6" Class="ml-md-5 mt-5 mt-md-0">Pacientes</MudText>
+            <MudText Typo="Typo.h6" Class="align-self-center">Pacientes</MudText>
             <MudTextField @bind-Value="_searchString" Placeholder="Buscar" Adornment="Adornment.Start" Immediate="true"
-                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="tablaPaciente__searcher"></MudTextField>
         </ToolBarContent>
         <Columns>
             
