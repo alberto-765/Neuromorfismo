@@ -1,11 +1,11 @@
 ﻿@* Overlay de carga  *@
 @if(_isDarkMode is not null){
-    <MudOverlay @bind-Visible="mostrarOverlay" DarkBackground="modoOscoruo" Absolute="absoluto" Style="@(modoOscoruo ? "" : "background: white;")">
+    <MudOverlay @bind-Visible="mostrarOverlay" DarkBackground="modoOscoruo" Absolute="absoluto" Style="@(!modoOscoruo && _isDarkMode is false ? "background: white;": "")">
         <div id="iconoOverLayCarga">
             <div id="spinner" class="@fondoSpinner"></div>
             <img src="icono.png" alt="Icono" />
         </div>
-        <div id="textoOverlayCarga">@textoOverlayCarga</div>
+        <div id="textoOverlayCarga" style="@(!modoOscoruo && _isDarkMode is false? "color: black;" : "" )">@textoOverlayCarga</div>
     </MudOverlay>
 }
 
@@ -30,7 +30,7 @@
 
     protected override void OnParametersSet() {
         // Colocamos un color de fondo para el spinner
-        if (_isDarkMode == true) {
+        if (_isDarkMode is true) {
 
             // Fondo oscuro
             if (modoOscoruo) {
@@ -39,9 +39,7 @@
                 // Fondo claro
                 fondoSpinner = "spinner2";
             }
-        } else if (_isDarkMode == false) {
-            // Modo claro
-
+        } else {
             // Fondo oscuro
             if (modoOscoruo) {
                 fondoSpinner = "spinner3";

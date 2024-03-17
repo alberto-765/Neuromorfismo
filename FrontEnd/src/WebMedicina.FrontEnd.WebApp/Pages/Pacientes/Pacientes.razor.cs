@@ -1,13 +1,11 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using WebMedicina.FrontEnd.ServiceDependencies;
 using MudBlazor;
 using WebMedicina.Shared.Dto.Tipos;
 using WebMedicina.Shared.Dto.Pacientes;
 using WebMedicina.FrontEnd.WebApp.Pages.Pacientes.LineaTemporal;
 using System.Collections.Immutable;
-using WebMedicina.FrontEnd.Dto;
-using System.Runtime.CompilerServices;
+
 
 namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
 {

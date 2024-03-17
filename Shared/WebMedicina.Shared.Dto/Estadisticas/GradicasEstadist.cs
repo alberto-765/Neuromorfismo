@@ -13,7 +13,7 @@ namespace WebMedicina.Shared.Dto.Estadisticas {
         public ImmutableDictionary<string, double> TotalEtapas { get; set; } = ImmutableDictionary<string, double>.Empty;
 
 
-        // Número de labels de la grafica total
+        // Readonly, Número de labels de la grafica total
         public static byte NumLabels { get; } = 6;
     }
 }

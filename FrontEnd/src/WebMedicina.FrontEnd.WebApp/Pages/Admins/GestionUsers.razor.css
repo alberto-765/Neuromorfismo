@@ -51,6 +51,18 @@
     padding-top: 10px !important;
 }
 
+/* Buscador */
+::deep #tablaGestionUsers .searcher {
+    max-width: 15rem;
+}
+
+/* Toolbar tabla pacientes */
+::deep #tablaGestionUsers > .mud-toolbar {
+    gap: 1rem;
+    justify-content: space-between;
+    padding: 0 3rem;
+}
+
 /*Estilo tabla en pc*/
 @media (min-width: 1280px) {
 
@@ -101,5 +113,18 @@
     ::deep #tablaGestionUsers {
         margin: auto;
         width: 600px;
+    }
+}
+
+/* Tamaño movil vertical y horizontal */
+@media (width < 960px) {
+    /* Toolbar tabla pacientes */
+    ::deep #tablaGestionUsers > .mud-toolbar {
+        padding: 0 1rem;
+    }
+
+    /* Contenedor de la tabla*/
+    ::deep .mud-table-container {
+        margin-top: 10px;
     }
 }

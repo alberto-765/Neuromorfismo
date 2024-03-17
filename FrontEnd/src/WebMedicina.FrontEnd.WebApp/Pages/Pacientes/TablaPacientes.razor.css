@@ -23,11 +23,23 @@
     max-width: 15rem;
 }
 
-
+/* Quitar before de las celdas */
+::deep .sinBefore::before{
+    content: none;
+}
 /* Tamaño movil vertical y horizontal */
 @media (width < 960px) {
     /* Toolbar tabla pacientes */
-    ::deep .tablaPaciente > .mud-toolbar {
+    :: deep .tablaPaciente > .mud-toolbar {
         padding: 0 1rem;
+    }
+    /* Tarjeta paciente */
+    ::deep .cardPaciente {
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    }
+
+    /* Contenedor de la tabla*/
+    ::deep .mud-table-container {
+        margin-top: 10px;
     }
 }

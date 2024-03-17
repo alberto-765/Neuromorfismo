@@ -30,18 +30,19 @@
 }
 
 /* Donut Char Etapas */
-.skeleton__labels__donutChar {
+::deep .skeleton__labels__donutChar {
     flex-grow: 1;
+    justify-content: center;
 }
 
-.skeleton__labels__donutChar > .mud-chart-donut {
+::deep .skeleton__labels__donutChar > * {
     margin: 0 auto;
 }
 
 /* Tamaño movil vertical y horizontal */
 @media (width < 960px) {
     /* MudPaper skeleton */
-    :: deep .skeleton {
+    ::deep .skeleton {
         flex-basis: 100%;
     }
 

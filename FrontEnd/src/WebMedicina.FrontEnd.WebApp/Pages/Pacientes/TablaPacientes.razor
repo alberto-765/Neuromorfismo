@@ -5,17 +5,15 @@
 <div>
     <MudDataGrid T="CrearPacienteDto" Items="@ListaPacientes"
                  EditTrigger="DataGridEditTrigger.Manual" Elevation="25" SortMode="SortMode.Single" Hover="true" Breakpoint="Breakpoint.Sm"
-                 QuickFilter="Search" Class="tablaPaciente">
+                 QuickFilter="Search" Class="tablaPaciente" ColumnResizeMode="ResizeMode.Column">
         <ToolBarContent>
-            <MudText Typo="Typo.h6" Class="align-self-center">Pacientes</MudText>
+            <MudText Typo="Typo.h6" Class="align-self-end align-self-sm-center">Pacientes</MudText>
             <MudTextField @bind-Value="_searchString" Placeholder="Buscar" Adornment="Adornment.Start" Immediate="true"
                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="tablaPaciente__searcher"></MudTextField>
         </ToolBarContent>
         <Columns>
-            
-
-            <HierarchyColumn T="CrearPacienteDto" />
-
+            <HierarchyColumn T="CrearPacienteDto"/>
+          
             @* Numero Historia *@
             <PropertyColumn Property="x => x.NumHistoria" Title="Número de Historia" />
 
@@ -40,7 +38,7 @@
             </TemplateColumn>
 
             @* Talla *@
-            <TemplateColumn Title="Talla" SortBy="@(x => x.Talla)">
+            <TemplateColumn Title="Talla" SortBy="@(x => x.Talla)" >
                 <CellTemplate>
                         @if (context.Item.Talla > 0) {
                             <MudText Typo="Typo.body1">@context.Item.Talla cm</MudText>
@@ -74,7 +72,7 @@
 
 
             @* Botones Editar y Eliminar *@  
-            <TemplateColumn CellClass="d-flex justify-space-end justify-sm-space-end gap-3">
+            <TemplateColumn CellClass="d-flex justify-between justify-sm-space-end gap-3 sinBefore">
                 <CellTemplate>
                     <MudIconButton id="@($"Paciente{context.Item.NumHistoria}")" Size="@Size.Small" Icon="@Icons.Material.Filled.Timeline" OnClick="@(async () =>await MostrarLineaTemp.InvokeAsync(context.Item))" Title="@($"Evolución paciente {@context.Item.NumHistoria.ToString()}")" />
                     <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => MostrarEditarPac(context.Item))" Title="@($"Editar paciente {@context.Item.NumHistoria.ToString()}")"/>
@@ -83,6 +81,7 @@
             </TemplateColumn>
         </Columns>
         <ChildRowContent>
+
             <MudCard Elevation="0" Class="cardPaciente">
                 <MudCardHeader>
                     <CardHeaderContent>
@@ -96,58 +95,61 @@
                    <MudGrid Justify="Justify.FlexStart" id="gridDecipcionPaciente" Class="gap-y-6" Spacing="0">
                        @* Fecha Nacimiento *@
                        <MudItem xs="12" md="6" >
-                            <MudText>Fecha Nacimiento: @context.Item.FechaNac?.ToString("dd/MM/yyyy")</MudText>
+                            <MudText><li>Fecha Nacimiento: @context.Item.FechaNac?.ToString("dd/MM/yyyy")</li></MudText>
                        </MudItem>
-
                         @* Genero *@
                         <MudItem xs="12" md="5">
-                            <MudText Class="d-flex flex-row align-center">Género:
-                                @if (context.Item.Sexo == "M") {
-                                    <text>Mujer</text>
-                                } else if (context.Item.Sexo == "H") {
-                                    <text>Hombre</text>
-                                }
+                            <MudText Class="d-flex flex-row align-center">
+                                <li>Género:
+                                    @if (context.Item.Sexo == "M") {
+                                        <text>Mujer</text>
+                                    } else if (context.Item.Sexo == "H") {
+                                        <text>Hombre</text>
+                                    }
+                                </li>
                             </MudText>
                         </MudItem>
                     
                         @* Fecha Diagnostico *@
                         <MudItem xs="12" md="6">
-                            <MudText>Fecha Diagnóstico: @context.Item.FechaDiagnostico?.ToString("dd/MM/yyyy")</MudText>
+                            <MudText><li>Fecha Diagnóstico: @context.Item.FechaDiagnostico?.ToString("dd/MM/yyyy")</li></MudText>
                         </MudItem>
                     
                         @* Fecha Fractalidad *@
                         <MudItem xs="12" md="5">
-                            <MudText>Fecha Fractalidad: @context.Item.FechaFractalidad?.ToString("dd/MM/yyyy")</MudText>
+                            <MudText><li>Fecha Fractalidad: @context.Item.FechaFractalidad?.ToString("dd/MM/yyyy")</li></MudText>
                         </MudItem>
 
                         @* Talla *@
                         <MudItem xs="12" md="6">
-                            <MudText>Talla: @(context.Item.Talla > 0 ? $"{context.Item.Talla} cm" : "No especificado")</MudText>
+                            <MudText><li>Talla: @(context.Item.Talla > 0 ? $"{context.Item.Talla} cm" : "No especificado")</li></MudText>
                         </MudItem>
 
                         @* Tipo Epilepsia *@
                         <MudItem xs="12" md="5">
-                                <MudText>Tipo Epilepsia: @((!string.IsNullOrEmpty(context.Item.Epilepsia?.Nombre) ? context.Item.Epilepsia.Nombre : "No especificado"))</MudText>
+                            <MudText><li>Tipo Epilepsia: @((!string.IsNullOrEmpty(context.Item.Epilepsia?.Nombre) ? context.Item.Epilepsia.Nombre : "No especificado"))</li></MudText>
                         </MudItem>
 
                         @* Tipo Mutación *@
                         <MudItem xs="12" md="6">
-                                <MudText>Tipo Mutación: @((!string.IsNullOrEmpty(context.Item.Mutacion?.Nombre) ? context.Item.Mutacion.Nombre : "No especificado"))</MudText>
+                            <MudText><li>Tipo Mutación: @((!string.IsNullOrEmpty(context.Item.Mutacion?.Nombre) ? context.Item.Mutacion.Nombre : "No especificado"))</li></MudText>
                         </MudItem>
 
                         @* Farmacos *@
                         <MudItem xs="12" md="5">
-                            <MudText>Fármacos: @((!string.IsNullOrEmpty(context.Item.Farmaco) ? context.Item.Farmaco : "No especificado"))</MudText>
+                                <MudText><li> Fármacos: @((!string.IsNullOrEmpty(context.Item.Farmaco) ? context.Item.Farmaco : "No especificado")) </li></MudText>
                         </MudItem>
 
                         @* Enfermedad Rara *@
                         <MudItem xs="12" md="6">
-                            <MudText Class="d-flex align-center">Enfermedad Rara: @(context.Item.EnfermRaras ? "Sí" : "No")
-
-                                @* Mostramos tooltip de info si tiene enfermedad rara *@
-                                @if (context.Item.EnfermRaras && !string.IsNullOrEmpty(context.Item.DescripEnferRaras)) {
-                                    <Tooltip Contenido="@(new MarkupString(context.Item.DescripEnferRaras))" Titulo="@(new MarkupString("<b>Descripción Enfermedad: </b>"))" SizeIcono="Size.Small" />
-                                }
+                            <MudText Class="d-flex align-center">
+                                <li>
+                                    Enfermedad Rara: @(context.Item.EnfermRaras ? "Sí" : "No")
+                                    @* Mostramos tooltip de info si tiene enfermedad rara *@
+                                    @if (context.Item.EnfermRaras && !string.IsNullOrEmpty(context.Item.DescripEnferRaras)) {
+                                        <Tooltip Contenido="@(new MarkupString(context.Item.DescripEnferRaras))" Titulo="@(new MarkupString("<b>Descripción Enfermedad: </b>"))" SizeIcono="Size.Small" />
+                                    }
+                                </li>
                             </MudText>
                         </MudItem>
                    </MudGrid>
@@ -156,23 +158,29 @@
                 <MudDivider DividerType="DividerType.FullWidth" Class="px-2" />
 
                 <MudCardActions Class="d-flex justify-space-between">
-                    <MudText Typo="Typo.subtitle2">Creado por
-                        <MudChip Variant="Variant.Text" Color="Color.Dark">@(string.IsNullOrEmpty(context.Item.NombreMedicoCreador) ? "-" : $"{context.Item.NombreMedicoCreador}")</MudChip>
-                        el
-                        <MudChip Variant="Variant.Text" Color="Color.Dark">@(context.Item.FechaCreac == DateTime.MinValue ? "-" : $"{context.Item.FechaCreac.ToString("dd/MM/yyyy")}")</MudChip>
-                    </MudText>
-                    <MudText Typo="Typo.subtitle2">
-                        Modificado por última vez por
-                            <MudChip Variant="Variant.Text" Color="Color.Dark">@(string.IsNullOrEmpty(context.Item.NombreMedicoUltMod) ? "-" : $"{context.Item.NombreMedicoUltMod}")</MudChip>
-                        el
-                        <MudChip Variant="Variant.Text" Color="Color.Dark">@(context.Item.FechaUltMod == DateTime.MinValue ? "-" : $"{context.Item.FechaUltMod.ToString("dd/MM/yyyy")}")</MudChip>
-                    </MudText>
+                    <MudGrid Spacing="0" Class="gap-y-3 px-2 px-xs-0" >
+                        <MudItem xs="12" sm="6">
+                            <MudText Typo="Typo.subtitle2">Creado por
+                                <MudChip Variant="Variant.Text" Color="Color.Dark">@(string.IsNullOrEmpty(context.Item.NombreMedicoCreador) ? "-" : $"{context.Item.NombreMedicoCreador}")</MudChip>
+                                el
+                                <MudChip Variant="Variant.Text" Color="Color.Dark">@(context.Item.FechaCreac == DateTime.MinValue ? "-" : $"{context.Item.FechaCreac.ToString("dd/MM/yyyy")}")</MudChip>
+                            </MudText>
+                        </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <MudText Typo="Typo.subtitle2">
+                                Modificado por última vez por
+                                <MudChip Variant="Variant.Text" Color="Color.Dark">@(string.IsNullOrEmpty(context.Item.NombreMedicoUltMod) ? "-" : $"{context.Item.NombreMedicoUltMod}")</MudChip>
+                                el
+                                <MudChip Variant="Variant.Text" Color="Color.Dark">@(context.Item.FechaUltMod == DateTime.MinValue ? "-" : $"{context.Item.FechaUltMod.ToString("dd/MM/yyyy")}")</MudChip>
+                            </MudText>
+                        </MudItem>
+                    </MudGrid>
                 </MudCardActions>
             </MudCard>
         </ChildRowContent>
-            <NoRecordsContent>
-                <MudText>No se han encontrado usuarios</MudText>
-            </NoRecordsContent>
+        <NoRecordsContent>
+            <MudText>No se han encontrado usuarios</MudText>
+        </NoRecordsContent>
         <PagerContent>
             <MudDataGridPager T="CrearPacienteDto" InfoFormat="@("{first_item}-{last_item} de {all_items}")" RowsPerPageString="Filas por página:" />
         </PagerContent>

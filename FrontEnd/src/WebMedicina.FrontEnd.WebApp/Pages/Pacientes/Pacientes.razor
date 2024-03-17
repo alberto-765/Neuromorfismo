@@ -10,7 +10,7 @@
 
             @* Tab con las subpantallas*@
             <MudStack Class="gap-8 gap-md-0">
-                <MudStack Spacing="0" Row Class="align-md-start justify-space-between">
+                <MudStack Spacing="0" Row Class="align-md-center justify-space-between">
                     @* Boton crear pacientes *@
                     <MudStack Row="true" AlignItems="AlignItems.Center" >
                         <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" id="@((IsDarkMode ? "btnCrearPacienteDark" : "btnCrearPacienteDef"))" StartIcon="@Icons.Material.Outlined.PersonAddAlt" @onclick="MostrarCrearPac">
