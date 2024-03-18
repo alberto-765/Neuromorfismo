@@ -32,7 +32,7 @@ namespace WebMedicina.FrontEnd.WebApp.Pages.Pacientes
         public ImmutableList<CrearPacienteDto>? PacientesFiltrados { get; set; }
         private IEnumerable<EpilepsiasDto>? ListaEpilepsias { get; set; } = null;
         private IEnumerable<MutacionesDto>? ListaMutaciones { get; set; } = null;
-
+          
 
         // Pop up crear paciente
         DialogOptions OpcionesDialogo { get; set; } = new DialogOptions{ FullWidth=true, CloseButton=true, DisableBackdropClick=true, Position=DialogPosition.Center, CloseOnEscapeKey=true};
