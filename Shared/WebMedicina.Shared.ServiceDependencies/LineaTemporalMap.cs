@@ -13,4 +13,3 @@ namespace WebMedicina.Shared.Mapers {
             new(evolucion.Id, evolucion.Confirmado, evolucion.Fecha, evolucion.IdMedicoUltModif, evolucion.IdEtapa, evolucion.IdPaciente);
     }
 }
-// Prueba
