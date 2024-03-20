@@ -1,4 +1,4 @@
-# WebMedicina
+# Neuromorfismo
 
 That project started at a big challenge for me, it are going to be a real private web app that some doctors of Spain would use for a study about a special disease in childrens
 I started that project using C# and .NET 7 without any experience in C# and Blazor. I was for 2 months as a self-taught learning about the best practice of C# and Blazor for start that project alone.
