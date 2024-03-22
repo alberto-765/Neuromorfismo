@@ -40,17 +40,6 @@ string connectionString = DBSettings.DBConnectionString(builder.Configuration);
 
 builder.Services.AddDbContext<NeuromorfismoContext>(options => {
 	options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
-
-	#if DEBUG
-		// NO SUBIR A PRODUCCION
-		if (builder.Environment.IsDevelopment()) {
-			options.EnableDetailedErrors();
-			options.EnableSensitiveDataLogging();
-		}
-	#else
-	#warning "Quitar esto de producción"
-	#endif
-
 });
 
 
@@ -161,15 +150,15 @@ builder.Services.Configure<EmailConfig>(builder.Configuration.GetSection("Email"
 
 var app = builder.Build();
 
-// Migraciones entity framework
-using (var scope = app.Services.CreateScope()) {
-	NeuromorfismoContext context = scope.ServiceProvider.GetRequiredService<NeuromorfismoContext>();
-	context.Database.Migrate();
-}
+if (app.Environment.IsDevelopment()) {
+	// Migraciones entity framework
+	using (var scope = app.Services.CreateScope()) {
+		NeuromorfismoContext context = scope.ServiceProvider.GetRequiredService<NeuromorfismoContext>();
+		context.Database.Migrate();
+	}
 
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment()) {
     app.UseDeveloperExceptionPage();
 	app.UseSwagger();
 	app.UseSwaggerUI();
