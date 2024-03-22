@@ -1,0 +1,20 @@
+﻿@using Neuromorfismo.Shared.Dto.Pacientes;
+@using Neuromorfismo.Shared.Dto.Tipos;
+
+@attribute [Authorize]
+@typeparam T where T : BasePaciente
+
+<div>
+    <MudSelect T="EpilepsiasDto" Class="filtro" @bind-Value="Paciente.Epilepsia" For="@(() => Paciente.Epilepsia)" Label="Epilepsia" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" OnOpen="async () => await _comun.BloquearScroll(IdDialogo)"
+               OnClose="async () => await _comun.DesbloquearScroll(IdDialogo)" Clearable="true" ToStringFunc="ConvertirEpi">
+        @if (ListaEpilepsias != null && ListaEpilepsias.Any()) {
+
+            @* Mapeamos todos los farmacos almacenados *@
+            foreach (EpilepsiasDto epilepsia in ListaEpilepsias) {
+                <MudSelectItem Value="epilepsia" />
+            }
+        } else {
+            <MudSelectItem Value="new EpilepsiasDto()" Disabled="true">No hay opciones disponibles</MudSelectItem>
+        }
+    </MudSelect>
+</div>

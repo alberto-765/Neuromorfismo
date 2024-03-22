@@ -1,0 +1,25 @@
+﻿@using Neuromorfismo.Shared.Dto.LineaTemporal;
+@using static Neuromorfismo.FrontEnd.Dto.EstadosEtapasLT;
+
+@attribute [Authorize]
+
+<div class="pa-10">
+    @* Mapeamos linea temporal y evolucion del paciente *@
+    <MudTimeline TimelinePosition="TimelinePosition.Start">
+
+        @* Mapeamos las etapas *@
+        @foreach (KeyValuePair<short, EtapaLTDto> etapa in EtapasLineaTemporal) {
+
+            // Intentamos obtener la evolución correspondiente a la etapa mapeada
+            if (Evoluciones.TryGetValue(etapa.Key, out evolucionPintar) == false) {
+                evolucionPintar = null;
+            }
+
+            @* Obtenemos estado de la etapa *@
+            estadoEtapa = CalcularEstadoEtapa(etapa);
+
+            <ItemLineaTemp EstadoEtapa="estadoEtapa" Etapa="etapa" EvolucionPintar="evolucionPintar" ActualizarEvolucionPaciente="ActualizarEvolucionPaciente" EnviarEmail="EnviarEmail" />
+
+        }
+    </MudTimeline>
+</div>

@@ -1,0 +1,56 @@
+﻿@using Neuromorfismo.Shared.Dto.Tipos;
+@attribute [Authorize(Roles = "superAdmin, admin")]
+
+<PageTitle>Mutaciones</PageTitle>
+@page "/mutaciones"
+<MudContainer Class="px-0 d-flex flex-column gap-sm-8 gap-3" MaxWidth="MaxWidth.Medium">
+
+    <div class="d-flex justify-space-between align-center">
+        <h1>Gestión Mutaciones</h1>
+        <MudButton Color="Color.Success" OnClick="crearMutacion" id="btnCrear" Variant="Variant.Filled" Size="Size.Small" StartIcon="@Icons.Material.Outlined.AddCircleOutline" Disabled="mostrarCargandoTabla">Crear</MudButton>
+    </div>
+
+    @if (mostrarTabla) {
+        <MudStack Class="mx-sm-16 mt-sm-4">
+            <MudTable T="MutacionesDto" Items="@MutacionesTabla" Hover="true" Breakpoint="Breakpoint.Xs" @ref="tabla" RowClassFunc="@SelectedRowClassFunc" Elevation="3"
+                        Class="pa-4" OnRowClick="RowClickEvent" Loading="mostrarCargandoTabla" LoadingProgressColor="Color.Info">
+                <HeaderContent>
+                    <MudTh>#</MudTh>
+                    <MudTh>Nombre</MudTh>
+                    <MudTh>Fecha Creación</MudTh>
+                    <MudTh>Fecha Última Modificación</MudTh>
+                </HeaderContent>
+
+                <RowTemplate>
+                    <MudTd DataLabel="#" Class="cursor-pointer">@context.Indice</MudTd>
+                    <MudTd DataLabel="Nombre" Class="cursor-pointer">@context.Nombre</MudTd>
+                    <MudTd DataLabel="Fecha Creación" Class="cursor-pointer">@context.FechaCreac.ToShortDateString()</MudTd>
+                    <MudTd DataLabel="Fecha Última Modificación" Class="cursor-pointer">@context.FechaUltMod.ToShortDateString()</MudTd>
+                </RowTemplate>
+                <PagerContent>
+                    <MudTablePager InfoFormat="@("{first_item}-{last_item} de {all_items}")" RowsPerPageString="Filas por página:" PageSizeOptions="new int[] { 5, 10, 15, 20 }" />
+                </PagerContent>
+                <LoadingContent>
+                    <MudText>Cargando...</MudText>
+                </LoadingContent>
+            </MudTable>
+
+
+            <MudPaper Class="@($"pa-4 {(!mostrarMutacion ? "d-none" : "")}")" Elevation="3">
+                <EditForm Model="mutacionSeleccionada" OnValidSubmit="EditarMutacion">
+                    <MudStack Spacing="16" Row="true" AlignItems="AlignItems.Center">
+                        <DataAnnotationsValidator />
+                        <MudTextField T="string" HelperTextOnFocus="true" For="@(() => mutacionSeleccionada.Nombre)" @bind-Value="@mutacionSeleccionada.Nombre" HelperText="No debe contener caracteres especiales"
+                                      Immediate="true" OnlyValidateIfDirty="true" Clearable="true" Label="Nuevo nombre" />
+                        <div>
+                            <MudButton OnClick="EliminarMutacion" Size="Size.Small" Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Rounded.DeleteOutline">Eliminar</MudButton>
+                            <MudButton Color="Color.Success" Class="ml-3" Size="Size.Small" ButtonType="ButtonType.Submit" Variant="Variant.Filled" StartIcon="@Icons.Material.Rounded.Upload">Actualizar</MudButton>
+                        </div>
+                    </MudStack>
+                </EditForm>
+            </MudPaper>
+        </MudStack>
+    } else {
+        <Error NombreImagen="Error1" mensajeError="No se han encontrado <b>tipos de mutaciones</b>" />
+    }
+</MudContainer>

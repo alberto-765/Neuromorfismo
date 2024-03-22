@@ -1,8 +1,0 @@
-﻿@using WebMedicina.Shared.Dto.Pacientes;
-
-@attribute [Authorize]
-@typeparam T where T : BasePaciente
-
-<div>
-    <MudSlider T="int" @bind-Value="Paciente.Talla" ValueLabel="true" Max="200" Min="50" Class="sliderTalla">@Label: @Paciente.Talla cm</MudSlider>
-</div>

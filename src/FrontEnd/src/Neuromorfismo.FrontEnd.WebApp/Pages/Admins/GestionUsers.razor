@@ -1,0 +1,139 @@
+﻿@using Neuromorfismo.Shared.Dto.Usuarios;
+
+@page "/gestionUsers"
+@attribute [Authorize(Roles = "superAdmin, admin")]
+
+
+<PageTitle>Gestión Médicos</PageTitle>
+
+<h1 class="mt-4 mt-sm-8 ml-sm-8 d-flex align-center">
+    Gestión de Usuarios
+    @if (mostrarTooltip) {
+        <Tooltip Posicion="Placement.Bottom" Contenido="tooltipInfoUser" Icono="@Icons.Material.Outlined.Info" />
+    }
+</h1>
+
+<div class="mt-5 mb-10 px-0 px-sm-8">
+    <MudTable ServerData="@(new Func<TableState, Task<TableData<UserUploadDto>>>(ServerReload))" Hover="true" @ref="table" CanCancelEdit="true" IsEditRowSwitchingBlocked="false" ApplyButtonPosition="TableApplyButtonPosition.End"
+                EditTrigger="TableEditTrigger.RowClick" SortLabel="Ordenar por" CommitEditTooltip="Editar usuario" CancelEditTooltip="Cancelar edición" 
+                RowEditPreview="CopiaSeguridadItem" RowEditCancel="ResetearUserInfo" RowEditCommit="ActualizarUsuario"                                                       
+                Breakpoint="Breakpoint.Md" id="tablaGestionUsers" Elevation="3" Class="rounded-lg">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6" Class="mt-5 mt-md-0 align-self-end align-self-sm-center">Usuarios dados de alta</MudText>
+            <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Buscar" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" 
+                IconSize="Size.Medium" Class="mt-0 sinMargin searcher"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh Class="tituloTabla filaId"><MudTableSortLabel SortLabel="IdMedico" T="UserUploadDto">#</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="UserLogin" T="UserUploadDto">User Login</MudTableSortLabel></MudTh>
+            <MudTh Class="filaNombre"><MudTableSortLabel SortLabel="Nombre" T="UserUploadDto">Nombre</MudTableSortLabel></MudTh>
+            <MudTh Class="filaApellidos"><MudTableSortLabel SortLabel="Apellidos" T="UserUploadDto">Apellidos</MudTableSortLabel></MudTh>
+            <MudTh Class=""><MudTableSortLabel SortLabel="FechaNac" T="UserUploadDto">Fecha Nacimiento</MudTableSortLabel></MudTh>
+            <MudTh Class="tituloTabla filaGenero"><MudTableSortLabel SortLabel="Sexo" T="UserUploadDto">Género</MudTableSortLabel></MudTh>
+            <MudTh Class="tituloTabla filaRol">Rol</MudTh>
+            <MudTh Class="tituloTabla"><MudTableSortLabel SortLabel="FechaCreac" T="UserUploadDto">Fecha Creación</MudTableSortLabel></MudTh>
+            <MudTh Class="tituloTabla"><MudTableSortLabel SortLabel="FechaUltMod" T="UserUploadDto">Fecha Última Modificación</MudTableSortLabel></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="#" Class="inputField">@context.Indice</MudTd>
+            <MudTd DataLabel="User Login" Class="inputField">@context.UserLogin</MudTd>
+            <MudTd DataLabel="Nombre" Class="inputField">@context.Nombre</MudTd>
+            <MudTd DataLabel="Apellidos" Class="inputField">@context.Apellidos</MudTd>
+            <MudTd DataLabel="Fecha Nacimiento" Class="">@context.FechaNac?.ToString("dd/MM/yyyy")</MudTd>
+            <MudTd DataLabel="Género" Class="inputField">
+                @if(context.Sexo == "M") {
+                    <div class="celda-espaciada">
+                        <MudIcon Icon="@Icons.Material.Outlined.Woman" Class="mr-1" Size="Size.Small"></MudIcon>
+                        <MudText Typo="Typo.body2" Align="Align.Center" Class="flex-1">Mujer</MudText>
+                    </div>
+                } else if (context.Sexo == "H") {
+                    <div class="celda-espaciada">
+                        <MudIcon Icon="@Icons.Material.Outlined.Man" Class="mr-1" Size="Size.Small"></MudIcon>
+                        <MudText Typo="Typo.body2" Align="Align.Center" Class="flex-1">Hombre</MudText>
+                    </div>
+                }
+            </MudTd>
+            <MudTd DataLabel="Rol" Class="inputField tituloTabla">
+                @switch (context.Rol) {
+                    case "superAdmin":
+                        <text>Super Admin</text>
+                    break;  
+                    case "admin":
+                        <text>Admin</text>
+                    break;
+                    case "medico":
+                        <text>Médico</text>
+                    break;
+                    default:
+                        <text>Sin Rol</text>
+                    break;
+                }
+            </MudTd>
+            <MudTd DataLabel="Fecha Creación" Class="inputField">
+                <div class="celda">
+                    <div class="celda_principal">@context.FechaCreac.ToString("dd/MM/yyyy")</div>
+                    <div class="celda_espacio"></div>
+                </div>
+            </MudTd>
+            <MudTd DataLabel="Fecha Última Modificación" Class="inputField">
+                <div class="celda">
+                    <div class="celda_principal">@context.FechaUltMod.ToString("dd/MM/yyyy")</div>
+                    <div class="celda_espacio"></div>
+                    </div>
+            </MudTd>
+        </RowTemplate>
+        <RowEditingTemplate>
+            <MudTd Class="justify-start">@context.Indice</MudTd>
+            <MudTd Class="justify-start">@context.UserLogin</MudTd>
+            <MudTd>
+                <MudTextField @bind-Value="@context.Nombre" For="@(() => context.Nombre)" OnlyValidateIfDirty="true" Clearable="true" Placeholder="Nombre" Class="inputField" />
+            </MudTd>
+            <MudTd>
+                <MudTextField @bind-Value="@context.Apellidos" For="@(() => context.Apellidos)" OnlyValidateIfDirty="true" Clearable="true" Variant="Variant.Text" Class="inputField"/>
+            </MudTd>
+            <MudTd Class="filaFechaNac">
+                @* Fecha Nacimiento *@
+                <Picker label="Fecha de Nacimiento" @bind-Fecha="context.FechaNac" FechaMaxima="ValidacionesRegistro.ObtenerFechaMaxNacimiento()" variante="PickerVariant.Dialog"
+                        autoCLose=true helperText="Mayor de 18 años" ClassDialogo="inputField mt-2" EstiloPicker="padding-top: 10px;"/>
+            </MudTd>
+            <MudTd>
+                <MudSelect T="string" @bind-Value="@context.Sexo" For="@(() => context.Sexo)" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Variant="Variant.Text" Class="inputField">
+                    <MudSelectItem Value="@("H")" ><div class="d-flex align-center"> <MudIcon Icon="@Icons.Material.Outlined.Man" Class="mr-2" Size="Size.Small"></MudIcon> Hombre </div></MudSelectItem>
+                    <MudSelectItem Value="@("M")"><div class="d-flex align-center"><MudIcon Icon="@Icons.Material.Outlined.Woman" Class="mr-2" Size="Size.Small"></MudIcon> Mujer </div></MudSelectItem>
+                </MudSelect>
+            </MudTd>
+            <MudTd>
+                <MudSelect T="string" @bind-Value="@context.Rol" For="@(() => context.Rol)" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Text" Class="inputField">
+                    @if (user is not null && user.IsInRole("superAdmin")) {
+                        <MudSelectItem Value="@("superAdmin")">Super Admin</MudSelectItem>
+                    }
+                    <MudSelectItem Value="@("admin")">Admin</MudSelectItem>
+                    <MudSelectItem Value="@("medico")">Médico</MudSelectItem>
+                </MudSelect>
+            </MudTd>
+            <MudTd Class="justify-start">
+                <div class="celda">
+                    <div class="celda_principal">@context.FechaCreac.ToString("dd/MM/yyyy")</div>
+                    <div class="celda_espacio"></div>
+                </div>
+            </MudTd>
+            <MudTd Class="justify-start">
+                <div class="celda">
+                    <div class="celda_principal">@context.FechaUltMod.ToString("dd/MM/yyyy")</div>
+                    <div class="celda_espacio"></div>
+                </div>
+            </MudTd>
+        </RowEditingTemplate>
+        <NoRecordsContent>
+            <MudText>No se han encontrado usuarios</MudText>
+        </NoRecordsContent>
+        <LoadingContent>
+            <MudText>Cargando...</MudText>
+        </LoadingContent>
+        <PagerContent>
+            <MudTablePager InfoFormat="@("{first_item}-{last_item} de {all_items}")" RowsPerPageString="Filas por página:"/>
+        </PagerContent>
+    </MudTable>
+</div>
+
+

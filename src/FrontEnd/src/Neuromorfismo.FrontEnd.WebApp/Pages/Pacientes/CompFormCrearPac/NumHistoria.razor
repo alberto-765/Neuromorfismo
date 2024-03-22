@@ -1,0 +1,6 @@
+﻿@using Neuromorfismo.Shared.Dto.Pacientes;
+
+@attribute [Authorize]
+@typeparam T where T : BasePaciente
+
+<MudTextField Counter="12" MaxLength="12" @bind-Value="Paciente.NumHistoria" For="@(() => Paciente.NumHistoria)" OnlyValidateIfDirty="true" Immediate="true" Clearable="true" Label="Número de Historia*" Variant="Variant.Text" OnBlur="@(async () => await ValidarNumHistoria())" HelperText="Formato ANXXXXXXXXXX" HelperTextOnFocus="true" />

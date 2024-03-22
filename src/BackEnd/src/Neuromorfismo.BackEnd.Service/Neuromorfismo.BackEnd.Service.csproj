@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.102.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Neuromorfismo.BackEnd.Dal\Neuromorfismo.BackEnd.Dal.csproj" />
+    <ProjectReference Include="..\Neuromorfismo.BackEnd.Dto\Neuromorfismo.BackEnd.Dto.csproj" />
+    <ProjectReference Include="..\Neuromorfismo.BackEnd.ServicesDependencies\Neuromorfismo.BackEnd.ServicesDependencies.csproj" />
+  </ItemGroup>
+
+</Project>

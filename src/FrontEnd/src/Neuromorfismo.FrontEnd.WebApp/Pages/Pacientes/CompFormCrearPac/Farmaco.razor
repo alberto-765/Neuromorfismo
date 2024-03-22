@@ -1,0 +1,6 @@
+﻿@using Neuromorfismo.Shared.Dto.Pacientes;
+
+@attribute [Authorize]
+@typeparam T where T : BasePaciente
+
+<MudTextField T="string" Label="Fármacos" OnlyValidateIfDirty="true" Clearable="true" Variant="Variant.Text" @bind-Value="Paciente.Farmaco" For="@(() => Paciente.Farmaco)" />
