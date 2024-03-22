@@ -8,10 +8,10 @@ using Neuromorfismo.Shared.Dto.Usuarios;
 
 namespace Neuromorfismo.BackEnd.Dal {
     public  class AdminDal {
-        private readonly WebmedicinaContext _context;
+        private readonly NeuromorfismoContext _context;
         private readonly UserManager<UserModel> _userManager;
 
-        public AdminDal(WebmedicinaContext context, UserManager<UserModel> userManager) {
+        public AdminDal(NeuromorfismoContext context, UserManager<UserModel> userManager) {
             _context = context;
             _userManager = userManager;
         }

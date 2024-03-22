@@ -4,11 +4,11 @@ using Neuromorfismo.BackEnd.Model.Seeds;
 
 namespace Neuromorfismo.BackEnd.Model;
 
-public class WebmedicinaContext : IdentityDbContext<UserModel, RoleModel, string> {
-    public WebmedicinaContext() {
+public class NeuromorfismoContext : IdentityDbContext<UserModel, RoleModel, string> {
+    public NeuromorfismoContext() {
     }
 
-    public WebmedicinaContext(DbContextOptions<WebmedicinaContext> options)
+    public NeuromorfismoContext(DbContextOptions<NeuromorfismoContext> options)
         : base(options)
     {
     }
@@ -40,12 +40,14 @@ public class WebmedicinaContext : IdentityDbContext<UserModel, RoleModel, string
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Seeds
         modelBuilder.ApplyConfiguration(new RolesSeed());
-        modelBuilder.ApplyConfiguration(new EpilepsiasSeed());
-        modelBuilder.ApplyConfiguration(new MutacionSeed());
-        modelBuilder.ApplyConfiguration(new EtapasLTSeed());
 
+        #if DEBUG
+            // Seeds para pruebas
+            modelBuilder.ApplyConfiguration(new EpilepsiasSeed());
+            modelBuilder.ApplyConfiguration(new MutacionSeed());
+            modelBuilder.ApplyConfiguration(new EtapasLTSeed());
+        #endif
 
 
         modelBuilder.Entity<EpilepsiaModel>(entity =>

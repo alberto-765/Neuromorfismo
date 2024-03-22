@@ -5,9 +5,9 @@ using Neuromorfismo.Shared.Dto.Tipos;
 
 namespace Neuromorfismo.BackEnd.Dal {
     public class FarmacosDal {
-        private readonly WebmedicinaContext _context;
+        private readonly NeuromorfismoContext _context;
 
-        public FarmacosDal(WebmedicinaContext context) {
+        public FarmacosDal(NeuromorfismoContext context) {
             _context = context;
         }
         //  Get FARMACOS

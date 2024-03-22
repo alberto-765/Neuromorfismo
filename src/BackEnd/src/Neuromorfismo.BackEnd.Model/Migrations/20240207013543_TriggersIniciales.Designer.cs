@@ -10,7 +10,7 @@ using Neuromorfismo.BackEnd.Model;
 
 namespace Neuromorfismo.BackEnd.Model.Migrations
 {
-    [DbContext(typeof(WebmedicinaContext))]
+    [DbContext(typeof(NeuromorfismoContext))]
     [Migration("20240207013543_TriggersIniciales")]
     partial class TriggersIniciales
     {

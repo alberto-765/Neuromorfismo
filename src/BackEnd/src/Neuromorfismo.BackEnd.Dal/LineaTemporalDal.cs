@@ -7,9 +7,9 @@ using Neuromorfismo.Shared.Dto.LineaTemporal;
 namespace Neuromorfismo.BackEnd.Dal
 {
     public class LineaTemporalDal {
-        private readonly WebmedicinaContext _context;
+        private readonly NeuromorfismoContext _context;
 
-        public LineaTemporalDal(WebmedicinaContext context) {
+        public LineaTemporalDal(NeuromorfismoContext context) {
             _context = context;
         }
 

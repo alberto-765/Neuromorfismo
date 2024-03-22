@@ -15,9 +15,9 @@ namespace Neuromorfismo.BackEnd.Service
         private readonly EpilepsiasDal _epilepsiasDal;
         private readonly FarmacosDal _farmacosDal;
         private readonly MutacionesDal _mutacionesDal;
-        private readonly WebmedicinaContext _context;
+        private readonly NeuromorfismoContext _context;
 
-        public PacientesService(PacientesDal pacientesDal, EpilepsiasDal epilepsiasDal, FarmacosDal farmacosDal, MutacionesDal mutacionesDal, WebmedicinaContext context) {
+        public PacientesService(PacientesDal pacientesDal, EpilepsiasDal epilepsiasDal, FarmacosDal farmacosDal, MutacionesDal mutacionesDal, NeuromorfismoContext context) {
             _pacientesDal = pacientesDal;
             _epilepsiasDal = epilepsiasDal;
             _farmacosDal = farmacosDal;

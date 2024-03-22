@@ -7,9 +7,9 @@ using Neuromorfismo.Shared.Dto.Tipos;
 namespace Neuromorfismo.BackEnd.Dal {
     public class MutacionesDal {
 
-        private readonly WebmedicinaContext _context;
+        private readonly NeuromorfismoContext _context;
 
-        public MutacionesDal(WebmedicinaContext context) {
+        public MutacionesDal(NeuromorfismoContext context) {
             _context = context;
         }
 

@@ -3,10 +3,10 @@ using Neuromorfismo.BackEnd.Model;
 
 namespace Neuromorfismo.BackEnd.Dal {
     public class MedicoDal {
-        private readonly WebmedicinaContext _context;
+        private readonly NeuromorfismoContext _context;
 
         // Contructor con inyeccion de dependencias
-        public MedicoDal(WebmedicinaContext context) {
+        public MedicoDal(NeuromorfismoContext context) {
             _context = context;
         }
 

@@ -9,8 +9,8 @@ using Neuromorfismo.BackEnd.Model;
 
 namespace Neuromorfismo.BackEnd.Model.Migrations
 {
-    [DbContext(typeof(WebmedicinaContext))]
-    partial class WebmedicinaContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(NeuromorfismoContext))]
+    partial class NeuromorfismoContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {

@@ -5,9 +5,9 @@ using Neuromorfismo.Shared.Dto.Tipos;
 
 namespace Neuromorfismo.BackEnd.Dal {
     public class EpilepsiasDal {
-        private readonly WebmedicinaContext _context;
+        private readonly NeuromorfismoContext _context;
 
-        public EpilepsiasDal(WebmedicinaContext context) {
+        public EpilepsiasDal(NeuromorfismoContext context) {
             _context = context;
         }
 

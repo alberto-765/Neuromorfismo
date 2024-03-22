@@ -14,10 +14,10 @@ namespace Neuromorfismo.BackEnd.API.Controllers
     public class GestionUsersController : Controller {
         private readonly IAdminsService _adminService;
         private readonly IIdentityService _identityService;
-        private readonly WebmedicinaContext _context;
+        private readonly NeuromorfismoContext _context;
 
 
-        public GestionUsersController(IAdminsService adminsService, IIdentityService identity, WebmedicinaContext context) {
+        public GestionUsersController(IAdminsService adminsService, IIdentityService identity, NeuromorfismoContext context) {
             _adminService = adminsService;
             _context = context;
             _identityService = identity;

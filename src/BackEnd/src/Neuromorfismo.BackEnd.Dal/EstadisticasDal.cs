@@ -4,10 +4,10 @@ using Neuromorfismo.BackEnd.Model;
 
 namespace Neuromorfismo.BackEnd.Dal {
     public class EstadisticasDal {
-        private readonly WebmedicinaContext _context;
+        private readonly NeuromorfismoContext _context;
 
 
-        public EstadisticasDal(WebmedicinaContext context) {
+        public EstadisticasDal(NeuromorfismoContext context) {
             _context = context;
         }
 

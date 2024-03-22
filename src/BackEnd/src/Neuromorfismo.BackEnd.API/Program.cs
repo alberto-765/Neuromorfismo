@@ -38,14 +38,19 @@ builder.Services.AddSwaggerGen();
 // conexion para BBDD
 string connectionString = DBSettings.DBConnectionString(builder.Configuration);
 
-builder.Services.AddDbContext<WebmedicinaContext>(options => {
+builder.Services.AddDbContext<NeuromorfismoContext>(options => {
 	options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 
-	// ¡¡¡¡¡ NO SUBIR A PRODUCCION !!!!!
-	if (builder.Environment.IsDevelopment()) {
-		options.EnableDetailedErrors(); 
-		options.EnableSensitiveDataLogging();
-	}
+	#if DEBUG
+		// NO SUBIR A PRODUCCION
+		if (builder.Environment.IsDevelopment()) {
+			options.EnableDetailedErrors();
+			options.EnableSensitiveDataLogging();
+		}
+	#else
+	#warning "Quitar esto de producción"
+	#endif
+
 });
 
 
@@ -70,7 +75,7 @@ builder.Services.AddIdentity<UserModel, RoleModel>(options => {
 	options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZÁÉÍÓÚÜÑáéíóúñü";
 
 })
-	.AddEntityFrameworkStores<WebmedicinaContext>() // usar entityframework core para trabajar con la BBDD
+	.AddEntityFrameworkStores<NeuromorfismoContext>() // usar entityframework core para trabajar con la BBDD
 .AddDefaultTokenProviders();  // para los tokens de inicio de sesion
 
 
@@ -158,7 +163,7 @@ var app = builder.Build();
 
 // Migraciones entity framework
 using (var scope = app.Services.CreateScope()) {
-	WebmedicinaContext context = scope.ServiceProvider.GetRequiredService<WebmedicinaContext>();
+	NeuromorfismoContext context = scope.ServiceProvider.GetRequiredService<NeuromorfismoContext>();
 	context.Database.Migrate();
 }
 

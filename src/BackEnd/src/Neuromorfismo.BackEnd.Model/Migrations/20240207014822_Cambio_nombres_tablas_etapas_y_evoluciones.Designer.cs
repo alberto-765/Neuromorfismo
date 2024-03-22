@@ -10,7 +10,7 @@ using Neuromorfismo.BackEnd.Model;
 
 namespace Neuromorfismo.BackEnd.Model.Migrations
 {
-    [DbContext(typeof(WebmedicinaContext))]
+    [DbContext(typeof(NeuromorfismoContext))]
     [Migration("20240207014822_Cambio_nombres_tablas_etapas_y_evoluciones")]
     partial class Cambio_nombres_tablas_etapas_y_evoluciones
     {

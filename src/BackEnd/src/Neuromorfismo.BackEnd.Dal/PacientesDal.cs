@@ -6,9 +6,9 @@ using Neuromorfismo.BackEnd.ServicesDependencies.Mappers;
 
 namespace Neuromorfismo.BackEnd.Dal {
     public class PacientesDal {
-        private readonly WebmedicinaContext _context;
+        private readonly NeuromorfismoContext _context;
 
-        public PacientesDal(WebmedicinaContext context) {
+        public PacientesDal(NeuromorfismoContext context) {
             _context = context;
         }
 

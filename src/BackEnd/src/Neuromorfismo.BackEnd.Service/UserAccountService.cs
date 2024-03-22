@@ -12,9 +12,9 @@ namespace Neuromorfismo.BackEnd.Service {
         private readonly IIdentityService _identityService;
         private readonly IJWTManagerRepository _jwtManager;
         private readonly UserManager<UserModel> _userManager;
-        private readonly WebmedicinaContext _context;
+        private readonly NeuromorfismoContext _context;
 
-        public UserAccountService(IIdentityService identityService, WebmedicinaContext context, IAdminsService adminService, IJWTManagerRepository jwtManager,
+        public UserAccountService(IIdentityService identityService, NeuromorfismoContext context, IAdminsService adminService, IJWTManagerRepository jwtManager,
             UserManager<UserModel> userManager) {
             _adminService = adminService;
             _identityService = identityService;
