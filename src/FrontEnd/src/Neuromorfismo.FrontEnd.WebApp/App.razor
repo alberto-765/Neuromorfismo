@@ -3,10 +3,7 @@
         <Found Context="routeData">
             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
                 <NotAuthorized>
-                    @if (noRedirigido) {
-                        redirigirManager.RedirigirDefault("login");
-                        noRedirigido = false;
-                    }
+                    <RedirigirNoAuthorized />
                 </NotAuthorized>
             </AuthorizeRouteView>
         </Found>
@@ -19,8 +16,15 @@
 </CascadingAuthenticationState> 
 
 @code{
+    [Inject] private NavigationManager navigationManager { get; set; } = null!;
     [Inject] private IRedirigirManager redirigirManager { get; set; } = null!;
-    private bool noRedirigido { get; set; } = true;
 
 
+    // Sistema para guardar las rutas por las que va pasando el usuario
+    protected override void OnInitialized() {
+        base.OnInitialized();
+        navigationManager.LocationChanged += (obj, lcea) => {
+            redirigirManager.ActualizarSeguimiento(lcea.Location);
+        };
+    }
 }

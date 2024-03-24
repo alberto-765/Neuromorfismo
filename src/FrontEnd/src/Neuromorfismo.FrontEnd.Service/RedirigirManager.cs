@@ -13,12 +13,20 @@ namespace Neuromorfismo.FrontEnd.Service {
             this.js = js;
         }
 
-        // Obtenemos la url de segumiento y redirigimos 
+        /// <summary>
+        /// Obtenemos la url de segumiento y redirigimos 
+        /// </summary>
+        /// <returns></returns>
         public async Task RedirigirPagAnt() { 
             string segEnl = await js.GetFromSessionStorage(enlaceSeguimientoKey);
             await RedirigirDefault(segEnl);
         }
 
+        /// <summary>
+        /// Redirige a la url especificada o al inicio
+        /// </summary>
+        /// <param name="enlace"></param>
+        /// <returns></returns>
         public async Task RedirigirDefault (string enlace = "/") {
             string urlActual = navigationManager.Uri;
             string baseUri = navigationManager.BaseUri;
@@ -39,9 +47,18 @@ namespace Neuromorfismo.FrontEnd.Service {
 
             // Comprobamos que no se está ya en la url a la que se quiere redirigir
             if (!paginaActual.Equals(enlace, StringComparison.InvariantCultureIgnoreCase)) {
-                await js.SetInSessionStorage(enlaceSeguimientoKey, paginaActual);
+                await ActualizarSeguimiento(enlace);
                 navigationManager.NavigateTo(enlace); 
             }
+        }
+
+        /// <summary>
+        /// Actualiza la url de segumiento
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        public async Task ActualizarSeguimiento(string url) {
+            await js.SetInSessionStorage(enlaceSeguimientoKey, url);
         }
     }
 }
