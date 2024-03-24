@@ -16,13 +16,27 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Setup .NET
+   
+    # Build and test API
+    - name: Setup .NET for API
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 7.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+    - name: Restore dependencies for API
+      run: dotnet restore src/BackEnd/src/Neuromorfismo.BackEnd.API
+    - name: Build API
+      run: dotnet build src/BackEnd/src/Neuromorfismo.BackEnd.API --no-restore
+    - name: Test API
+      run: dotnet test src/BackEnd/src/Neuromorfismo.BackEnd.API --no-build --verbosity normal
+
+    # Build and test Blazor app
+    - name: Setup .NET for Blazor
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 7.0.x
+    - name: Restore dependencies for Blazor
+      run: dotnet restore src/FrontEnd/src/Neuromorfismo.FrontEnd.WebApp
+    - name: Build Blazor
+      run: dotnet build src/FrontEnd/src/Neuromorfismo.FrontEnd.WebApp --no-restore
+    - name: Test Blazor
+      run: dotnet test src/FrontEnd/src/Neuromorfismo.FrontEnd.WebApp --no-build --verbosity normal
