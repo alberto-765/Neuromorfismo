@@ -36,7 +36,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Shared\Neuromorfismo.Shared.Dto\Neuromorfismo.Shared.Dto.csproj" />
-    <ProjectReference Include="..\..\..\Shared\Neuromorfismo.Shared.ServiceDependencies\Neuromorfismo.Shared.Mapers.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Neuromorfismo.Shared.Mapers\Neuromorfismo.Shared.Mapers.csproj" />
     <ProjectReference Include="..\Neuromorfismo.FrontEbd.Dto\Neuromorfismo.FrontEnd.Dto.csproj" />
     <ProjectReference Include="..\Neuromorfismo.FrontEnd.ServiceDependencies\Neuromorfismo.FrontEnd.ServiceDependencies.csproj" />
     <ProjectReference Include="..\Neuromorfismo.FrontEnd.Service\Neuromorfismo.FrontEnd.Service.csproj" />
