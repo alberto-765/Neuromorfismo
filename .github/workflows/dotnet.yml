@@ -35,7 +35,7 @@ jobs:
       with:
         dotnet-version: 7.0.x
     - name: Restore .NET workloads for Blazor
-      run: dotnet workload restore src/FrontEnd/src/Neuromorfismo.FrontEnd.WebApp
+      run: dotnet workload restore ./src/FrontEnd/src/Neuromorfismo.FrontEnd.WebApp
     - name: Restore dependencies for Blazor
       run: dotnet restore src/FrontEnd/src/Neuromorfismo.FrontEnd.WebApp
     - name: Build Blazor
